@@ -1,0 +1,722 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Latex语法 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="LaTeX 中文手册 (1024th.github.io) 0 常见插入公式$\LaTeX$  的数学公式有两种：行中公式和行间公式。行中公式放在文中与其它文字混编，独立公式单独成行。 行中公式：$ function $$function$ 行间公式：$$ function $$$$function$$ 功能符号&#123; &#125;：单个模块&#123;\rm d&#125; 和\mathr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Latex语法">
+<meta property="og:url" content="http://liuke101.github.io/post/52454.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="LaTeX 中文手册 (1024th.github.io) 0 常见插入公式$\LaTeX$  的数学公式有两种：行中公式和行间公式。行中公式放在文中与其它文字混编，独立公式单独成行。 行中公式：$ function $$function$ 行间公式：$$ function $$$$function$$ 功能符号&#123; &#125;：单个模块&#123;\rm d&#125; 和\mathr">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png">
+<meta property="article:published_time" content="2024-04-28T11:22:00.000Z">
+<meta property="article:modified_time" content="2024-04-28T11:22:24.021Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="Latex">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/52454.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Latex语法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-28 12:22:24'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Latex语法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-28T11:22:00.000Z" title="发表于 2024-04-28 12:22:00">2024-04-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-28T11:22:24.021Z" title="更新于 2024-04-28 12:22:24">2024-04-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Latex语法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/52454.html#post-comment"><span class="waline-comment-count" data-path="/post/52454.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><a target="_blank" rel="noopener" href="https://1024th.github.io/MathJax_Tutorial_CN/">LaTeX 中文手册 (1024th.github.io)</a><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404281221182.png" alt="Pasted image 20230420174107"></p>
+<h1 id="0-常见"><a href="#0-常见" class="headerlink" title="0 常见"></a>0 常见</h1><h2 id="插入公式"><a href="#插入公式" class="headerlink" title="插入公式"></a>插入公式</h2><p>$\LaTeX$  的数学公式有两种：行中公式和行间公式。行中公式放在文中与其它文字混编，独立公式单独成行。</p>
+<p><strong>行中公式</strong>：<br><code>$ function $</code><br>$function$</p>
+<p><strong>行间公式</strong>：<br><code>$$ function $$</code><br>$$function$$</p>
+<h2 id="功能符号"><a href="#功能符号" class="headerlink" title="功能符号"></a>功能符号</h2><p><code>&#123; &#125;</code>：单个模块<br><code>&#123;\rm d&#125;</code> 和<code>\mathrm&#123;d&#125;</code>等价：将括号内的字母由数学斜体变为正体<br><code>\textstyle</code>：让公式以行内公式格式显示<br><code>\displaystyle</code>：让公式以行间公式的格式排版，可以防止压扁<br><code>\stackrel</code>：多行极限<br><code>\tag&#123;1&#125;</code>：放在公式末尾，给公式编号</p>
+<h1 id="1-函数、符号及特殊字符"><a href="#1-函数、符号及特殊字符" class="headerlink" title="1  函数、符号及特殊字符"></a>1  函数、符号及特殊字符</h1><h2 id="标准函数"><a href="#标准函数" class="headerlink" title="标准函数"></a>标准函数</h2><p><strong>指数</strong></p>
+<p><code>\exp_a b = a^b, \exp b = e^b, 10^m</code></p>
+<p>${\displaystyle \exp _{a}b&#x3D;a^{b},\exp b&#x3D;e^{b},10^{m}}$</p>
+<p><strong>对数</strong></p>
+<p><code>\ln c, \lg d = \log e, \log_&#123;10&#125; f</code></p>
+<p>${\displaystyle \ln c,\lg d&#x3D;\log e,\log _{10}f}$</p>
+<p><strong>三角函数</strong></p>
+<p><code>\sin a, \cos b, \tan c, \cot d, \sec e, \csc f</code></p>
+<p>${\displaystyle \sin a,\cos b,\tan c,\cot d,\sec e,\csc f}$</p>
+<p><code>\arcsin a, \arccos b, \arctan c</code></p>
+<p>${\displaystyle \arcsin a,\arccos b,\arctan c}$</p>
+<p><code>\arccot d, \arcsec e, \arccsc f</code></p>
+<p>${\displaystyle \operatorname {arccot} d,\operatorname {arcsec} e,\operatorname {arccsc} f}$<br><strong>最大值，最小值</strong><br>&#96;\min x, \max y<br>${\displaystyle \min x,\max y}$</p>
+<p><code>\min(x,y), \max(x,y)</code></p>
+<p>${\displaystyle \min(x,y),\max(x,y)}$</p>
+<h2 id="极限"><a href="#极限" class="headerlink" title="极限"></a>极限</h2><p><code>\lim u</code></p>
+<p>${\displaystyle \lim u}$</p>
+<p><code>\lim_&#123;x \to \infty&#125; \frac&#123;1&#125;&#123;n(n+1)&#125;</code></p>
+<p>${\displaystyle \lim_{x \to \infty} \frac{1}{n(n+1)}}$</p>
+<p><code>\lim_&#123;n \to \infty&#125;x_n</code></p>
+<p>${\displaystyle \lim <em>{n\to \infty}x</em>{n}}$</p>
+<p><code>\begin&#123;matrix&#125; \lim_&#123;n \to \infty&#125;x_n \end&#123;matrix&#125;</code></p>
+<p>${\displaystyle {\begin{matrix}\lim <em>{n\to \infty }x</em>{n}\end{matrix}}}$</p>
+<h2 id="模长"><a href="#模长" class="headerlink" title="模长"></a>模长</h2><p><code>\lvert z \rvert</code><br>$\lvert z \rvert$</p>
+<p><code>\lVert z \rVert</code><br>$\lVert z \rVert$</p>
+<h2 id="微分及导数"><a href="#微分及导数" class="headerlink" title="微分及导数"></a>微分及导数</h2><p><code>dt, \mathrm&#123;d&#125;t, \partial t, \nabla\psi</code></p>
+<p>${\displaystyle dt,\mathrm {d} t,\partial t,\nabla \psi }$</p>
+<p><code>x&#39;</code></p>
+<p>${\displaystyle x’}$</p>
+<p><code>x^\prime</code></p>
+<p>${\displaystyle x^{\prime}}$</p>
+<p><code>dy/dx, \mathrm&#123;d&#125;y/\mathrm&#123;d&#125;x, \frac&#123;dy&#125;&#123;dx&#125;, \frac&#123;\mathrm&#123;d&#125;y&#125;&#123;\mathrm&#123;d&#125;x&#125;, \frac&#123;\partial^2&#125;&#123;\partial x_1\partial x_2&#125;y</code><br>$\partial$  偏导数<br>${\displaystyle dy&#x2F;dx,\mathrm {d} y&#x2F;\mathrm {d} x,{\frac {dy}{dx}},{\frac {\mathrm {d} y}{\mathrm {d} x}},{\frac {\partial ^{2}}{\partial x_{1}\partial x_{2}}}y}$</p>
+<p><code>\prime, \backprime, f^\prime, f&#39;, f&#39;&#39;, f^&#123;(3)&#125;, \dot y, \ddot y</code></p>
+<p>${\displaystyle \prime ,\backprime ,f^{\prime},f’,f’’,f^{(3)}!,{\dot {y}},{\ddot {y}}}$</p>
+<h2 id="取模"><a href="#取模" class="headerlink" title="取模"></a>取模</h2><p><code>a \bmod b</code></p>
+<p>${\displaystyle a \bmod b}$</p>
+<h2 id="根号"><a href="#根号" class="headerlink" title="根号"></a>根号</h2><p><code>\sqrt&#123;2&#125;, \sqrt[3]&#123;\frac&#123;x^3+y^3&#125;&#123;2&#125;&#125;</code></p>
+<p>${\displaystyle {\sqrt {2}},{\sqrt[{3}]{\frac {x^{3}+y^{3}}{2}}}}$</p>
+<h2 id="加减乘除"><a href="#加减乘除" class="headerlink" title="加减乘除"></a>加减乘除</h2><p><code>+, -, \pm, \mp, \dotplus</code></p>
+<p>${\displaystyle +,-,\pm ,\mp ,\dotplus}$</p>
+<p><code>\times, \div, /, \backslash</code></p>
+<p>${\displaystyle \times ,\div  ,&#x2F;,\backslash}$</p>
+<p>点乘<br>&#96;\cdot</p>
+<p>${\displaystyle a \cdot b }$</p>
+<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><p><strong>中括号</strong><br>&#96;{ }<br>${\displaystyle {}}$</p>
+<h2 id="关系符号"><a href="#关系符号" class="headerlink" title="关系符号"></a>关系符号</h2><p><strong>等号</strong><br><code>=, \ne, \neq, \equiv, \not\equiv</code></p>
+<p>${\displaystyle &#x3D;,\neq ,\neq ,\equiv ,\not \equiv}$</p>
+<p><code>\approx</code><br>约等<br>${\displaystyle \approx }$</p>
+<p><code>\sim, \nsim, \backsim, \thicksim, \simeq, \backsimeq, \eqsim, \cong, \ncong</code></p>
+<p>${\displaystyle \sim ,\nsim ,\backsim ,\thicksim ,\simeq ,\backsimeq ,\eqsim ,\cong ,\ncong}$<br><strong>不等式</strong></p>
+<p><code>&lt; \leqslant, \nleqslant</code></p>
+<p>${\displaystyle &lt; ,\leqslant ,\nleqslant }$</p>
+<p><code>&gt; \geqslant, \ngeqslan</code></p>
+<p>${\displaystyle &gt;,\geqslant ,\ngeqslant}$</p>
+<h2 id="角度"><a href="#角度" class="headerlink" title="角度"></a>角度</h2><p>#垂直<br><code>\perp, \angle, \sphericalangle, \measuredangle, 45^\circ</code></p>
+<p>${\displaystyle \perp ,\angle ,\sphericalangle ,\measuredangle ,45^{\circ}}$</p>
+<h2 id="箭头"><a href="#箭头" class="headerlink" title="箭头"></a>箭头</h2><p><code>\Rightarrow, \nRightarrow, \Leftarrow, \nLeftarrow, \Leftrightarrow</code><br>$\Rightarrow, \nRightarrow, \Leftarrow, \nLeftarrow, \Leftrightarrow$</p>
+<p><code>\rightarrow \to, \nrightarrow, \longrightarrow</code></p>
+<p>${\displaystyle \rightarrow \to ,\nrightarrow ,\longrightarrow}$</p>
+<p><code>\leftarrow \gets, \nleftarrow, \longleftarrow</code></p>
+<p>${\displaystyle \leftarrow \gets ,\nleftarrow ,\longleftarrow}$</p>
+<p><code>\leftrightarrow, \nleftrightarrow, \longleftrightarrow</code></p>
+<p>${\displaystyle \leftrightarrow ,\nleftrightarrow ,\longleftrightarrow}$</p>
+<p><strong>左箭头</strong><br><code>\overleftarrow&#123;a b&#125;</code></p>
+<p>${\displaystyle {\overleftarrow {ab}}}$</p>
+<p><strong>右箭头</strong><br><code>\overrightarrow&#123;c d&#125;</code></p>
+<p>${\displaystyle {\overrightarrow {cd}}}$</p>
+<p><strong>双箭头</strong><br><code>\overleftrightarrow&#123;a b&#125;</code></p>
+<p>${\displaystyle {\overleftrightarrow {ab}}}$</p>
+<h2 id="省略号"><a href="#省略号" class="headerlink" title="省略号"></a>省略号</h2><p><code>\ldots</code> 表示与文本底线对齐的省略号，<code>\cdots</code> 表示与文本中线对齐的省略号。<br>$\ldots, \cdots$</p>
+<h2 id="上弧"><a href="#上弧" class="headerlink" title="上弧"></a>上弧</h2><p><code>\widehat&#123;e f g&#125;</code></p>
+<p>${\displaystyle {\widehat {efg}}}$</p>
+<p><code>\overset&#123;\frown&#125; &#123;AB&#125;</code></p>
+<p>${\displaystyle {\overset {\frown}{AB}}}$</p>
+<h2 id="上括号下括号"><a href="#上括号下括号" class="headerlink" title="上括号下括号"></a>上括号下括号</h2><p><code>\overbrace&#123;1+2+\cdots+100&#125;</code></p>
+<p>${\displaystyle \overbrace {1+2+\cdots +100} }$</p>
+<p><code>\begin&#123;matrix&#125; 5050 \\ \overbrace&#123; 1+2+\cdots+100 &#125; \end&#123;matrix&#125;</code></p>
+<p>${\displaystyle {\begin{matrix}5050\\overbrace {1+2+\cdots +100} \end{matrix}}}$</p>
+<p><code>\underbrace&#123;a+b+\cdots+z&#125;</code></p>
+<p>${\displaystyle \underbrace {a+b+\cdots +z} }$</p>
+<p><code>\begin&#123;matrix&#125; \underbrace&#123; a+b+\cdots+z &#125; \\ 26 \end&#123;matrix&#125;</code></p>
+<p>${\displaystyle {\begin{matrix}\underbrace {a+b+\cdots +z} \26\end{matrix}}}$</p>
+<h2 id="上划线下划线"><a href="#上划线下划线" class="headerlink" title="上划线下划线"></a>上划线下划线</h2><p><code>overline</code><br>$\overline{a}$</p>
+<p><code>\underline</code><br>$\underline{b}$</p>
+<h2 id="上下标"><a href="#上下标" class="headerlink" title="上下标"></a>上下标</h2><p><strong>上标</strong></p>
+<p><code>a^2</code><br>${\displaystyle a^{2}}$</p>
+<p><code>a^&#123;2+2&#125;</code></p>
+<p>${\displaystyle a^{2+2}}$</p>
+<p><strong>下标</strong></p>
+<p><code>a_2</code><br>${\displaystyle a_{2}}$</p>
+<p><code>a_&#123;i,j&#125;</code></p>
+<p>${\displaystyle a_{i,j}}$</p>
+<p><strong>结合上下标</strong></p>
+<p><code>x_2^3</code></p>
+<p>${\displaystyle x_{2}^{3}}$</p>
+<p>前置上下标</p>
+<p><code>&#123;&#125;_1^2\!X_3^4</code></p>
+<p>${\displaystyle {}<em>{1}^{2}!X</em>{3}^{4}}$</p>
+<h2 id="向量"><a href="#向量" class="headerlink" title="向量"></a>向量</h2><p><code>\vec&#123;c&#125;</code></p>
+<p>$\vec{c}$</p>
+<h2 id="括号"><a href="#括号" class="headerlink" title="括号"></a>括号</h2><p><code>()</code>、<code>[]</code> 和 <code>|</code> 表示符号本身，使用 <code>\&#123;\&#125;</code> 来表示 <code>&#123;&#125;</code> 。</p>
+<p><strong>短括号</strong></p>
+<p><code>\frac&#123;1&#125;&#123;2&#125;</code></p>
+<p>${\displaystyle ({\frac {1}{2}})}$</p>
+<p><strong>长括号</strong></p>
+<p><code>\left(\frac&#123;1&#125;&#123;2&#125; \right)</code></p>
+<p>${\displaystyle \left({\frac {1}{2}}\right)}$</p>
+<p><strong>使用 <code>\left</code> 和 <code>\right</code> 来创建自动匹配高度的 (圆括号)，[方括号] 和 {花括号} 。</strong></p>
+<p><strong>圆括号，小括号</strong></p>
+<p><code>\left( \frac&#123;a&#125;&#123;b&#125; \right)</code></p>
+<p>${\displaystyle \left({\frac {a}{b}}\right)}$</p>
+<p><strong>方括号，中括号</strong></p>
+<p><code>\left[ \frac&#123;a&#125;&#123;b&#125; \right]</code></p>
+<p>${\displaystyle \left[{\frac {a}{b}}\right]}$</p>
+<p><strong>花括号，大括号</strong></p>
+<p><code>\left\&#123; \frac&#123;a&#125;&#123;b&#125; \right\&#125;</code></p>
+<p>${\displaystyle \left&lt;!–swig￼17–&gt;\right}}$</p>
+<p><strong>角括号</strong></p>
+<p><code>\left \langle \frac&#123;a&#125;&#123;b&#125; \right \rangle</code></p>
+<p>${\displaystyle \left\langle {\frac {a}{b}}\right\rangle }$</p>
+<p><strong>混合括号</strong></p>
+<p><code>\left[ 0,1 \right)</code></p>
+<p>${\displaystyle \left[0,1\right)}$</p>
+<p><strong>单竖线，绝对值</strong></p>
+<p><code>\left| \frac&#123;a&#125;&#123;b&#125; \right|</code></p>
+<p>${\displaystyle \left| \frac{a}{b} \right|}$</p>
+<p><strong>双竖线，范</strong></p>
+<p><code>\left \| \frac&#123;a&#125;&#123;b&#125; \right \|</code></p>
+<p>${\displaystyle \left|{\frac {a}{b}}\right|}$</p>
+<p><strong>取整函数</strong></p>
+<p><code>\left \lfloor \frac&#123;a&#125;&#123;b&#125; \right \rfloor</code></p>
+<p>${\displaystyle \left\lfloor {\frac {a}{b}}\right\rfloor }$</p>
+<p><strong>取顶函数</strong></p>
+<p><code>\left \lceil \frac&#123;c&#125;&#123;d&#125; \right \rceil</code></p>
+<p>${\displaystyle \left\lceil {\frac {c}{d}}\right\rceil }$</p>
+<p><strong>如果括号只有一边，要用 <code>\left.</code> 或 <code>\right.</code> 匹配另一边。</strong></p>
+<p><strong>单左括号</strong></p>
+<p><code>\left \&#123;\frac&#123;a&#125;&#123;b&#125; \right.</code></p>
+<p>${\displaystyle \left&lt;!–swig￼18–&gt;\right.}$</p>
+<p><strong>单右括号</strong></p>
+<p><code>\left. \frac&#123;a&#125;&#123;b&#125; \right \&#125;</code></p>
+<p>${\displaystyle \left.{\frac {a}{b}}\right}}$</p>
+<ul>
+<li><p><strong>可以使用 <code>\big, \Big, \bigg, \Bigg</code> 控制括号的大小，比如代码</strong></p>
+<p><code>\Bigg ( \bigg [ \Big \&#123; \big \langle \left | \| \frac&#123;a&#125;&#123;b&#125; \| \right | \big \rangle \Big \&#125; \bigg ] \Bigg )</code><br>$$\Bigg ( \bigg [ \Big { \big \langle \left | | \frac{a}{b} | \right | \big \rangle \Big } \bigg ] \Bigg )$$</p>
+<h2 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h2><h3 id="quad-空格"><a href="#quad-空格" class="headerlink" title="quad 空格"></a>quad 空格</h3></li>
+</ul>
+<p><code>\alpha\quad\beta</code></p>
+<p>${\displaystyle \alpha \quad \beta}$</p>
+<p><code>\alpha\qquad\beta</code></p>
+<p>${\displaystyle \alpha \qquad \beta}$</p>
+<h3 id="大空格"><a href="#大空格" class="headerlink" title="大空格"></a>大空格</h3><p><code>\alpha\ \beta</code></p>
+<p>${\displaystyle \alpha \ \beta}$</p>
+<h3 id="中等空格"><a href="#中等空格" class="headerlink" title="中等空格"></a>中等空格</h3><p><code>\alpha\;\beta</code></p>
+<p>${\displaystyle \alpha ;\beta}$</p>
+<h3 id="小空格"><a href="#小空格" class="headerlink" title="小空格"></a>小空格</h3><p><code>\alpha\,\beta</code></p>
+<p>${\displaystyle \alpha ,\beta}$</p>
+<h3 id="紧贴"><a href="#紧贴" class="headerlink" title="紧贴"></a>紧贴</h3><p><code>\alpha\!\beta</code></p>
+<p>${\displaystyle \alpha !\beta}$</p>
+<h1 id="2-算术运算"><a href="#2-算术运算" class="headerlink" title="2 算术运算"></a>2 算术运算</h1><h2 id="累加累乘"><a href="#累加累乘" class="headerlink" title="累加累乘"></a>累加累乘</h2><p><strong>求和（累加）</strong></p>
+<p><code>\sum_&#123;k=1&#125;^N k^2</code></p>
+<p>${\displaystyle \sum _{k&#x3D;1}^{N}k^{2}}$</p>
+<p><code>\begin&#123;matrix&#125; \sum_&#123;k=1&#125;^N k^2 \end&#123;matrix&#125;</code></p>
+<p>${\displaystyle {\begin{matrix}\sum _{k&#x3D;1}^{N}k^{2}\end{matrix}}}$</p>
+<p>行间公式使用<code> \sum\limits</code> 可以让上下限固定在符号上下方，其他类似的符号也适用：<br>${\displaystyle {\begin{matrix}\sum\limits _{k&#x3D;1}^{N}k^{2}\end{matrix}}}$</p>
+<p><strong>求积（累乘）</strong></p>
+<p><code>\prod_&#123;i=1&#125;^N x_i</code></p>
+<p>${\displaystyle \prod <em>{i&#x3D;1}^{N}x</em>{i}}$</p>
+<p><code>\begin\limits&#123;matrix&#125; \prod_&#123;i=1&#125;^N x_i \end&#123;matrix&#125;</code></p>
+<p>${\displaystyle {\begin{matrix}\prod <em>{i&#x3D;1}^{N}x</em>{i}\end{matrix}}}$</p>
+<h2 id="积分"><a href="#积分" class="headerlink" title="积分"></a>积分</h2><p><strong>积分</strong></p>
+<p><code>\int_&#123;-N&#125;^&#123;N&#125; e^x\, &#123;\rm d&#125;x</code></p>
+<p>${\displaystyle \int _{-N}^{N}e^{x},{\rm d} x}$</p>
+<p>本例中 <code>\,</code> 和 <code>&#123;\rm d&#125;</code> 部分可省略，但建议加入，能使式子更美观。<code>&#123;\rm d&#125;</code>可以用<code>\mathrm&#123;d&#125;</code>等价替换。</p>
+<p><code>\begin&#123;matrix&#125; \int_&#123;-N&#125;^&#123;N&#125; e^x\, \mathrm&#123;d&#125;x \end&#123;matrix&#125;</code>（矩阵中积分符号变小）</p>
+<p>${\displaystyle {\begin{matrix}\int _{-N}^{N}e^{x},\mathrm {d} x\end{matrix}}}$</p>
+<p><strong>双重积分</strong></p>
+<p><code>\iint_&#123;D&#125;^&#123;W&#125; \, \mathrm&#123;d&#125;x\,\mathrm&#123;d&#125;y</code></p>
+<p>${\displaystyle \iint _{D}^{W},\mathrm {d} x,\mathrm {d} y}$</p>
+<p><strong>三重积分</strong></p>
+<p><code>\iiint_&#123;E&#125;^&#123;V&#125; \, \mathrm&#123;d&#125;x\,\mathrm&#123;d&#125;y\,\mathrm&#123;d&#125;z</code></p>
+<p>${\displaystyle \iiint _{E}^{V},\mathrm {d} x,\mathrm {d} y,\mathrm {d} z}$</p>
+<p><strong>闭合的曲线、曲面积分</strong></p>
+<p><code>\oint_&#123;C&#125; x^3\, \mathrm&#123;d&#125;x + 4y^2\, \mathrm&#123;d&#125;y</code></p>
+<p>${\displaystyle \oint _{C}x^{3},\mathrm {d} x+4y^{2},\mathrm {d} y}$</p>
+<h2 id="分数"><a href="#分数" class="headerlink" title="分数"></a>分数</h2><p>通常使用 <code>\frac &#123;分子&#125; &#123;分母&#125;</code> 命令产生一个分数，分数可嵌套。<br>便捷情况可直接输入 <code>\frac ab</code> 来快速生成一个 $\frac ab$ 。<br>如果分式很复杂，亦可使用 <code>分子 \over 分母</code> 命令，此时分数仅有一层。</p>
+<p><code>\tfrac</code> 设置分数为 <code>textstyle</code><br><code>\dfrac</code> 设置分数为 <code>displaystyle</code><br><code>\frac</code> 根据上下文决定使用 <code>\tfrac</code> 还是 <code>\dfrac</code><br><code>\cfrac</code> 用于表示连续分数</p>
+<p><strong>分数</strong></p>
+<p><code>\frac&#123;2&#125;&#123;4&#125;=0.5</code></p>
+<p>${\displaystyle {\frac {2}{4}}&#x3D;0.5}$</p>
+<p><strong>小型分数</strong></p>
+<p><code>\tfrac&#123;2&#125;&#123;4&#125; = 0.5</code></p>
+<p>${\displaystyle {\tfrac {2}{4}}&#x3D;0.5}$</p>
+<p><strong>连分式（大型嵌套分式）</strong><br><code>\cfrac</code> 用于表示连续分数</p>
+<p><code>\cfrac&#123;2&#125;&#123;c + \cfrac&#123;2&#125;&#123;d + \cfrac&#123;2&#125;&#123;4&#125;&#125;&#125; = a</code></p>
+<p>${\displaystyle {\cfrac {2}{c+{\cfrac {2}{d+{\cfrac {2}{4}}}}}}&#x3D;a}$</p>
+<p><strong>大型不嵌套分式</strong></p>
+<p><code>\dfrac&#123;2&#125;&#123;4&#125; = 0.5 \qquad \dfrac&#123;2&#125;&#123;c + \dfrac&#123;2&#125;&#123;d + \dfrac&#123;2&#125;&#123;4&#125;&#125;&#125; = a</code></p>
+<p>${\displaystyle {\dfrac {2}{4}}&#x3D;0.5\qquad {\dfrac {2}{c+{\dfrac {2}{d+{\dfrac {2}{4}}}}}}&#x3D;a}$</p>
+<h2 id="二项式"><a href="#二项式" class="headerlink" title="二项式"></a>二项式</h2><p><strong>二项式系数</strong></p>
+<p><code>\dbinom&#123;n&#125;&#123;r&#125;=\binom&#123;n&#125;&#123;n-r&#125;=\mathrm&#123;C&#125;_n^r=\mathrm&#123;C&#125;_n^&#123;n-r&#125;</code></p>
+<p>${\displaystyle {\dbinom {n}{r}}&#x3D;{\binom {n}{n-r}}&#x3D;\mathrm {C} _{n}^{r}&#x3D;\mathrm {C} _{n}^{n-r}}$</p>
+<p><strong>小型二项式系数</strong></p>
+<p><code>\tbinom&#123;n&#125;&#123;r&#125;=\tbinom&#123;n&#125;&#123;n-r&#125;=\mathrm&#123;C&#125;_n^r=\mathrm&#123;C&#125;_n^&#123;n-r&#125;</code></p>
+<p>${\displaystyle {\tbinom {n}{r}}&#x3D;{\tbinom {n}{n-r}}&#x3D;\mathrm {C} _{n}^{r}&#x3D;\mathrm {C} _{n}^{n-r}}$</p>
+<p><strong>大型二项式系数</strong></p>
+<p><code>\binom&#123;n&#125;&#123;r&#125;=\dbinom&#123;n&#125;&#123;n-r&#125;=\mathrm&#123;C&#125;_n^r=\mathrm&#123;C&#125;_n^&#123;n-r&#125;</code></p>
+<p>${\displaystyle {\binom {n}{r}}&#x3D;{\dbinom {n}{n-r}}&#x3D;\mathrm {C} _{n}^{r}&#x3D;\mathrm {C} _{n}^{n-r}}$</p>
+<p>在以 e 为底的指数函数、极限和积分中尽量不要使用 <code>\frac</code> 符号：它会使整段函数看起来很怪，而且可能产生歧义。也正是因此它在专业数学排版中几乎从不出现。<br>横着写这些分式，中间使用斜线间隔 <code>/</code> （用斜线代替分数线）。</p>
+<ul>
+<li>例子：</li>
+</ul>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;array&#125;&#123;cc&#125;</span><br><span class="line"><span class="keyword">\mathrm</span>&#123;Bad&#125; <span class="built_in">&amp;</span> <span class="keyword">\mathrm</span>&#123;Better&#125; <span class="keyword">\\</span></span><br><span class="line"><span class="keyword">\hline</span> <span class="keyword">\\</span></span><br><span class="line">e<span class="built_in">^</span>&#123;i<span class="keyword">\frac</span>&#123;<span class="keyword">\pi</span>&#125;2&#125; <span class="keyword">\quad</span> e<span class="built_in">^</span>&#123;<span class="keyword">\frac</span>&#123;i<span class="keyword">\pi</span>&#125;2&#125;<span class="built_in">&amp;</span> e<span class="built_in">^</span>&#123;i<span class="keyword">\pi</span>/2&#125; <span class="keyword">\\</span></span><br><span class="line"><span class="keyword">\int</span><span class="built_in">_</span>&#123;-<span class="keyword">\frac</span><span class="keyword">\pi</span>2&#125;<span class="built_in">^</span><span class="keyword">\frac</span><span class="keyword">\pi</span>2 <span class="keyword">\sin</span> x<span class="keyword">\,</span>dx <span class="built_in">&amp;</span> <span class="keyword">\int</span><span class="built_in">_</span>&#123;-<span class="keyword">\pi</span>/2&#125;<span class="built_in">^</span>&#123;<span class="keyword">\pi</span>/2&#125;<span class="keyword">\sin</span> x<span class="keyword">\,</span>dx <span class="keyword">\\</span></span><br><span class="line"><span class="keyword">\end</span>&#123;array&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>显示：</li>
+</ul>
+<p>$$\begin{array}{cc} \mathrm{Bad} &amp; \mathrm{Better} \ \hline \ e^{i\frac{\pi}2} \quad e^{\frac{i\pi}2}&amp; e^{i\pi&#x2F;2} \ \int_{-\frac\pi2}^\frac\pi2 \sin x,dx &amp; \int_{-\pi&#x2F;2}^{\pi&#x2F;2}\sin x,dx \ \end{array}$$</p>
+<h2 id="矩阵"><a href="#矩阵" class="headerlink" title="矩阵"></a>矩阵</h2><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;类型&#125;</span><br><span class="line">公式内容</span><br><span class="line"><span class="keyword">\end</span>&#123;类型&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类型可以是：矩阵 <code>matrix</code> <code>pmatrix</code> <code>bmatrix</code> <code>Bmatrix</code> <code>vmatrix</code> <code>Vmatrix</code>、条件表达式 <code>cases</code>、多行对齐方程式 <code>aligned</code>、数组 <code>array</code>。</p>
+<p>在公式内容中：在每一行中插入 <code>&amp;</code> 来指定需要<strong>对齐</strong>的内容，在每行结尾处使用 <code>\\</code> <strong>换行</strong>。</p>
+<h3 id="无框矩阵"><a href="#无框矩阵" class="headerlink" title="无框矩阵"></a>无框矩阵</h3><p>在开头使用 <code>begin&#123;matrix&#125;</code>，在结尾使用 <code>end&#123;matrix&#125;</code>，在中间插入矩阵元素，每个元素之间插入 <code>&amp;</code> ，并在每行结尾处使用 <code>\\</code> 。</p>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;matrix&#125;</span><br><span class="line">x <span class="built_in">&amp;</span> y <span class="keyword">\\</span></span><br><span class="line">z <span class="built_in">&amp;</span> v</span><br><span class="line"><span class="keyword">\end</span>&#123;matrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>${\displaystyle {\begin{matrix}x&amp;y\z&amp;v\end{matrix}}}$</p>
+<h3 id="有框矩阵"><a href="#有框矩阵" class="headerlink" title="有框矩阵"></a>有框矩阵</h3><p>在开头将 <code>matrix</code> 替换为 <code>pmatrix</code> <code>bmatrix</code> <code>Bmatrix</code> <code>vmatrix</code> <code>Vmatrix</code> 。</p>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;vmatrix&#125;</span><br><span class="line">x <span class="built_in">&amp;</span> y <span class="keyword">\\</span></span><br><span class="line">z <span class="built_in">&amp;</span> v</span><br><span class="line"><span class="keyword">\end</span>&#123;vmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>${\displaystyle {\begin{vmatrix}x&amp;y\z&amp;v\end{vmatrix}}}$</p>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;Vmatrix&#125;</span><br><span class="line">x <span class="built_in">&amp;</span> y <span class="keyword">\\</span></span><br><span class="line">z <span class="built_in">&amp;</span> v</span><br><span class="line"><span class="keyword">\end</span>&#123;Vmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>${\displaystyle {\begin{Vmatrix}x&amp;y\z&amp;v\end{Vmatrix}}}$</p>
+<p>使用 <code>\cdots</code> $\cdots$ , <code>\ddots</code> $\ddots$ , <code>\vdots</code> $\vdots$ 来输入<strong>省略符号</strong>。</p>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;bmatrix&#125;</span><br><span class="line">0      <span class="built_in">&amp;</span> <span class="keyword">\cdots</span> <span class="built_in">&amp;</span> 0      <span class="keyword">\\</span></span><br><span class="line"><span class="keyword">\vdots</span> <span class="built_in">&amp;</span> <span class="keyword">\ddots</span> <span class="built_in">&amp;</span> <span class="keyword">\vdots</span> <span class="keyword">\\</span></span><br><span class="line">0      <span class="built_in">&amp;</span> <span class="keyword">\cdots</span> <span class="built_in">&amp;</span> 0</span><br><span class="line"><span class="keyword">\end</span>&#123;bmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>${\displaystyle {\begin{bmatrix}0&amp;\cdots &amp;0\\vdots &amp;\ddots &amp;\vdots \0&amp;\cdots &amp;0\end{bmatrix}}}$</p>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;Bmatrix&#125;</span><br><span class="line">x <span class="built_in">&amp;</span> y <span class="keyword">\\</span></span><br><span class="line">z <span class="built_in">&amp;</span> v</span><br><span class="line"><span class="keyword">\end</span>&#123;Bmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>${\displaystyle {\begin{Bmatrix}x&amp;y\z&amp;v\end{Bmatrix}}}$</p>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;pmatrix&#125;</span><br><span class="line">x <span class="built_in">&amp;</span> y <span class="keyword">\\</span></span><br><span class="line">z <span class="built_in">&amp;</span> v</span><br><span class="line"><span class="keyword">\end</span>&#123;pmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>${\displaystyle {\begin{pmatrix}x&amp;y\z&amp;v\end{pmatrix}}}$</p>
+<h3 id="增广矩阵"><a href="#增广矩阵" class="headerlink" title="增广矩阵"></a>增广矩阵</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">A\rightarrow</span><br><span class="line">\left [</span><br><span class="line">\begin&#123;array&#125;&#123;c:c&#125;</span><br><span class="line">\begin&#123;matrix&#125;</span><br><span class="line"><span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">-1</span> &amp; <span class="number">1</span> \\ </span><br><span class="line"><span class="number">0</span> &amp; <span class="number">2</span> &amp; <span class="number">1</span> &amp; <span class="number">-6</span> \\ </span><br><span class="line"><span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> </span><br><span class="line">\end&#123;matrix&#125;&amp;</span><br><span class="line">\begin&#123;matrix&#125;</span><br><span class="line"><span class="number">-2</span> \\ </span><br><span class="line"><span class="number">3</span>  \\ </span><br><span class="line"><span class="number">0</span></span><br><span class="line">\end&#123;matrix&#125;</span><br><span class="line">\end&#123;array&#125;</span><br><span class="line">\right ]</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>A\rightarrow<br>\left [<br>\begin{array}{c:c}<br>\begin{matrix}<br>1 &amp; 1 &amp; -1 &amp; 1 \<br>0 &amp; 2 &amp; 1 &amp; -6 \<br>0 &amp; 0 &amp; 0 &amp; 0<br>\end{matrix}&amp;<br>\begin{matrix}<br>-2 \<br>3  \<br>0<br>\end{matrix}<br>\end{array}<br>\right ]<br>$$</p>
+<h2 id="条件表达式"><a href="#条件表达式" class="headerlink" title="条件表达式"></a>条件表达式</h2><p><strong>条件表达式</strong></p>
+<p>使用 <code>\text &#123;文字&#125;</code> 来添加注释文本（注释文本不会被识别为公式，不用斜体显示）。<code>\text &#123;文字&#125;</code>中仍可以使用 <code>$公式$</code> 插入其它公式。</p>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f(n) =</span><br><span class="line"><span class="keyword">\begin</span>&#123;cases&#125; </span><br><span class="line">n/2,  <span class="built_in">&amp;</span> <span class="keyword">\text</span>&#123;if &#125;n<span class="keyword">\text</span>&#123; is even&#125; <span class="keyword">\\</span></span><br><span class="line">3n+1, <span class="built_in">&amp;</span> <span class="keyword">\text</span>&#123;if &#125;n<span class="keyword">\text</span>&#123; is odd&#125;</span><br><span class="line"><span class="keyword">\end</span>&#123;cases&#125;</span><br></pre></td></tr></table></figure>
+
+<p>${\displaystyle f(n)&#x3D;{\begin{cases}n&#x2F;2,&amp;{\text{if }}n{\text{ is even}}\3n+1,&amp;{\text{if }}n{\text{ is odd}}\end{cases}}}$</p>
+<p><strong>多行等式、同余式</strong></p>
+<p>人们经常想要一列整齐且居中的方程式序列。使用 <code>\begin&#123;aligned&#125;…\end&#123;aligned&#125;</code>。</p>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;aligned&#125;</span><br><span class="line">f(x) <span class="built_in">&amp;</span> = (m+n)<span class="built_in">^</span>2 <span class="keyword">\\</span></span><br><span class="line">     <span class="built_in">&amp;</span> = m<span class="built_in">^</span>2+2mn+n<span class="built_in">^</span>2 <span class="keyword">\\</span></span><br><span class="line"><span class="keyword">\end</span>&#123;aligned&#125;</span><br></pre></td></tr></table></figure>
+
+<p>${\displaystyle {\begin{aligned}f(x)&amp;&#x3D;(m+n)^{2}\&amp;&#x3D;m^{2}+2mn+n^{2}\\end{aligned}}}$</p>
+<h2 id="方程组"><a href="#方程组" class="headerlink" title="方程组"></a>方程组</h2><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;cases&#125;</span><br><span class="line">3x + 5y +  z <span class="keyword">\\</span></span><br><span class="line">7x - 2y + 4z <span class="keyword">\\</span></span><br><span class="line">-6x + 3y + 2z</span><br><span class="line"><span class="keyword">\end</span>&#123;cases&#125;</span><br></pre></td></tr></table></figure>
+
+<p>$${\displaystyle {\begin{cases}3x+5y+z\7x-2y+4z\-6x+3y+2z\end{cases}}}$$</p>
+<p>或</p>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\left</span><span class="keyword">\&#123;</span><span class="keyword">\begin</span>&#123;aligned&#125;</span><br><span class="line">3x + 5y +  z <span class="keyword">\\</span></span><br><span class="line">7x - 2y + 4z <span class="keyword">\\</span></span><br><span class="line">-6x + 3y + 2z</span><br><span class="line"><span class="keyword">\end</span>&#123;aligned&#125;<span class="keyword">\right</span>.</span><br></pre></td></tr></table></figure>
+
+<p>$$\left{\begin{aligned} 3x + 5y + z \ 7x - 2y + 4z \ -6x + 3y + 2z \end{aligned}\right.$$</p>
+<h1 id="3-数组与表格"><a href="#3-数组与表格" class="headerlink" title="3 数组与表格"></a>3 数组与表格</h1><p>通常，一个格式化后的表格比单纯的文字或排版后的文字更具有可读性。数组和表格均以 <code>\begin&#123;array&#125;</code> 开头，并在其后定义列数及每一列的文本对齐属性，<code>c</code> <code>l</code> <code>r</code> 分别代表居中、左对齐及右对齐。若需要插入垂直分割线，在定义式中插入 <code>|</code> ，若要插入水平分割线，在下一行输入前插入 <code>\hline</code> 。与矩阵相似，每行元素间均须要插入 <code>&amp;</code> ，每行元素以 <code>\\</code> 结尾，最后以 <code>\end&#123;array&#125;</code> 结束数组。</p>
+<ul>
+<li>例子：</li>
+</ul>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;array&#125;&#123;c|lcr&#125;</span><br><span class="line">n <span class="built_in">&amp;</span> <span class="keyword">\text</span>&#123;左对齐&#125; <span class="built_in">&amp;</span> <span class="keyword">\text</span>&#123;居中对齐&#125; <span class="built_in">&amp;</span> <span class="keyword">\text</span>&#123;右对齐&#125; <span class="keyword">\\</span></span><br><span class="line"><span class="keyword">\hline</span></span><br><span class="line">1 <span class="built_in">&amp;</span> 0.24 <span class="built_in">&amp;</span> 1 <span class="built_in">&amp;</span> 125 <span class="keyword">\\</span></span><br><span class="line">2 <span class="built_in">&amp;</span> -1 <span class="built_in">&amp;</span> 189 <span class="built_in">&amp;</span> -8 <span class="keyword">\\</span></span><br><span class="line">3 <span class="built_in">&amp;</span> -20 <span class="built_in">&amp;</span> 2000 <span class="built_in">&amp;</span> 1+10i</span><br><span class="line"><span class="keyword">\end</span>&#123;array&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>显示：</li>
+</ul>
+<p>$$\begin{array}{c|lcr} n &amp; \text{左对齐} &amp; \text{居中对齐} &amp; \text{右对齐} \ \hline 1 &amp; 0.24 &amp; 1 &amp; 125 \ 2 &amp; -1 &amp; 189 &amp; -8 \ 3 &amp; -20 &amp; 2000 &amp; 1+10i \end{array}$$</p>
+<ul>
+<li>例子:</li>
+</ul>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;array&#125;&#123;lcl&#125;</span><br><span class="line">z        <span class="built_in">&amp;</span> = <span class="built_in">&amp;</span> a <span class="keyword">\\</span></span><br><span class="line">f(x,y,z) <span class="built_in">&amp;</span> = <span class="built_in">&amp;</span> x + y + z </span><br><span class="line"><span class="keyword">\end</span>&#123;array&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>显示：</li>
+</ul>
+<p>${\displaystyle {\begin{array}{lcl}z&amp;&#x3D;&amp;a\f(x,y,z)&amp;&#x3D;&amp;x+y+z\end{array}}}$</p>
+<ul>
+<li>例子:</li>
+</ul>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;array&#125;&#123;lcr&#125;</span><br><span class="line">z        <span class="built_in">&amp;</span> = <span class="built_in">&amp;</span> a <span class="keyword">\\</span></span><br><span class="line">f(x,y,z) <span class="built_in">&amp;</span> = <span class="built_in">&amp;</span> x + y + z    </span><br><span class="line"><span class="keyword">\end</span>&#123;array&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>显示:</li>
+</ul>
+<p>${\displaystyle {\begin{array}{lcr}z&amp;&#x3D;&amp;a\f(x,y,z)&amp;&#x3D;&amp;x+y+z\end{array}}}$</p>
+<ul>
+<li>例子:</li>
+</ul>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;array&#125;&#123;ccc&#125;</span><br><span class="line">a <span class="built_in">&amp;</span> b <span class="built_in">&amp;</span> S <span class="keyword">\\</span></span><br><span class="line"><span class="keyword">\hline</span></span><br><span class="line">0<span class="built_in">&amp;</span>0<span class="built_in">&amp;</span>1<span class="keyword">\\</span></span><br><span class="line">0<span class="built_in">&amp;</span>1<span class="built_in">&amp;</span>1<span class="keyword">\\</span></span><br><span class="line">1<span class="built_in">&amp;</span>0<span class="built_in">&amp;</span>1<span class="keyword">\\</span></span><br><span class="line">1<span class="built_in">&amp;</span>1<span class="built_in">&amp;</span>0<span class="keyword">\\</span></span><br><span class="line"><span class="keyword">\end</span>&#123;array&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>显示:</li>
+</ul>
+<p>$${\displaystyle {\begin{array}{ccc}a&amp;b&amp;S\\hline 0&amp;0&amp;1\0&amp;1&amp;1\1&amp;0&amp;1\1&amp;1&amp;0\\end{array}}}$$</p>
+<h1 id="4-字体"><a href="#4-字体" class="headerlink" title="4 字体"></a>4 字体</h1><p>输入 <code>\小写希腊字母英文全称</code> 和 <code>\首字母大写希腊字母英文全称</code> 来分别输入小写和大写希腊字母。</p>
+<p><code>\Alpha \Beta \Gamma \Delta \Epsilon \Zeta \Eta \Theta</code></p>
+<p>${\displaystyle \mathrm {A} \mathrm {B} \Gamma \Delta \mathrm {E} \mathrm {Z} \mathrm {H} \Theta }$</p>
+<p><code>\Iota \Kappa \Lambda \Mu \Nu \Xi \Omicron \Pi</code></p>
+<p>${\displaystyle \mathrm {I} \mathrm {K} \Lambda \mathrm {M} \mathrm {N} \mathrm {O} \Xi \Pi }$</p>
+<p><code>\Rho \Sigma \Tau \Upsilon \Phi \Chi \Psi \Omega</code></p>
+<p>${\displaystyle \mathrm {P} \Sigma \mathrm {T} \Upsilon \Phi \mathrm {X} \Psi \Omega }$</p>
+<p><code>\alpha \beta \gamma \delta \epsilon \zeta \eta \theta</code></p>
+<p>${\displaystyle \alpha \beta \gamma \delta \epsilon \zeta \eta \theta}$</p>
+<p><code>\iota \kappa \lambda \mu \nu \omicron \xi \pi</code></p>
+<p>${\displaystyle \iota \kappa \lambda \mu \nu \mathrm {o} \xi \pi }$</p>
+<p><code>\rho \sigma \tau \upsilon \phi \chi \psi \omega</code></p>
+<p>${\displaystyle \rho \sigma \tau \upsilon \phi \chi \psi \omega}$</p>
+<p><strong>部分字母有变量专用形式，以 <code>\var-</code> 开头。</strong></p>
+<p><code>\varepsilon \digamma \varkappa \varpi</code></p>
+<p>${\displaystyle \varepsilon \digamma \varkappa \varpi}$</p>
+<p><code>\varrho \varsigma \vartheta \varphi</code></p>
+<p>${\displaystyle \varrho \varsigma \vartheta \varphi}$</p>
+<h1 id="5-颜色"><a href="#5-颜色" class="headerlink" title="5 颜色"></a>5 颜色</h1><p><strong>方法一:</strong><br>&#96;\color </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/52454.html">http://liuke101.github.io/post/52454.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Latex/">Latex</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/post/60457.html" title="Effective C++"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Effective C++</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0-%E5%B8%B8%E8%A7%81"><span class="toc-text">0 常见</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E5%85%AC%E5%BC%8F"><span class="toc-text">插入公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E7%AC%A6%E5%8F%B7"><span class="toc-text">功能符号</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%87%BD%E6%95%B0%E3%80%81%E7%AC%A6%E5%8F%B7%E5%8F%8A%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6"><span class="toc-text">1  函数、符号及特殊字符</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%87%BD%E6%95%B0"><span class="toc-text">标准函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%81%E9%99%90"><span class="toc-text">极限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E9%95%BF"><span class="toc-text">模长</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E5%88%86%E5%8F%8A%E5%AF%BC%E6%95%B0"><span class="toc-text">微分及导数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%96%E6%A8%A1"><span class="toc-text">取模</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E5%8F%B7"><span class="toc-text">根号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E5%87%8F%E4%B9%98%E9%99%A4"><span class="toc-text">加减乘除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E5%90%88"><span class="toc-text">集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E7%AC%A6%E5%8F%B7"><span class="toc-text">关系符号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%92%E5%BA%A6"><span class="toc-text">角度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%AD%E5%A4%B4"><span class="toc-text">箭头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9C%81%E7%95%A5%E5%8F%B7"><span class="toc-text">省略号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E5%BC%A7"><span class="toc-text">上弧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E6%8B%AC%E5%8F%B7%E4%B8%8B%E6%8B%AC%E5%8F%B7"><span class="toc-text">上括号下括号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E5%88%92%E7%BA%BF%E4%B8%8B%E5%88%92%E7%BA%BF"><span class="toc-text">上划线下划线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E4%B8%8B%E6%A0%87"><span class="toc-text">上下标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91%E9%87%8F"><span class="toc-text">向量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%AC%E5%8F%B7"><span class="toc-text">括号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E6%A0%BC"><span class="toc-text">空格</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#quad-%E7%A9%BA%E6%A0%BC"><span class="toc-text">quad 空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E7%A9%BA%E6%A0%BC"><span class="toc-text">大空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E7%AD%89%E7%A9%BA%E6%A0%BC"><span class="toc-text">中等空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%A9%BA%E6%A0%BC"><span class="toc-text">小空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A7%E8%B4%B4"><span class="toc-text">紧贴</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97"><span class="toc-text">2 算术运算</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%AF%E5%8A%A0%E7%B4%AF%E4%B9%98"><span class="toc-text">累加累乘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%AF%E5%88%86"><span class="toc-text">积分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%95%B0"><span class="toc-text">分数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E9%A1%B9%E5%BC%8F"><span class="toc-text">二项式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A9%E9%98%B5"><span class="toc-text">矩阵</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%A1%86%E7%9F%A9%E9%98%B5"><span class="toc-text">无框矩阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E6%A1%86%E7%9F%A9%E9%98%B5"><span class="toc-text">有框矩阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%B9%BF%E7%9F%A9%E9%98%B5"><span class="toc-text">增广矩阵</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-text">条件表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E7%A8%8B%E7%BB%84"><span class="toc-text">方程组</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E6%95%B0%E7%BB%84%E4%B8%8E%E8%A1%A8%E6%A0%BC"><span class="toc-text">3 数组与表格</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%AD%97%E4%BD%93"><span class="toc-text">4 字体</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E9%A2%9C%E8%89%B2"><span class="toc-text">5 颜色</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/52454.html" title="Latex语法">Latex语法</a><time datetime="2024-04-28T11:22:00.000Z" title="发表于 2024-04-28 12:22:00">2024-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/60457.html" title="Effective C++">Effective C++</a><time datetime="2024-04-28T11:20:00.000Z" title="发表于 2024-04-28 12:20:00">2024-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/41177.html" title="模板与泛型编程">模板与泛型编程</a><time datetime="2024-04-28T11:14:25.000Z" title="发表于 2024-04-28 12:14:25">2024-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/37796.html" title="STL标准库">STL标准库</a><time datetime="2024-04-28T11:06:25.000Z" title="发表于 2024-04-28 12:06:25">2024-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/60549.html" title="C++精粹">C++精粹</a><time datetime="2024-04-28T10:52:25.000Z" title="发表于 2024-04-28 11:52:25">2024-04-28</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>
