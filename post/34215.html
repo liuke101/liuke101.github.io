@@ -1,0 +1,910 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【公式推导01】三维旋转 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="旋转矩阵 [!NOTE] 约定列向量&#x2F;右手坐标系  旋转矩阵的应用范围比较广，是姿态变换，坐标变换等的基础。本篇先介绍旋转矩阵的推导过程与助记方法。 旋转矩阵的旋转其实包含两种意思，一是在同一个坐标系下，向量的旋转；二是坐标系的旋转，使得同一向量在不同的坐标系下有不同的坐标。 首先讨论二维平面坐标下的旋转，然后引申至三维。 1.1 2D旋转如下图，XY 坐标系中，向量 OP 旋转β角度到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【公式推导01】三维旋转">
+<meta property="og:url" content="http://liuke101.github.io/post/34215.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="旋转矩阵 [!NOTE] 约定列向量&#x2F;右手坐标系  旋转矩阵的应用范围比较广，是姿态变换，坐标变换等的基础。本篇先介绍旋转矩阵的推导过程与助记方法。 旋转矩阵的旋转其实包含两种意思，一是在同一个坐标系下，向量的旋转；二是坐标系的旋转，使得同一向量在不同的坐标系下有不同的坐标。 首先讨论二维平面坐标下的旋转，然后引申至三维。 1.1 2D旋转如下图，XY 坐标系中，向量 OP 旋转β角度到">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227539.png">
+<meta property="article:published_time" content="2024-04-29T21:28:25.000Z">
+<meta property="article:modified_time" content="2024-04-29T21:33:08.242Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="3D数学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227539.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/34215.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【公式推导01】三维旋转',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-29 22:33:08'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227539.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【公式推导01】三维旋转</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-29T21:28:25.000Z" title="发表于 2024-04-29 22:28:25">2024-04-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-29T21:33:08.242Z" title="更新于 2024-04-29 22:33:08">2024-04-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">16.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>70分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【公式推导01】三维旋转"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/34215.html#post-comment"><span class="waline-comment-count" data-path="/post/34215.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="旋转矩阵"><a href="#旋转矩阵" class="headerlink" title="旋转矩阵"></a>旋转矩阵</h1><blockquote>
+<p>[!NOTE] 约定<br>列向量&#x2F;右手坐标系</p>
+</blockquote>
+<p>旋转矩阵的应用范围比较广，是姿态变换，坐标变换等的基础。本篇先介绍旋转矩阵的推导过程与助记方法。</p>
+<p>旋转矩阵的旋转其实包含两种意思，一是在同一个坐标系下，<strong>向量的旋转</strong>；二是<strong>坐标系的旋转</strong>，使得同一向量在不同的坐标系下有不同的坐标。</p>
+<p>首先讨论二维平面坐标下的旋转，然后引申至三维。</p>
+<h2 id="1-1-2D旋转"><a href="#1-1-2D旋转" class="headerlink" title="1.1 2D旋转"></a>1.1 2D旋转</h2><p>如下图，XY 坐标系中，向量 OP 旋转β角度到了 OP’的位置：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225002.png"></p>
+<p>根据三角函数关系，可以列出向量 OP 与 OP’的坐标表示形式：</p>
+<p>对比上面个两个式子，将第 2 个式子展开：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225003.png"></p>
+<p>用矩阵形式重新表示为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225004.png"></p>
+<p>这就是二维旋转的基本形式，中间的矩阵即二维旋转的<strong>旋转矩阵</strong>，坐标中的某一向量左乘该矩阵后，即得到这个向量旋转β角后的坐标。</p>
+<h2 id="1-2-3D旋转"><a href="#1-2-3D旋转" class="headerlink" title="1.2 3D旋转"></a>1.2 3D旋转</h2><p>三维旋转可借助二维旋转来理解，由于三维空间中可以任意轴旋转，为方便分析与使用，只考虑绕 X、Y、Z 轴的旋转。</p>
+<ul>
+<li><strong>绕 Z 轴</strong></li>
+</ul>
+<p>参照上面的图，添加一个 Z 轴，则上面的二维旋转实际上就是绕 Z 轴的三维旋转</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225005.png"></p>
+<p>照搬上面的推导公式，并添加 Z 坐标的变换关系 (实际是没有变)，然后改写成矩阵形式，红色方框即为绕 Z 轴的旋转矩阵。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225006.png"></p>
+<ul>
+<li><strong>绕 Y 轴</strong></li>
+</ul>
+<p>绕 Y 轴旋转同理，这里直接改变坐标轴的符号表示，<strong>注意坐标顺序要符合右手系</strong>，我这里用颜色区分了不同的轴。最终的矩阵形式要进一步改写成 XYZ 的顺序。红色方框即为绕 Y 轴的旋转矩阵。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225007.png"></p>
+<ul>
+<li><strong>绕 X 轴</strong></li>
+</ul>
+<p>参照绕 Y 轴的推导，可以得到绕 X 轴的结果。红色方框即为绕 X 轴的旋转矩阵。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225008.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225009.png"></p>
+<h2 id="1-3-助记"><a href="#1-3-助记" class="headerlink" title="1.3 助记"></a>1.3 助记</h2><p>对于单位矩阵，绕哪个轴旋转，哪一列不用变，然后将二维旋转矩阵替换对应的 4 个位置，注意，绕 Y 的旋转矩阵看起来与另外两个不同，它的 - sinβ是在左下！</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225010.png"></p>
+<h2 id="1-4-注意事项"><a href="#1-4-注意事项" class="headerlink" title="1.4 注意事项"></a>1.4 注意事项</h2><ul>
+<li><strong>反向旋转</strong></li>
+</ul>
+<p>如果是反向旋转一个角度，推导过程类似：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225011.png"></p>
+<p>最终得到的旋转矩阵其实是正向旋转矩阵的<strong>逆矩阵</strong>，由于这个矩阵是<strong>正交阵</strong>，所以逆矩阵就是<strong>转置矩阵</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225012.png"></p>
+<ul>
+<li><strong>书写形式</strong></li>
+</ul>
+<p>上面的向量的坐标都是按照<strong>列</strong>的形式书写，如果是换成<strong>行</strong>的形式表示，则旋转的矩阵形式被转置了一下，同时矩阵在行向量的右边进行相乘。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225013.png"></p>
+<h2 id="1-5-罗德里格斯公式"><a href="#1-5-罗德里格斯公式" class="headerlink" title="1.5  罗德里格斯公式"></a>1.5  罗德里格斯公式</h2><p>沿任意轴旋转：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225014.png" alt="image-20220914230035451"> 代表任意旋转轴</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225015.png" alt="image-20220914230027175"></p>
+<p>P54</p>
+<h1 id="欧拉角"><a href="#欧拉角" class="headerlink" title="欧拉角"></a>欧拉角</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p> 旋转是一个过程，一个物体围绕周或者点角度变化的过程。为了描述这个过程我们必须有参照物，于是我们先定义一个世界坐标系，笛卡尔坐标系。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225016.png"></p>
+<p> 欧拉角用 $(x, y, z)$ 分别来表示这个物体相对三个坐标系的夹角，这是由数学家欧拉首先提出而得名的。 </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225017.png"></p>
+<p> 然而仅仅有 $(x, y, z)$ 来表示旋转是不够的，还有两个因素：</p>
+<ol>
+<li><p>首先是<strong>旋转顺序</strong>，从各个轴上进行角度旋转时 xyz 先后的不同会得到不同的结果。我们称这个顺序定义为<strong>顺规</strong>。</p>
+<blockquote>
+<p>[!quote] 顺规<br>在经典力学里，时常用 zxz 顺规来设定欧拉角；照着第二个转动轴的轴名，简称为 x 顺规。另外，还有别的欧拉角组。合法的欧拉角组中，唯一的限制是，任何两个连续的旋转，必须绕着不同的转动轴旋转。因此，一共有 12 种顺规。例如，y 顺规，第二个转动轴是 y - 轴，时常用在量子力学、核子物理学、粒子物理学。另外，还有一种顺规，xyz 顺规，是用在航空航天工程学；</p>
+</blockquote>
+<p>按 (z-x-z, x-y-x, y-z-y, z-y-z, x-z-x, y-x-y) 轴序列旋转，即第一个旋转轴和最后一个旋转轴相同，我们称之为<strong>经典欧拉角（Proper Euler Angle）</strong>。 </p>
+<blockquote>
+<p>按 (x-y-z, y-z-x, z-x-y, x-z-y, z-y-x, y-x-z) 轴序列旋转，即三个不同的轴，我们称之为<strong>泰特布莱恩角（Tait–Bryan angles）</strong>。</p>
+</blockquote>
+</li>
+<li><p>其次是<strong>旋转的参照坐标系</strong>，欧拉角按旋转的坐标系分为： </p>
+<ul>
+<li><strong>内旋（intrinsic rotation）：</strong> 即按照物体本身的坐标系进行旋转，坐标系会跟随旋转与世界坐标系产生偏移。  </li>
+<li><strong>外旋（extrinsic rotation）：</strong> 即根据世界坐标系进行旋转。<br>  这是我们看看 Unity3d 中 Transform 的 Rotate，最后一个参数即坐标系：</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="type">void</span> <span class="title">Rotate</span><span class="params">(Vector3 eulerAngles, Space relativeTo = Space.Self)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p> 注意：<strong>Unity3d 使用的是 zxy 的顺规</strong>，且进行一次欧拉旋转的 zxy 依次执行过程中，始终沿着初始的固定轴向在进行按 Z、X、Y 顺序的旋转。</p>
+<h2 id="推导"><a href="#推导" class="headerlink" title="推导"></a>推导</h2><blockquote>
+<p>[!info] 约定<br>这里使用了 OpenGL 采用的列向量&#x2F;右手坐标系&#x2F; XYZ 顺规</p>
+</blockquote>
+<p><strong>欧拉角 (Euler Angle)是可以表示 3D 空间中任何旋转的 3 个值</strong>，由莱昂哈德·欧拉 (Leonhard Euler)在 18 世纪提出。<br><strong>一共有 3 种欧拉角：俯仰角 (Pitch)、偏航角 (Yaw)和滚转角 (Roll)</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225018.png" alt="img"></p>
+<ul>
+<li>俯仰角绕 x 轴旋转，是描述我们如何往上或往下看的角</li>
+<li>偏航角绕 y 轴旋转，表示我们往左和往右看的程度。</li>
+<li>滚转角绕 z 轴旋转，代表我们如何<strong>翻滚</strong>摄像机</li>
+</ul>
+<p><strong>每个欧拉角都有一个值来表示，把三个角结合起来我们就能够计算 3D 空间中任何的旋转向量了。对于我们的摄像机系统来说，我们只关心俯仰角和偏航角</strong>，所以我们不会讨论滚转角。</p>
+<p><strong>给定一个俯仰角和偏航角，我们可以把它们转换为一个代表新的方向向量的 3D 向量。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225019.png" alt="img|300"></p>
+<p>如果我们把斜边边长定义为 $1$，我们就能知道邻边的长度是 $cos x$，它的对边是 $sin y$。这样我们获得了能够得到 $x$ 和 $y$ 方向长度的通用公式，它们取决于所给的角度。<strong>欧拉角推导过程（实际上就是球面坐标）：</strong></p>
+<p>我们需要得到向量 $\vec{a}(x,y,z)$<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225031.svg" alt="Diagram 1|529"></p>
+<p>已知俯仰角 $\alpha$，偏航角 $\beta$ ，设 $\vec{a}$ 的值为 $1$</p>
+<p>所以 $\vec{b}&#x3D;sin\alpha$， $\vec{c}&#x3D;cos\alpha$</p>
+<p>$\begin{cases}z&#x3D;cos\alpha<em>sin\beta\y&#x3D;|b|&#x3D;sin\alpha\z&#x3D;cos\alpha</em>sin\beta\end{cases}$</p>
+<p>所以 $\vec{a}&#x3D;(x,y,z)&#x3D;(cos\alpha<em>cos\beta,sin\alpha,cos\alpha</em>sin\beta)$ </p>
+<h2 id="万向节死锁（Gimbal-Lock）"><a href="#万向节死锁（Gimbal-Lock）" class="headerlink" title="万向节死锁（Gimbal Lock）"></a>万向节死锁（Gimbal Lock）</h2><p>视频： <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Nr4y1j7kn/?share_source=copy_web&vd_source=299c4f6627c111293ca308fd2699c4d2">无伤理解欧拉角中的“万向死锁”现象</a> </p>
+<p>为了解释原因，规定以下三个条件：</p>
+<ol>
+<li><strong>旋转顺序</strong>：xyz 顺规</li>
+<li><strong>旋转的参照坐标系</strong>：内旋，即按照物体本身的坐标系进行旋转</li>
+<li><strong>平衡环架（Gimbal）规则</strong>：旋转顺序靠前的轴可以带动后面的轴旋转，后面的轴不可以带动前面的轴旋转，例如：<ul>
+<li>绕 x 旋转，那么 yz 轴也会跟着旋转</li>
+<li>绕 y 轴旋转，x 轴不动，z 轴跟着旋转</li>
+<li>绕 z 轴旋转，那么 xy 轴不会跟着旋转</li>
+</ul>
+</li>
+</ol>
+<p>初始状态：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225032.png" alt="Pasted image 20230426141259"></p>
+<p>如果<strong>绕顺规的中间轴</strong>（即绕 y 轴）旋转 90 度：x 轴和 z 轴重合<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225033.png" alt="Pasted image 20230426141332"></p>
+<p>此时旋转 x 轴和 z 轴效果相同，三个旋转轴相当于变成了两个，物体丢失了一个自由度，此时发生了万向节死锁。（顺规中间的轴只要是 90 度就会发生死锁）</p>
+<p><strong>为什么后面的轴不可以带动前面的轴旋转？平衡环架是因为其机械结构导致，那么欧拉角为什么要使用这么奇怪的设定？</strong><br>实际上这不是一个设定，只是凑巧和平衡环架的物理表现相同。实际上因为是算法本就是这样实现的，每次变换都是从物体的初始状态按顺规 xyz 开始变换（例如列向量左乘对应的三个变换矩阵）。自然后面的计算不会影响前面，换句话说，必须从前开始，所谓的后面轴带动前面轴这种情况根本不会出现。</p>
+<p>万向节死锁无法避免，<strong>游戏开发中可以根据需要将最不可能发生 90 度旋转的轴放在顺规的中间次序</strong>。四元数可以解决这一问题</p>
+<h1 id="四元数"><a href="#四元数" class="headerlink" title="四元数"></a>四元数</h1><blockquote>
+<p>[!NOTE] 约定<br>列向量&#x2F;右手坐标系</p>
+</blockquote>
+<p>四元数可被视为复数的推广</p>
+<ol>
+<li>复数 $p$（可看作一个 2D 向量或 2D 点）与单位复数相乘的结果，即为在几何学上堆 $p$ 进行相应的旋转操作。</li>
+<li>一个特定的四元数与一个单位四元数乘积的结果，相当于在几何学上对一个向量或点 $p$ 执行对应的 3D 旋转操作。</li>
+</ol>
+<h2 id="复数回顾"><a href="#复数回顾" class="headerlink" title="复数回顾"></a>复数回顾</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>复数有不同的表示形式，$(a,b)&#x3D;(a+ib)$</p>
+<p>我们将其联想到 2D 点或 2D 向量, 本文使用 $(a, b)$ 形式为主</p>
+<h4 id="a-b-形式"><a href="#a-b-形式" class="headerlink" title="(a,b)形式"></a>(a,b)形式</h4><p>有序实数对 $z&#x3D; (a, b)$ 表示一个复数。其第一个分量名为<strong>实部</strong> ( real part )，第二个分量则称为<strong>虚部</strong> ( imaginary part )，任何实数都可看作虚部为 0 的复数。</p>
+<p>复数相等、加法运算、减法运算、乘法运算以及除法运算的定义依次为:</p>
+<ol>
+<li>$(a, b)&#x3D;(c, d)$，当且仅当 $a&#x3D;c$ 且 $b&#x3D; d$</li>
+<li>$(a, b)±(c, d)&#x3D;(a±c, b±d)$</li>
+<li>$(a, b)(c, d) &#x3D;(ac -bd, ad + bc)$</li>
+<li>如果 $(c, d)≠(0,0)$，那 $\displaystyle\frac{(a,b)}{(c,d)}&#x3D;\left(\frac{a c+b d}{c^{2}+d^{2}},\frac{b c-a d}{c^{2}+d^{2}}\right)$<br>(分子和分母同时乘以分母的共钜复数)</li>
+</ol>
+<p>实数常见的算术性质 (例如交换律、结合律以及分配律)也适用于复数运算。</p>
+<p>定义<strong>虚数单位</strong> $i&#x3D;(0,1)$。根据复数的乘法定义，可得到 $i^2 &#x3D;(0, 1)(0,1)&#x3D;(-1,0)&#x3D;-1$ </p>
+<p>复数 $z &#x3D; (a, b)$ 的<strong>共轭复数</strong>记作 $\overline{z}$，并表示为 $z&#x3D;(a,-b)$。</p>
+<h4 id="a-ib-形式"><a href="#a-ib-形式" class="headerlink" title="(a+ib)形式"></a>(a+ib)形式</h4><p>接下来，我们证明复数 $(a, b)$可以写作 $a+ib$ 的形式。假设已知 $a&#x3D;(a, 0)$，$b&#x3D;(b, 0)$，$i&#x3D;(0,1)$，则有<br>$a+ib &#x3D;(a, 0)+(0,1)(b, 0)&#x3D;(a, 0)+(0, b)&#x3D;(a, b)$</p>
+<p>通过 (a+ib)的形式，我们可以将复数的加、减、乘、除四则运算重新定义为: </p>
+<ol>
+<li>$(a+ ib)±(c+ id)&#x3D;(a±c)+i (b±d)$</li>
+<li>$(a + ib)(c + id)&#x3D;(ac - bd)+i (ad + bc)$</li>
+<li>如果 $(c, d) ≠(0,0)$，那么 $\displaystyle{\frac{a+i b}{c+i d}}&#x3D;{\frac{a c+b d}{c^{2}+d^{2}}}+i{\frac{b c-a d}{c^{2}+d^{2}}}$<br>(分子和分母同时乘以分母的共钜复数)</li>
+</ol>
+<p>在这种形式下，$z&#x3D; a +ib$ 的共辄复数则为 $\overline{z}&#x3D;a-ib$ 。</p>
+<h3 id="复数几何意义"><a href="#复数几何意义" class="headerlink" title="复数几何意义"></a>复数几何意义</h3><p>复数的模：$|a +ib|&#x3D;\sqrt{a^2+b^2}$<br>单位复数：模为 1<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225034.png" alt="Pasted image 20230426164529"></p>
+<h3 id="复数的极坐标表示法"><a href="#复数的极坐标表示法" class="headerlink" title="复数的极坐标表示法"></a>复数的极坐标表示法</h3><p>由于可以将复数视作 2D 复平面内的点或向量，因此我们就能将它们的分量用极坐标来表示。<br>$r&#x3D;|a+ib|$</p>
+<p>$a+ib&#x3D;r\cos\theta+ir\sin\theta&#x3D;r(\cos\theta+i\sin\theta)$</p>
+<p>乘法运算：设 $z_1&#x3D;r_1(\cos\theta_1+i\sin\theta_1)$， $z_2&#x3D;r_2(\cos\theta_2+i\sin\theta_2)$<br>则<br>$\begin{array}{l}z_1z_2&#x3D;r_1r_2(\cos\theta_1\cos\theta_2-\sin\theta_1\sin\theta_2+i(\cos\theta_1\sin\theta_2+\sin\theta_1\cos\theta_2))\ &#x3D;r_1r_2(\cos(\theta_1+\theta_z)+i\sin(\theta_1+\theta_2))\end{array}$</p>
+<p>因此, 从几何学角度上来看, 乘积 $z_1z_2$ 所得到的复数可表示为由模为 $r_1r_2$ 且与实轴夹角为 $\theta_1+\theta_2$ 的向量。</p>
+<p>特别地，如果 $r_2 &#x3D;1$，则 $z_{1}z_{2}&#x3D;r_{1}\left(\cos\left(\theta_{1}+\theta_{2}\right)+i\sin\left(\theta_{1}+\theta_{2}\right)\right):$，在几何学上即表示将 $z_1$ 按 $\theta_2$ 进行旋转,。因此，将复数 $z_1$ (把它视为一个 2D 点或 2D 向量）与单位复数 $z_2$ 相乘就相当于对 $z_2$ 进行旋转操作。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225035.png" alt="Pasted image 20230426165535"></p>
+<h2 id="四元数代数"><a href="#四元数代数" class="headerlink" title="四元数代数"></a>四元数代数</h2><h3 id="定义与基本运算"><a href="#定义与基本运算" class="headerlink" title="定义与基本运算"></a>定义与基本运算</h3><p>有序实数四元组 $q&#x3D;(x, y, z, w)&#x3D;(q_1, q_2,q_3,q_4)$ 即为一个四元数。通常可将它简记作 $q&#x3D;(\textbf u, w)&#x3D;(x, y, z, w)$，称 $\textbf u&#x3D;(x, y, z)$ 为<strong>虚部向量</strong>，而 $w$ 为<strong>实部</strong>。</p>
+<p>$q&#x3D;(x, y, z, w)&#x3D;xi+yj+zk+w$</p>
+<p>四元数相等、加法运算、减法运算、乘法运算的定义如下。</p>
+<ol>
+<li>$(\textbf u, a) &#x3D;(v, b)$，当且仅当 $\textbf u&#x3D;\textbf v$ 且 $a&#x3D; b$。</li>
+<li>$(\textbf u, a)±(v, b)&#x3D;(\textbf u±\textbf v, a±b)$。</li>
+<li>$(\textbf u, a)(\textbf v, b)&#x3D;(av+bu +\textbf u× \textbf v, ab -\textbf u·v)$。</li>
+</ol>
+<p>设 $p&#x3D;(:\boldsymbol{u},:p_4)&#x3D;(:p_1,:p_2,:p_3,:p_4:)$，$q&#x3D;(\nu,q_{4})&#x3D;(q_{1},q_{2},q_{3},q_{4})$。<br>那么 $\textit{u}\times\nu&#x3D;\left(\begin{matrix}{p_{2}q_{3}-p_{3}q_{2}},:p_{3}q_{1}-p_{1}q_{3},p_1q_2-p_2q_1)\end{matrix}\right.$（由于虚部是向量, 所以此处直接看作向量叉积运算即可，下同）<br>且$:u\cdot\nu&#x3D;p_{1}q_{1}+p_{2}q_{2}+p_{3}q_{3}:,$</p>
+<p>所以四元数乘积 $r&#x3D;p q$ 可以表示为以下的分量形式<br>$$<br>\begin{array}{l}r_1&#x3D;p_4q_1+q_4p_1+p_2q_3-p_3q_2&#x3D;q_1p_4-q_2p_3+q_3p_2+q_4p_1\ r_2&#x3D;p_4q_2+q_4p_2+p_3q_1-p_1q_3-p_1q_3&#x3D;q_1p_3-q_2p_4+q_3p_1+q_4p_2\ r_3&#x3D;p_4q_3+q_4p_3+p_1q_2-p_2q_1&#x3D;-q_1p_2+q_2p_1+q_3p_4+q_4p_3\ r_4&#x3D;p_4q_4-p_1q_1-p_2q_2-p_3q_3&#x3D;-q_1p_1-q_2p_2-q_3p_3+q_4p_4\ \end{array}<br>$$<br>可以写作矩阵的乘积<br>列向量形式：<br>$p\boldsymbol{q}&#x3D;\begin{bmatrix}p_4&amp;-p_3&amp;p_2&amp;p_1\ p_3&amp;p_4&amp;-p_1&amp;p_2\ -p_2&amp;p_1&amp;p_4&amp;p_3\ -p_1&amp;-p_2&amp;-p_3&amp;p_4\end{bmatrix}\begin{bmatrix}q_1\ q_2\ q_3\ q_4\end{bmatrix}$</p>
+<p>行向量形式：取转置即可<br>$\begin{bmatrix}q_1\ q_2\ q_3\ q_4\end{bmatrix}^{\text{T}}\begin{bmatrix}p_4&amp;-p_3&amp;p_2&amp;p_1\ p_3&amp;p_4&amp;-p_1&amp;p_2\ -p_2&amp;p_1&amp;p_4&amp;p_3\ -p_1&amp;-p_2&amp;-p_3&amp;p_4\end{bmatrix}^{\text{T}}$</p>
+<p>四元数乘积不满足交换率，满足结合律，分配律</p>
+<h4 id="特殊乘积"><a href="#特殊乘积" class="headerlink" title="特殊乘积"></a>特殊乘积</h4><p>设$i&#x3D;(1,0,0,0)， j&#x3D;(0,1,0,0)，k&#x3D;(0,0,1,0)$都为四元数。运用这三个数，便能得到一些特殊的乘积, 其中一部分会使人联想到叉积计算:<br>$\begin{array}{l}i^2&#x3D;j^2&#x3D;k^2&#x3D;ijk&#x3D;-1\ \ ij&#x3D;k&#x3D;-ji\\ jk&#x3D;i&#x3D;-kj\ \ ki&#x3D;j&#x3D;-ik\end{array}$</p>
+<p>这些等式可由之前推算的四元数乘法定义直接推导出。例如，</p>
+<p>$ij&#x3D;\begin{bmatrix}0&amp;0&amp;0&amp;1\ 0&amp;0&amp;-1&amp;0\ 0&amp;1&amp;0&amp;0\ -1&amp;0&amp;0&amp;0\end{bmatrix}\begin{bmatrix}0\ 1\ 0\ 0\end{bmatrix}&#x3D;\begin{bmatrix}0\ 0\ 1 \ 0\end{bmatrix}&#x3D;k$</p>
+<h4 id="转换"><a href="#转换" class="headerlink" title="转换"></a>转换</h4><p>我们将实数、向量 (或点）与四元数的关系表达如下。设 $s$ 为一个实数，且 $u&#x3D;(x, y, z)$为一个向量，那么:</p>
+<p>$s&#x3D;(0,0,0,s)$、<br>$\text{}u&#x3D;(x,y,z)&#x3D;(u,0)&#x3D;(x,y,z,0)$</p>
+<ul>
+<li><strong>可将实数看作向量虚部为 0 的四元数</strong></li>
+<li><strong>可将向量视为实部为 0 的四元数</strong></li>
+</ul>
+<h4 id="共轭-模-逆"><a href="#共轭-模-逆" class="headerlink" title="共轭&#x2F;模&#x2F;逆"></a>共轭&#x2F;模&#x2F;逆</h4><ol>
+<li>${q}&#x3D;(q_{1},:q_{2},:q_{3},:q_{4})&#x3D;(\boldsymbol{u},:q_{4})$ <strong>共轭四元数</strong>为：<br>$q^*&#x3D;(-q_{1},:-q_{2},:q_{3},:-q_{4})&#x3D;(\boldsymbol{-u},:q_{4})$</li>
+</ol>
+<p>性质<br>$\begin{array}{l}(pq)^{\star}&#x3D;q^{\star}p^{\star}{}<em>{\circ}\ (p+q)^{\star}&#x3D;p^{\star}+q^{\star}{}\ (q^{\star})^{\star}&#x3D;q</em>{\circ}\end{array}$</p>
+<p>$\begin{array}{c}\quad q+q^\ast&#x3D;(\boldsymbol u,q_4)+(-\boldsymbol u,q_4)&#x3D;(0,:2\boldsymbol q_4)&#x3D;2\boldsymbol q_{4}\ \boldsymbol q\boldsymbol q^\star&#x3D;\boldsymbol q^\ast\boldsymbol q&#x3D;\boldsymbol q_1^2+\boldsymbol q_2^2+\boldsymbol q_3^2+\boldsymbol q_4^2&#x3D;|\boldsymbol u|^2+\boldsymbol q_4^2\ \end{array}$</p>
+<hr>
+<ol start="2">
+<li>四元数的<strong>模（范数）</strong>：<br>$\left|\textbf q\right|&#x3D;\sqrt{\textbf{q}\textbf{q}^{\star}}&#x3D;\sqrt{q_1^2+q_2^2+q_3^2+q_4^2}&#x3D;\sqrt{\left|\textbf{u}\right|^2+q_4^2}\quad\quad$<br>范数为 1 ，称为单位四元数<br>$\begin{array}{l}|q\ ^{\ast}|&#x3D;|q|<em>{\circ}\ |pq|&#x3D;|p||q|</em>{\circ}\end{array}$</li>
+</ol>
+<hr>
+<ol start="3">
+<li>四元数的<strong>逆</strong><br>$\boldsymbol q^{-1}&#x3D;\dfrac{\boldsymbol q^{\star}}{\left|\boldsymbol q\right|^{2}}\quad$</li>
+</ol>
+<p>$\begin{array}{l}\left(\boldsymbol q^{-1}\right)^{-1}&#x3D;\boldsymbol q\ \left(\begin{array}{c}p\boldsymbol q\end{array}\right)^{-1}&#x3D;\boldsymbol q^{-1}\boldsymbol p^{-1}\end{array}$</p>
+<h3 id="极坐标形式"><a href="#极坐标形式" class="headerlink" title="极坐标形式"></a>极坐标形式</h3><p>${q}&#x3D;(q_{1},:q_{2},:q_{3},:q_{4})&#x3D;(\boldsymbol{u},:q_{4})$ 为一个单位四元数，$n$ 为与 $u$ 同方向的单位向量，<br>则极坐标形式为：<br>$q&#x3D;(\sin\theta \boldsymbol n ,\cos\theta)::,其中\theta\in[0,\pi]\quad$</p>
+<p>其中 $\displaystyle\theta&#x3D;\arccos(q_4),\quad n&#x3D;\frac{u}{\sin{\theta}}$</p>
+<h3 id="四元数旋转"><a href="#四元数旋转" class="headerlink" title="四元数旋转"></a>四元数旋转</h3><h4 id="旋转算子"><a href="#旋转算子" class="headerlink" title="旋转算子"></a>旋转算子</h4><p>设 $q&#x3D;(u, w)$ 为单位四元数，而 $v$ 为一个 3D 点或 3D 向量，将 $v$ 视作纯四元数 $p&#x3D;(v, 0)$ </p>
+<p>定义四元数的旋转算子为：<br>$\begin{aligned}R_q(\nu)&amp;&#x3D;q\nu q^{-1}\ &amp;&#x3D;q\nu q^{*}\ &amp;&#x3D;\cos(2\theta)v+(1-\cos(2\theta))(n\cdot\nu)n+\sin(2\theta)(n\times\nu)\end{aligned}$</p>
+<p>含义：<strong>四元数旋转算子将向量（或点）$v$ 绕轴 $n$ 旋转角 $2\theta$</strong><br>所以，若给定一个旋转轴 $n$ 以及旋转角 $\theta$，我们就能通过下式构建出相应的旋转四元数:<br>$$<br>\boldsymbol{q}&#x3D;\left(\sin\left(\dfrac{\theta}{2}\right)\boldsymbol{n}\text{,}\cos\left(\dfrac{\theta}{2}\right)\right)<br>$$</p>
+<h4 id="旋转算子转换为矩阵形式"><a href="#旋转算子转换为矩阵形式" class="headerlink" title="旋转算子转换为矩阵形式"></a>旋转算子转换为矩阵形式</h4><p>行向量模式<br>$$<br>R_{q}(\nu)&#x3D;\nu Q&#x3D;[\nu_{x}<del>\nu_{y}</del>\nu_{z}]\begin{bmatrix}1-2q_{2}^{2}-2q_{3}^{2}&amp;2q_{1}q_{2}+2q_{3}q_{4}&amp;2q_{1}q_{3}-2q_{2}q_{4}\ 2q_{1}q_{2}-2q_{3}q_{4}&amp;1-2q_{1}^{2}-2q_{3}^{2}&amp;2q_{2}q_{3}+2q_{1}q_{4}\ 2q_{1}q_{3}+2q_{2}q_{4}&amp;2q_{2}q_{3}-2q_{1}q_{4}&amp;1-2q_{1}^{2}-2q_{2}^{2}\end{bmatrix}<br>$$</p>
+<p>列向量模式：转置即可</p>
+<h4 id="旋转矩阵变换为四元数旋转算子"><a href="#旋转矩阵变换为四元数旋转算子" class="headerlink" title="旋转矩阵变换为四元数旋转算子"></a>旋转矩阵变换为四元数旋转算子</h4><p>已知旋转矩阵<br>$R&#x3D;\left[\begin{array}{ccc}R_{11}&amp;R_{12}&amp;R_{13}\ R_{21}&amp;R_{22}&amp;R_{23}\ R_{31}&amp;R_{32}&amp;R_{33}\end{array}\right].$</p>
+<p>求四元数 $q&#x3D;(q_1,q_2,q_3,q_4)$</p>
+<p>根据以下方程求解即可：<br>$$<br>\left[\begin{array}{ccc}R_{11}&amp;R_{12}&amp;R_{13}\ R_{21}&amp;R_{22}&amp;R_{23}\ R_{31}&amp;R_{32}&amp;R_{33}\end{array}\right]&#x3D;\begin{bmatrix}1-2q_{2}^{2}-2q_{3}^{2}&amp;2q_{1}q_{2}+2q_{3}q_{4}&amp;2q_{1}q_{3}-2q_{2}q_{4}\ 2q_{1}q_{2}-2q_{3}q_{4}&amp;1-2q_{1}^{2}-2q_{3}^{2}&amp;2q_{2}q_{3}+2q_{1}q_{4}\ 2q_{1}q_{3}+2q_{2}q_{4}&amp;2q_{2}q_{3}-2q_{1}q_{4}&amp;1-2q_{1}^{2}-2q_{2}^{2}\end{bmatrix}<br>$$</p>
+<h4 id="四元数插值"><a href="#四元数插值" class="headerlink" title="四元数插值"></a>四元数插值</h4><h5 id="球面线性插值公式"><a href="#球面线性插值公式" class="headerlink" title="球面线性插值公式"></a>球面线性插值公式</h5><p><strong>由于四元数即实数四元组，所以就能将其视作几何学上的 4D 向量。单位四元数则是位于 4D 单位球面上的 4D 单位向量。</strong><br>利用叉积 (此运算定义仅用于 3D 向量)以外的运算规则，我们就能将向量的数学运算推广到四维空间乃至 n 维空间。<br><strong>尤其是适用于四元数的点积运算:</strong><br>设四元数 $\boldsymbol p &#x3D;(\boldsymbol u, s)$ 与 $\boldsymbol q&#x3D;(\boldsymbol v, t)$，<br>那么 $p\cdot q&#x3D;u\cdot v+st&#x3D;|p||q|\cos\theta\quad\text{}$</p>
+<p>其中，$\theta$ 为这两个四元数之间的夹角。如果四元数 p 与 q 皆为单位长度，那么 $p·q &#x3D; cos\theta$。这就是说，<strong>点积使我们可以描述出两个四元数之间的夹角, 作为它们在单位球面上彼此远近程度的度量手段。</strong></p>
+<p>考虑到 3D 旋转动画方面上的需求, 我们希望在两个不同的方向之间进行插值，求取中间的变化过程。<strong>为了对四元数进行插值, 我们就联想到对单位球面上的弧进行插值, 这样一来，所得到的插值四元数依然是单位四元数</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225036.png" alt="Pasted image 20230426193143"></p>
+<p>为了推导出这样一个插值公式，我们考虑图 22.6 所示的情景, 在这里, 我们希望在 $a$ 到 $b$ 之间的角 $t\theta$ 方向进行插值。此时, 我们的目标是求出权重 $c_1$ 与 $c_2$ 使 $p &#x3D; c_1a +c_2b$, 其中 $\left|p\right|&#x3D;\left|a\right|&#x3D;\left|b\right|$。</p>
+<p>经推导求出<br>$\displaystyle c_1&#x3D;\frac{\sin((1-t)\theta)}{sin(\theta)}$</p>
+<p>$\displaystyle c_2&#x3D;\frac{\sin(t\theta)}{sin(\theta)}$</p>
+<p>得出<strong>球面线性插值公式</strong>（spherical linear interpolation）为：<br>$$<br>\operatorname{slerp}(a,b,t)&#x3D;\dfrac{\sin((1-t)\theta)a+\sin(t\theta)b}{\sin\theta}，其中t\in\left[\begin{matrix}{0,1}\ \end{matrix}\right]<br>$$<br>将单位四元数看作 4D 单位向量，便可以解出四元数之间的夹角 $\theta &#x3D; arccos (a ·b)$</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225037.png" alt="Pasted image 20230426194217"></p>
+<p>如果 a 与 b 之间的夹角 $\theta$ 接近于 $0$，那么 $sin \theta$ 也接近于 $0$，因此有限的数值精度会引起上式中除数为 $0$ 的问题。在这种情况下，我们要在这两个四元数之间进行线性插值，再<strong>对结果执行规范化处理</strong>。此时，我们即可得到 $0$ 较小时的一个极为接近的插值结果（见图 22.7 )。<br>观察图 22.8，其中展示的是待完成线性插值后，再将插值四元数投影回单位球面而导致的<strong>非线性旋转速率</strong> (nonlinear rate of rotation )。这是<strong>因为我们对夹角过大的四元数采用线性插值，从而导致其转速忽快忽慢</strong>（即线段 ab 上进行的是均匀线性插值，但投影至球面上却有很大差异)。这通常并不是我们所期待的效果，同时也**从侧面反映出球面插值更受追捧的原因（球面插值使旋转速率保持恒定)**。</p>
+<h5 id="旋转弧度长短问题"><a href="#旋转弧度长短问题" class="headerlink" title="旋转弧度长短问题"></a>旋转弧度长短问题</h5><p>四元数 $q$ 与 $-q$ 会得到相同的旋转结果，但两者有区别，一个旋转角度大，一个旋转角度小。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225038.png" alt="Pasted image 20230426194751|500"><br>由于这个原因，我们对四元数插值可以选择 $\operatorname{slerp}(a,b,t)$ 或 $\operatorname{slerp}(a,-b,t)$<br>为了选用最短弧长的旋转，我们要对 $\left|a-b\right|^2与\left|a-(-b)\right|^2&#x3D;\left|a+b\right|^2$ 进行比较，如果 $\left|a+b\right|^2&lt;\left|a-b\right|^2$，那么就选择 $-b$ 进行插值，因为这时 $-b$ 更接近 $a$，旋转的弧度更小，经过的弧长最短。</p>
+<h1 id="【摘】-欧拉角、四元数、旋转矩阵、轴角"><a href="#【摘】-欧拉角、四元数、旋转矩阵、轴角" class="headerlink" title="【摘】 欧拉角、四元数、旋转矩阵、轴角"></a>【摘】 欧拉角、四元数、旋转矩阵、轴角</h1><p>之间的转换</p>
+<p>3d 数学里有写<br>$Ref:$<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/45404840">三维旋转：欧拉角、四元数、旋转矩阵、轴角之间的转换</a></p>
+<blockquote>
+<p>[!NOTE] 约定<br>列向量&#x2F;右手坐标系&#x2F;采用 DX 的 ZXY 顺规</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225020.png"></p>
+<h2 id="1-欧拉角-Euler-Angle-与旋转矩阵-Rotation-Matrix"><a href="#1-欧拉角-Euler-Angle-与旋转矩阵-Rotation-Matrix" class="headerlink" title="1 欧拉角 (Euler Angle) 与旋转矩阵(Rotation Matrix)"></a><strong>1 欧拉角 (Euler Angle) 与旋转矩阵(Rotation Matrix)</strong></h2><h3 id="1-1-欧拉角-—-旋转矩阵"><a href="#1-1-欧拉角-—-旋转矩阵" class="headerlink" title="1.1 欧拉角 —-&gt; 旋转矩阵"></a>1.1 欧拉角 —-&gt; 旋转矩阵</h3><p>D3D 和 OpenGL 不同，用的坐标系是 Y 轴竖直向上的左手系，所以欧拉角的顺规是跟广大 blog、OpenGL 不一样的，那么博客上、甚至维基百科 [2] 上的各种基于右手系 xyz 顺规 (分别对应 roll, pitch,yaw) 的看起来就不太能随随便便直接用了。</p>
+<p>DirectXMath 库采用的是 <strong>ZXY 顺规</strong>，分别对应着 Z-Roll，X-Pitch，Y-Yaw。<br>**注意：那么下文我们都采用 ZXY 顺规来推导公式！采用列主向量 (column major)！(但是注意 DirectXMath API 生成的矩阵其实是行主向量(row major) 的)</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225021.png"></p>
+<p><strong>欧拉角旋转矩阵：</strong></p>
+<p>$\begin{aligned} R(\alpha,\beta,\gamma) &amp;&#x3D;R_y (\alpha) R_x (\beta) R_z (\gamma) \ &amp;&#x3D; \left[\begin{matrix} cos\alpha &amp; 0 &amp; sin\alpha \ 0 &amp; 1 &amp; 0 \ -sin\alpha &amp; 0 &amp; cos\alpha \end{matrix}\right] \left[\begin{matrix} 1 &amp; 0 &amp; 0 \ 0 &amp; cos\beta &amp; -sin\beta \ 0 &amp; sin\beta &amp; cos\beta \end{matrix}\right] \left[\begin{matrix} cos\gamma &amp; -sin\gamma &amp; 0 \ sin\gamma &amp; cos\gamma &amp; 0 \ 0 &amp; 0 &amp; 1 \end{matrix}\right] \ &amp;&#x3D; \left[\begin{matrix} c_1 &amp; 0 &amp; s_1 \ 0 &amp; 1 &amp; 0 \ -s_1 &amp; 0 &amp; c_1 \end{matrix}\right] \left[\begin{matrix} 1 &amp; 0 &amp; 0 \ 0 &amp; c_2 &amp; -s_2 \ 0 &amp; s_2 &amp; c_2 \end{matrix}\right] \left[\begin{matrix} c_3 &amp; -s_3 &amp; 0 \ s_3 &amp; c_3 &amp; 0 \ 0 &amp; 0 &amp; 1 \end{matrix}\right] \ &amp;&#x3D; \left[\begin{matrix} c_1 &amp; s_1s_2 &amp; s_1c_2 \ 0 &amp; c_2 &amp; -s_2 \ -s_1 &amp; c_1s_2 &amp; c_1c_2 \end{matrix}\right] \left[\begin{matrix} c_3 &amp; -s_3 &amp; 0 \ s_3 &amp; c_3 &amp; 0 \ 0 &amp; 0 &amp; 1 \end{matrix}\right] \ &amp;&#x3D; \left[\begin{matrix} c_1c_3+s_1s_2s_3 &amp; c_3s_1s_2-c_1s_3 &amp; c_2s_1 \ c_2s_3 &amp; c_2c_3 &amp; -s_2 \ c_1s_2s_3-s_1c_3 &amp; s_1s_3+c_1c_3s_2 &amp; c_1c_2 \end{matrix}\right] \ \end{aligned}$</p>
+<p>其中：</p>
+<p>$c_1&#x3D;cos(\alpha)&#x3D;cos(Y_{yaw}), s_1&#x3D;sin\alpha&#x3D;sin(Y_{yaw})$<br>$c_2&#x3D;cos(\beta)&#x3D;cos(X_{pitch}), s_2&#x3D;sin\beta&#x3D;sin(X_{pitch})$<br>$c_3&#x3D;cos(\gamma)&#x3D;cos(Z_{roll}), s_3&#x3D;sin\gamma&#x3D;sin(Z_{roll})$</p>
+<p>上面的矩阵之所以是这么个顺序，是因为：</p>
+<ol>
+<li>采用了 ZXY 顺规</li>
+<li>采用列主向量</li>
+<li>采用外旋的约定</li>
+</ol>
+<p>在这规定下，上面的矩阵就是先 roll Z，再 pitch X，再 yaw Y。</p>
+<p>所有顺规对应的旋转矩阵<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225022.png"></p>
+<p>.</p>
+<h3 id="1-2-旋转矩阵-—-欧拉角"><a href="#1-2-旋转矩阵-—-欧拉角" class="headerlink" title="1.2 旋转矩阵 —-&gt; 欧拉角"></a><strong>1.2 旋转矩阵 —-&gt; 欧拉角</strong></h3><p>参考一篇 NASA 的关于姿态描述的技术报告 [1] 的 Appendix-A6 和[5]，我们可以用<strong>旋转矩阵元素的相乘、相除、反三角函数等操作去 “凑” 出欧拉角</strong>。[5]给出了从 XYZ 顺规提取欧拉角的方法、步骤、思路，[1]则给出了全部 12 种顺规的欧拉角提取公式，但是没有给一些细节注意事项。所以总结一下，根据 [1]、[5]、[7]《Real Time Rendering 3rd Edition》4.2.2 和自己的推导，从 ZXY 顺规旋转矩阵提取欧拉角的公式是（[1] 原文下标似乎有点小问题）：</p>
+<ul>
+<li>Y axis yaw angle:</li>
+</ul>
+<p>$\alpha&#x3D;atan2(sin\alpha cos\beta,cos\alpha cos\beta)&#x3D;atan2(m_{13},m_{33})$</p>
+<ul>
+<li>X axis pitch angle:</li>
+</ul>
+<p>$\beta&#x3D;arcsin(sin\beta)&#x3D;arcsin(-m_{23})$</p>
+<ul>
+<li>Z axis roll angle:</li>
+</ul>
+<p>$\gamma&#x3D;atan2(cos\beta sin\gamma,cos\beta cos\gamma)&#x3D;atan2(m_{21},m_{22})$</p>
+<p>.</p>
+<p>注意到一点，注意到矩阵的每一个元素都是 pitch angle $\beta$ 的函数… 所以当 $m_{23}&#x3D;-sin\beta&#x3D;\pm1$ 即 $cos\beta&#x3D;0$ 的时候，这时候其他的欧拉角提取表达式就凉凉了（分子分母都是 0, arctan 和 atan2 都没有意义了）…. 其实 pitch angle $\beta&#x3D;\pm \pi&#x2F;2$ 恰好就是 Gimbal Lock 的位置。在 Gimbal Lock 的时候，旋转矩阵会退化为：</p>
+<p>$\begin{aligned} R(\alpha,\beta,\gamma)&amp;&#x3D; \left[ \begin{matrix} c_1c_3\pm s_1s_3 &amp; \pm c_3s_1-c_1s_3 &amp; 0 \ 0 &amp; 0 &amp; \pm 1 \ \pm c_1s_3-s_1c_3 &amp; s_1s_3 \pm c_1c_3 &amp; 0 \end{matrix}\right]\ &amp;&#x3D;\left[ \begin{matrix} cos(\alpha \pm \gamma) &amp; sin(\alpha \pm \gamma) &amp; 0 \ 0 &amp; 0 &amp; \pm 1 \ -sin(\alpha \pm \gamma) &amp; -cos(\alpha \pm \gamma) &amp; 0 \end{matrix}\right] \end{aligned}$</p>
+<p>.</p>
+<p>那么要进一步处理万向节死锁的 corner case 就需要分两种情况：</p>
+<ul>
+<li>$\beta&#x3D;-\pi&#x2F;2$ ，此时  $sin\beta&#x3D;-1, cos\beta&#x3D;0$</li>
+</ul>
+<p>$\begin{aligned} R(\alpha,\beta,\gamma)&amp;&#x3D; \left[ \begin{matrix} c_1c_3- s_1s_3 &amp; -c_3s_1-c_1s_3 &amp; 0 \ 0 &amp; 0 &amp; \pm 1 \ - c_1s_3-s_1c_3 &amp; s_1s_3 - c_1c_3 &amp; 0 \end{matrix}\right]\ &amp;&#x3D;\left[ \begin{matrix} cos(\alpha + \gamma) &amp; -sin(\alpha + \gamma) &amp; 0 \ 0 &amp; 0 &amp; 1 \ -sin(\alpha + \gamma) &amp; -cos(\alpha + \gamma) &amp; 0 \end{matrix}\right] \end{aligned}$</p>
+<p>$\Rightarrow \alpha+\gamma &#x3D;atan2(-m_{12},m_{11})$</p>
+<p>其中要给$\alpha$ 或者 $\gamma$ 其中一个欧拉角赋值，另外一个就按等式计算出来。</p>
+<p>.</p>
+<ul>
+<li>$\beta&#x3D;\pi&#x2F;2$ ，此时  $sin\beta&#x3D;1, cos\beta&#x3D;0$</li>
+</ul>
+<p>$\begin{aligned} R(\alpha,\beta,\gamma)&amp;&#x3D; \left[ \begin{matrix} c_1c_3+ s_1s_3 &amp; c_3s_1-c_1s_3 &amp; 0 \ 0 &amp; 0 &amp; -1 \ c_1s_3-s_1c_3 &amp; s_1s_3 + c_1c_3 &amp; 0 \end{matrix}\right]\ &amp;&#x3D;\left[ \begin{matrix} cos(\alpha - \gamma) &amp; sin(\alpha - \gamma) &amp; 0 \ 0 &amp; 0 &amp; -1 \ -sin(\alpha - \gamma) &amp; cos(\alpha - \gamma) &amp; 0 \end{matrix}\right] \end{aligned}$</p>
+<p>$\Rightarrow \alpha - \gamma &#x3D;atan2(m_{12},m_{11})$</p>
+<p>同样的，要给$\alpha$ 或者 $\gamma$ 其中一个欧拉角赋值，另外一个就按等式计算出来。</p>
+<p>.</p>
+<p>从旋转矩阵提取欧拉角的公式跟欧拉角顺规的选取有关，因为旋转矩阵的元素会略有不同，但是思路都是一样的，就是<strong>根据旋转矩阵的解析表达式 + 反三角函数凑出来</strong> 23333。</p>
+<h2 id="2-四元数-Quaternion-与旋转矩阵"><a href="#2-四元数-Quaternion-与旋转矩阵" class="headerlink" title="2 四元数 (Quaternion) 与旋转矩阵"></a><strong>2 四元数 (Quaternion) 与旋转矩阵</strong></h2><p><strong>2.1 四元数 —-&gt; 旋转矩阵</strong></p>
+<p>众所周知的是，欧拉旋转是有万向节死锁 (Gimbal Lock) 的问题的。幸好我们有四元数 (Quaternion) 这种数学工具可以避免这个情况。一般来说，我们都会用单位四元数 $\textbf q&#x3D;w+x \textbf i+y \textbf j+z \textbf k$ 来表示旋转，其中 $||\textbf q||&#x3D;x^2+y^2+z^2+w^2&#x3D;1$ 。那么给定一个单位四元数，可以构造旋转矩阵 (column major)[1][4][8][14][15]：</p>
+<p>$\begin{aligned} R(q)&amp;&#x3D; \left[ \begin{matrix} 1-2y^2-2z^2 &amp; 2xy-2zw &amp; 2xz+2yw \ 2xy+2zw &amp; 1-2x^2-2z^2 &amp; 2yz-2xw\ 2xz-2yw &amp; 2yz+2xw &amp; 1-2x^2-2y^2 \end{matrix}\right]\ \end{aligned}$</p>
+<p>这个四元数构造的大概思路就是把<strong>四元数的旋转操作写成矩阵形式</strong>（注：给定一个用于旋转的单位四元数 $\textbf q&#x3D;w+x \textbf i+y \textbf j+z \textbf k$ 和被旋转的三维向量 $\textbf v$ ，那么要直接用四元数旋转这个向量，则我们首先要构造一个纯四元数 $\textbf p&#x3D;(\textbf v, 0)$ ，设旋转后的向量为 $\textbf v’$ ，旋转后的向量构造的纯四元数为 $\textbf p’&#x3D;(\textbf v’, 0)$ ，那么 $\textbf p’&#x3D; \textbf q \textbf p \textbf q^-1$ ）。因为是用四元数来构造矩阵的，所以这个矩阵构造公式就没有欧拉角顺规的说法了。</p>
+<p>.</p>
+<p><strong>2.2 旋转矩阵 —-&gt; 四元数</strong></p>
+<p>那第一步肯定是判断 3x3 矩阵是一个正交矩阵啦（满足 $RR^T&#x3D;R^TR&#x3D;I$ ）。那么如果这个矩阵已经是一个合法的旋转矩阵了，要从旋转矩阵里提取四元数，也是可以像提取欧拉角那样，<strong>用参数化过的矩阵的表达式凑出来</strong>。参考 [8]《Real Time Rendering 3rd edition》Chapter4 的思路，我们观察一下用四元数分量进行参数化的矩阵 $R(q)$ ，然后经过一顿操作，我们发现：</p>
+<p>$m_{32}-m_{23}&#x3D;(2yz+2xw)-(2yz-2xw)&#x3D;4xw\ m_{13}-m_{31}&#x3D;(2xz+2yw)-(2xz-2yw)&#x3D;4yw\ m_{21}-m_{12}&#x3D;(2xy+2zw)-(2xy-2zw)&#x3D;4zw$</p>
+<p>于是我们再凑出个实分量 $w$ ，就可以把四元数四个分量都用矩阵元素表示出来了。于是我们又机智地发现了一个等式：</p>
+<p>$\begin{aligned} tr(R(q))&amp;&#x3D;m_{11}+m_{22}+m_{33}\ &amp;&#x3D;3-4(x^2+y^2+z^2)\ &amp;&#x3D;4(1-(x^2+y^2+z^2))-1\ &amp;&#x3D;4w^2-1 \end{aligned}$</p>
+<p>其中 $tr(M)$ 是矩阵 $M$ 的迹 (trace)，也就是矩阵对角元素的和。因为这里用的是 3x3 矩阵，跟其他资料里面的表示有一点不同。所以我们可以把四元数的四个分量都用矩阵元素凑出来了：</p>
+<p>$$w&#x3D;\frac{\sqrt{(tr(R)+1}}{2}\ x&#x3D;\frac{m_{32}-m_{23}}{4w}\ y&#x3D;\frac{m_{13}-m_{31}}{4w}\ z&#x3D;\frac{m_{21}-m_{12}}{4w}\ $$</p>
+<p>有一点《Real Time Rendering》提到的， $w$ 绝对值比较小的时候，可能会出现数值不稳定的情况，那么想要数值稳定的话就得用一种不用除法的方式来凑，在这不展开了，可以看一下 RTR 2333。</p>
+<h2 id="3-欧拉角与四元数"><a href="#3-欧拉角与四元数" class="headerlink" title="3 欧拉角与四元数"></a><strong>3 欧拉角与四元数</strong></h2><p><strong>3.1 欧拉角 —-&gt; 四元数</strong></p>
+<p>首先提一下四元数的乘积：</p>
+<p>$\textbf p&#x3D;w_1+\textbf v_1&#x3D;w_1+x_1 \textbf i + y_1 \textbf j + z_1 \textbf k \ \textbf q&#x3D;w_2+\textbf v_2&#x3D;w_2+x_2 \textbf i + y_2 \textbf j + z_2 \textbf k$</p>
+<p>$\begin{aligned} \Rightarrow \textbf p \textbf q &amp;&#x3D; w_1w_2 - \textbf v_1 \cdot \textbf v_2 + w_2 \textbf v_1+w_1\textbf v_2 + \textbf v_1\times \textbf v_2 \ &amp;&#x3D; \left[\begin{matrix} x_1w_2+w_1x_2+y_1z_2-z_1y_2\ y_1w_2+w_1y_2+z_1x_2-x_1z_2\ z_1w_2 + w_1z_2 + x_1y_2-y_1x_2\ w_1w_2-x_1x_2-y_1y_2-z_1z_2 \end{matrix}\right] \end{aligned}$</p>
+<p>参考维基百科 [2] 的思路，欧拉角构造四元数，跟欧拉角构造旋转矩阵一样，就是<strong>把三个基础旋转 Elemental Rotation 组合在一起。</strong></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Euler_Angles_to_Quaternion_Conversion">Conversion between quaternions and Euler angles</a></p>
+<p>那么用于旋转的四元数 $q(x,y,z,w)$ 的表达式是：</p>
+<p>$\begin{aligned} q(\alpha,\beta,\gamma) &amp;&#x3D;q_y(\alpha)q_x(\beta)q_z(\gamma)\ &amp;&#x3D;\left[ \begin{matrix} 0 \sin\alpha&#x2F;2\0\cos\alpha&#x2F;2 \ \end{matrix}\right] \left[ \begin{matrix} sin\beta&#x2F;2 \0\0\cos\beta&#x2F;2 \ \end{matrix}\right] \left[ \begin{matrix} 0 \0\sin\gamma&#x2F;2\cos\gamma&#x2F;2 \ \end{matrix}\right]\ &amp;&#x3D;\left[ \begin{matrix} cos(\alpha&#x2F;2)sin(\beta&#x2F;2) \sin(\alpha&#x2F;2)cos(\beta&#x2F;2)\-sin(\alpha&#x2F;2)sin(\beta&#x2F;2)\cos(\alpha&#x2F;2)cos(\beta&#x2F;2) \ \end{matrix}\right] \left[ \begin{matrix} 0 \0\sin\gamma&#x2F;2\cos\gamma&#x2F;2 \ \end{matrix}\right] \ &amp;&#x3D;\left[ \begin{matrix} cos(\alpha&#x2F;2)sin(\beta&#x2F;2)cos(\gamma&#x2F;2)+sin(\alpha&#x2F;2)cos(\beta&#x2F;2)sin(\gamma&#x2F;2) \ sin(\alpha&#x2F;2)cos(\beta&#x2F;2)cos(\gamma&#x2F;2)-cos(\alpha&#x2F;2)sin(\beta&#x2F;2)sin(\gamma&#x2F;2)\ -sin(\alpha&#x2F;2)sin(\beta&#x2F;2)cos(\gamma&#x2F;2)+cos(\alpha&#x2F;2)cos(\beta&#x2F;2)sin(\gamma&#x2F;2)\ cos(\alpha&#x2F;2)cos(\beta&#x2F;2)cos(\gamma&#x2F;2)+sin(\alpha&#x2F;2)sin(\beta&#x2F;2)sin(\gamma&#x2F;2) \ \end{matrix}\right] \end{aligned}$</p>
+<p>这个我自己推导的结果跟 [1]NASA Technical Report 的 Appendix A 给出的结果对比过了</p>
+<p><a target="_blank" rel="noopener" href="https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19770019231.pdf">https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19770019231.pdf</a></p>
+<p>（[1] 中四元数记号是 $\textbf q&#x3D;q_1+q_2 \textbf i + q_3 \textbf j + q_4 \textbf k$ ），看起来没什么问题。</p>
+<p>.</p>
+<p><strong>3.2 四元数 —-&gt; 欧拉角</strong></p>
+<p>本来我以为，从四元数提取欧拉角的思路可以跟旋转矩阵提取欧拉角类似，也是用四元数的元素运算和反三角函数凑出公式来。后来我发现这简直就是一个极其硬核的任务，展开之后每一项都是六次多项式，画面有一丢暴力且少儿不宜，直接强行凑的话画风大概是这样：</p>
+<p>$\begin{aligned} xw&amp;&#x3D;(c_1s_2c_3+s_1c_2s_3)(c_1c_2c_3+s_1s_2s_3)\ &amp;&#x3D;c_1^2c_2s_2c_3^2+c_1s_2s_2^2c_3s_3+c_1s_1c_2^2c_3s_3+s_1^2c_2s_2s_3^2 \end{aligned}\ \begin{aligned} yz&amp;&#x3D;(s_1c_2c_3-c_1s_2s_3)(-s_1s_2c_3+c_1c_2s_3)\ &amp;&#x3D;-s_1^2c_2s_2c_3^2+c_1s_1c_2^2c_3s_3+c_1s_1s_2^2c_3s_3-c_1^2c_2s_2s_3^2 \end{aligned}$</p>
+<p> $\Rightarrow 2(xw-yz)&#x3D;2(c_1^2c_2s_2+s_1^2c_2s_2) &#x3D;2c_2s_2 &#x3D;sin\beta$</p>
+<p>$\begin{aligned} \Rightarrow \beta &#x3D; arcsin(2(xw-yz))&#x3D;arcsin(-m_{23}) \end{aligned}$</p>
+<p>这个结果跟欧拉角参数化的旋转矩阵的 $m_{23}&#x3D;-sin\beta&#x3D;2yz-2xw$ 的表达式是吻合的。但这还只是最好凑的那一个，惹不起惹不起。所以舒服的思路还是<strong>四元数 –&gt; 旋转矩阵 –&gt; 欧拉角</strong>，想一步到位的话，把四元数分量参数化的旋转矩阵、欧拉角参数化的旋转矩阵结合在一起，参考下旋转矩阵转欧拉角的方法，替换下元素就完事了。这里就不把公式展开了，因为四元数直接转欧拉角 跟 旋转矩阵转欧拉角一样，依旧是要处理 gimbal lock 的 corner case，还是那么麻烦，所以这里先鸽了 23333</p>
+<h2 id="4-轴-角-Axis-Angle"><a href="#4-轴-角-Axis-Angle" class="headerlink" title="4 轴 - 角 (Axis-Angle)"></a><strong>4 轴 - 角 (Axis-Angle)</strong></h2><p><strong>4.1 轴角 —-&gt; 四元数</strong></p>
+<p>轴 - 角 (Axis-Angle) 顾名思义就是绕某条单位轴旋转一定角度，从这个意义上看，它构造四元数是非常舒服的，毕竟直观的几何意义有一点点类似，绕单位轴 $\textbf u$ 旋转 $\theta$ 的四元数是：</p>
+<p>$\textbf q(w,\textbf v)&#x3D;(cos\frac{\theta}{2},\textbf usin\frac{\theta}{2})$</p>
+<p>.</p>
+<p><strong>4.2 轴角 —-&gt; 旋转矩阵</strong></p>
+<p>Axis Angle 转 Rotation Matrix 可以从 [9] 罗德里格斯旋转公式 Rodrigues Rotation Formula 开始推导。</p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula">https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula</a></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula">Rodrigues’ rotation formula</a></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula">Rodrigues’ rotation formula</a></p>
+<p>设 $\textbf v$ 是我们要旋转的单位向量，旋转轴为 $\textbf k$ ， $\textbf v$ 绕 $\textbf k$ 旋转角度 $\theta$ ，那么旋转后的向量为：</p>
+<p>$\textbf v_{rot}&#x3D;\textbf vcos\theta+(\textbf k \times \textbf v)sin\theta + \textbf k (\textbf k \cdot \textbf v)(1-cos\theta)$</p>
+<p>这个公式的推导思路是这样子的，我们先对向量 $\textbf v$ 进行正交分解，分解成投影到旋转轴 $\textbf k$ 的分量和垂直于 $\textbf k$ 的分量：</p>
+<p>$\textbf v&#x3D;\textbf v_\parallel+\textbf v_\bot$</p>
+<p>其中：</p>
+<p>$\textbf v_\parallel&#x3D;(\textbf v \cdot \textbf k)\textbf k \ \textbf v_\bot &#x3D; - \textbf k \times(\textbf k \times \textbf v)$</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225023.png"></p>
+<p>于是绕 $\textbf k$ 旋转向量 $\textbf v$ 其实就是把上面<strong>正交投影后的向量分别旋转之后再加起来</strong>。那么很明显的，投影到旋转轴上的部分 $\textbf v_\parallel$ 都跟旋转轴共享了，那么自然旋转之后的结果就没有变化了，于是我们只需要旋转和旋转轴垂直的部分 $\textbf v_\bot$ 。那么这个 $\textbf v_\bot$ 旋转后的表达式就是：</p>
+<p> $\textbf v_{\bot -rotated}&#x3D;cos\theta \textbf v_\bot +sin\theta \textbf k \times \textbf v$</p>
+<p>然后我们不按 wikipedia 里面坑爹的、不考虑下文的变形，自己推一波：</p>
+<p>$\begin{aligned} \textbf v_{rotated} &amp;&#x3D; \textbf v_{\bot-rotated}+\textbf v_{\parallel-rotated}\ &amp;&#x3D;cos\theta \textbf v_\bot + sin\theta\textbf k \times \textbf v+\textbf v_\parallel \ &amp;&#x3D;-cos\theta\textbf k \times (\textbf k\times \textbf v)+sin\theta\textbf k \times \textbf v+(\textbf v- \textbf v_\bot)\ &amp;&#x3D;-cos\theta\textbf k \times (\textbf k\times \textbf v)+sin\theta\textbf k \times \textbf v+(\textbf v- (-\textbf k\times(\textbf k\times \textbf v)))\ &amp;&#x3D;\textbf v+(1-cos\theta)\textbf k \times (\textbf k \times \textbf v) +sin\theta \textbf k \times \textbf v \end{aligned}$</p>
+<p>这里我们把旋转后向量的表达式<strong>变形得只剩下叉积 (cross product)，去掉点积(dot product) 了</strong>，这样子我们才可以把这个绕轴旋转的表达式写成矩阵形式。怎么写呢？首先叉积可以写成矩阵形式：</p>
+<p>$\textbf M&#x3D; \left[\begin{matrix} 0 &amp; -k_z &amp; k_y \ k_z &amp; 0 &amp; -k_x \ -k_y &amp; k_x &amp; 0 \ \end{matrix}\right]\ \textbf M\textbf v&#x3D; \textbf k \times \textbf v$</p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cross_product#Conversion_to_matrix_multiplication">Cross product - Wikipedia</a></p>
+<p>于是罗德里格斯旋转公式的变换就可以写成矩阵形式：</p>
+<p>$R(\textbf k,\theta)&#x3D;\textbf I +sin\theta \textbf M+(1-cos\theta)\textbf M^2$</p>
+<p>展开之后就是：</p>
+<p>$R(\textbf k,\theta)&#x3D;\left[ \begin{matrix} cos\theta + k_x^2(1-cos\theta) &amp; -sin\theta k_z + (1-cos\theta)k_xk_y &amp; sin\theta k_y+(1-cos\theta)k_xk_z\ sin\theta k_z + (1-cos\theta)k_xk_y &amp; cos\theta+k_y^2(1-cos\theta) &amp; -sin\theta k_x +(1-cos\theta)k_yk_z \ -sin\theta k_y + (1-cos\theta) k_xk_z &amp; sin\theta k_x+(1-cos\theta)k_yk_z &amp; cos\theta+ k_z^2(1-cos\theta) \end{matrix}\right]$</p>
+<h1 id="【摘】-对游戏开发中的四元数的一些理解"><a href="#【摘】-对游戏开发中的四元数的一些理解" class="headerlink" title="【摘】 对游戏开发中的四元数的一些理解"></a>【摘】 对游戏开发中的四元数的一些理解</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385337220">对游戏开发中的四元数的一些理解 - 知乎 (zhihu.com)</a></p>
+<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>游戏开发里四元数是用于旋转计算，由于四元数比较难以理解，因而知乎上有 “如何形象理解四元数” 之类的问题，会有四维空间的介绍，甚至一些图形化的表达方式，而四元数本身是一个抽象后的数学概念，个人觉得直接从四元数的代数性质出发，是理解四元数旋转性质的更简单、快速的方法。</p>
+<p>本文对四元数一些性质的推导过程都是很基础的代数运算，其中一些思路来自《大学物理》第 23 卷第 4 期的《三维转动的四元数表述》一文。本文的大部分内容是从一些问题的理解出发，下面先列一下目录：</p>
+<ol>
+<li>四元数是超复数、四维向量、轴角？  </li>
+<li>四元数为什么能表示旋转？  </li>
+<li>为什么四元数旋转向量的公式是： $\mathbf v’&#x3D;q\mathbf vq^{\ast}$ ？  </li>
+<li>为什么旋转向量使用单位四元数？  </li>
+<li>四元数的逆或共轭表示什么旋转？  </li>
+<li>四元数取反表示什么旋转？  </li>
+<li>有没有 0 四元数（0 旋转）？  </li>
+<li>代码里如何存储四元数？  </li>
+<li>代码里如何计算向量旋转？  </li>
+<li>四元数和标量、向量相乘有没有意义？  </li>
+<li>四元数和四元数相乘有没有意义？  </li>
+<li>四元数可以表示对一个向量的旋转信息，那么如何表示物体的朝向（orientation）？  </li>
+<li>四元数如何进行父子空间朝向信息的转换？  </li>
+<li>四元数加法有没有意义（四元数与角速度）？  </li>
+<li>两个四元数如何进行插值？</li>
+</ol>
+<h2 id="二、四元数的一些性质"><a href="#二、四元数的一些性质" class="headerlink" title="二、四元数的一些性质"></a>二、四元数的一些性质</h2><p><strong>1. 四元数定义</strong></p>
+<p>关于四元数的来源，可以看简单下百度百科上关于<strong>向量</strong>的发展历史 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385337220#ref_1">[1 前言]</a> 介绍，大致是：复数可以表达二维向量的运算，四元数则是将复数拓展到三维空间，四元数分为标量部分和向量部分，后来的三维向量的分析运算就脱胎于四元数的向量部分。</p>
+<p>四元数的定义是：</p>
+<p>$q&#x3D;s+x\mathbf i+y\mathbf j+z\mathbf k$ ， $\mathbf i^{2}&#x3D;\mathbf j^{2}&#x3D;\mathbf k^{2}&#x3D;\mathbf {ijk}&#x3D;-1$</p>
+<p>四元数标量部分是 $s$ ，向量部分是 $\mathbf v&#x3D;x\mathbf i+y\mathbf j+z\mathbf k$ ， $\mathbf {i,j,k}$ 是单位向量，因此四元数也可以写成：</p>
+<p>$q&#x3D;s+\mathbf v$</p>
+<p>因此四元数是<strong>标量和向量的组合</strong>。</p>
+<p><strong>2. 四元数与向量</strong></p>
+<p>对于 2 个四元数 $q&#x3D;a+b\mathbf i+c\mathbf j+d\mathbf k$ ， $p&#x3D;e+f\mathbf i+g\mathbf j+h\mathbf k$ ，其乘积为：</p>
+<p>$\begin{align} qp&amp;&#x3D;(a+b\mathbf i+c\mathbf j+d\mathbf k)(e+f\mathbf i+g\mathbf j+h\mathbf k)\ &amp;&#x3D;(ae-bf-cg-dh)+(be+af-dg+ch)\mathbf i\ &amp;+(ce+df+ag-bh)\mathbf j+(de-cf+bg+ah)\mathbf k\ &amp;&#x3D;(ae+a(f\mathbf i+g\mathbf j+h\mathbf k)+e(b\mathbf i+c\mathbf j+d\mathbf k))-(bf+cg+dh)\ &amp;+(-dg+ch)\mathbf i+(df-bh)\mathbf j+(-cf+bg)\mathbf k\ \end{align}$</p>
+<p>把四元数写出标量加向量的形式： $q&#x3D;a+\mathbf u$ ， $p&#x3D;e+\mathbf v$ ， 其中 $\mathbf u&#x3D;b\mathbf i+c\mathbf j+d\mathbf k$ ， $\mathbf v&#x3D;f\mathbf i+g\mathbf j+h\mathbf k$ ，则有：</p>
+<p>$\mathbf u·\mathbf v&#x3D;-(bf+cg+dh)$<br>$\mathbf u×\mathbf v&#x3D;(-dg+ch)\mathbf i+(df-bh)\mathbf j+(-cf+bg)\mathbf k$ （叉乘的性质）</p>
+<p>那么上面四元数的乘积就变成：</p>
+<p>$qp&#x3D;ae+a\mathbf v+e\mathbf u-\mathbf u·\mathbf v+\mathbf u×\mathbf v$</p>
+<p>而本身乘积也可以表示为：</p>
+<p>$qp&#x3D;(a+\mathbf u)(e+\mathbf v)&#x3D;ae+a\mathbf v+e\mathbf u+\mathbf u\mathbf v$</p>
+<p>所以可以得出：</p>
+<p>$\mathbf u\mathbf v&#x3D;-\mathbf u·\mathbf v+\mathbf u×\mathbf v$</p>
+<p>同理可得：</p>
+<p>$\mathbf v\mathbf u&#x3D;-\mathbf v·\mathbf u+\mathbf v×\mathbf u&#x3D;-\mathbf u·\mathbf v-\mathbf u×\mathbf v$ （叉乘是反交换律）</p>
+<p>联合上面 2 式可得：</p>
+<p>$\mathbf u·\mathbf v&#x3D;-\frac{\mathbf u\mathbf v+\mathbf v\mathbf u}{2}$<br>$\mathbf u×\mathbf v&#x3D;\frac{\mathbf u\mathbf v-\mathbf v\mathbf u}{2}$</p>
+<p>也就是说向量的运算可以用四元数运算获得，如果把 $\mathbf u,\mathbf v$ 当成标量为 0 的四元数，这种四元数其实也叫做<strong>纯四元数</strong>。</p>
+<p>而事实上标量和向量都是四元数的一个特例，所以<strong>四元数的性质及运算规则也适用于向量</strong>，四元数本身也有点乘和叉乘 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385337220#ref_2">[2 基本认知和应用]</a>：</p>
+<p>$p\cdot q&#x3D;ae+\mathbf u\cdot \mathbf v$<br>$p\times q&#x3D;\mathbf u\times \mathbf v$</p>
+<p>此时再看四元数定义里的 $\mathbf i^{2}&#x3D;\mathbf j^{2}&#x3D;\mathbf k^{2}&#x3D;\mathbf {ijk}&#x3D;-1$</p>
+<p>由于 $\mathbf i,\mathbf j,\mathbf k$ 是单位向量，那么就可以得出： $\mathbf i^2&#x3D;\mathbf i\mathbf i&#x3D;-\mathbf i·\mathbf i+\mathbf i×\mathbf i&#x3D;-\mathbf i·\mathbf i&#x3D;-1$</p>
+<p>如果 $\mathbf i,\mathbf j,\mathbf k$ 互相垂直，则： $\mathbf j\mathbf k&#x3D;-\mathbf j·\mathbf k+\mathbf j×\mathbf k&#x3D;\mathbf j×\mathbf k&#x3D;\mathbf i$</p>
+<p>刚好反向证明了 $\mathbf i,\mathbf j,\mathbf k$ 的定义。</p>
+<p><strong>3. 四元数的模、共轭、逆</strong></p>
+<p><strong>四元数的模</strong>：</p>
+<p>$|q|&#x3D;\sqrt{s^{2}+x^{2}+y^{2}+z^{2}}$</p>
+<p>复数的共轭是实部相等，虚部相反，因此可以定义<strong>四元数的共轭</strong>：</p>
+<p>$q^{\ast}&#x3D;s-\mathbf v$</p>
+<p>令四元数 $q$ 的逆为 $q^{-1}$ ，根据：</p>
+<p>$qq^{-1}&#x3D;q^{-1}q&#x3D;1$<br>$qq^{\ast}&#x3D;(s+\mathbf v)(s-\mathbf v)&#x3D;s^{2}-\mathbf{vv}&#x3D;s^{2}+\mathbf v\cdot \mathbf v&#x3D;s^{2}+x^{2}+y^{2}+z^{2}&#x3D;|q|^{2}$<br>$q\frac{q^{\ast}}{|q|^{2}}&#x3D;1$</p>
+<p>可得<strong>四元数的逆</strong>：</p>
+<p>$q^{-1}&#x3D;\frac{q^{\ast}}{|q|^{2}}$</p>
+<p>那么可知单位四元数： $q_{unit}^{-1}&#x3D;q_{unit}^{\ast}$</p>
+<p>相应的，也可以定义<strong>向量的共轭、逆</strong>，令向量 $\mathbf v&#x3D;0+\mathbf v&#x3D;q_{v}$ ，也就是个纯四元数，则：</p>
+<p>$\mathbf v^{\ast}&#x3D;q_{v}^{\ast}&#x3D;-\mathbf v$<br>$\mathbf v^{-1}&#x3D;q_{v}^{-1}&#x3D;-\frac{\mathbf v}{|\mathbf v|^{2}}$</p>
+<p><strong>4. 四元数的三角形式</strong></p>
+<p>对与四元数 $q&#x3D;s+\mathbf v$ ，令： $r&#x3D;|q|$ ， $\rho&#x3D;|\mathbf v|$ ，可得： $r&#x3D;\sqrt{s^{2}+\rho^{2}}$ ，因此对于 $s$ 和 $\rho$ 的关系可以给出极坐标下的形式，即： $s&#x3D;r\cos\theta$ ， $\rho&#x3D;r\sin\theta$ ，在令向量 $\mathbf n$ 为向量 $\mathbf v$ 的单位向量，即： $\mathbf v&#x3D; \rho\mathbf n$ ，那么就可以对四元数的表达式进行变形：</p>
+<p>$q&#x3D;r(\cos\theta+\mathbf n\sin\theta)$</p>
+<p>这就是<strong>四元数的三角形式</strong>，这与复数的三角形式： $z&#x3D;r(\cosθ+i\sinθ)$ 是统一的，区别是一个是单位向量、一个是虚数单位，不过在代数运算上是一样的： $\mathbf n^{2}&#x3D;i ^{2}&#x3D;-1$ 。另外复数的三角形式也可以写成指数形式： $z&#x3D;re^{\theta i}$ ，对应四元数也有一样的<strong>指数形式</strong>：</p>
+<p>$q&#x3D;re^{\theta \mathbf n}$</p>
+<p><strong>5. 四元数的一些运算规则</strong></p>
+<p>利用四元数运算的多项式展开方法，可以证明：</p>
+<p>$q_{1}q_{2}\ne q_{2}q_{1}$<br>$q_{1}(q_{2}+q_{3})&#x3D; q_{1}q_{2}+q_{1}q_{3}$<br>$(q_{1}q_{2})q_{3}&#x3D; q_{1}(q_{2}q_{3})$</p>
+<p>也就是<strong>四元数满足乘法的分配律、结合律，不满足交换律</strong>。</p>
+<p>$(q_{1} q_{2})^{\ast}&#x3D; q_{2}^{\ast}q_{1}^{\ast}$<br>$(q_{1} q_{2})^{-1}&#x3D; q_{2}^{-1}q_{1}^{-1}$</p>
+<p>也就是<strong>四元数乘积的共轭和逆是各个四元数共轭和逆的倒序的乘积</strong>。</p>
+<h2 id="三、关于四元数的一些问题的理解"><a href="#三、关于四元数的一些问题的理解" class="headerlink" title="三、关于四元数的一些问题的理解"></a>三、关于四元数的一些问题的理解</h2><p><strong>1. 四元数是超复数、四维向量、轴角？</strong></p>
+<p>类比复数定义 $z&#x3D;a+bi$ ， $i^{2}&#x3D;-1$ ，四元数可以叫做超复数。</p>
+<p>由于四元数有 4 个维度的数据，所以本质上说是四维向量也没有问题，而且确实能从四维空间进行一定的解释，不过四元数设计之初应该不是直接从 4 维空间去考虑的，另外 4 维空间难以理解，因此游戏开发中不必纠结与理解四元数的 4 维空间性质。</p>
+<p>轴角是一个有明确几何意思的概念，而四元数的概率更抽象一点，虽然四元数的三角形式代表的几何意义其实是与轴角一样的，但是轴角很难应用与实际运算中，相反四元数非常合适。</p>
+<p><strong>2. 四元数为什么能表示旋转？</strong></p>
+<p>定义向量 $\mathbf a$ 和 $\mathbf b$ ，其夹角为 $\theta$ ， $|\mathbf a|&#x3D;|\mathbf b|&#x3D;l$ ， $\mathbf n$ 为垂直于 $\mathbf a$ 、$\mathbf b$ 所在的平面单位向量，则有：</p>
+<p>$\mathbf a\cdot \mathbf b&#x3D;l^{2}\cos\theta$<br>$\mathbf a \times \mathbf b&#x3D;\mathbf nl^{2}\sin\theta$</p>
+<p>所以有：</p>
+<p>$\mathbf b \mathbf a&#x3D;-\mathbf a\cdot \mathbf b-\mathbf a\times \mathbf b&#x3D;-l^{2}\cos\theta-\mathbf nl^{2}\sin\theta$ $\mathbf b&#x3D;-l^{2}(\cos\theta+\mathbf n\sin\theta)\mathbf a^{-1}&#x3D;-l^{2}(\cos\theta+\mathbf n\sin\theta)\frac{-\mathbf a}{l^{2}}&#x3D;(\cos\theta+\mathbf n\sin\theta)\mathbf a$</p>
+<p>也就是 $\mathbf b&#x3D;(\cos\theta+\mathbf n\sin\theta)\mathbf a$ ，其中 $(cos\theta+\mathbf n\sin\theta)$ 就是一个三角形式的单位四元数，因此<strong>存在一个单位四元数可以表示一个向量的旋转操作</strong>。</p>
+<p><strong>3. 为什么是四元数旋转向量的公式是：</strong> $\mathbf v’&#x3D;q\mathbf vq^{\ast}$ <strong>？</strong></p>
+<p>上一个问题的前提是：“ $\mathbf n$ 为垂直于 $\mathbf a$ 、$\mathbf b$ 所在的平面单位向量”，那么对于任意向量和四元数，有没有表示旋转的形式？</p>
+<p>定义向量 $\mathbf a$ 和 $\mathbf b$ ， $|\mathbf a|&#x3D;|\mathbf b|&#x3D;l$ ，令 $\mathbf a$ 绕单位向量轴 $\mathbf n$ 旋转 $\theta$ 角度得到 $\mathbf b$ ，将 $\mathbf a$ 分解为平行于 $\mathbf n$ 的 $\mathbf a_{∥}$ 和垂直与 $\mathbf n$ 的 $\mathbf a_{\bot}$ ，实际上只要旋转 $\mathbf a_{\bot}$ 就行了，并且 $\mathbf a_{\bot}$ 满足问题 2 的推导，如下图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225024.png"></p>
+<p>则有：</p>
+<p>$\mathbf a_{∥}&#x3D;(\mathbf a \cdot \mathbf n)\mathbf n&#x3D;-\frac{1}{2}(\mathbf a\mathbf n+\mathbf n\mathbf a)\mathbf n&#x3D;\frac{1}{2}(\mathbf a-\mathbf n\mathbf a\mathbf n)$<br>$\mathbf a_{\bot}&#x3D;\mathbf a-\mathbf a_{∥}&#x3D;\mathbf a-\frac{1}{2}(\mathbf a-\mathbf n\mathbf a\mathbf n)&#x3D;\frac{1}{2}(\mathbf a+\mathbf n\mathbf a\mathbf n)$<br>$\mathbf a’<em>{\bot}&#x3D;(\cos\theta+\mathbf n\sin\theta)\mathbf a</em>{\bot}&#x3D;\frac{1}{2}(\cos\theta+\mathbf n\sin\theta)(\mathbf a+\mathbf n\mathbf a\mathbf n)$<br>$\begin{align} \mathbf b&amp;&#x3D;\mathbf a_{∥} + \mathbf a’_{\bot}&#x3D;\frac{1}{2}(\mathbf a-\mathbf n\mathbf a\mathbf n + (\cos\theta+\mathbf n\sin\theta)(\mathbf a+\mathbf n\mathbf a\mathbf n))\ &amp;&#x3D;\frac{1}{2}((\cos\theta+1)\mathbf a+\sin\theta\mathbf n\mathbf a-\sin\theta\mathbf a\mathbf n+(\cos\theta-1)\mathbf n\mathbf a\mathbf n)\ \end{align}$</p>
+<p>令： $\mathbf b&#x3D;(s+x\mathbf n)\mathbf a(t+y\mathbf n)&#x3D;st\mathbf a+xt\mathbf n\mathbf a+sy\mathbf a\mathbf n+xy\mathbf n\mathbf a\mathbf n$ ，才能得到上面的表达式，不过这里用四元数的三角式：</p>
+<p>$\begin{align} \mathbf b&amp;&#x3D;x(\cos\alpha+\sin\alpha\mathbf n)\mathbf ay(\cos\beta+\sin\beta\mathbf n)\ &amp;&#x3D;xy\cos\alpha\cos\beta\mathbf a+xy\sin\alpha\cos\beta\mathbf n\mathbf a+xy\cos\alpha\sin\beta\mathbf a\mathbf n +xy\sin\alpha\sin\beta\mathbf n\mathbf a\mathbf n\ \end{align}$</p>
+<p>在将原式通过三角函数二倍角公式公式变形：</p>
+<p>$\mathbf b&#x3D;\cos^{2}\frac{\theta}{2}\mathbf a+\sin\frac{\theta}{2}\cos\frac{\theta}{2}\mathbf n\mathbf a-\sin\frac{\theta}{2}\cos\frac{\theta}{2}\mathbf a\mathbf n-\sin^{2}\frac{\theta}{2}\mathbf n\mathbf a\mathbf n$</p>
+<p>可得等式：</p>
+<p>$xy\cos\alpha\cos\beta&#x3D;\cos^{2}\frac{\theta}{2}$<br>$xy\sin\alpha\cos\beta&#x3D;\sin\frac{\theta}{2}\cos\frac{\theta}{2}$<br>$xy\cos\alpha\sin\beta&#x3D;-\sin\frac{\theta}{2}\cos\frac{\theta}{2}$<br>$xy\sin\alpha\sin\beta&#x3D;-\sin^{2}\frac{\theta}{2}$</p>
+<p>消元得：</p>
+<p>$\tan\alpha&#x3D;\tan\frac{\theta}{2}$<br>$\tan\beta&#x3D;-\tan\frac{\theta}{2}$</p>
+<p>可取： $a&#x3D;\frac{\theta}{2}$ ， $\beta&#x3D;-\frac{\theta}{2}$ ，那么可得： $xy&#x3D;1$ （如果取 $a&#x3D;\frac{\theta}{2}+\pi$ 则 $\sin\alpha$ 和 $\cos\alpha$ 只是取反，不影响最终结果），带入上面假设的三角式就得到：</p>
+<p>$\mathbf b&#x3D;(\cos\frac{\theta}{2}+\sin\frac{\theta}{2}\mathbf n)\mathbf a(\cos\frac{\theta}{2}-\sin\frac{\theta}{2}\mathbf n)$</p>
+<p>令四元数 $q&#x3D;\cos\frac{\theta}{2}+\sin\frac{\theta}{2}\mathbf n$ ，则 $q^{\ast}&#x3D;\cos\frac{\theta}{2}-\sin\frac{\theta}{2}\mathbf n$ ，因此可得结论：</p>
+<p>$\mathbf b&#x3D;q\mathbf a q^{\ast}$</p>
+<p>也就是向量 $\mathbf a$ 绕单位向量轴 $\mathbf n$ 旋转 $\theta$ 角度得到向量 $\mathbf b$ 可由四元数运算获得，这里四元数是单位四元数，所以<strong>任意单位四元数可将任意向量旋转一定角度，旋转轴是四元数向量部分，旋转角度是四元数三角式里角度的 2 倍</strong>。</p>
+<p><strong>4. 为什么是旋转向量使用单位四元数？</strong></p>
+<p>如果不是单位四元数，令 $q’&#x3D;rq$ ，则：</p>
+<p>$\mathbf b’&#x3D;q’\mathbf a q’^{\ast}&#x3D;rq\mathbf a rq^{\ast}&#x3D;r^{2}\mathbf b$</p>
+<p>那么新向量的模长会增大四元数模平方的倍数，不过这里也可以发现，只要最终得到的向量在更改模大小就可以了，运算过程中四元数不是单位四元数也没关系。</p>
+<p><strong>5. 四元数的逆或共轭表示什么旋转？</strong></p>
+<p>令单位四元数 $q&#x3D;\cos\frac{\theta}{2}+\sin\frac{\theta}{2}\mathbf n$ ，则其逆或共轭为 :</p>
+<p>$q^{-1}&#x3D;q^{\ast}&#x3D;\cos\frac{\theta}{2}-\sin\frac{\theta}{2}\mathbf n&#x3D;\cos(-\frac{\theta}{2})+\sin(-\frac{\theta}{2})\mathbf n$</p>
+<p>也就是<strong>绕相同的轴反向旋转相同的角度</strong>。</p>
+<p><strong>6. 四元数取反表示什么旋转？</strong></p>
+<p>令单位四元数 $q&#x3D;\cos\frac{\theta}{2}+\sin\frac{\theta}{2}\mathbf n$ ，则取反为 :</p>
+<p>$q’&#x3D;-q&#x3D;-\cos\frac{\theta}{2}-\sin\frac{\theta}{2}\mathbf n&#x3D;\cos\frac{2\pi-\theta}{2}+\sin\frac{2\pi-\theta}{2}(-\mathbf n)$</p>
+<p>是<strong>绕相反的轴旋转 $2\pi-\theta$ 的角度</strong>，从对向量的旋转结果可以看出其旋转效果是一样的：</p>
+<p>$\mathbf v’&#x3D;(-q)\mathbf v(-q^*)&#x3D;q\mathbf vq^*$</p>
+<p><strong>7. 有没有 0 四元数（0 旋转）？</strong></p>
+<p>如果四元数不产生旋转效果，也就是 $\theta&#x3D;0$ ，则 $q&#x3D;1$ ，这也是引擎里四元数 “Identity” 变量的定义，类似于向量的 “Zero” 变量。</p>
+<p><strong>8. 代码里如何存储四元数？</strong></p>
+<p>因为游戏使用四元数就是表示旋转信息，所以存储内容的就是： $q&#x3D;\cos\frac{\theta}{2}+\sin\frac{\theta}{2}\mathbf n$ ，也就是绕轴 $\mathbf n$ 旋转 $\theta$ 角度，其中有 4 个维度的数据，因此代码里的数据结构是： $\left[ w,x,y,z \right]$ ，其中： $w&#x3D;\cos\frac{\theta}{2},x&#x3D;\sin\frac{\theta}{2} \mathbf n_{x},y&#x3D;\sin\frac{\theta}{2} \mathbf n_{y},z&#x3D;\sin\frac{\theta}{2} \mathbf n_{z}$ 。</p>
+<p>同样可由 $\left[ w,x,y,z \right]$ 得知四元数的旋转角是： $\theta&#x3D;2\arccos w$ ，旋转轴是： $\mathbf n&#x3D;\frac{\left[x,y,z \right]}{\sqrt{x^{2}+y^{2}+z^{2}}}$ 。</p>
+<p><strong>9. 代码里如何计算向量旋转？</strong></p>
+<p>$\mathbf v’&#x3D;q\mathbf vq^{\ast}$ 只是向量旋转的公式，真正代码计算还是得用到向量的点乘和叉乘，所以对公式进行展开，令单位四元数 $q&#x3D;t+\mathbf u$ ：</p>
+<p>$\begin{align} \mathbf v’&amp;&#x3D;(t+\mathbf u)\mathbf v(t- \mathbf u)&#x3D;t^{2}\mathbf v+t\mathbf u\mathbf v-t\mathbf v\mathbf u-\mathbf {uvu} \ &amp;&#x3D;t^{2}\mathbf v+2t(\mathbf u\times \mathbf v)+(\mathbf u\cdot\mathbf v)\mathbf u+(\mathbf u\times\mathbf v)\cdot\mathbf u-(\mathbf u\times\mathbf v)\times\mathbf u\ &amp;&#x3D;t^{2}\mathbf v+2t(\mathbf u\times \mathbf v)+(\mathbf u\cdot\mathbf v)\mathbf u-(\mathbf u\cdot \mathbf u)\mathbf v+(\mathbf u\cdot \mathbf v)\mathbf u\ &amp;&#x3D;(t^{2}-\mathbf u\cdot \mathbf u)\mathbf v+2t(\mathbf u\times \mathbf v)+2(\mathbf u\cdot\mathbf v)\mathbf u\ \end{align}$</p>
+<p>因为 $t^{2}+|\mathbf u|^{2}&#x3D;1$ ，也就是 $t^{2}+\mathbf u\cdot\mathbf u&#x3D;1$ ，对上式在进行变形：</p>
+<p>$\begin{align} \mathbf v’&amp;&#x3D;(1-2\mathbf u\cdot \mathbf u)\mathbf v+2t(\mathbf u\times \mathbf v)+2(\mathbf u\cdot\mathbf v)\mathbf u \ &amp;&#x3D; \mathbf v+2t(\mathbf u\times \mathbf v)+2((\mathbf u\cdot\mathbf v)\mathbf u-(\mathbf u\cdot \mathbf u)\mathbf v) \ &amp;&#x3D;\mathbf v+2t(\mathbf u\times \mathbf v)+2\mathbf u\times (\mathbf u\times \mathbf v) \ \end{align}$</p>
+<p>这就是<strong>引擎里最终使用的向量旋转计算公式</strong>，很简洁，推导过程用到了双重叉乘公式。</p>
+<p><strong>10. 四元数和标量、向量相乘有没有意义？</strong></p>
+<p>四元数和标量相乘就是各个分量和标量相乘，结果会改变四元数的模长，但并不改变四元数旋转数值，四元数和向量相乘的结果是一个新的四元数，标量和向量部分都改变了。2 者单独使用对四元数代表的旋转信息的改变都没有什么明确意义，实际使用是存在与四元数的一些运算中，例如和标量相乘是在四元数的 Normalize 中，和向量相乘是在四元数旋转向量的计算中。</p>
+<p><strong>11. 四元数和四元数相乘有没有意义？</strong></p>
+<p>文中开头分析过四元数相乘的结果是： $pq&#x3D;st+t\mathbf v+s\mathbf u-\mathbf u·\mathbf v+\mathbf u×\mathbf v$ ，结果还是一个四元数，由于四元数的主要用途表示旋转信息，因此考虑对向量进行多次旋转的情况，例如对向量 $\mathbf v$ 先后进行 $q_{1},q_{2},q_{3}$ 3 次旋转，则旋转结果应为：</p>
+<p>$\mathbf v’&#x3D;q_{1}\mathbf vq_{1}^{<em>}$<br>$\mathbf v’’&#x3D;q_{2}\mathbf v’q_{2}^{</em>}&#x3D;q_{2}(q_{1}\mathbf vq_{1}^{<em>})q_{2}^{</em>}&#x3D;(q_{2}q_{1})\mathbf v(q_{1}^{<em>}q_{2}^{</em>})&#x3D;(q_{2}q_{1})\mathbf v(q_{2}q_{1})^{<em>}$<br>$\mathbf v’’’&#x3D;q_{3}\mathbf v’’q_{3}^{</em>}&#x3D;(q_{3}(q_{2}q_{1}))\mathbf v((q_{2}q_{1})^{<em>}q_{3}^{</em>})&#x3D;(q_{3}q_{2}q_{1})\mathbf v(q_{3}q_{2}q_{1})^{*}$</p>
+<p>令四元数 $q&#x3D;q_{3}q_{2}q_{1}$ ， $\mathbf v’’’&#x3D;q\mathbf vq^{*}$ ，也就是<strong>四元数乘积对向量的旋转相当于各个四元数依次按倒叙对向量进行旋转，所以四元数和四元数相乘代表了旋转的复合</strong>。</p>
+<p><strong>12. 四元数可以表示对一个向量的旋转信息，那么如何表示物体的朝向（orientation）？</strong></p>
+<p>表达物体朝向最直观的方法就是确定物体本地坐标系的 3 个轴，以左手系为例就是：（Forward、Right、Up）3 个轴（Unity 里是 zxy 轴，UE 里是 xyz 轴，所以这里用这个写法代替），可以从世界坐标系的（Forward、Right、Up）旋转一定角度获得，旋转的角度其实就是<strong>欧拉角</strong>，一般也叫做：翻滚角、俯仰角、偏航角（Roll、Pitch、Yaw）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225025.png"></p>
+<p>当然欧拉角有很多形式，用不同顺序的轴旋转的结果是不一样的，这里用的（Roll、Pitch、Yaw）旋转顺序，旋转轴就是世界坐标轴，有意思的是按照相反的顺序也能获得完全一样的旋转结果，只不过旋转轴是本地坐标轴（欧拉角一般指按本地坐标轴进行旋转，其 Yaw、Pitch、Roll 的旋转形式是与世界坐标轴的 Roll、Pitch、Yaw 旋转形式结果一致的）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225026.png"></p>
+<p>所以用四元数表示朝向就是 3 次坐标轴向量旋转的复合，旋转轴（Forward、Right、Up）用（x、y、z）代替，旋转角（Roll、Pitch、Yaw）用（ $\alpha$ 、 $\beta$ 、 $\gamma$ ）代替，则转换公式为：</p>
+<p>$\begin{align} q_{xyz}&amp;&#x3D;q_{z}q_{y}q_{x}&#x3D;(\cos \frac{\gamma}{2}+\sin \frac{\gamma}{2}\mathbf z)(\cos \frac{\beta}{2}+\sin \frac{\beta}{2}\mathbf y)(\cos \frac{\alpha}{2}+\sin \frac{\alpha}{2}\mathbf x) \ &amp;&#x3D;(\cos \frac{\alpha}{2}\cos \frac{\beta}{2}\cos \frac{\gamma}{2}+\sin \frac{\alpha}{2}\sin \frac{\beta}{2}\sin \frac{\gamma}{2})\ &amp;+(-\cos \frac{\alpha}{2}\sin\frac{\beta}{2}\sin\frac{\gamma}{2}+\sin\frac{\alpha}{2}\cos \frac{\beta}{2}\cos \frac{\gamma}{2})\mathbf x\ &amp;+(\cos \frac{\alpha}{2}\sin\frac{\beta}{2}\sin\frac{\gamma}{2}+\sin\frac{\alpha}{2}\cos \frac{\beta}{2}\sin\frac{\gamma}{2})\mathbf y\ &amp;+(\cos \frac{\alpha}{2}\cos \frac{\beta}{2}\sin\frac{\gamma}{2}-\sin\frac{\alpha}{2}\sin\frac{\beta}{2}\cos \frac{\gamma}{2})\mathbf z\ \end{align}$</p>
+<p>其中（x、y、z）满足 $\mathbf x^{2}&#x3D;\mathbf y^{2}&#x3D;\mathbf z^{2}&#x3D;\mathbf {xyz}&#x3D;-1$ ，可求得 $\mathbf {zy}&#x3D;-\mathbf x$ ， $\mathbf {yx}&#x3D;-\mathbf z$ ， $\mathbf {zx}&#x3D;\mathbf y$ ， $\mathbf {zyx}&#x3D;1$ ，带入展开式即可。这里的结果同维基百科上 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385337220#ref_3">[3 PBR 基本原理和实现]</a> 是一致的，不过跟虚幻引擎里的并不一致，原因是 UE 里的欧拉角 Roll、Pitch 是顺时针旋转，而 Yaw 是逆时针旋转的，这块具体设计原因不太清楚。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225027.png"></p>
+<p>因此<strong>四元数通过复合运算最终可以表示物体的朝向信息</strong>，由于四元数的旋转信息就是轴和角，所以对任意 2 个朝向，可以直接找到一个轴并使一方绕轴旋转一定角度获得另一方，也就是说 <strong>2 个朝向可以通过一次旋转进行转换</strong>，这也是轴角旋转的原理（欧拉旋转定律）。</p>
+<p><strong>13. 四元数如何进行父子空间朝向信息的转换？</strong></p>
+<p>四元数可以表示物体的朝向，其也代表了从世界空间坐标系到物体本身坐标系的旋转信息，因此在游戏里父子空间下物体朝向信息的转换就是四元数操作的复合。</p>
+<p>对于 2 个物体的朝向 $q_{1}$ 和 $q_{2}$ ，物体 1 的朝向是直接从世界坐标系旋转来的，先考虑物体 2 的朝向是在物体 1 的本地坐标系上旋转而来的，也就是说物体 1 的坐标系是物体 2 的 “世界坐标系”，想象一下先把 A 拉回 0 朝向，则物体 2 的朝向就是世界朝向，也就是应用了一个世界空间的 $q_{2}$ ，然后在让 A 应用本身的 $q_{1}$ ，则此时物体 2 就回到了原来的朝向，因为物体 1 的旋转会带动物体 2 旋转，因此物体 2 在世界空间的旋转是：</p>
+<p>$q_{w2}&#x3D;q_{2\rightarrow1}&#x3D;q_{1}q_{2}$ ，也就是：<strong>世界旋转 &#x3D; 父世界旋转 * 本地旋转</strong></p>
+<p>在考虑物体 2 的朝向也是从世界坐标系旋转来的，则物体 2 相对与物体 1 的本地朝向的旋转可以从上面的式子进行推导：</p>
+<p>$q_{2}&#x3D;q_{1}q_{l2}$<br>$q_{l2}&#x3D;q_{1}^{-1}q_{2}&#x3D;q_{1}^{<em>}q_{2}$ ，也就是：*<em>本地旋转 &#x3D; 父世界逆旋转 * 世界旋转</em></em></p>
+<p>这里应该在回顾一下问题 11，会发现同样是四元数连乘，但是意义却是不一样的，看过 UE 四元数代码应该注意到这个注释：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225028.png"></p>
+<p>也就是公式：</p>
+<p>$q’&#x3D;q(\Delta q)$<br>$q’&#x3D;(\Delta q)q$</p>
+<p>前者假定 $\Delta q$ 是本地空间的，对应的是旋转从本地转世界，后者则假定 $\Delta q$ 是世界空间的，对应的是旋转的复合，当然最终都是获得世界空间的新旋转（这里的世界空间也可以理解为父所在空间），使用的时候需要注意下这里的区别。</p>
+<p><strong>14. 四元数加法有没有意义（四元数与角速度）？</strong></p>
+<p>四元数的加法就是各个分量相加，得到一个新的四元数，标量和向量部分都改变了，所以加法本身并不能代表什么实际意义。</p>
+<p>四元数加法一个实际应用的地方是在对四元数微分方程的求解上，考虑向量可以代表物体的位置，位置向量对时间求导就是速度，用于描述物体的线性运动，那么四元数可以代表物体的朝向，则四元数的对时间求导应该也能描述物体的旋转运动，由于游戏里一般使用显示欧拉法求解运动微分方程，所以四元数旋转运动方程形式应该是：</p>
+<p>$\dot{q}&#x3D;\frac{dq}{dt}\Rightarrow q_{(t+\Delta t)}&#x3D;q_{(t)} + \dot{q}\Delta t$</p>
+<p>因此<strong>四元数的加法可以体现在四元数的旋转运动方程的求解中</strong>，其中 $\dot{q}&#x3D;\frac{1}{2}\mathbf ω q$ （ $\mathbf ω$ 是世界空间下的），关于这个公式的推导有很多方式，这里介绍一个利用四元数本身的代数运算规则来推导的方法 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385337220#ref_4">[01 光学原理]</a>：</p>
+<p>角速度和线速度的关系为： $\mathbf v&#x3D;\mathbf ω\times \mathbf r$ ，而线速度也能由位置向量 $\mathbf r$ 对时间求导获得： $\mathbf v&#x3D;\frac{d\mathbf r}{dt}$ ，因此：</p>
+<p>$\mathbf v&#x3D;\frac{d\mathbf r}{dt}&#x3D;\mathbf ω\times \mathbf r$</p>
+<p>其中位置向量 $\mathbf r$ 可以定义一个四元数运算获得： $\mathbf r&#x3D;q\mathbf r_{0}q^{*}$ ，表示从物体 0 朝向下经由四元数 $q$ 旋转而来，所以 $q$ 也代表了物体目前的朝向，因此可得：</p>
+<p>$\frac{d\mathbf r}{dt}&#x3D;\frac{d}{dt}(q\mathbf r_{0}q^{<em>})&#x3D;\dot q\mathbf r_{0}{q}^{</em>}+q\mathbf r_{0}\dot q^{*}&#x3D;\mathbf ω\times\mathbf r$</p>
+<p>其中 $\mathbf r_{0}$ 是常量，而 $\dot q^{<em>}$ 可由 $\frac{d}{dt}(qq^{</em>})&#x3D;\frac{d}{dt}(1)&#x3D;\dot q{q}^{<em>}+q\dot q^{</em>}&#x3D;0$ 求得：</p>
+<p>$\dot q^{<em>}&#x3D;-q^{</em>}\dot q{q}^{*}$</p>
+<p>带入原式可得：</p>
+<p>$\dot q\mathbf r_{0}{q}^{<em>}-q\mathbf r_{0}q^{</em>}\dot q{q}^{<em>}&#x3D;\dot q({q}^{</em>}q)\mathbf r_{0}{q}^{<em>}-\mathbf r\dot q{q}^{</em>}&#x3D;\dot q{q}^{<em>}\mathbf r-\mathbf r\dot q{q}^{</em>}&#x3D;\mathbf ω\times\mathbf r$</p>
+<p>另 $q\dot q^{<em>}&#x3D;(\dot q{q}^{</em>})^{<em>}$ 可得： $\dot q{q}^{</em>}+q\dot q^{<em>}&#x3D;\dot q{q}^{</em>}+(\dot q{q}^{<em>})^{</em>}&#x3D;0$ ，也就是说形如 $\dot q{q}^{*}$ 的四元数肯定是一个纯四元数，也就是个向量，由向量的乘法运算可知：</p>
+<p>$(\dot q{q}^{<em>})\mathbf r-\mathbf r(\dot q{q}^{</em>})&#x3D;2(\dot q{q}^{*}) \times\mathbf r&#x3D;\mathbf ω\times \mathbf r$</p>
+<p>由于 $\mathbf ω$ 与 $\mathbf r$ 是垂直的，因此只有一个解就是： $2\dot q{q}^{*} &#x3D;\mathbf ω$ ，也就得到最终结果：</p>
+<p>$\dot q &#x3D;\frac{1}{2}\mathbf ωq$</p>
+<p><strong>15. 两个四元数如何进行插值？</strong></p>
+<p>对两个四元数进行插值有几个思路，第一个是针对四元数的代数表达式进行直接插值，也就是针对标量部分和向量部分或者 4 个分量进行插值，第二个是将四元数理解成旋转信息，也就是旋转轴加旋转角，则 2 个四元数插值可以分别对旋转轴和旋转角进行插值，第三个是将四元数看成一个朝向，而 2 个朝向可以通过一个四元数的旋转进行转换，那么就可以找到一个转换四元数，然后对这个转换四元数的旋转角进行插值。</p>
+<p>第一个思路，令四元数 $q&#x3D;s+\mathbf v$ 和 $p&#x3D;t+\mathbf u$ ，插值系数 $\alpha$ ，则插值后的四元数为：</p>
+<p>$q’&#x3D;\alpha s+\alpha\mathbf v+(1-\alpha)t+(1-\alpha)\mathbf u$</p>
+<p>第二个思路，令四元数 $q&#x3D;\cos\frac{\theta}{2}+\sin\frac{\theta}{2}\mathbf n$ 和 $p&#x3D;\cos\frac{\eta}{2}+\sin\frac{\eta}{2}\mathbf m$ ，插值系数 $\alpha$ ，则插值后的四元数为：</p>
+<p>$q’&#x3D;\cos\frac{\alpha\theta+(1-\alpha)\eta}{2}+\sin\frac{\alpha\theta+(1-\alpha)\eta}{2}\mathbf (\alpha\mathbf n+(1-\alpha)\mathbf m)$</p>
+<p>第三个思路，对于四元数 $q&#x3D;s+\mathbf v$ 和 $p&#x3D;t+\mathbf u$ ，插值系数 为 $\alpha$ ，转换四元数为： $q&#x3D;(\Delta q)p\Rightarrow\Delta q&#x3D;qp^{*}$ ，则插值后的四元数为：</p>
+<p>$\Delta q&#x3D; (s+\mathbf v)(t-\mathbf u)&#x3D;st+\mathbf v\cdot \mathbf u+t\mathbf v-s\mathbf u-\mathbf v\times \mathbf u&#x3D;\cos\frac{\theta}{2}+\sin\frac{\theta}{2}\mathbf n$<br>$\theta&#x3D;2\arccos(st+\mathbf v\cdot \mathbf u),\mathbf n&#x3D;\frac{t\mathbf v-s\mathbf u-\mathbf v\times \mathbf u}{\sin\frac{\theta}{2}}$<br>$q’&#x3D;(\cos\frac{\alpha\theta}{2}+\sin\frac{\alpha\theta}{2}\mathbf n)p$</p>
+<p>如果这个思路写成四元数的指数形式的话就是：</p>
+<p>$\Delta q&#x3D;\cos\frac{\theta}{2}+\sin\frac{\theta}{2}\mathbf n&#x3D;e^{\frac{\theta}{2}\mathbf n}$<br>$q’&#x3D;(\cos\frac{\alpha\theta}{2}+\sin\frac{\alpha\theta}{2}\mathbf n)p&#x3D;e^{\alpha\frac{\theta}{2}\mathbf n}p&#x3D;\Delta q^{\alpha}p&#x3D;(qp^{*})^{\alpha}p$</p>
+<p>这其实就是<strong>四元数的 Slerp 插值公式</strong>，对上面的推导公式进行进一步化简可得：</p>
+<p>$\mathbf n&#x3D;\frac{qp^{<em>}-\cos\frac{\theta}{2}}{\sin\frac{\theta}{2}}$<br>$\begin{align} q’&amp;&#x3D;(\cos\frac{\alpha\theta}{2}+\sin\frac{\alpha\theta}{2}(\frac{qp^{</em>}-\cos\frac{\theta}{2}}{\sin\frac{\theta}{2}}))p&#x3D;\cos\frac{\alpha\theta}{2}p+\frac{\sin\frac{\alpha\theta}{2}q-\sin\frac{\alpha\theta}{2}\cos\frac{\theta}{2}p}{\sin\frac{\theta}{2}}\ &amp;&#x3D;\frac{\cos\frac{\alpha\theta}{2}\sin\frac{\theta}{2}p-\sin\frac{\alpha\theta}{2}\cos\frac{\theta}{2}p+\sin\frac{\alpha\theta}{2}q}{\sin\frac{\theta}{2}}&#x3D;\frac{\sin\frac{\alpha\theta}{2}q-\sin\frac{(a-1)\theta}{2}p}{\sin\frac{\theta}{2}}\ &amp;&#x3D;\frac{\sin\frac{\alpha\theta}{2}q+\sin\frac{(1-\alpha)\theta}{2}p}{\sin\frac{\theta}{2}} \end{align}$</p>
+<p>如果令 $\Omega&#x3D;\frac{\theta}{2}&#x3D;\arccos(st+\mathbf v\cdot \mathbf u)&#x3D;\arccos(q\cdot p)$ ，则最终的形式就是：</p>
+<p>$q’&#x3D;\frac{\sin(\alpha\Omega) q+\sin{((1-\alpha)\Omega)}p}{\sin\Omega}&#x3D;\frac{\sin(\alpha\Omega)}{\sin\Omega}q+\frac{\sin{((1-\alpha)\Omega)}}{\sin\Omega}p$</p>
+<p>这就是实际计算时用到的四元数的 Slerp 公式，之所以叫 Slerp 是因为公式跟向量的 Slerp 是一样的，而且角 $\Omega$ 正好也是四元数的点积，这也应征了四元数的四维向量的性质。</p>
+<p>然后看一下 3 个方案的效果，从左到右按照上面的思路顺序来，最后一个是对欧拉角的线性插值效果：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225029.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292225030.png"></p>
+<p>第一个方案其实就是四元数的 Nlerp（Lerp 之后在 Normalize 一下），效果上跟第三个 Slerp 还有点区别的，Slerp 因为是对旋转角进行插值的，所以插值变化时角速度时不变的，看起来更平稳，Nlerp 则是中间快 2 头慢，具体可以参考向量的 Lerp 和 Slerp 的分析 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385337220#ref_5">[5]</a>，方案 2 的旋转效果看起来是大概是一个先慢后快的过程，不过计算量比 Slerp 大一点。另外第二张图可以明显看见 Slerp 旋转的路径更简单（可以看到 XY 轴旋转角度小于 180 度），这是因为引擎在实际处理 Slerp 的时候会判断插值的旋转角，如果比较大那么可以对转换四元数进行取反，这样旋转的角度就会变小，旋转路径更短，这也是 Slerp 的一个优势。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385337220#ref_1_0">^</a> 向量 <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%90%91%E9%87%8F/1396519?fr=aladdin">https://baike.baidu.com/item/%E5%90%91%E9%87%8F/1396519?fr=aladdin</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385337220#ref_2_0">^</a> 四元数 <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%9B%9B%E5%85%83%E6%95%B0/5795379?fr=aladdin">https://baike.baidu.com/item/%E5%9B%9B%E5%85%83%E6%95%B0/5795379?fr=aladdin</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385337220#ref_3_0">^</a>Conversion between quaternions and Euler angles <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles">https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385337220#ref_4_0">^</a>How to Integrate Quaternions <a target="_blank" rel="noopener" href="https://www.ashwinnarayan.com/post/how-to-integrate-quaternions/">https://www.ashwinnarayan.com/post/how-to-integrate-quaternions/</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385337220#ref_5_0">^</a> 四元数与三维旋转 <a target="_blank" rel="noopener" href="https://krasjet.github.io/quaternion/quaternion.pdf">https://krasjet.github.io/quaternion/quaternion.pdf</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/34215.html">http://liuke101.github.io/post/34215.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/3D%E6%95%B0%E5%AD%A6/">3D数学</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227539.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/41022.html" title="UML类图"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">UML类图</div></div></a></div><div class="next-post pull-right"><a href="/post/9181.html" title="【公式推导02】空间变换"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292230524.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【公式推导02】空间变换</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/50070.html" title="3D数学"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292248855.gif" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">3D数学</div></div></a></div><div><a href="/post/9181.html" title="【公式推导02】空间变换"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292230524.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【公式推导02】空间变换</div></div></a></div><div><a href="/post/32783.html" title="【公式推导03】光照向量"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292237904.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【公式推导03】光照向量</div></div></a></div><div><a href="/post/22003.html" title="【公式推导04】纹理映射"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【公式推导04】纹理映射</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">文章主要迁移自个人的obsidian仓库，存在部分md语法冲突，导致显示异常，暂未修复...</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5"><span class="toc-text">旋转矩阵</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-2D%E6%97%8B%E8%BD%AC"><span class="toc-text">1.1 2D旋转</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-3D%E6%97%8B%E8%BD%AC"><span class="toc-text">1.2 3D旋转</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E5%8A%A9%E8%AE%B0"><span class="toc-text">1.3 助记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">1.4 注意事项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-%E7%BD%97%E5%BE%B7%E9%87%8C%E6%A0%BC%E6%96%AF%E5%85%AC%E5%BC%8F"><span class="toc-text">1.5  罗德里格斯公式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AC%A7%E6%8B%89%E8%A7%92"><span class="toc-text">欧拉角</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E5%AF%BC"><span class="toc-text">推导</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%87%E5%90%91%E8%8A%82%E6%AD%BB%E9%94%81%EF%BC%88Gimbal-Lock%EF%BC%89"><span class="toc-text">万向节死锁（Gimbal Lock）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E5%85%83%E6%95%B0"><span class="toc-text">四元数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E6%95%B0%E5%9B%9E%E9%A1%BE"><span class="toc-text">复数回顾</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="toc-text">定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#a-b-%E5%BD%A2%E5%BC%8F"><span class="toc-text">(a,b)形式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#a-ib-%E5%BD%A2%E5%BC%8F"><span class="toc-text">(a+ib)形式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E6%95%B0%E5%87%A0%E4%BD%95%E6%84%8F%E4%B9%89"><span class="toc-text">复数几何意义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E6%95%B0%E7%9A%84%E6%9E%81%E5%9D%90%E6%A0%87%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="toc-text">复数的极坐标表示法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E5%85%83%E6%95%B0%E4%BB%A3%E6%95%B0"><span class="toc-text">四元数代数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%9F%BA%E6%9C%AC%E8%BF%90%E7%AE%97"><span class="toc-text">定义与基本运算</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E4%B9%98%E7%A7%AF"><span class="toc-text">特殊乘积</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%AC%E6%8D%A2"><span class="toc-text">转换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B1%E8%BD%AD-%E6%A8%A1-%E9%80%86"><span class="toc-text">共轭&#x2F;模&#x2F;逆</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%81%E5%9D%90%E6%A0%87%E5%BD%A2%E5%BC%8F"><span class="toc-text">极坐标形式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E5%85%83%E6%95%B0%E6%97%8B%E8%BD%AC"><span class="toc-text">四元数旋转</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC%E7%AE%97%E5%AD%90"><span class="toc-text">旋转算子</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC%E7%AE%97%E5%AD%90%E8%BD%AC%E6%8D%A2%E4%B8%BA%E7%9F%A9%E9%98%B5%E5%BD%A2%E5%BC%8F"><span class="toc-text">旋转算子转换为矩阵形式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%B8%BA%E5%9B%9B%E5%85%83%E6%95%B0%E6%97%8B%E8%BD%AC%E7%AE%97%E5%AD%90"><span class="toc-text">旋转矩阵变换为四元数旋转算子</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E5%85%83%E6%95%B0%E6%8F%92%E5%80%BC"><span class="toc-text">四元数插值</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%90%83%E9%9D%A2%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC%E5%85%AC%E5%BC%8F"><span class="toc-text">球面线性插值公式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC%E5%BC%A7%E5%BA%A6%E9%95%BF%E7%9F%AD%E9%97%AE%E9%A2%98"><span class="toc-text">旋转弧度长短问题</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%90%E6%91%98%E3%80%91-%E6%AC%A7%E6%8B%89%E8%A7%92%E3%80%81%E5%9B%9B%E5%85%83%E6%95%B0%E3%80%81%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5%E3%80%81%E8%BD%B4%E8%A7%92"><span class="toc-text">【摘】 欧拉角、四元数、旋转矩阵、轴角</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%AC%A7%E6%8B%89%E8%A7%92-Euler-Angle-%E4%B8%8E%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5-Rotation-Matrix"><span class="toc-text">1 欧拉角 (Euler Angle) 与旋转矩阵(Rotation Matrix)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E6%AC%A7%E6%8B%89%E8%A7%92-%E2%80%94-%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5"><span class="toc-text">1.1 欧拉角 —-&gt; 旋转矩阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5-%E2%80%94-%E6%AC%A7%E6%8B%89%E8%A7%92"><span class="toc-text">1.2 旋转矩阵 —-&gt; 欧拉角</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%9B%9B%E5%85%83%E6%95%B0-Quaternion-%E4%B8%8E%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5"><span class="toc-text">2 四元数 (Quaternion) 与旋转矩阵</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%AC%A7%E6%8B%89%E8%A7%92%E4%B8%8E%E5%9B%9B%E5%85%83%E6%95%B0"><span class="toc-text">3 欧拉角与四元数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E8%BD%B4-%E8%A7%92-Axis-Angle"><span class="toc-text">4 轴 - 角 (Axis-Angle)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%90%E6%91%98%E3%80%91-%E5%AF%B9%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E5%9B%9B%E5%85%83%E6%95%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3"><span class="toc-text">【摘】 对游戏开发中的四元数的一些理解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%9B%9B%E5%85%83%E6%95%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%A7%E8%B4%A8"><span class="toc-text">二、四元数的一些性质</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%85%B3%E4%BA%8E%E5%9B%9B%E5%85%83%E6%95%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">三、关于四元数的一些问题的理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/64863.html" title="全局光照GI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300005318.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="全局光照GI"/></a><div class="content"><a class="title" href="/post/64863.html" title="全局光照GI">全局光照GI</a><time datetime="2024-04-29T23:06:00.000Z" title="发表于 2024-04-30 00:06:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/55802.html" title="环境光照IBL"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300003151.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="环境光照IBL"/></a><div class="content"><a class="title" href="/post/55802.html" title="环境光照IBL">环境光照IBL</a><time datetime="2024-04-29T23:03:00.000Z" title="发表于 2024-04-30 00:03:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/49886.html" title="光线追踪理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292358872.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="光线追踪理论"/></a><div class="content"><a class="title" href="/post/49886.html" title="光线追踪理论">光线追踪理论</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/38389.html" title="路径追踪"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300000048.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="路径追踪"/></a><div class="content"><a class="title" href="/post/38389.html" title="路径追踪">路径追踪</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/19081.html" title="PBR理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292357277.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PBR理论"/></a><div class="content"><a class="title" href="/post/19081.html" title="PBR理论">PBR理论</a><time datetime="2024-04-29T22:57:00.000Z" title="发表于 2024-04-29 23:57:00">2024-04-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227539.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>

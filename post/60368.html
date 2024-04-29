@@ -1,0 +1,569 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【图形系统05】模板测试 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="1 理解 Stencil Buffer引例stencil 是印刷工业中的版面模子，模子上抠出需要的图案，然后将模子盖在要被印刷的材质上，对洞涂或喷绘颜色。 如果将屏幕上所有像素想象成一串连续的 0 组成的矩形，那么 stencil buffer 的作用就是将某些 0 变为 1，2，3 … 255，在每个 pass 中可以决定只渲染某个特定 stencil 值的像素并抛弃对其他非该值像素的操作，就像">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【图形系统05】模板测试">
+<meta property="og:url" content="http://liuke101.github.io/post/60368.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="1 理解 Stencil Buffer引例stencil 是印刷工业中的版面模子，模子上抠出需要的图案，然后将模子盖在要被印刷的材质上，对洞涂或喷绘颜色。 如果将屏幕上所有像素想象成一串连续的 0 组成的矩形，那么 stencil buffer 的作用就是将某些 0 变为 1，2，3 … 255，在每个 pass 中可以决定只渲染某个特定 stencil 值的像素并抛弃对其他非该值像素的操作，就像">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292323410.png">
+<meta property="article:published_time" content="2024-04-29T22:23:00.000Z">
+<meta property="article:modified_time" content="2024-04-29T22:31:39.338Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="图形学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292323410.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/60368.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【图形系统05】模板测试',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-29 23:31:39'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292323410.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【图形系统05】模板测试</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-29T22:23:00.000Z" title="发表于 2024-04-29 23:23:00">2024-04-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-29T22:31:39.338Z" title="更新于 2024-04-29 23:31:39">2024-04-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>17分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【图形系统05】模板测试"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/60368.html#post-comment"><span class="waline-comment-count" data-path="/post/60368.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="1-理解-Stencil-Buffer"><a href="#1-理解-Stencil-Buffer" class="headerlink" title="1 理解 Stencil Buffer"></a>1 理解 Stencil Buffer</h1><h2 id="引例"><a href="#引例" class="headerlink" title="引例"></a>引例</h2><p>stencil 是印刷工业中的版面模子，模子上抠出需要的图案，然后将模子盖在要被印刷的材质上，对洞涂或喷绘颜色。</p>
+<p>如果将屏幕上所有像素想象成一串连续的 0 组成的矩形，那么 stencil buffer 的作用就是将某些 0 变为 1，2，3 … 255，在每个 pass 中可以决定只渲染某个特定 stencil 值的像素并抛弃对其他非该值像素的操作，就像一块模板一样扣住了所有像素，并只对当前 stencil 值的洞洞进行喷绘。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322708.png" alt="Pasted image 20221030224512"></p>
+<ul>
+<li>左图为颜色缓冲区中的一张图，在模板缓冲区中我们会给这张图的每一个片元分配一个 0-255 的数字（8 位，<strong>默认为 0</strong>）</li>
+<li>中、右图可以看到，我们修改了一些 0 为 1，通过自定义的一些准则，如输出模板缓冲区中 1 对应的片元的颜色；0 的不输出，最后通过模板测试的结果就如右图所示。</li>
+</ul>
+<h2 id="模板测试效果举例"><a href="#模板测试效果举例" class="headerlink" title="模板测试效果举例"></a>模板测试效果举例</h2><ul>
+<li>①传送门效果：可以看到左边传送门内的景象正是右侧的场景<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322710.png" alt="Pasted image 20221030224810"></li>
+<li>②Minions 讲解的一些效果，例如 3D 卡牌效果、侦探镜效果等</li>
+<li><ul>
+<li>大佬链接：<a target="_blank" rel="noopener" href="https://www.patreon.com/posts/14832618">https://www.patreon.com/posts/14832618</a></li>
+</ul>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322711.gif" alt="1|200"> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322712.gif" alt="1 1|200"> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322713.gif" alt="1 2|200"> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322714.gif" alt="1 3|200"></p>
+<ul>
+<li><p>③每个正方体面显示不同场景（每个面作为蒙版来显示场景）<br> 《笼中窥梦》游戏场景：<br> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322715.gif" alt="y7Tcu-l8zuwKKGkVacX8qg"> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322716.gif" alt="bvS1V1NTiLs9k5UHIqnUUw"></p>
+</li>
+<li><p>对于上述的例子总结一下，这些效果基本可以归结为三层组成</p>
+</li>
+<li><p>以②中的图 4 传送门为例子，三层分别对应：门外场景、门内场景、门</p>
+</li>
+<li><p>也就是说可以理解为：包括两层物体&#x2F;场景、和一层遮罩</p>
+</li>
+</ul>
+<h1 id="2-什么是模板测试"><a href="#2-什么是模板测试" class="headerlink" title="2 什么是模板测试"></a>2 什么是模板测试</h1><h2 id="从渲染管线理解"><a href="#从渲染管线理解" class="headerlink" title="从渲染管线理解"></a>从渲染管线理解</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322717.png" alt="1683366278896"></p>
+<p>在像素处理阶段的合并阶段（Merger）进行各种测试：<br>合并阶段是<strong>可以配置但不可编程的</strong>（对应图中为黄色背景）<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322718.jpg" alt="Pasted image 20221030230409"></p>
+<p>流程：</p>
+<ul>
+<li><p><strong>像素所有权测试→裁剪测试→透明度测试→模板测试→深度测试→透明度混合</strong></p>
+</li>
+<li><p><strong>PixelOwnershipTest（像素所有权测试）：</strong></p>
+</li>
+<li><p>简单来说就是控制当前屏幕像素的使用权限</p>
+</li>
+<li><p>举例：比如 unity 引擎中仅渲染 scene 和 game 窗口，即只对 scene 和 game 窗口部分的像素具有使用权限</p>
+</li>
+<li><p><strong>ScissorTest（裁剪测试）：</strong></p>
+</li>
+<li><p>在渲染窗口再定义要渲染哪一部分，默认全部渲染，可以自己控制。</p>
+</li>
+<li><p>和裁剪空间一起理解，也就是只渲染能看到的部分</p>
+</li>
+<li><p>举例：只渲染窗口的左下角部分</p>
+</li>
+<li><p><strong>AlphaTest（透明度测试）</strong></p>
+</li>
+<li><p>提前设置一个透明度阈值</p>
+</li>
+<li><p>只能实现不透明效果和全透明效果</p>
+</li>
+<li><p>举例：设置透明度 a 为 0.5，如果片元大于这个值就通过测试，如果小于 0.5 就剔除掉</p>
+</li>
+<li><p><strong>StencilTest（模板测试）</strong></p>
+</li>
+<li><p><strong>DepthTest（深度测试）</strong></p>
+</li>
+<li><p><strong>Blending（透明度混合）</strong></p>
+</li>
+<li><p>可以实现半透明效果</p>
+</li>
+<li><p>完成接下来的其他一系列操作后，我们会将合格的片元&#x2F;像素输出到<strong>帧缓冲区（FrameBuffer）</strong>，最后渲染到屏幕上。</p>
+</li>
+</ul>
+<h2 id="从逻辑上理解"><a href="#从逻辑上理解" class="headerlink" title="从逻辑上理解"></a>从逻辑上理解</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322719.png" alt="Pasted image 20221030230942"></p>
+<ul>
+<li><p>理解：</p>
+</li>
+<li><p><strong>referenceValue</strong>：当前模板缓冲片元的参考值（0~255）</p>
+</li>
+<li><p><strong>&amp;readMask</strong>：与读掩码做一个“与”操作</p>
+</li>
+<li><p><strong>stencilBufferValue</strong>：模板缓冲区里的值，初始为 0</p>
+</li>
+<li><p>中间<strong>comparisonFunction</strong>，就是做一个比较</p>
+</li>
+<li><p>结果：</p>
+</li>
+<li><p>如果通过，这个片元就进入下一个阶段</p>
+</li>
+<li><p>未通过&#x2F;抛弃，停止并且不会进入下一个阶段，也就是说不会进入颜色缓冲区</p>
+</li>
+<li><p>总结：就是<strong>通过一定条件来判断这个片元&#x2F;片元属性执行保留还是抛弃</strong>的操作</p>
+</li>
+</ul>
+<h2 id="从书面概念上理解"><a href="#从书面概念上理解" class="headerlink" title="从书面概念上理解"></a>从书面概念上理解</h2><p><strong>模板缓冲区 Stencil buffer</strong> </p>
+<ul>
+<li>模板缓冲区与颜色缓冲区和深度缓冲区类似，模板缓冲区可以为屏幕上的每一个像素点保存一个无符号整数值（通常为 8 位 int，0-255）。</li>
+<li>这个值的意义根据程序的具体应用而定。</li>
+</ul>
+<p><strong>模板测试</strong></p>
+<ul>
+<li>渲染过程中，可以用这个值与预先设定好的参考值作（ReferenceValue）比较，根据结果来决定是否更新相应的像素点的颜色值。</li>
+<li>这个比较的过程就称为<strong>模板测试</strong>。</li>
+<li>模板测试在<strong>透明度测试之后</strong>，<strong>深度测试之前</strong>。</li>
+<li>如果模板测试通过，相应的像素点更新，否则不更新。</li>
+</ul>
+<h1 id="3-使用方法"><a href="#3-使用方法" class="headerlink" title="3 使用方法"></a>3 使用方法</h1><h2 id="语法表示-结构解释"><a href="#语法表示-结构解释" class="headerlink" title="语法表示&#x2F;结构解释"></a>语法表示&#x2F;结构解释</h2><p>[[unity3d.com)](<a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/Manual/SL-Stencil.html|ShaderLab">https://docs.unity3d.com/cn/2022.3/Manual/SL-Stencil.html|ShaderLab</a> 命令：模板 - Unity 手册 (unity3d.com)]]<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322720.png" alt="Pasted image 20221030231544"></p>
+<ul>
+<li><strong>Ref</strong>：当前片元的参考值（0-255）referenceValue</li>
+<li><strong>ReadMask</strong>：读掩码</li>
+<li><strong>WriteMask</strong>：写掩码</li>
+<li><strong>Comp</strong>：比较操作函数</li>
+<li><strong>Pass</strong>：测试通过，之后进行操作（StencilOperation，后边有详细讲解）</li>
+<li><strong>Fail</strong>：测试未通过，也会进行一个操作</li>
+<li><strong>ZFail：</strong> 模板测试通过，深度测试未通过，也可以进行一个操作</li>
+</ul>
+<p>默认值如下：<br><strong>注：Unity 中模板缓冲区默认是 0, 即 Ref 0</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Stencil </span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//当前像素stencil值与0进行比较</span></span><br><span class="line">    Ref <span class="number">0</span>           <span class="comment">//0-255</span></span><br><span class="line">    <span class="comment">//测试条件：测试是否相等</span></span><br><span class="line">    Comp Equal     <span class="comment">//default:always</span></span><br><span class="line">    <span class="comment">//如果测试通过对此stencil值进行的写入操作：保持当前stencil值</span></span><br><span class="line">    Pass keep       <span class="comment">//default:keep</span></span><br><span class="line">    <span class="comment">//如果测试失败对此stencil值进行的写入操作：保持当前stencil值</span></span><br><span class="line">    Fail keep       <span class="comment">//default:keep</span></span><br><span class="line">    <span class="comment">//如果深度测试失败对此stencil值进行的写入操作：循环递增</span></span><br><span class="line">    ZFail IncrWrap  <span class="comment">//default:keep</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="ComparisonFunction"><a href="#ComparisonFunction" class="headerlink" title="ComparisonFunction"></a>ComparisonFunction</h2><p>我们可以根据需求配置<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322721.png" alt="Pasted image 20221030231708"></p>
+<h2 id="StencilOperation-更新值"><a href="#StencilOperation-更新值" class="headerlink" title="StencilOperation 更新值"></a>StencilOperation 更新值</h2><p>有不同的更新操作，根据自己的需求进行配置<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322722.png" alt="Pasted image 20221030231720"></p>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h1><ul>
+<li><p><strong>最重要 (用来比较的）两个值</strong>：</p>
+</li>
+<li><p><strong>当前模板缓冲区值（StencilBufferValue）</strong>、<strong>模板参考值（ReferenceValue）</strong></p>
+</li>
+<li><p>模板测试主要就是对这两个值进行特定的比较操作，例如 Never、Always、Equal 等，具体参考上文的表格</p>
+</li>
+<li><p>模板测试后要对模板缓冲区的值进行更新操作，例如 Keep，Replace 等，具体参考上文表格</p>
+</li>
+<li><p>模板测试之后可以根据结果对模板缓冲区做不同的更新操作，例如模板测试成功操作 Pass、模板测试失败操作 Fail、深度测试失败操作 ZFail、还有正对正面和背面精确更新操作 Passback，Passfront，Failback 等…</p>
+</li>
+</ul>
+<p>属性中使用一个内置的枚举，这样就可以在外边自己选择可配置的属性了<br> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322723.png" alt="Pasted image 20221031163235"></p>
+<h1 id="5-应用"><a href="#5-应用" class="headerlink" title="5 应用"></a>5 应用</h1><p> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322724.png" alt="Pasted image 20221031163637"><br>[<a target="_blank" rel="noopener" href="https://blog.csdn.net/liu_if_else/article/details/86316361|(3%E6%9D%A1%E6%B6%88%E6%81%AF">3条消息) Unity Shader: 理解Stencil buffer并将它用于一些实战案例（描边，多边形填充，反射区域限定，阴影体shadow volume阴影渲染）_liu_if_else的博客-CSDN博客</a> Unity Shader: 理解Stencil buffer并将它用于一些实战案例（描边，多边形填充，反射区域限定，阴影体shadow volume阴影渲染）_liu_if_else的博客-CSDN博客]]</p>
+<h2 id="描边"><a href="#描边" class="headerlink" title="描边"></a>描边</h2><p>[[05 描边#2 模板测试描边]]</p>
+<h2 id="卡牌效果"><a href="#卡牌效果" class="headerlink" title="卡牌效果"></a>卡牌效果</h2><p>ID 都为 0 时，即 unity 默认的显示效果：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322725.png" alt="Pasted image 20221031161931|300"><br>Mask 和 Texture 的 ID 都设置为 1：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322726.png" alt="Pasted image 20221031155916|300"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322727.png" alt="Pasted image 20221031160105|300"><br>思路：蒙版 <code>Ref[_ID]</code>设置为 1，Texture 的 <code>Ref[_ID]</code>也设置为 1，这样可以显示与蒙版重叠的部分，其余部分都剔除。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322728.gif" alt="kapai"><br><strong>以下为案例 shader，重点在于 Stencil 部分的设置，其余部分就是按正常 shader 来写，对于 3d 模型计算一下光照</strong></p>
+<h3 id="①蒙版-Mask-的-shader"><a href="#①蒙版-Mask-的-shader" class="headerlink" title="①蒙版 Mask 的 shader"></a>①蒙版 Mask 的 shader</h3><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//蒙版，ID设置为1，将外面东西全部剔除</span></span><br><span class="line"><span class="selector-tag">Shader</span> &quot;<span class="selector-tag">Unlit</span>/<span class="selector-tag">StencilMask</span>&quot;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="selector-tag">Properties</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="selector-tag">_ID</span> (<span class="string">&quot;Mask ID&quot;</span>, Int) = <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-tag">SubShader</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="selector-tag">Tags</span> &#123; &quot;<span class="selector-tag">RenderType</span>&quot;=&quot;<span class="selector-tag">Opaque</span>&quot; &quot;<span class="selector-tag">Queue</span>&quot; = &quot;<span class="selector-tag">Geometry</span>+<span class="number">1</span>&quot; &#125;</span><br><span class="line">        <span class="selector-tag">ColorMask</span> <span class="number">0</span> <span class="comment">//0：什么都不显示，全透明</span></span><br><span class="line">        <span class="comment">//ColorMask RGBA  //四个通道全部输出，其他可选RGB、R、G、B、0</span></span><br><span class="line">        <span class="selector-tag">Zwrite</span> <span class="selector-tag">off</span></span><br><span class="line">        </span><br><span class="line">        <span class="selector-tag">Stencil</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="selector-tag">Ref</span><span class="selector-attr">[_ID]</span></span><br><span class="line">            <span class="selector-tag">Comp</span> <span class="selector-tag">always</span> <span class="comment">//默认always</span></span><br><span class="line">            <span class="selector-tag">Pass</span> <span class="selector-tag">replace</span> <span class="comment">//replace：通过就把模板缓冲区的值替换成我们的ID值，默认keep</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">//其他不写的选项默认Keep</span></span><br><span class="line">            <span class="comment">//Fail Keep</span></span><br><span class="line">            <span class="comment">//ZFail keep</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="selector-tag">LOD</span> <span class="number">100</span></span><br><span class="line"></span><br><span class="line">        <span class="selector-tag">Pass</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="selector-tag">CGPROGRAM</span></span><br><span class="line">            <span class="selector-id">#pragma</span> <span class="selector-tag">vertex</span> <span class="selector-tag">vert</span></span><br><span class="line">            <span class="selector-id">#pragma</span> <span class="selector-tag">fragment</span> <span class="selector-tag">frag</span></span><br><span class="line"></span><br><span class="line">            <span class="selector-id">#include</span> &quot;<span class="selector-tag">UnityCG</span><span class="selector-class">.cginc</span>&quot;</span><br><span class="line"></span><br><span class="line">            <span class="selector-tag">struct</span> <span class="selector-tag">appdata</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="selector-tag">float4</span> <span class="selector-tag">vertex</span> : <span class="selector-tag">POSITION</span>;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="selector-tag">struct</span> <span class="selector-tag">v2f</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="selector-tag">float4</span> <span class="selector-tag">pos</span> : <span class="selector-tag">SV_POSITION</span>;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="selector-tag">v2f</span> <span class="selector-tag">vert</span> (appdata v)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="selector-tag">v2f</span> <span class="selector-tag">o</span>;</span><br><span class="line">                <span class="selector-tag">o</span><span class="selector-class">.pos</span> = <span class="selector-tag">UnityObjectToClipPos</span>(v.vertex);</span><br><span class="line">                <span class="selector-tag">return</span> <span class="selector-tag">o</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="selector-tag">fixed4</span> <span class="selector-tag">frag</span> (v2f i) : <span class="selector-tag">SV_Target</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="selector-tag">return</span> <span class="selector-tag">float4</span>(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>); <span class="comment">//随便给一个颜色，因为ColorMask为0，不会输出颜色</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="selector-tag">ENDCG</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="②被遮挡物体的-shader"><a href="#②被遮挡物体的-shader" class="headerlink" title="②被遮挡物体的 shader"></a>②被遮挡物体的 shader</h3><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//被遮挡物体 </span></span><br><span class="line"><span class="selector-tag">Shader</span> &quot;<span class="selector-tag">Unlit</span>/<span class="selector-tag">TextureMasked</span>&quot;  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="selector-tag">Properties</span>  </span><br><span class="line">    &#123;  </span><br><span class="line">        <span class="selector-tag">_MainTex</span>(<span class="string">&quot;BaseColor&quot;</span>,<span class="number">2</span>D) = &quot;<span class="selector-tag">white</span>&quot;&#123;&#125;  </span><br><span class="line">        <span class="selector-tag">_ID</span> (<span class="string">&quot;Mask ID&quot;</span>, Int) = <span class="number">1</span>  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="selector-tag">SubShader</span>  </span><br><span class="line">    &#123;  </span><br><span class="line">        <span class="comment">//在Mask之后渲染，队列次序比Mask高  </span></span><br><span class="line">        <span class="selector-tag">Tags</span> &#123; &quot;<span class="selector-tag">RenderType</span>&quot;=&quot;<span class="selector-tag">Opaque</span>&quot; &quot;<span class="selector-tag">Queue</span>&quot; = &quot;<span class="selector-tag">Geometry</span>+<span class="number">2</span>&quot; &#125;  </span><br><span class="line">          </span><br><span class="line">        <span class="selector-tag">Stencil</span>  </span><br><span class="line">        &#123;  </span><br><span class="line">            <span class="selector-tag">Ref</span><span class="selector-attr">[_ID]</span>  </span><br><span class="line">            <span class="selector-tag">Comp</span> <span class="selector-tag">equal</span>  <span class="comment">//索引值和当前模板缓冲区中的值一致时才会被绘制  </span></span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="selector-tag">LOD</span> <span class="number">100</span>  </span><br><span class="line">  </span><br><span class="line">        <span class="selector-tag">Pass</span>  </span><br><span class="line">        &#123;  </span><br><span class="line">            <span class="selector-tag">CGPROGRAM</span>  </span><br><span class="line">            <span class="selector-id">#pragma</span> <span class="selector-tag">vertex</span> <span class="selector-tag">vert</span>  </span><br><span class="line">            <span class="selector-id">#pragma</span> <span class="selector-tag">fragment</span> <span class="selector-tag">frag</span>  </span><br><span class="line">  </span><br><span class="line">            <span class="selector-id">#include</span> &quot;<span class="selector-tag">UnityCG</span><span class="selector-class">.cginc</span>&quot;  </span><br><span class="line">  </span><br><span class="line">            <span class="selector-tag">struct</span> <span class="selector-tag">appdata</span>  </span><br><span class="line">            &#123;  </span><br><span class="line">                <span class="selector-tag">float4</span> <span class="selector-tag">vertex</span> : <span class="selector-tag">POSITION</span>;  </span><br><span class="line">                <span class="selector-tag">float2</span> <span class="selector-tag">uv</span> : <span class="selector-tag">TEXCOORD0</span>;  </span><br><span class="line">            &#125;;  </span><br><span class="line">  </span><br><span class="line">            <span class="selector-tag">struct</span> <span class="selector-tag">v2f</span>  </span><br><span class="line">            &#123;  </span><br><span class="line">                <span class="selector-tag">float4</span> <span class="selector-tag">pos</span> : <span class="selector-tag">SV_POSITION</span>;  </span><br><span class="line">                <span class="selector-tag">float2</span> <span class="selector-tag">uv</span> : <span class="selector-tag">TEXCOORD0</span>;  </span><br><span class="line">            &#125;;  </span><br><span class="line">  </span><br><span class="line">            <span class="selector-tag">sampler2D</span> <span class="selector-tag">_MainTex</span>;  </span><br><span class="line">            <span class="selector-tag">float4</span> <span class="selector-tag">_MainTex_ST</span>;  </span><br><span class="line">  </span><br><span class="line">            <span class="selector-tag">v2f</span> <span class="selector-tag">vert</span> (appdata v)  </span><br><span class="line">            &#123;  </span><br><span class="line">                <span class="selector-tag">v2f</span> <span class="selector-tag">o</span>;  </span><br><span class="line">                <span class="selector-tag">o</span><span class="selector-class">.uv</span> = <span class="selector-tag">v</span><span class="selector-class">.uv</span>;  </span><br><span class="line">                <span class="selector-tag">o</span><span class="selector-class">.pos</span> = <span class="selector-tag">UnityObjectToClipPos</span> (v.vertex);  </span><br><span class="line">                <span class="selector-tag">return</span> <span class="selector-tag">o</span>;  </span><br><span class="line">            &#125;  </span><br><span class="line">  </span><br><span class="line">            <span class="selector-tag">fixed4</span> <span class="selector-tag">frag</span> (v2f i) : <span class="selector-tag">SV_Target</span>  </span><br><span class="line">            &#123;  </span><br><span class="line">                <span class="selector-tag">float4</span> <span class="selector-tag">BaseColor</span> = <span class="selector-tag">tex2D</span>(_MainTex, i.uv);  </span><br><span class="line">                <span class="selector-tag">return</span> <span class="selector-tag">BaseColor</span>;   </span><br><span class="line">            &#125;  </span><br><span class="line">            <span class="selector-tag">ENDCG</span>  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="selector-tag">FallBack</span> &quot;<span class="selector-tag">Diffuse</span>&quot;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="③完善卡牌效果"><a href="#③完善卡牌效果" class="headerlink" title="③完善卡牌效果"></a>③完善卡牌效果</h3><p><strong>分离前后 Mask：</strong><br>MainTex 的 A 通道是一个 Mask，将正反面分离以定制正反面的不同效果，比如单独加 Fresnel<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322729.png" alt="Pasted image 20221031170431|300"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322730.png" alt="Pasted image 20221031170405"></p>
+<h2 id="盒子不同面显示不同场景"><a href="#盒子不同面显示不同场景" class="headerlink" title="盒子不同面显示不同场景"></a>盒子不同面显示不同场景</h2><p> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322716.gif" alt="bvS1V1NTiLs9k5UHIqnUUw"></p>
+<ul>
+<li>和卡牌效果类似，一个用蒙版遮罩的物体，盒子每个面使用一个蒙版遮罩</li>
+<li>同样利用默认的值为 0 来做，只是面多了，蒙版和里边显示的物体也多了，ID 依次为 1、2、3、4</li>
+<li>总结：一个蒙版对应一个物体，他们使用相同的 ID，出来的效果就是：每个面显示的盒子内部物体不同</li>
+</ul>
+<h2 id="多边形填充"><a href="#多边形填充" class="headerlink" title="多边形填充"></a>多边形填充</h2><p>通过 stencil 值对几何体交叉区域进行判定与渲染。</p>
+<p>第一个 pass 渲染一个几何体，不论任何情况都通过测试并对它所覆盖的像素区域 stencil 值加 1，后三个 pass 分别只对 stencil 值为 2，3，4 的区域进行渲染。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322732.png" alt="3f106474b6e69426ec99d0e8d45a5c6f_MD5"></p>
+<figure class="highlight c"><figcaption><span>fold</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line">Shader <span class="string">&quot;Unlit/PolygonsBeta&quot;</span></span><br><span class="line">&#123;</span><br><span class="line">    Properties</span><br><span class="line">    &#123;</span><br><span class="line">        _MainTex (<span class="string">&quot;Texture&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    SubShader</span><br><span class="line">    &#123;</span><br><span class="line">        Tags &#123; <span class="string">&quot;RenderType&quot;</span>=<span class="string">&quot;Opaque&quot;</span> &#125;</span><br><span class="line">        LOD <span class="number">100</span></span><br><span class="line"></span><br><span class="line">        CGINCLUDE</span><br><span class="line">        <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;UnityCG.cginc&quot;</span></span></span><br><span class="line">        <span class="keyword">struct</span> appdata</span><br><span class="line">        &#123;</span><br><span class="line">            float4 vertex : POSITION;</span><br><span class="line">            float2 uv : TEXCOORD0;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">v2f</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            float2 uv : TEXCOORD0;</span><br><span class="line">            UNITY_FOG_COORDS(<span class="number">1</span>)</span><br><span class="line">            float4 vertex : SV_POSITION;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        sampler2D _MainTex;</span><br><span class="line">        float4 _MainTex_ST;</span><br><span class="line">        </span><br><span class="line">        v2f <span class="title function_">vert</span> <span class="params">(appdata v)</span></span><br><span class="line">        &#123;</span><br><span class="line">            v2f o;</span><br><span class="line">            o.vertex = UnityObjectToClipPos(v.vertex);</span><br><span class="line">            o.uv = TRANSFORM_TEX(v.uv, _MainTex);</span><br><span class="line">            UNITY_TRANSFER_FOG(o,o.vertex);</span><br><span class="line">            <span class="keyword">return</span> o;</span><br><span class="line">        &#125;</span><br><span class="line">        ENDCG</span><br><span class="line"></span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            Stencil &#123;</span><br><span class="line">                Ref <span class="number">0</span>           <span class="comment">//0-255</span></span><br><span class="line">                Comp always     <span class="comment">//default:always</span></span><br><span class="line">                Pass IncrWrap       <span class="comment">//default:keep</span></span><br><span class="line">                Fail keep       <span class="comment">//default:keep</span></span><br><span class="line">                ZFail IncrWrap  <span class="comment">//default:keep</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            CGPROGRAM</span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> vertex vert</span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> fragment frag</span></span><br><span class="line">            <span class="comment">// make fog work</span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> multi_compile_fog</span></span><br><span class="line"></span><br><span class="line">            fixed4 <span class="title function_">frag</span> <span class="params">(v2f i)</span> : SV_Target</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// sample the texture</span></span><br><span class="line">                fixed4 col = tex2D(_MainTex, i.uv);</span><br><span class="line">                <span class="comment">// apply fog</span></span><br><span class="line">                UNITY_APPLY_FOG(i.fogCoord, col);</span><br><span class="line">                <span class="keyword">return</span> fixed4(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            ENDCG</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            Stencil &#123;</span><br><span class="line">                Ref <span class="number">2</span>           <span class="comment">//0-255</span></span><br><span class="line">                Comp Equal     <span class="comment">//default:always</span></span><br><span class="line">                Pass keep       <span class="comment">//default:keep</span></span><br><span class="line">                Fail keep       <span class="comment">//default:keep</span></span><br><span class="line">                ZFail keep  <span class="comment">//default:keep</span></span><br><span class="line">            &#125;</span><br><span class="line">            CGPROGRAM</span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> vertex vert</span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> fragment frag</span></span><br><span class="line">            <span class="comment">// make fog work</span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> multi_compile_fog</span></span><br><span class="line">            </span><br><span class="line">            <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;UnityCG.cginc&quot;</span></span></span><br><span class="line"></span><br><span class="line">            fixed4 <span class="title function_">frag</span> <span class="params">(v2f i)</span> : SV_Target</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// sample the texture</span></span><br><span class="line">                fixed4 col = tex2D(_MainTex, i.uv);</span><br><span class="line">                <span class="comment">// apply fog</span></span><br><span class="line">                UNITY_APPLY_FOG(i.fogCoord, col);</span><br><span class="line">                <span class="keyword">return</span> fixed4(<span class="number">0.2</span>,<span class="number">0.2</span>,<span class="number">0.2</span>,<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            ENDCG</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            Stencil &#123;</span><br><span class="line">                Ref <span class="number">3</span>          <span class="comment">//0-255</span></span><br><span class="line">                Comp equal     <span class="comment">//default:always</span></span><br><span class="line">                Pass keep   <span class="comment">//default:keep</span></span><br><span class="line">                Fail keep      <span class="comment">//default:keep</span></span><br><span class="line">                ZFail keep  <span class="comment">//default:keep</span></span><br><span class="line">            &#125;</span><br><span class="line">            CGPROGRAM</span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> vertex vert</span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> fragment frag</span></span><br><span class="line">            <span class="comment">// make fog work</span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> multi_compile_fog</span></span><br><span class="line">            </span><br><span class="line">            <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;UnityCG.cginc&quot;</span></span></span><br><span class="line"></span><br><span class="line">            fixed4 <span class="title function_">frag</span> <span class="params">(v2f i)</span> : SV_Target</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// sample the texture</span></span><br><span class="line">                fixed4 col = tex2D(_MainTex, i.uv);</span><br><span class="line">                <span class="comment">// apply fog</span></span><br><span class="line">                UNITY_APPLY_FOG(i.fogCoord, col);</span><br><span class="line">                <span class="keyword">return</span> fixed4(<span class="number">0.6</span>,<span class="number">0.6</span>,<span class="number">0.6</span>,<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            ENDCG</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            Stencil &#123;</span><br><span class="line">                Ref <span class="number">4</span>          <span class="comment">//0-255</span></span><br><span class="line">                Comp equal     <span class="comment">//default:always</span></span><br><span class="line">                Pass keep   <span class="comment">//default:keep</span></span><br><span class="line">                Fail keep      <span class="comment">//default:keep</span></span><br><span class="line">                ZFail keep  <span class="comment">//default:keep</span></span><br><span class="line">            &#125;</span><br><span class="line">            CGPROGRAM</span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> vertex vert</span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> fragment frag</span></span><br><span class="line">            <span class="comment">// make fog work</span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> multi_compile_fog</span></span><br><span class="line">            </span><br><span class="line">            <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;UnityCG.cginc&quot;</span></span></span><br><span class="line"></span><br><span class="line">            fixed4 <span class="title function_">frag</span> <span class="params">(v2f i)</span> : SV_Target</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// sample the texture</span></span><br><span class="line">                fixed4 col = tex2D(_MainTex, i.uv);</span><br><span class="line">                <span class="comment">// apply fog</span></span><br><span class="line">                UNITY_APPLY_FOG(i.fogCoord, col);</span><br><span class="line">                <span class="keyword">return</span> fixed4(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            ENDCG</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="反射区域限定"><a href="#反射区域限定" class="headerlink" title="反射区域限定"></a>反射区域限定</h2><p>此用法主要是辅助一个反射 shader，可以比较简单的模拟出一个镜面效果。</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line">Shader &quot;Unlit/TwoPassReflection&quot;</span><br><span class="line">&#123;</span><br><span class="line">	Properties</span><br><span class="line">	&#123;</span><br><span class="line">		_MainTex (&quot;Texture&quot;, 2D) = &quot;white&quot; &#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	SubShader</span><br><span class="line">	&#123;</span><br><span class="line">		Tags &#123; &quot;RenderType&quot;=&quot;Opaque&quot; &quot;Queue&quot;=&quot;Geometry&quot; &#125;</span><br><span class="line">		LOD 100</span><br><span class="line"></span><br><span class="line">		Pass</span><br><span class="line">		&#123;</span><br><span class="line">			CGPROGRAM</span><br><span class="line"> #pragma vertex vert</span><br><span class="line"> #pragma fragment frag</span><br><span class="line">			// make fog work</span><br><span class="line"> #pragma multi_compile_fog</span><br><span class="line"> #include &quot;UnityCG.cginc&quot;</span><br><span class="line"></span><br><span class="line">			struct appdata</span><br><span class="line">			&#123;</span><br><span class="line">				float4 vertex : POSITION;</span><br><span class="line">				float2 uv : TEXCOORD0;</span><br><span class="line">			&#125;;</span><br><span class="line"></span><br><span class="line">			struct v2f</span><br><span class="line">			&#123;</span><br><span class="line">				float2 uv : TEXCOORD0;</span><br><span class="line">				UNITY_FOG_COORDS(1)</span><br><span class="line">				float4 vertex : SV_POSITION;</span><br><span class="line">			&#125;;</span><br><span class="line"></span><br><span class="line">			sampler2D _MainTex;</span><br><span class="line">			float4 _MainTex_ST;</span><br><span class="line">			</span><br><span class="line">			v2f vert (appdata v)</span><br><span class="line">			&#123;</span><br><span class="line">				v2f o;</span><br><span class="line">				o.vertex = UnityObjectToClipPos(v.vertex);</span><br><span class="line">				o.uv = TRANSFORM_TEX(v.uv, _MainTex);</span><br><span class="line">				UNITY_TRANSFER_FOG(o,o.vertex);</span><br><span class="line">				return o;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			fixed4 frag (v2f i) : SV_Target</span><br><span class="line">			&#123;</span><br><span class="line">				// sample the texture</span><br><span class="line">				fixed4 col = tex2D(_MainTex, i.uv);</span><br><span class="line">				// apply fog</span><br><span class="line">				UNITY_APPLY_FOG(i.fogCoord, col);</span><br><span class="line">				return col;</span><br><span class="line">			&#125;</span><br><span class="line">			ENDCG</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            Stencil &#123;</span><br><span class="line">                Ref 1          //0-255</span><br><span class="line">                Comp Equal     //default:always</span><br><span class="line">                Pass keep   //default:keep</span><br><span class="line">                Fail keep      //default:keep</span><br><span class="line">                ZFail keep     //default:keep</span><br><span class="line">            &#125;</span><br><span class="line">            ZTest Always</span><br><span class="line">            CGPROGRAM</span><br><span class="line"> #pragma vertex vert</span><br><span class="line"> #pragma fragment frag</span><br><span class="line">            // make fog work</span><br><span class="line"> #pragma multi_compile_fog</span><br><span class="line"> #include &quot;UnityCG.cginc&quot;</span><br><span class="line"></span><br><span class="line">            struct appdata</span><br><span class="line">            &#123;</span><br><span class="line">                float4 vertex : POSITION;</span><br><span class="line">                float2 uv : TEXCOORD0;</span><br><span class="line">                float4 normal: NORMAL;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            struct v2f</span><br><span class="line">            &#123;</span><br><span class="line">                float2 uv : TEXCOORD0;</span><br><span class="line">                UNITY_FOG_COORDS(1)</span><br><span class="line">                float4 vertex : SV_POSITION;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            sampler2D _MainTex;</span><br><span class="line">            float4 _MainTex_ST;</span><br><span class="line">            </span><br><span class="line">            v2f vert (appdata v)</span><br><span class="line">            &#123;</span><br><span class="line">                v2f o;</span><br><span class="line">                v.vertex.xyz=reflect(v.vertex.xyz,float3(-1.0f,0.0f,0.0f));</span><br><span class="line">                v.vertex.xyz=reflect(v.vertex.xyz,float3(0.0f,1.0f,0.0f));</span><br><span class="line">                v.vertex.x+=1.5f;</span><br><span class="line">                o.vertex = UnityObjectToClipPos(v.vertex);</span><br><span class="line">                o.uv = TRANSFORM_TEX(v.uv, _MainTex);</span><br><span class="line">                UNITY_TRANSFER_FOG(o,o.vertex);</span><br><span class="line">                return o;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            fixed4 frag (v2f i) : SV_Target</span><br><span class="line">            &#123;</span><br><span class="line">                // sample the texture</span><br><span class="line">                fixed4 col = tex2D(_MainTex, i.uv);</span><br><span class="line">                // apply fog</span><br><span class="line">                UNITY_APPLY_FOG(i.fogCoord, col);</span><br><span class="line">                return col;</span><br><span class="line">            &#125;</span><br><span class="line">            ENDCG</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">Shader &quot;Unlit/Mirror&quot;</span><br><span class="line">&#123;</span><br><span class="line">	Properties</span><br><span class="line">	&#123;</span><br><span class="line">		_MainTex (&quot;Texture&quot;, 2D) = &quot;white&quot; &#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	SubShader</span><br><span class="line">	&#123;</span><br><span class="line">		Tags &#123; &quot;RenderType&quot;=&quot;Opaque&quot; &quot;Queue&quot;=&quot;Geometry-1&quot; &#125;</span><br><span class="line">		LOD 100</span><br><span class="line"></span><br><span class="line">        Stencil &#123;</span><br><span class="line">            Ref 0          //0-255</span><br><span class="line">            Comp always     //default:always</span><br><span class="line">            Pass IncrSat   //default:keep</span><br><span class="line">            Fail keep      //default:keep</span><br><span class="line">            ZFail keep     //default:keep</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">		Pass</span><br><span class="line">		&#123;</span><br><span class="line">			CGPROGRAM</span><br><span class="line">			#pragma vertex vert</span><br><span class="line">			#pragma fragment frag</span><br><span class="line">			// make fog work</span><br><span class="line">			#pragma multi_compile_fog</span><br><span class="line">			</span><br><span class="line">			#include &quot;UnityCG.cginc&quot;</span><br><span class="line"></span><br><span class="line">			struct appdata</span><br><span class="line">			&#123;</span><br><span class="line">				float4 vertex : POSITION;</span><br><span class="line">				float2 uv : TEXCOORD0;</span><br><span class="line">			&#125;;</span><br><span class="line"></span><br><span class="line">			struct v2f</span><br><span class="line">			&#123;</span><br><span class="line">				float2 uv : TEXCOORD0;</span><br><span class="line">				UNITY_FOG_COORDS(1)</span><br><span class="line">				float4 vertex : SV_POSITION;</span><br><span class="line">			&#125;;</span><br><span class="line"></span><br><span class="line">			sampler2D _MainTex;</span><br><span class="line">			float4 _MainTex_ST;</span><br><span class="line">			</span><br><span class="line">			v2f vert (appdata v)</span><br><span class="line">			&#123;</span><br><span class="line">				v2f o;</span><br><span class="line">				o.vertex = UnityObjectToClipPos(v.vertex);</span><br><span class="line">				o.uv = TRANSFORM_TEX(v.uv, _MainTex);</span><br><span class="line">				UNITY_TRANSFER_FOG(o,o.vertex);</span><br><span class="line">				return o;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			fixed4 frag (v2f i) : SV_Target</span><br><span class="line">			&#123;</span><br><span class="line">				// sample the texture</span><br><span class="line">				fixed4 col = tex2D(_MainTex, i.uv);</span><br><span class="line">				// apply fog</span><br><span class="line">				UNITY_APPLY_FOG(i.fogCoord, col);</span><br><span class="line">				return fixed4(0.2f,0.2f,0.2f,1.0f);</span><br><span class="line">			&#125;</span><br><span class="line">			ENDCG</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>在 TwoPassReflection. shader 中，第一个 pass 正常渲染模型，第二个 pass 对顶点进行了一个简单的反射，并将 ZTest 设为 always，然后将一个 quad 放入本体和倒影之间，它的效果是这样的：  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322733.png" alt="9f9de8465e47213581a87a5e2abe562a_MD5"></p>
+<p>图 5：使用 TwoPassReflection. shader，无 mirror. shader</p>
+<p>倒影超出了想要的范围。解决这一问题，在 quad 上使用 mirror. shader 将 quad 覆盖的像素 stencil 值改为 1，并在 TwoPassReflection 第二个 pass 中约定只在 stencil 值为 1 的区域中渲染。</p>
+<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322734.png" alt="259dc239aafdb72d497bf1c408867f1c_MD5"></p>
+<p>图 6：quad 使用 mirror. shader</p>
+<p>这里有个前提是 mirror 必须在倒影之前渲染以先将反射区域的 stencil 值标记好。</p>
+<p>   
+   </p>
+<h2 id="阴影体-shadow-volume-阴影渲染"><a href="#阴影体-shadow-volume-阴影渲染" class="headerlink" title="阴影体 shadow volume 阴影渲染"></a>阴影体 shadow volume 阴影渲染</h2><h3 id="说明-1"><a href="#说明-1" class="headerlink" title="说明"></a>说明</h3><p>shadow volume 阴影体算法是将‘遮光体’遮挡光源后产生的阴影实例为一个几何体，对在该阴影几何体的渲染过程中找出应该渲染阴影效果的像素。  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322735.png" alt="a5ed32890776026ea1cc8b80094929fd_MD5"></p>
+<p>图 7：圆柱阴影体</p>
+<p>检测手段有几种，本案例 shader 采用的是 Depth Fail，也叫 Carmack’s reverse 方法的思路。它的思想与步骤如下：</p>
+<p>1，在一般物体渲染后，渲染阴影体，第一个 pass cull front，渲染内侧，在 stencil 测试阶段如果发现深度测试失败，说明该像素在阴影体内部表面或阴影体外部表面与视角之间有发生遮挡，将该像素 stencil 值加 1。</p>
+<p>2，第二个 pass cull back，渲染外侧，如果有深度测试失败，则说明该像素在阴影体外部表面与视角之间有发生遮挡，将该像素 stencil 值减 1。</p>
+<p>3，经过两个 pass 的 stencil 操作，只有在阴影体内部的物体且它遮挡住阴影体内部表面的部分的 stencil 值为 1。对阴影体内 stencil 值为 1 的像素进行渲染。</p>
+<p>本文中的 shader 只为展示 stencil buffer 在此技术中的角色，缺乏正确的阴影体网格或它的动态生成手段，粗暴的用 Unity 默认几何体中的圆柱体模拟一个阴影体，并且算法中也没有考虑被阴影覆盖的物体自身的阴影体的问题以及其他细节问题。</p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line">Shader &quot;Unlit/SV_DepthFailBeta&quot;</span><br><span class="line">&#123;</span><br><span class="line">    Properties</span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    SubShader</span><br><span class="line">    &#123;</span><br><span class="line">        Tags &#123; &quot;RenderType&quot;=&quot;Opaque&quot; &quot;Queue&quot;=&quot;Geometry+1&quot;&#125;  //在渲染所有阴影体内物体后再渲染阴影体</span><br><span class="line">        LOD 100</span><br><span class="line">        </span><br><span class="line">        CGINCLUDE       //三个pass内着色器内容相同</span><br><span class="line">        #include &quot;UnityCG.cginc&quot;</span><br><span class="line">        struct appdata</span><br><span class="line">        &#123;</span><br><span class="line">            float4 vertex : POSITION;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        struct v2f</span><br><span class="line">        &#123;</span><br><span class="line">            UNITY_FOG_COORDS(1)</span><br><span class="line">            float4 vertex : SV_POSITION;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        v2f vert (appdata v)</span><br><span class="line">        &#123;</span><br><span class="line">            v2f o;</span><br><span class="line">            o.vertex = UnityObjectToClipPos(v.vertex);</span><br><span class="line">            UNITY_TRANSFER_FOG(o,o.vertex);</span><br><span class="line">            return o;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        fixed4 frag (v2f i) : SV_Target</span><br><span class="line">        &#123;</span><br><span class="line">            // apply fog</span><br><span class="line">            UNITY_APPLY_FOG(i.fogCoord, col);</span><br><span class="line">            return fixed4(0.3,0.3,0.3,1);           //影子颜色</span><br><span class="line">        &#125;</span><br><span class="line">        ENDCG</span><br><span class="line"></span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            Cull Front          //阴影体内侧像素Z测试失败，stencil值加1</span><br><span class="line">            Stencil &#123;           </span><br><span class="line">                Ref 0           //0-255</span><br><span class="line">                Comp always     //default:always</span><br><span class="line">                Pass keep       //default:keep</span><br><span class="line">                Fail keep       //default:keep</span><br><span class="line">                ZFail IncrWrap  //default:keep</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            ColorMask 0         //关闭color buffer写入</span><br><span class="line">            CGPROGRAM</span><br><span class="line">            #pragma vertex vert</span><br><span class="line">            #pragma fragment frag</span><br><span class="line">            // make fog work</span><br><span class="line">            #pragma multi_compile_fog</span><br><span class="line">            ENDCG</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            Cull Back           //阴影体外侧像素Z测试失败，stencil值减1</span><br><span class="line">            Stencil &#123;</span><br><span class="line">                Ref 0           //0-255</span><br><span class="line">                Comp always     //default:always</span><br><span class="line">                Pass keep       //default:keep</span><br><span class="line">                Fail keep       //default:keep</span><br><span class="line">                ZFail DecrWrap  //default:keep</span><br><span class="line">            &#125;</span><br><span class="line">            ColorMask 0         //关闭color buffer写入</span><br><span class="line">            CGPROGRAM</span><br><span class="line">            #pragma vertex vert</span><br><span class="line">            #pragma fragment frag</span><br><span class="line">            // make fog work</span><br><span class="line">            #pragma multi_compile_fog</span><br><span class="line">            ENDCG</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            Cull Back          //经过前两个pass，stencil值为1的值为在此阴影体内被阴影覆盖的像素</span><br><span class="line">            Stencil &#123;</span><br><span class="line">                Ref 1          //0-255</span><br><span class="line">                Comp equal     //default:always</span><br><span class="line">                Pass keep   //default:keep</span><br><span class="line">                Fail keep      //default:keep</span><br><span class="line">                ZFail keep  //default:keep</span><br><span class="line">            &#125;</span><br><span class="line">            CGPROGRAM</span><br><span class="line">            #pragma vertex vert</span><br><span class="line">            #pragma fragment frag</span><br><span class="line">            // make fog work</span><br><span class="line">            #pragma multi_compile_fog</span><br><span class="line">            ENDCG</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="效果-1"><a href="#效果-1" class="headerlink" title="效果"></a>效果</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322736.png" alt="60e95f131768e67ac4e3fc979a01a586_MD5"></p>
+<p>图 8：使用 SV_DepthFailBeta. shader</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/60368.html">http://liuke101.github.io/post/60368.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292323410.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/18856.html" title="【图形系统04】纹理"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315854.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【图形系统04】纹理</div></div></a></div><div class="next-post pull-right"><a href="/post/60367.html" title="【图形系统06】深度测试"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292328888.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【图形系统06】深度测试</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/56109.html" title="【图形系统03】光照模型"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292308147.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统03】光照模型</div></div></a></div><div><a href="/post/61142.html" title="【图形系统01】渲染管线"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292307876.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统01】渲染管线</div></div></a></div><div><a href="/post/18856.html" title="【图形系统04】纹理"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315854.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统04】纹理</div></div></a></div><div><a href="/post/18785.html" title="【图形系统02】光栅化"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292307530.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统02】光栅化</div></div></a></div><div><a href="/post/33842.html" title="【图形系统07】混合和剔除"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292331423.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统07】混合和剔除</div></div></a></div><div><a href="/post/60367.html" title="【图形系统06】深度测试"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292328888.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统06】深度测试</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">文章主要迁移自个人的obsidian仓库，存在部分md语法冲突，导致显示异常，暂未修复...</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E7%90%86%E8%A7%A3-Stencil-Buffer"><span class="toc-text">1 理解 Stencil Buffer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E4%BE%8B"><span class="toc-text">引例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E6%B5%8B%E8%AF%95%E6%95%88%E6%9E%9C%E4%B8%BE%E4%BE%8B"><span class="toc-text">模板测试效果举例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E4%BB%80%E4%B9%88%E6%98%AF%E6%A8%A1%E6%9D%BF%E6%B5%8B%E8%AF%95"><span class="toc-text">2 什么是模板测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E7%90%86%E8%A7%A3"><span class="toc-text">从渲染管线理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E9%80%BB%E8%BE%91%E4%B8%8A%E7%90%86%E8%A7%A3"><span class="toc-text">从逻辑上理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E4%B9%A6%E9%9D%A2%E6%A6%82%E5%BF%B5%E4%B8%8A%E7%90%86%E8%A7%A3"><span class="toc-text">从书面概念上理解</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-text">3 使用方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95%E8%A1%A8%E7%A4%BA-%E7%BB%93%E6%9E%84%E8%A7%A3%E9%87%8A"><span class="toc-text">语法表示&#x2F;结构解释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ComparisonFunction"><span class="toc-text">ComparisonFunction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#StencilOperation-%E6%9B%B4%E6%96%B0%E5%80%BC"><span class="toc-text">StencilOperation 更新值</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E6%80%BB%E7%BB%93"><span class="toc-text">4 总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E5%BA%94%E7%94%A8"><span class="toc-text">5 应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%8F%E8%BE%B9"><span class="toc-text">描边</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%A1%E7%89%8C%E6%95%88%E6%9E%9C"><span class="toc-text">卡牌效果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A0%E8%92%99%E7%89%88-Mask-%E7%9A%84-shader"><span class="toc-text">①蒙版 Mask 的 shader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A1%E8%A2%AB%E9%81%AE%E6%8C%A1%E7%89%A9%E4%BD%93%E7%9A%84-shader"><span class="toc-text">②被遮挡物体的 shader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A2%E5%AE%8C%E5%96%84%E5%8D%A1%E7%89%8C%E6%95%88%E6%9E%9C"><span class="toc-text">③完善卡牌效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%92%E5%AD%90%E4%B8%8D%E5%90%8C%E9%9D%A2%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%90%8C%E5%9C%BA%E6%99%AF"><span class="toc-text">盒子不同面显示不同场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%BE%B9%E5%BD%A2%E5%A1%AB%E5%85%85"><span class="toc-text">多边形填充</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%8C%BA%E5%9F%9F%E9%99%90%E5%AE%9A"><span class="toc-text">反射区域限定</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-text">代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-text">说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%88%E6%9E%9C"><span class="toc-text">效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B4%E5%BD%B1%E4%BD%93-shadow-volume-%E9%98%B4%E5%BD%B1%E6%B8%B2%E6%9F%93"><span class="toc-text">阴影体 shadow volume 阴影渲染</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E-1"><span class="toc-text">说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-text">代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%88%E6%9E%9C-1"><span class="toc-text">效果</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/64863.html" title="全局光照GI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300005318.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="全局光照GI"/></a><div class="content"><a class="title" href="/post/64863.html" title="全局光照GI">全局光照GI</a><time datetime="2024-04-29T23:06:00.000Z" title="发表于 2024-04-30 00:06:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/55802.html" title="环境光照IBL"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300003151.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="环境光照IBL"/></a><div class="content"><a class="title" href="/post/55802.html" title="环境光照IBL">环境光照IBL</a><time datetime="2024-04-29T23:03:00.000Z" title="发表于 2024-04-30 00:03:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/49886.html" title="光线追踪理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292358872.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="光线追踪理论"/></a><div class="content"><a class="title" href="/post/49886.html" title="光线追踪理论">光线追踪理论</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/38389.html" title="路径追踪"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300000048.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="路径追踪"/></a><div class="content"><a class="title" href="/post/38389.html" title="路径追踪">路径追踪</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/19081.html" title="PBR理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292357277.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PBR理论"/></a><div class="content"><a class="title" href="/post/19081.html" title="PBR理论">PBR理论</a><time datetime="2024-04-29T22:57:00.000Z" title="发表于 2024-04-29 23:57:00">2024-04-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292323410.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>

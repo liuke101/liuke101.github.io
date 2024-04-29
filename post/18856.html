@@ -1,0 +1,1566 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【图形系统04】纹理 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="1 纹理映射 TextureMapping首先让我们一起来观察这样一张图：  无论是球上的图案，以及地板的木头纹理都呈现出了不同的颜色信息，那么回想在讲解 Blinn-Phong 反射模型的时候曾提到，一个点的颜色是由其漫反射系数决定的，反射什么颜色的光，人眼就能看见什么颜色。那么针对上面这幅图，难道要去针对每一个点自己去设定一个颜色吗？还是说有什么更方便的方法呢？那便是纹理映射了！ 主要有两种方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【图形系统04】纹理">
+<meta property="og:url" content="http://liuke101.github.io/post/18856.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="1 纹理映射 TextureMapping首先让我们一起来观察这样一张图：  无论是球上的图案，以及地板的木头纹理都呈现出了不同的颜色信息，那么回想在讲解 Blinn-Phong 反射模型的时候曾提到，一个点的颜色是由其漫反射系数决定的，反射什么颜色的光，人眼就能看见什么颜色。那么针对上面这幅图，难道要去针对每一个点自己去设定一个颜色吗？还是说有什么更方便的方法呢？那便是纹理映射了！ 主要有两种方">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315854.png">
+<meta property="article:published_time" content="2024-04-29T22:21:00.000Z">
+<meta property="article:modified_time" content="2024-04-29T22:22:34.880Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="图形学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315854.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/18856.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【图形系统04】纹理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-29 23:22:34'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315854.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【图形系统04】纹理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-29T22:21:00.000Z" title="发表于 2024-04-29 23:21:00">2024-04-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-29T22:22:34.880Z" title="更新于 2024-04-29 23:22:34">2024-04-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">20.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>71分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【图形系统04】纹理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/18856.html#post-comment"><span class="waline-comment-count" data-path="/post/18856.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="1-纹理映射-TextureMapping"><a href="#1-纹理映射-TextureMapping" class="headerlink" title="1 纹理映射 TextureMapping"></a>1 纹理映射 TextureMapping</h1><p>首先让我们一起来观察这样一张图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315236.png" alt="1684499673566"></p>
+<p>无论是球上的图案，以及地板的木头纹理都呈现出了不同的颜色信息，那么回想在讲解 Blinn-Phong 反射模型的时候曾提到，一个点的颜色是由其<strong>漫反射系数</strong>决定的，反射什么颜色的光，人眼就能看见什么颜色。那么针对上面这幅图，难道要去<strong>针对每一个点自己去设定一个颜色</strong>吗？还是说有什么更方便的方法呢？那便是<strong>纹理映射</strong>了！</p>
+<p>主要有两种方法可以将三维的空间坐标点转化为二维的纹理坐标点：Projector 和 UV Mapping</p>
+<h3 id="Projector"><a href="#Projector" class="headerlink" title="Projector"></a>Projector</h3><p>对于简单的集合体，通常用投影的方式：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315239.png" alt="1684499673628"></p>
+<p>倘若拥有从 3 维 World space 到 2 维 Texture space 的一个映射关系，那么只需要将每个点的颜色信息即漫反射系数存储在 2 维的 Texture 之上，每次利用光照模型进行计算的时候根据映射关系就能查到这个点的漫反射系数是多少，所有点计算完之后，结果就像最左边的 screen space 之中，整个 Texture 被贴在了模型之上。</p>
+<p>一个纹理坐标使用的伪代码供参考:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315240.png" alt="1684499674200"></p>
+<p><strong>简而言之就是对每个光栅化的屏幕坐标算出它的 uv 坐标 (利用三角形顶点重心坐标插值)，再利用这个 uv 坐标去查询 texture 上的颜色，把这个颜色信息当作漫反射系数 Kd。</strong></p>
+<p>将矩形地图纹理均匀贴到球表面的投影函数称之为：Spherical 形式。此外还有 Plane, Cubic 和 Cylindrical，下图总结了四者差异（一张红绿相间的纹理贴到不同简单几何体的方式）：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315242.png" alt="1684548373611"></p>
+<h3 id="UV-Mapping"><a href="#UV-Mapping" class="headerlink" title="UV Mapping"></a>UV Mapping</h3><p>对于更复杂的几何体贴图，往往需要用到 UV Mapping：用于将 3 维模型中的每个顶点与 2 维纹理坐标一一对应。 UV map 则需要建模师精心制作：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315244.png" alt="1684548373674"></p>
+<p>在实时渲染中，通常是将 uv 坐标保存在顶点信息中，在三角形内使用时，通过插值的方式得到每个片元具体的 uv 坐标，再从纹理中采样获得对应的值。但也有例外，比如在进行环境贴图 (Environment Mapping) 时，需要在渲染时根据投影方程再去确定每个点的纹理坐标以及纹理值</p>
+<h1 id="2-纹理过滤"><a href="#2-纹理过滤" class="headerlink" title="2 纹理过滤"></a>2 纹理过滤</h1><p>在理解了纹理映射的基础之后，考虑如果纹理分辨率特别小或者纹理分辨率特别大会分别引起什么问题呢？</p>
+<h3 id="2-1-纹理分辨率过小"><a href="#2-1-纹理分辨率过小" class="headerlink" title="2.1 纹理分辨率过小"></a>2.1 纹理分辨率过小</h3><p>纹理过小的问题相对容易理解，想想我们把一张 100x100 的纹理贴图应用在一 500x500 的屏幕之上必然会导致走样失真，因为屏幕空间的几个像素点对应在纹理贴图的坐标上都是集中在一个纹素大小之内。那么如果仅仅是使用对应 (u, v) 坐标在采样贴图上距离最近的那个像素点，往往会<strong>造成严重的走样</strong>。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315245.png" alt="1684499674257||300"></p>
+<p>黑点所在的方块表示纹理的一个纹素，红点表示屏幕空间的像素采样点，<strong>采样时最简单的办法是去选择离采样点临近的纹素（该方法称为最邻近采样 Nearest neighbor），那么图中四个采样点采样得到的颜色都是同一个纹素的颜色。</strong></p>
+<p>这种方法往往会产生严重的走样，接下来会介绍利用双线性插值的方法缓解这种走样现象。</p>
+<h3 id="2-2-双线性插值-Bilinear-Interpolation"><a href="#2-2-双线性插值-Bilinear-Interpolation" class="headerlink" title="2.2 双线性插值 (Bilinear Interpolation)"></a>2.2 双线性插值 (Bilinear Interpolation)</h3><p>我们依然取上图的点作为例子，解释双线性插值。 </p>
+<p>第一步，取出离红色点最近的 4 个黑色顶点，分别算出，该红色点在水平及竖直方向偏移的比率 $s,t$，图示如下:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315246.png" alt="1684499674313||300"></p>
+<p>接着先利用 $s$，可以线性插值出如下图所示的 $u_0$，$u_1$ 点的颜色值<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315247.png" alt="Pasted image 20230520102619"><br>那么下一步相信读者也能猜到了，利用比例 $t$，颜色值 $u_0$，$u_1$ 插值出红色点的颜色值<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315248.png" alt="Pasted image 20230520102532"></p>
+<p>如此这样利用两次线性插值，考虑到了 4 个纹素的颜色值，能够很好的缓解走样失真现象，并且计算速度较高。</p>
+<p>(tips: 还有一种插值方法叫做双三次插值 (Bicubic), 取临近 16 个纹素，每次对 4 个纹素用三次插值，而不是线性插值，效果可能更好，但是计算速度很低不在这里具体讨论了)</p>
+<p>最后以一张闫老师课上的例子看看这 3 种方法效果的对比<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315250.png" alt="Pasted image 20230520102841|500"></p>
+<h3 id="2-3-纹理分辨率过大"><a href="#2-3-纹理分辨率过大" class="headerlink" title="2.3 纹理分辨率过大"></a>2.3 纹理分辨率过大</h3><p>可能对于我们的第一直觉来说，纹理小确实会引发问题，但是纹理大那不是更好吗，为什么会引发问题呢？但事实是纹理过大所引发的走样甚至会更加严重。想象一张很大的地板，在上面铺满了重复的方格贴图，我们所期望看到的结果应该是这样的：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315252.png" alt="1684499674488||500"></p>
+<p>嗯，非常符合透视关系，不错，当然这只是一个参考。再来看看利用在第一章所提到的计算纹理颜色的伪代码来计算的结果呢：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315253.png" alt="1684499674550||500"></p>
+<p><strong>近处锯齿！远处摩尔纹！</strong> 非常严重的走样现象，为什么会导致这样的一个现象呢？这里作者尝试给出自己的两种解释:</p>
+<p><strong>1 如开头所说，地板上铺满了重复的方格贴图，根据近大远小，远处的一张完整的贴图可能在屏幕空间中仅仅是几个像素的大小，那么必然屏幕空间的一个像素对应了纹理贴图上的一片范围的点，这其实就是纹理过大所导致的，直观来说想用一个点采样的结果代替纹理空间一片范围的颜色信息，必然会导致严重失真！(从信号的角度来说就是，采样频率过低无法还原信号原貌)</strong></p>
+<p><strong>2 换一种想法，考虑离相机很远的一个三角形面，假设该三角形面真正在纹理贴图上对应的一片区域有 10 个像素点。但是由于透视的关系，距离很远的三角形面投影到近平面时可能只有 1 个或 2 个像素点的大小 (远远小于 10 个像素的原来大小)，那么这 1 个或 2 个像素采样 texture 的结果就要代表原来这个三角形面 10 个像素点的颜色信息，自然会导致失真！</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315254.png" alt="Pasted image 20230520103718"></p>
+<p>一种直观的解决方法就是超采样 Supersampling，如果一个像素点不足以代表一个区域的颜色信息，那么便把一个像素细分为更多个小的采样点不就可以解决这个问题了吗？对，确实是这样，可以看看如下图 512x 超采样的结果</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315255.png" alt="1684499674687"></p>
+<p>效果虽称不上完美但也极大缓解了走样现象，但问题是什么？计算量太大了，一个像素点被分为了 512x512 个采样点，计算量几乎多出了 25 万倍！这显然不是所希望看到的，并且随着屏幕空间的点离相机距离更远，更多的 texels (纹理空间的像素) 会在屏幕像素的一个覆盖面积（footprint） 里面，会要更高的超采样频率。</p>
+<p>那么另外一种想法，如果不去超采样，仅仅是求出每个屏幕像素所对应的覆盖面积（footprint） 里所有 texels 的颜色均值呢？这也就是接下来所要介绍的著名的 Mipmap 技术了！</p>
+<h3 id="2-3-多级渐远纹理-Mipmap"><a href="#2-3-多级渐远纹理-Mipmap" class="headerlink" title="2.3 多级渐远纹理 Mipmap"></a>2.3 多级渐远纹理 Mipmap</h3><p>“MIP”来自于拉丁语 multum in parvo 的首字母，意思是“放置很多东西的小空间”</p>
+<p>回顾一下屏幕像素在 Texture 空间里的覆盖面积（footprint） 的这张图:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315256.png" alt="1684499674811"></p>
+<p>正如上文所提，一个采样点的颜色信息不足以代表 “覆盖面积（footprint）” 里一个区域的颜色信息，如果可以求出这样一个区域里面所有颜色的均值，是不是就是一种可行的方法呢？没错我们的目标就是从点查询 (point query)迈向范围查询 (range query)。但依然存在一个问题，从上图不难看出，不同的屏幕像素所对应的覆盖面积（footprint） size 是不一样大小的，看下图这样一个例子：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315257.png" alt="1684499674849"></p>
+<p>远处圆圈里的覆盖面积（footprint） 必然比近处的要大，因此必须要准备不同 level 的范围查询才可以，而这正是 Mipmap。 </p>
+<p><strong>Mipmap 允许范围查询 (快速，近似，正方形)</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315258.png" alt="Pasted image 20230520105340"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315259.png" alt="1684499674924"></p>
+<p>level 0 代表的是原始 texture，也是精度最高的纹理，随着 level 的提升，每提升一级将 4 个相邻像素点求均值合为一个像素点，因此越高的 level 也就代表了更大的覆盖面积（footprint） 的范围查询。接下来要做的就是根据屏幕像素的覆盖面积（footprint） 大小选定不同 level 的 texture，再进行点查询即可，而这其实就相当于在原始 texture 上进行了范围查询！</p>
+<blockquote>
+<p>[!NOTE] Mipmap 的额外显存开销<br>原始图像开销：$128\times 128&#x3D;16,384$<br>mipmap 开销：$128\times 128+64\times64+32\times32+16\times16+8\times8+4\times4+2\times2+1\times1&#x3D;21845$<br>额外开销：$\frac5461{16384}\approx1&#x2F;3$<br>即做 mipmap 比会增加原本图像 1&#x2F;3 的额外存储量</p>
+<p>Mipmap 除了能消除采样率过低带来的失真问题，还有一个重要的优点是<strong>节约显存带宽</strong>，注意是带宽而<strong>不是容量</strong>。Mipmap 实际消耗的显存大约增加了 1&#x2F;3，但每次仅从需要的 Mipmap 级别进行读取，而不必每次都访问原始大小的纹理，因此可以节约带宽。</p>
+</blockquote>
+<h4 id="如何去确定使用哪个-level-？"><a href="#如何去确定使用哪个-level-？" class="headerlink" title="如何去确定使用哪个 level ？"></a>如何去确定使用哪个 level ？</h4><p>利用屏幕像素的相邻像素点估算覆盖面积（footprint） 大小再确定 level D！如下图:<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315260.png" alt="Pasted image 20230520111345"><br>在屏幕空间中取当前像素点的右方和上方的两个相邻像素点 (4 个全取也可以)，分别查询得到这 3 个点对应在 Texture space 的坐标，计算出当前像素点与右方像素点和上方像素点在 Texture space 的距离，二者取最大值，计算公式如图中所示，那么 level D 就是这个距离的 log2 值 (D &#x3D; log2L) ! 这不难理解，读者可以具体取几个例子比如 L &#x3D; 1，L &#x3D; 2，L &#x3D; 4，看看是否符合这样的计算即可。</p>
+<p>但是这里 D 值算出来是一个连续值，并不是一个整数，有两种对应的方法：</p>
+<ol>
+<li><p><strong>四舍五入取得最近的那个 level D</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315261.png" alt="Pasted image 20230520111752"><br>我们会发现不同 level 边缘很硬，为了解决这个问题，自然想到了插值</p>
+</li>
+<li><p><strong>利用 D 值在向下和向上取整的两个不同 level 进行三线性插值</strong></p>
+</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315263.png" alt="1684499675056"></p>
+<blockquote>
+<p>[!NOTE] 三线性插值<br>所谓三线性插值，就是在向下取整的 D level 上进行一次双线性插值 (前文提过)，再在 D+1 level 之上进行一次双线性插值，这二者数据再根据实际的连续 D 值在向下和向上取整的两个不同 level 之间的比例，再来一次线性插值，而这整体就是一个三线性插值了。 ^s6etys</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315267.png" alt="Pasted image 20230520112104"></p>
+<p>好了！根据上述的方法算出屏幕上每一个像素点所对应的 Mipmap level，再进行三线性插值得到颜色值，是否就能很好的解决走样问题了呢？很遗憾，在本文的那个地板的例子之中，费了这么大力气依然不能完美解决，如下图结果:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315269.png" alt="1684499675124"></p>
+<p>远处的地板产生一种模糊的现象（Overblur）。该如何解决这个最后的问题呢——各向异性过滤。</p>
+<h3 id="2-4-各向异性过滤-Mipmap"><a href="#2-4-各向异性过滤-Mipmap" class="headerlink" title="2.4 各向异性过滤 Mipmap"></a>2.4 各向异性过滤 Mipmap</h3><p>各向异性的意思是在各个方向上的表现不相同。通过各向异性可以考虑不同的方向性。</p>
+<p><strong>产生 Overblur 的原因是因为，所采用的不同 level 的 Mipmap 默认的都是正方形区域的 Range Query</strong>，然而真实情况并不是如此，见下图:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315270.png" alt="1684499675236"></p>
+<p>可以看出不同 screen space 的像素点所对应的覆盖面积（footprint） 是不同的，有长方形，甚至是不规则图形，那么针对这种情况，有的所需要的是仅仅是水平方向的高 level，有的需要的仅仅是竖直方向上的高 level，因此这也就启发了各向异性的过滤:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315271.png" alt="1684499675290"></p>
+<blockquote>
+<p>从左往右看，宽度从原长逐渐缩小逼近 0<br>从上往下看，高度从原长逐渐缩小逼近 0</p>
+</blockquote>
+<blockquote>
+<p>[!NOTE] 各向异性过滤显存开销<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315272.png" alt="Pasted image 20230520144131"><br>可以看出，额外 3 倍的显存开销</p>
+</blockquote>
+<p>利用这样不同的贴图，更加精细的选择后结果就会明显好很多，基本解决了 overblur:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315273.png" alt="1684499675354||300"></p>
+<p><strong>各向异性过滤只能解决水平或竖直的不同大小的矩形覆盖面积（footprint），并不能解决斜向的覆盖面积（footprint）。</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315277.png" alt="Pasted image 20230520112744|323"></p>
+<p>解决方法：EWA 过滤<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315278.png" alt="Pasted image 20230520112852|400"><br>EWA 过滤就是把斜着的图形拆成很多个圆形去覆盖不规则形状，每一次就查询一个圆形，然后多次查询，自然就可以覆盖这个不规则的形状，得到好的结果。缺点是开销较大</p>
+<h4 id="附录：各向异性过滤实现步骤"><a href="#附录：各向异性过滤实现步骤" class="headerlink" title="附录：各向异性过滤实现步骤"></a>附录：各向异性过滤实现步骤</h4><p>（1）计算得到 UV 在 xy 方向上的偏导数 $du_{x},du_{y},dv_{x},dv_{y}$</p>
+<p>（2）计算得到纹理坐标偏导数 $s&#x3D;du<em>width,t&#x3D;dv</em>height$</p>
+<p>（3）计算绘制图形在纹理空间的投影向量 <strong>r1 r2 d1 d2</strong></p>
+<p>$r1 &#x3D; (s_{x},t_{x}),r2&#x3D;(s_{y},t_{y})$</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315279.png" alt="1684499683255"></p>
+<p>其中，为了后续计算简便，将向量的模进行近似</p>
+<p>$|r1| \approx max(|s_{x}|,|t_{x}|)$</p>
+<p>$|r2| \approx max(|s_{y}|,|t_{y}|)$</p>
+<p>$|d1| \approx max(|s_{x}+s_{y}|,|t_{x}+t_{y}|)$</p>
+<p>$|d1| \approx max(|s_{x}-s_{y}|,|t_{x}-t_{y}|)$</p>
+<p>（3）计算使用的 MipmapLevel</p>
+<p>$j&#x3D;min(|r1|,|r2|,|d1|,|d2|)$</p>
+<p>$l &#x3D; log_{2}j$ ，此为采样使用的 MipmapLevel</p>
+<p>$f&#x3D;\frac{j}{2^l}-1$ ，此为三线性过滤使用的插值系数</p>
+<p>（4）计算各向异性比例</p>
+<p>$N &#x3D; min(2^{[log_{2}\frac{max(|r1|,|r2|)}{j}]}, maxAniso)$ 这里的 maxAniso 就是设置开启的各向异性过滤级别，方括号代表取整</p>
+<p>（4）在上面计算出的 MipmapLevel 下进行多次三线性采样，为此需要生成一系列采样坐标</p>
+<p>$m &#x3D; max(r1,r2)$ (这里使用的是向量 r1 r2)</p>
+<p>$du &#x3D; \frac{m.x}{2^{l}N},dv &#x3D; \frac{m.y}{2^{l}N}$</p>
+<p>$u_{n} &#x3D; u + (\frac{n}{2} du),v_{n} &#x3D; v+(\frac{n}{2}dv)$</p>
+<p>其中 $n &#x3D; -N+1,-N+3……-3,-1,1,3……N-3,N-1$</p>
+<p>（5）将采样获得的颜色进行平均</p>
+<p>一般来说，我们在游戏中最高可以开启 16x 的各向异性过滤，但是实际运算时会将我们设置的各向异性级别与计算得的 N 取较小值，因此并不是开启了 16x 就一定会执行 16 次采样。各向异性过滤相比双线性的性能消耗成倍增长，好在现代 GPU 上纹理采样已不是瓶颈，在平时游戏时我们可以放心开启此选项，帧数不足时优先关闭阴影、抗锯齿等特效。</p>
+<h1 id="3-纹理寻址模式"><a href="#3-纹理寻址模式" class="headerlink" title="3 纹理寻址模式"></a>3 纹理寻址模式</h1><p>我们将 3 维空间坐标映射为了 2 维参数空间坐标 uv，此时得到的有可能是 $[0.25,0.3]$ 这种在 $[0,1]$ 范围内的值，但也有可能超出了 $[0,1]$ 范围。<br>可将经过常数插值或线性插值的纹理定义为一个返回向量值的函数 $T (u, v) &#x3D;(r, g, b, a)$，即给定纹理坐标 $(u, v)∈[0, 1]^2$，则上述纹理函数 $T$ 将返回颜色 $(r, g, b, a)$。Direct3D 允许我们采用下列 4 种不同方式（即寻址模式，address mode)来扩充此函数的定义域（解决输入值超出定义域 $[0, 1]^2$ 这一问题)：</p>
+<ul>
+<li><p>重复寻址模式 ( wrap)：通过在坐标的每个整数点处重复绘制图像来拓充纹理函数。<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315281.png" alt="Pasted image 20230520151724|400"></p>
+</li>
+<li><p>边框颜色寻址模式 ( border color，也有译作边界颜色寻址模式)：通过将每个不在范围 $[0,1]^2$ 内的坐标 $(u, v)$ 都映射为程序员指定的颜色而拓充纹理函数。<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315282.png" alt="Pasted image 20230520151813|400"></p>
+</li>
+<li><p>钳位寻址模式 ( clamp)：钳位寻址模式通过将范围 $[0,1]^2$ 外的每个坐标 $(u, v)$ 都映射为颜色 $T (u_0, v_0)$ 来扩充纹理函数, 其中 $(u_0,v_0)$ 为范围 $[0,1]^2$ 内距离 $(u, v)$ 最近的点。<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315285.png" alt="Pasted image 20230520152004|400"></p>
+</li>
+<li><p>镜像寻址模式 ( mirror )：通过在坐标的每个整数点处绘制图像的镜像来扩充纹理函数 <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315286.png" alt="Pasted image 20230520152030|400"></p>
+</li>
+</ul>
+<p><strong>在 OpenGL 中称为纹理环绕方式：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">环绕方式</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">GL_REPEAT</td>
+<td align="left">对纹理的默认行为。重复纹理图像。</td>
+</tr>
+<tr>
+<td align="left">GL_MIRRORED_REPEAT</td>
+<td align="left">和 GL_REPEAT 一样，但每次重复图片是镜像放置的。</td>
+</tr>
+<tr>
+<td align="left">GL_CLAMP_TO_EDGE</td>
+<td align="left">纹理坐标会被约束在 0 到 1 之间，超出的部分会重复纹理坐标的边缘，产生一种边缘被拉伸的效果。</td>
+</tr>
+<tr>
+<td align="left">GL_CLAMP_TO_BORDER</td>
+<td align="left">超出的坐标为用户指定的边缘颜色。</td>
+</tr>
+</tbody></table>
+<p>当纹理坐标超出默认范围时，每个选项都有不同的视觉效果输出。我们来看看这些纹理图像的例子：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315287.png" alt="texture_wrapping|img"></p>
+<h1 id="4-纹理数据源"><a href="#4-纹理数据源" class="headerlink" title="4 纹理数据源"></a>4 纹理数据源</h1><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315288.png" alt="Pasted image 20230517230046"></p>
+<blockquote>
+<p>[!NOTE]<br>艺术家使用美术软件制作贴图并导出为 TGA、PNG 等格式，最后引擎自动将其转换为 DDS 格式。</p>
+</blockquote>
+<p>DDS (DirectDraw 图面格式，DirectDraw Surface format，DDS) 是一种针对 GPU 专门设计的图像格式。满足用于 3D 图形开发的以下特征：</p>
+<ol>
+<li>mipmap</li>
+<li>GPU 能自行解压的压缩格式</li>
+<li>纹理数组</li>
+<li>立方体贴图（cubemap）</li>
+<li>体积纹理（volume texture）</li>
+</ol>
+<h1 id="5-纹理应用"><a href="#5-纹理应用" class="headerlink" title="5 纹理应用"></a>5 纹理应用</h1><p>在这里，主要介绍纹理映射的应用：<strong>Material Map、Alpha Map、Bump Map、Normal Map、Relief Map、Displacement Map、Parallax Map、Textured Light、Shadow Map、Environment Map</strong></p>
+<p>我将这些应用分为六个方面：</p>
+<p><strong>控制着色信息、控制片元透明度、改变法线、改变表面结构、阴影贴图、环境贴图</strong></p>
+<h3 id="一、控制着色信息"><a href="#一、控制着色信息" class="headerlink" title="一、控制着色信息"></a>一、控制着色信息</h3><p>在之前 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/360222821">《基础着色模型》</a>中，介绍了简单的 Blinn-Phong 着色模型，如下图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315289.png" alt="1684548488321"></p>
+<p>可以看到，里面有许多需要调节的参数，如表面颜色、高光强弱、高光衰减等因子，这还只是简单的着色模型，如果用基于物理的着色（PBS）模型，参数会更加复杂。</p>
+<p>虽然可以通过赋予顶点更多信息来改变这些参数，但是要做到亚三角形的细节，就需要用各种各样纹理，来对每个片元的着色参数进行调节，我将这些纹理映射方法统称为<strong>材质映射</strong> (Material Map)</p>
+<p>用得最多的是<strong>漫反射映射</strong> (diffuse&#x2F;albedo&#x2F;base color map)，比如经常用于模拟墙壁或者岩石：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315290.png" alt="1684548488374"></p>
+<p>此外还可以改变镜面反射的系数，如<strong>粗糙度</strong> (决定高光衰减) 和<strong>高光反射系数</strong>：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315291.png" alt="1684548488409"></p>
+<p>同时应用漫反射贴图和粗糙度贴图的效果如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315292.png" alt="1684548488482"></p>
+<h3 id="二、控制片元透明度"><a href="#二、控制片元透明度" class="headerlink" title="二、控制片元透明度"></a>二、控制片元透明度</h3><p>纹理都是矩形的，但当我们需要实现 <strong>贴画</strong> (decal) 或者 <strong>镂空</strong> (cutout) 效果时，往往不想让纹理贴满整个表面，也就是说，一些地方的透明度要为 0.</p>
+<p>如下图中的血迹的贴画和镂空的树：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315293.png" alt="1684548488520"></p>
+<p>此类纹理映射称为<strong>透明度映射</strong> (Alpha Map)，这种纹理通常有一个性质：texel 完全透明或者完全不透明 (其实也有半透明需要混合的情况，此处不考虑)</p>
+<p>所以不需要把片元当作半透明进行混合，而是进行<strong>透明度测试</strong> (Alpha Test)，将透明度小于阈值的 texel 认为是完全透明，直接抛弃片元，否则为完全不透明</p>
+<p>测试完成后，再用 z-buffer 算法 (可见前文 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/368065919">《透明度与混合》</a>) 进行对所有完全不透明片元进行混合。</p>
+<p>透明度测试的伪代码如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315294.png" alt="1684548488587"></p>
+<p>但是简单的透明度测试在使用 Mipmap 使会存在问题：如下图，第 0 级纹理连续四个 texel 的透明度为 [0.0, 1.0, 1.0, 0.0]，第 1 级纹理就为 [0.5, 0.5]</p>
+<p>假设我们的阈值设为 0.75，根据双线性插值，可知道第 0 级纹理中有 1.5&#x2F;4 在测试中保留，但是在第 1 级纹理中由于 0.5&lt;0.75，所以像素均被抛弃，如下图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315295.png" alt="1684548488651"></p>
+<p>于是，在不同的 Mipmap 纹理等级中，经过透明度测试留下来的像素占比 (Coverage) 也不一样，会随着 d 增大，有效像素越来越少，如下图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315296.png" alt="1684548488685"></p>
+<p>在一个镜头逐渐拉远时，可以看到树叶也在变少，到远距离时只能看到树干了：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315297.png" alt="1684548488721"></p>
+<p>一般解决的方法有两种：</p>
+<p>1） 手动调节每级 Mipmap 的透明度，或者在 shader 里面根据纹理等级 d 对透明度进行缩放</p>
+<p>2） 一般严重的 artifact 出现在 d 比较大的时候，所以就限制 d 的最大值</p>
+<p>但这两种方法都只能是近似，不能很好解决问题，出现这个 artifact 的关键在于：不同 Mipmap，用同样的透明度阈值会得到不同的 <strong>Coverage</strong>(代表测试留存的像素比例)</p>
+<p>Castano 提出了一种：保证 coverage 一致的情况下，自适应确定透明度阈值，并对原透明度缩放调整的方法，详见 [[1 前言]] ( <a target="_blank" rel="noopener" href="http://the-witness.net/news/2010/09/computing-alpha-mipmaps/">http://the-witness.net/news/2010/09/computing-alpha-mipmaps/</a> )</p>
+<p>其步骤为：</p>
+<p>1） 先求出 d&#x3D;0 纹理等级时，自定义的一个阈值 a_0 对应的 coverage &#x3D; c_0，</p>
+<p>2） 随后在 d&#x3D;1,2,3… 等各级纹理中 coverage 与 c_0 相近的前提下，用二分查找求出不同等级的透明度阈值 a_d，此时理论上只需要对不同等级的纹理透明度施加不同的透明度阈值即可，但是现有管线的透明度测试中，只能用同一个透明度阈值。所以等效为：</p>
+<p>3） 对各级纹理的透明度进行 a_0 &#x2F; a_d 倍缩放，在透明度测试时，用 d&#x3D;0 级处的透明度阈值 a_0 阈值即可。</p>
+<p>此过程可用下图表示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315298.png" alt="1684548488777"></p>
+<p>使用此算法处理前后的效果如下，可见处理后，中远距离的树叶没有消失：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315299.png" alt="1684548488894"></p>
+<p>除此之外，还有其他方法，考虑到本文的主旨是讲纹理映射的应用，所以关于透明度测试的一些问题就后面有机会再讲</p>
+<p>另外在对 RGBA 值进行线性插值时，要注意先把 alpha 分量预乘到 RGB 分量上，再进行插值，比如要对很透明的绿色 (0,255,0,2) 和不透明的红色 (255,0,0,255) 进行插值，有两种情况：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315300.png" alt="1684548488931"></p>
+<p>可以发现，无预乘插值结果更偏绿，而预乘后插值结果更偏红。</p>
+<p>比较实际的情况是：希望插值的结果偏向于不透明那边颜色的色调，所以通常而言，<strong>预乘后插值会比较合理</strong></p>
+<h3 id="三、改变法线"><a href="#三、改变法线" class="headerlink" title="三、改变法线"></a>三、改变法线</h3><p>用于改变表面法线的贴图统称为<strong>凹凸贴图</strong> (Bump Mapping，虎书上面把 Bump Mapping 特指为后续的 height-field map，我此处沿用了 RTR 的说法，即 Bump Mapping 包含这一类技术，都是改变法向的技术)</p>
+<p>为什么使用凹凸贴图呢？我们先来看三种细节层次：</p>
+<p>1） 宏观特征 (Macro-Feature)：往往是跨三角形的，主要用几何体来表征。比如一个人的头或者胳膊，都是用三角形构成的几何体</p>
+<p>2） 微观特征 (Micro-Feature)：往往是亚像素的，主要是用着色方程来表征。比如衣服的材质和皮肤的材质、粗糙度等不一样</p>
+<p>3） 中观特征 (Meso-Feature)：中观特征位于宏观和微观之间，往往是在一个三角形内跨像素的，比如衣服上的褶皱或者脸上的皱纹，这些特征用细小的三角形建模显得过于浪费了，于是就用凹凸贴图的方式表征。</p>
+<p>我们知道，一个三角形就有一个法向量，凹凸贴图在于微调三角形内每个像素的法线，但只用于着色方程中计算光照，三角形的几何体并没有改变，仍然是平的。<strong>凹凸贴图的制作通常是从非常细节、非常多小三角形的模型中导出来</strong></p>
+<p>凹凸贴图的保存有几种方式：</p>
+<p>1） 用一个分量保存高程图 (height-field)，然后通过差分计算出法向量，称之为 <strong>height-field map</strong></p>
+<p>2） 用两个分量保存法向量在 (u, v) 两个方向的偏移 (b_u, b_v)，称之为 <strong>offset map</strong></p>
+<p>3） 用三个分量直接保存新的法向量 (x, y, z)，称之为 <strong>normal map</strong></p>
+<p>三者保存方式如下图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315301.png" alt="1684548489128"></p>
+<p>对于第一种高程 (height-field)，其纹理值高的地方对应 “高度” 也高，一般看起来是一张灰度图，如下图所示，用一张高程纹理来形成球面起伏的效果：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315302.png" alt="1684548489196"></p>
+<p>对应第二种偏移图 (offset map)，这是 Blinn 在 1978 年提出来的，属于很老的技术，现在很少用，可参考 [[2 基本认知和应用]] ( <a target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/research/wp-content/uploads/1978/01/p286-blinn.pdf">https://www.microsoft.com/en-us/research/wp-content/uploads/1978/01/p286-blinn.pdf</a> )</p>
+<p>而第三种法向贴图 (normal map)，应用最广泛。直接将法向量三个分量 (x, y, z) 保存在纹理的 (R, G, B) 三个通道，用 [0,255] 表示 [-1,1]，所以在前面图中转化为减去了 128. 法向贴图及其效果可见下图，由于法向都与三角形面法向相近，所以 z 分量会比较大，贴图看上去往往是蓝色的：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315303.png" alt="1684548489233"></p>
+<p>此外，对于法向量所处的坐标空间也有一定选择：</p>
+<p>1） 世界空间 (world space)：法向量处于世界空间系，那么模型一旦旋转后就不能用了</p>
+<p>2） 物体空间 (object space)：模型旋转后贴图还能用，但是不能将贴图复用于同一模型的多个不同朝向的面</p>
+<p>3） 切线空间 (tangent space)：贴图可以复用于不同朝向的表面上，所以最常用</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315304.png" alt="1684548489323"></p>
+<p>切线空间基一般是三个分量：法向基 <strong>n</strong> (normal)、切线基 <strong>t</strong> (tangent)、双切线基 <strong>b</strong> (bitangent)，但为了节省存储，只在每个顶点保存 <strong>t</strong> 和 <strong>b</strong>，然后叉乘计算 <strong>n</strong>。</p>
+<p>要注意的是：<strong>在计算光照时，要保证法向量和光线向量等都在同一个坐标空间。</strong></p>
+<p>若不在同一空间，乘以一个矩阵转换即可，比如将向量从物体空间转到切线空间的矩阵：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315305.png" alt="1684548489367"></p>
+<p>另外还有一个问题，<strong>凹凸贴图在多级纹理插值时会很困难</strong>，因为着色方程的表达式与法向量的关系往往不是线性的。</p>
+<p>在线性插值时，比如由两个法向量 n1, n2 插值得到新的法向量 n，记此过程为：n &#x3D; a<em>n1 + b</em>n2，但在着色时，比如 Blinn-Phong 里的高光部分记为 c (n)，不是线性运算，合并计算与分别计算的光照并不相等，即：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315306.png" alt="1684548489406"></p>
+<p>关于此问题的一个解决思路是：将着色方程的一些参数作为整体进行插值，把这个整体作为变量使得光照计算变为线性，而不仅仅是插值法向量。具体细节的话得在 PBS 里面才涉及到，此处就不深入了。</p>
+<p>凹凸贴图的缺点在于：没有真正改变表面的几何凹凸性，所以在观察角度过于倾斜的时候，越会觉得表面像贴了一张纸上去，这是因为没有考虑由于高程带来的视差和遮挡</p>
+<p><strong>Parallax Mapping (视差贴图)</strong> 解决了这个问题</p>
+<p>如下左图所示，当我们从相机观察到 p 点时，由于高程的存在，我们应该看到的是 p_ideal 处的着色，但实际上在凹凸贴图中用的是 p 点的着色信息，所以看起来不够真实：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315307.png" alt="1684548489450"></p>
+<p>视差映射由 Kaneko 提出 [[3 PBR 基本原理和实现]] ( <a target="_blank" rel="noopener" href="https://www.gamedevs.org/uploads/detailed-shape-representation-with-parallax-mapping.pdf">https://www.gamedevs.org/uploads/detailed-shape-representation-with-parallax-mapping.pdf</a> )</p>
+<p>如上右图所示，所做的事情就是：根据 p 点的高程，以及 v 的方向，对 p 点偏移一段距离到达 p_adj，以接近 p_ideal</p>
+<p>当高程变化比较平缓时，这个方法表现较好，但是当高程在 p 点处变化剧烈时或者 v 与表面法向的角度很大时，就有可能导致 p_adj 与 p_ideal 相差很远，如下图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315308.png" alt="1684548489485"></p>
+<p>为了解决这个问题，Welsh 对此进行了改进 [[01 光学原理]] ( <a target="_blank" rel="noopener" href="http://page.mi.fu-berlin.de/block/htw-lehre/wise2015_2016/bel_und_rend/skripte/welsh2004.pdf">http://page.mi.fu-berlin.de/block/htw-lehre/wise2015_2016/bel_und_rend/skripte/welsh2004.pdf</a> )：</p>
+<p>为了防止 p 点偏移得过于厉害，Welsh 将偏移量限制在 h 范围内，此方法对于这种局部高程变化剧烈的砖墙图能够表现得很好，见下图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315309.png" alt="1684548489529"></p>
+<p>即使这种方法解决了高程变化剧烈的情况，但还遗留一种遮挡的情况。</p>
+<p>如下图所示，光线有时会被更高的其他点的高程所遮挡，但是上面并没有考虑这一点：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315310.png" alt="1684548489569"></p>
+<p>一种类似于 Ray Marching 的思想：从 p 点出发，向前检查有限数量的点，看这些点处的高程是否与光线相交，如果相交则取离交点最近的像素点，如 p_adj，并用此处的光照去替代 p 点的光照信息。</p>
+<p>此外还有其他很丰富的方法，这一类技术统称为 <strong>地势贴图</strong> (relief Mapping).</p>
+<p>下图对比了凹凸贴图 (法线贴图)、视差贴图、地势贴图三种情况的效果：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315311.png" alt="1684548489601"></p>
+<p>Ray Marching 很有趣，是 ShaderToy 里面很常用的技巧，它和 Ray Tracing 很相似，都需要投射光线，区别在于 RM 没有实实在在的几何体，判断光线相交情况是用 Sphere Tracing 结合 Signed Distance Functions (SDF)，之后有机会也会写一篇关于 RM 的文章</p>
+<h3 id="四、改变表面结构"><a href="#四、改变表面结构" class="headerlink" title="四、改变表面结构"></a>四、改变表面结构</h3><p>第三部分中的凹凸贴图 (法线贴图)、视差贴图和地势贴图，都只是在计算光照时对法线或者其他光照方程的输入进行了微调，没有修改表面结构</p>
+<p>此处所介绍的<strong>移位贴图</strong> (Displacement Mapping) 则实际性地修改了表面结构，其主要依赖于渲染管线的<strong>曲面细分</strong> (tessellation) 功能，即根据贴图中对三角形进行曲面细分，生成足够多更小的三角形，并对每个三角形的顶点位置都进行移位，实际上得到了更为精细的几何体。</p>
+<p>可想而知，这种技术是效果最好的，但也是最复杂的。</p>
+<p>Kalos 在 06 年有一篇综述 [[5]] ( <a target="_blank" rel="noopener" href="https://www.researchgate.net/profile/Laszlo-Szirmay-Kalos/publication/220506016_Displacement_Mapping_on_the_GPU_-_State_of_the_Art/links/5aec48feaca2727bc003fdf9/Displacement-Mapping-on-the-GPU-State-of-the-Art.pdf">https://www.researchgate.net/profile/Laszlo-Szirmay-Kalos/publication/220506016_Displacement_Mapping_on_the_GPU_-_State_of_the_Art/links/5aec48feaca2727bc003fdf9/Displacement-Mapping-on-the-GPU-State-of-the-Art.pdf</a> )：</p>
+<p>对比了各种技术，感觉讲得很不错，下图来源于此：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315312.png" alt="1684548489636"></p>
+<h3 id="五、改变光源"><a href="#五、改变光源" class="headerlink" title="五、改变光源"></a>五、改变光源</h3><p>纹理还可以用于改变光源，称之为 <strong>Textured Light</strong></p>
+<p>最简单的二维光源，类似投影仪的工作原理：把一张纹理放在聚光灯下投射过来，那么光照就带有各种图案：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315313.png" alt="1684548489675"></p>
+<p>除了二维纹理，用视锥体的方式进行投射之外，还可以用一维纹理保存光线的衰减系数，甚至用三维体纹理直接保存光在空间中的分布，但极其耗费内存。</p>
+<h3 id="六、阴影贴图"><a href="#六、阴影贴图" class="headerlink" title="六、阴影贴图"></a>六、阴影贴图</h3><p>介绍阴影贴图之前，先回顾一下 z-buffer 算法：将距离相机最近的片元的深度保存起来：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315314.png" alt="1684548489757"></p>
+<p>如果我们把相机换成点光源，那么<strong>右边这张深度图，是否可以代表有光照片元的深度？且大于这个深度的片元都没有光照？</strong></p>
+<p>这就是阴影贴图的思想，考虑以下场景：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315315.png" alt="1684548489797"></p>
+<p>黄色区域为点光源光照示意范围，绿色区域为视锥体范围，很明显，红线处是阴影部分，实际操作时怎样确定这个红线位置呢？有以下步骤：</p>
+<p>1） 第一次 pass，将相机放在光源位置，用 z-buffer 的方式存一张深度缓冲，称之为<strong>阴影贴图</strong> (Shadow Map)，并记录此时的投影变换矩阵 M</p>
+<p>2） 第二次 pass，正式开始渲染场景，将相机放到正确的位置，对片元进行着色时，考察每个片元处是否有光照，方法为：用第一次 pass 里面的矩阵 M 将三维点 (Px, Py, Pz) 变换为二维坐标 (px, py) 和深度 pz，将 pz 与第一次 pass 里面存下来的阴影贴图对应点的深度 c (px, py) 进行对比，若 pz&gt; c (px, py)，则认为此片元无光照，否则有光照。</p>
+<p>此过程如下图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315316.png" alt="1684548489838"></p>
+<p>但此处的阴影贴图局限于只能生成点光源的硬阴影，对于其他光源或者软阴影的生成还需要其他方法，会在后面专门的阴影章节讲解。</p>
+<h3 id="七、环境贴图-Environment-Mapping"><a href="#七、环境贴图-Environment-Mapping" class="headerlink" title="七、环境贴图 (Environment Mapping)"></a>七、环境贴图 (Environment Mapping)</h3><p>相信一些人看过《楚门的世界》这部电影，里面的一个世界是被很大的一个几何体围起来的，环境贴图也是类似的做法：你所看到的四周比较远的东西不过是一整张贴图</p>
+<p>环境贴图有多种保存形式：最常用的<strong>立方贴图</strong> (Cubic Map)、<strong>经纬度贴图</strong> (Latitude-Longitude Map)、<strong>球面贴图</strong> (Sphere Map)：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315317.png" alt="1684548489874"></p>
+<p>环境贴图主要有两个应用：</p>
+<p>一是作为场景的背景颜色，比如这个场景有一些模型，但是模型后面不可能总是灰的或者黑的背景色，那么环境贴图就充当背景的颜色</p>
+<p>二是作为镜面反射的颜色，比如场景中有一面镜子，你从镜子里看到的，实际是反射的背景的颜色，就好比你看到的镜子的颜色，其实就是镜子里面那个虚拟摄像机朝反射方向看过去的环境贴图的颜色，比如在 Forza 游戏中，赛车上的反射效果：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315318.png" alt="1684548489933"></p>
+<p>环境贴图有一个很重要的性质就是：<strong>贴图很远，以至于在获取贴图纹理值的时候，不需要考虑向量的位置，只需要考虑向量的方向</strong> 即可：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315319.png" alt="1684548489970"></p>
+<p>如图所示，尽管两个摄像机的位置不一样，但是视线方向是一致的，那么得到的环境贴图的纹理也是一样的。这种性质可以在计算光照时，不用判断向量到底与贴图的哪一点相交，只考虑方向</p>
+<p>本文对一些常见的纹理映射的应用进行了大致讲解，每一种应用延伸出去都有很多东西可讲，受限于自身的水平和文章的篇幅，此处没有展开。如有错误，还请多多指教！</p>
+<h1 id="6-纹理压缩"><a href="#6-纹理压缩" class="headerlink" title="6  纹理压缩"></a>6  纹理压缩</h1><h2 id="一、什么是纹理压缩"><a href="#一、什么是纹理压缩" class="headerlink" title="一、什么是纹理压缩"></a>一、什么是纹理压缩</h2><ul>
+<li><p><strong>纹理压缩是</strong>：</p>
+</li>
+<li><p>为了解决内存、带宽问题，专为在计算机图形渲染系统中<strong>存储纹理</strong>而使用的<strong>图像压缩技术</strong>。</p>
+</li>
+<li><p><strong>区分图片格式和纹理压缩格式</strong></p>
+</li>
+<li><p><strong>概念上讲</strong></p>
+</li>
+<li><p>图片格式：</p>
+</li>
+<li><p>是图片文件的存储格式，通常在硬盘、内存中存储，传输文件时使用</p>
+</li>
+<li><p>例如：jpg、png、gif、bmp</p>
+</li>
+<li><p>纹理压缩格式：</p>
+</li>
+<li><p>是<strong>显卡能直接进行采样</strong>的<strong>纹理数据格式</strong>，通常在向显卡中加载纹理时才使用</p>
+</li>
+<li><p><strong>原理上讲</strong></p>
+</li>
+<li><p>图片格式：</p>
+</li>
+<li><p>图片压缩格式是<strong>基于整张图片进行压缩</strong>，像素之间解码过程中<strong>存在依赖关系</strong></p>
+</li>
+<li><p>无法实现单个像素级的解析，发挥不了显卡的并行能力</p>
+</li>
+<li><p>并且，无论什么格式在显卡解码后都是 RGBA 的纹理格式</p>
+</li>
+<li><p>总结：无法减少显存的占用率，且需要 CPU 解压后才能被 GPU 读取，结果就是：增加了 CPU 的时间和带宽</p>
+</li>
+<li><p>纹理压缩格式：</p>
+</li>
+<li><p>基于块压缩，能够更快的读取像素所属字节块进行解压缩，以支持快速访问</p>
+</li>
+<li><p>“随机访问”：如果渲染一个物体时，需要在某个坐标上采样纹理，那么 GPU 只需要读取该像素所属固定大小字节块，对其进行解压即可。</p>
+</li>
+<li><p>举例理解：</p>
+</li>
+<li><p>如果拿到一张贴图，设置纹理压缩格式：</p>
+</li>
+<li><p>CPU 会按照我们设定的格式进行压缩，然后传递给 GPU 读取</p>
+</li>
+<li><p>如果不设置纹理压缩格式，以图片格式进行：</p>
+</li>
+<li><p>CPU 也会进行压缩，但是会压缩为 RGBA32 格式，但其实这个格式是非常大的，并没有起到压缩的作用</p>
+</li>
+</ul>
+<h2 id="二、为什么要使用纹理压缩"><a href="#二、为什么要使用纹理压缩" class="headerlink" title="二、为什么要使用纹理压缩"></a>二、为什么要使用纹理压缩</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315320.png" alt="Pasted image 20221208232051"></p>
+<ul>
+<li><p>实际上，使用纹理压缩的原因在上部分<strong>图片格式和纹理压缩格式区别</strong>的部分里已经讲了</p>
+</li>
+<li><p><strong>图片压缩格式下</strong></p>
+</li>
+<li><p>无法实现像素级解析，<strong>无法发挥 GPU 并行能力</strong>，无法减少显存的占用率</p>
+</li>
+<li><p>需要在到 GPU 之间使用 CPU 解压缩，增加了 CPU 的时间和带宽</p>
+</li>
+<li><p><strong>纹理压缩格式下</strong></p>
+</li>
+<li><p>GPU 可以直接读取贴图，不需要经过中间 CPU 解码&#x2F;解压缩的步骤</p>
+</li>
+<li><p>还支持“随机访问”</p>
+</li>
+<li><p>总结一下就是：</p>
+</li>
+<li><p>我们需要一种<strong>内存占用既小又能被 GPU 直接读取的格式</strong>（这种格式就是纹理压缩）</p>
+</li>
+<li><p><strong>总结</strong></p>
+</li>
+<li><p>纹理压缩相对正常图片格式，能够直接被 GPU 采样，发挥 GPU 强大的并行能力，且优化了带宽问题</p>
+</li>
+</ul>
+<h2 id="三、常见的纹理压缩格式"><a href="#三、常见的纹理压缩格式" class="headerlink" title="三、常见的纹理压缩格式"></a>三、常见的纹理压缩格式</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315321.png" alt="Pasted image 20221208232125"></p>
+<blockquote>
+<p>黄字是我们常用的压缩格式 </p>
+</blockquote>
+<h3 id="非纹理压缩格式"><a href="#非纹理压缩格式" class="headerlink" title="非纹理压缩格式"></a>非纹理压缩格式</h3><ul>
+<li><p>RGBA8888（RGBA32）</p>
+</li>
+<li><p>R、G、B、A 四个通道各占 8 位</p>
+</li>
+<li><p>所以一个像素消耗：4 * 8 &#x3D; 32 位（bit）&#x3D; 4 字节（byte）</p>
+</li>
+<li><p>RGBA4444（RGBA16）</p>
+</li>
+<li><p>四个通道各占 4 位内存</p>
+</li>
+<li><p>一个像素消耗：4 * 4 &#x3D; 16 位 &#x3D; 2 字节</p>
+</li>
+<li><p>RGB888（RBG24）</p>
+</li>
+<li><p>同理，一个像素消耗**:** 3 字节</p>
+</li>
+<li><p>RGB565 (RGB16)</p>
+</li>
+<li><p>一个像素消耗<strong>：</strong>2 字节</p>
+</li>
+<li><p><strong>总结</strong></p>
+</li>
+<li><p>带透明通道的，单通道可以是 4 位、8 位</p>
+</li>
+<li><p>不带透明通道的，单通道可以是 8 位，或者在 RGB 分 16 位（565、绿通道多给 1 位）</p>
+</li>
+</ul>
+<h3 id="1、DXTC-系列"><a href="#1、DXTC-系列" class="headerlink" title="1、DXTC 系列"></a>1、DXTC 系列</h3><p>DXTC 系列的纹理压缩格式来源于 S3 公司提出的 S3TC 算法</p>
+<ul>
+<li><p><strong>基本思想</strong>：</p>
+</li>
+<li><p>把 4×4 的像素块压缩成一个 64 或 128 位的数据块</p>
+</li>
+<li><p><strong>优点</strong>：</p>
+</li>
+<li><p>创建了一个固定大小且独立的编码片段，没有共享查找表或其他依赖关系，简化了解码过程</p>
+</li>
+</ul>
+<h4 id="DXT1（BC1）"><a href="#DXT1（BC1）" class="headerlink" title="DXT1（BC1）"></a>DXT1（BC1）</h4><ul>
+<li><p>也叫作 BC1</p>
+</li>
+<li><p><strong>内容</strong>：</p>
+</li>
+<li><p>将 4×4 的像素块压缩成了一个 64 位的数据块，这个 64 位的数据块中包含：</p>
+</li>
+<li><p>其中 32 位是：</p>
+</li>
+<li><p>两个 16 位 RGB（RGB565）颜色。</p>
+</li>
+<li><p>（这两个 RGB 颜色是 4×4 像素块中的两个极端颜色值，然后通过线性插值计算出剩余的两个中间颜色）</p>
+</li>
+<li><p>剩余的 32 位</p>
+</li>
+<li><p>平均分配给了 16 个像素作为颜色值的索引值，每个像素占 2 位</p>
+</li>
+<li><p><strong>理解</strong>：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315322.png" alt="Pasted image 20221208232506"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315323.png" alt="Pasted image 20221208232510"></p>
+</li>
+<li><p>64 位分别为：</p>
+</li>
+<li><p>其中 32 位是：蓝色的 A、B 两个 16 位 RGB 颜色，它们是极端颜色（格式为 RGB565）</p>
+</li>
+<li><p>极端颜色通过线性插值得到的中间颜色：红色的 C、D</p>
+</li>
+<li><p>另外 32 位是：16 个像素的颜色索引值，每个像素占 2 位（可能是 00 01 10 11，可以分别表示上边的 A、B、C、D 四种颜色）</p>
+</li>
+<li><p><strong>注意</strong>：</p>
+</li>
+<li><p><strong>①</strong>存储极端颜色的格式是 RGB565，也就是说绿（G）通道的精度比其他两个通道精度高一些</p>
+</li>
+<li><p>这就是有些人说把信息放绿通道精度更高的原因</p>
+</li>
+<li><p>&#x2F;&#x2F;补充：多出来的精度给绿通道是因为：人眼对绿色更敏感</p>
+</li>
+<li><p><strong>②</strong>DXT1 格式适用于不具有透明度信息或者具有一位透明度信息（表示完全透明 or 完全不透明）的贴图</p>
+</li>
+<li><p>对于没有 Alpha 信息的贴图，压缩遵循上文</p>
+</li>
+<li><p>对于有 Alpha 信息的贴图</p>
+</li>
+<li><p>极端颜色插值时，中间颜色只有一个，另一个表示完全透明 or 完全不透明（例如上述例子中，C 为中间颜色，D 表示透明信息）</p>
+</li>
+<li><p>每个像素索引时，极端颜色+中间颜色表示完全不透明，另外一个表示完全透明</p>
+</li>
+<li><p><strong>DXT1 的压缩率</strong></p>
+</li>
+<li><p>参照对象：RGB24（DXT1 主要用于没有 Alpha 信息的贴图）</p>
+</li>
+<li><p>DXT1:</p>
+</li>
+<li><p>总数据块为 64 位，16 个像素共用 &#x3D;&gt;一个像素 4 位</p>
+</li>
+<li><p>所以压缩率为：24 &#x2F; 4 &#x3D; 6:1</p>
+</li>
+</ul>
+<h4 id="DXT2-3（BC2）"><a href="#DXT2-3（BC2）" class="headerlink" title="DXT2&#x2F;3（BC2）"></a>DXT2&#x2F;3（BC2）</h4><ul>
+<li><p>也叫作 BC2</p>
+</li>
+<li><p>128 位</p>
+</li>
+<li><p>颜色信息和 DXT1 是一样占用 64 位，多出 64 位用来增加 Alpha 信息</p>
+</li>
+<li><p>Alpha 信息并没有插值，只是单纯的为每一个像素多给 4 位信息，用来记录 Alpha 信息</p>
+</li>
+<li><p>这样一来，每个像素就占 4+4&#x3D;8 位，（0~3 表示透明信息，4-7 表示颜色信息）</p>
+</li>
+<li><p><strong>简单来说就是：</strong></p>
+</li>
+<li><p>相比 DXT1，多了 64 位用来存 Alpha 信息， 16 个像素，每个 4 位</p>
+</li>
+<li><p><strong>DXT2 和 DXT3 的区别</strong>：</p>
+</li>
+<li><p>DXT2 是已经完成了颜色与 Alpha 的混合，当透明度发生改变时，直接改变整体颜色值，不再单独进行复合</p>
+</li>
+<li><p>DXT3 的 Alpha 信息相对独立（分开压缩）</p>
+</li>
+<li><p><strong>DXT2、3 的压缩率</strong></p>
+</li>
+<li><p>参照对象：RGBA（32 位）</p>
+</li>
+<li><p>总数据块为 128 位，16 个像素共用 &#x3D;&gt;一个像素 8 位</p>
+</li>
+<li><p>压缩率为：32 &#x2F; 8 &#x3D; 4:1</p>
+</li>
+</ul>
+<h4 id="DXT4-5（BC3）"><a href="#DXT4-5（BC3）" class="headerlink" title="DXT4&#x2F;5（BC3）"></a>DXT4&#x2F;5（BC3）</h4><ul>
+<li><p>也被称为 BC3</p>
+</li>
+<li><p>128 位</p>
+</li>
+<li><p><strong>和 DXT2&#x2F;3 的区别：</strong></p>
+</li>
+<li><p>Alpha 信息是通过线性插值得来的：</p>
+</li>
+<li><p>表示颜色信息的 64 位同上</p>
+</li>
+<li><p>多出的 64 位：</p>
+</li>
+<li><p>2 个 8 位的极端值</p>
+</li>
+<li><p>每个像素 3 位的索引值（16*3）</p>
+</li>
+<li><p><strong>DXT4 和 DXT5 的区别</strong>：</p>
+</li>
+<li><p>同 2 和 3</p>
+</li>
+<li><p><strong>DXT4、5 的压缩率</strong></p>
+</li>
+<li><p>同为4:1</p>
+</li>
+</ul>
+<h4 id="扩展知识"><a href="#扩展知识" class="headerlink" title="扩展知识"></a>扩展知识</h4><ul>
+<li><p>Unity 将贴图类型选为法线时，会采用 DXTnm 格式</p>
+</li>
+<li><p>它基于 DXT5，会把法线贴图的 R 通道存入 A 通道，然后将 RB 通道清除为 1</p>
+</li>
+<li><p>这样就可以把法线 xy 信息分别存入到 RGB 和 A 中进行压缩，<strong>来获得更高的精度</strong></p>
+</li>
+<li><p>最后再根据 xy 构建出 z 的信息</p>
+</li>
+</ul>
+<h3 id="2、ATI-系列"><a href="#2、ATI-系列" class="headerlink" title="2、ATI 系列"></a>2、ATI 系列</h3><h4 id="ATI1-2（BC4、BC5）"><a href="#ATI1-2（BC4、BC5）" class="headerlink" title="ATI1&#x2F;2（BC4、BC5）"></a>ATI1&#x2F;2（BC4、BC5）</h4><ul>
+<li><p>ATI1，也被称为 BC4</p>
+</li>
+<li><p>64 位</p>
+</li>
+<li><p>每一个数据块中存储的是单个颜色通道的数据</p>
+</li>
+<li><p><strong>主要用于存储：高度图、光滑度贴图等单通道信息</strong></p>
+</li>
+<li><p>ATI1 的压缩方式：</p>
+</li>
+<li><p>和 DXT5 中，对于 Alpha 数据处理一样</p>
+</li>
+<li><p>ATI2, 也被称为 BC5</p>
+</li>
+<li><p>128 位</p>
+</li>
+<li><p>和 ATI1 的区别在于，它存储了两个颜色通道的数据</p>
+</li>
+<li><p>ATI2 的压缩方式：</p>
+</li>
+<li><p>处理方式也是相同的，相当于存储了两个 ATI1 的数据块</p>
+</li>
+<li><p>如果想要节省通道只存储法线 xy 通道时，就可以采用 BC5（ATI2）压缩格式</p>
+</li>
+<li><p><strong>优点：</strong></p>
+</li>
+<li><p>因为每个通道都会有自己的索引，会单独压缩，所以<strong>法线贴图的 xy 信息可以比 DXT1 中有更多保真度</strong></p>
+</li>
+<li><p><strong>缺点：</strong></p>
+</li>
+<li><p>需要使用两倍内存，需要更多的带宽才能将纹理传递到着色器中</p>
+</li>
+<li><p><strong>压缩比：</strong></p>
+</li>
+<li><p>ATI1：</p>
+</li>
+<li><p>参照对象：单通道 8 位</p>
+</li>
+<li><p>总数据块为 64 位，16 个像素，所以每个像素 4 位</p>
+</li>
+<li><p>压缩比为：8 &#x2F; 4 &#x3D;2:1</p>
+</li>
+<li><p>ATI2：</p>
+</li>
+<li><p>参照对象：两个通道 16 位</p>
+</li>
+<li><p>总数据块为 128 位，16 个像素，所以每个像素 4 位</p>
+</li>
+<li><p>压缩比为：16 &#x2F; 8 &#x3D; 2:1</p>
+</li>
+<li><p>&#x2F;&#x2F;注：一些资料上显示 BC4 和 5 的压缩比为 4&#x2F;1，查了很多还是没找到详细资料。这一块待定，日后搞清楚了回来修改</p>
+</li>
+<li><p>弹幕有同学提出：维基百科中说，4:1的压缩比，是因为单个像素当作 32 位的大小来计算了</p>
+</li>
+</ul>
+<h4 id="BC6-7"><a href="#BC6-7" class="headerlink" title="BC6&#x2F;7"></a>BC6&#x2F;7</h4><ul>
+<li><p>BC6 和 BC 仅在 D3D11 及以上图形硬件中受到支持</p>
+</li>
+<li><p>他们每个块占用 16 字节</p>
+</li>
+<li><p>BC6</p>
+</li>
+<li><p>针对 RGB 半精度浮点数数据进行压缩</p>
+</li>
+<li><p><strong>是专门针对 HDR（高动态范围）图像设计的压缩算法</strong></p>
+</li>
+<li><p>压缩比为6:1</p>
+</li>
+<li><p>BC7</p>
+</li>
+<li><p>针对 8 位 RGB 或 RGBA 的图像进行压缩</p>
+</li>
+<li><p><strong>是专门针对 LDR（低动态范围）图像设计的压缩算法</strong>，该格式用于高质量的 RGBA 压缩，可以显著减少由于压缩法线带来的错误效果</p>
+</li>
+<li><p>压缩比为3:1</p>
+</li>
+<li><p><strong>一般我们使用 BC7 给端游高质量图像进行压缩</strong></p>
+</li>
+<li><p>Reference：</p>
+</li>
+<li><p>BC6 和 BC7 的官方原理说明</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/uwp/graphics-concepts/bc6h-format">https://docs.microsoft.com/zh-cn/windows/uwp/graphics-concepts/bc6h-format</a> <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/uwp/graphics-concepts/bc7-format">https://docs.microsoft.com/zh-cn/windows/uwp/graphics-concepts/bc7-format</a></p>
+</li>
+</ul>
+<h3 id="3、ETC-系列"><a href="#3、ETC-系列" class="headerlink" title="3、ETC 系列"></a>3、ETC 系列</h3><ul>
+<li><p>DirectX 选择 DXTC 作为标准压缩格式，而 OpenGL 选择了爱立信研发的 ETC 格式</p>
+</li>
+<li><p><strong>几乎所有安卓设备都支持 ETC 格式，所以它在移动端应用广泛</strong></p>
+</li>
+<li><p>基本思想：</p>
+</li>
+<li><p>ETC 的方案同样将 4×4 的像素单元压缩成 64 位数据块，同时，将像素单元水平或竖直朝向分为两个区块，每个像素颜色等于基础颜色加上索引指向的亮度范围<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315324.gif" alt="Pasted image 20221208234341"></p>
+</li>
+<li><p>总结：每个区块中有 12 位用来存储颜色信息（12<em>2），16 位存储其 8 个像素的索引（每个像素 2 位，16</em>2），4 位存储亮度索引（4*2）</p>
+</li>
+</ul>
+<h4 id="ETC1"><a href="#ETC1" class="headerlink" title="ETC1"></a>ETC1</h4><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315325.png" alt="Pasted image 20221208234503"></p>
+<ul>
+<li><p><strong>亮度索引值</strong>：（上表，水平方向）</p>
+</li>
+<li><p>每个区块的亮度索引值（3 位，0-7）会从 8 个亮度索引值中获取当前像素单元的亮度表</p>
+</li>
+<li><p>&#x2F;&#x2F;注：课程里讲的是 4 位，0-15 个亮度索引值，但资料中显示的是 3 位索引值，表中也是，正确性存疑</p>
+</li>
+<li><p><strong>像素索引值</strong>（上表，竖直方向）：</p>
+</li>
+<li><p>每个像素的像素索引值（2 位，0-3）可以从亮度表的四个值中选取对应的亮度补充值</p>
+</li>
+<li><p><strong>最终的颜色 &#x3D; 12 位基础颜色信息 + 亮度补偿值</strong></p>
+</li>
+<li><p>补充：</p>
+</li>
+<li><p><strong>原理：</strong></p>
+</li>
+<li><p>将 4×4 的像素块编码为 2×4 或者 4×2 像素的两个块</p>
+</li>
+<li><p>每个块指定一个基色，每个像素的颜色铜鼓偶一个编码为相对于这个基色偏移的灰度值确定（上面提到的亮度）</p>
+</li>
+<li><p><strong>位数占比</strong>：</p>
+</li>
+<li><p>亮度索引 3 位*2</p>
+</li>
+<li><p>像素索引 2 位*16</p>
+</li>
+<li><p>基础颜色 12 位（444<em>2，或者 555+333）</em>2</p>
+</li>
+<li><p>flip1 位（控制水平或者竖直划分）*2</p>
+</li>
+<li><p>总位数 &#x3D; 3<em>2 + 2</em>16 + 12<em>2 + 1</em>2 &#x3D; 64 位</p>
+</li>
+<li><p>&#x2F;&#x2F;注：<em>2 是因为有两个块，</em>16 是因为有 16 个像素</p>
+</li>
+<li><p><strong>压缩率</strong>：</p>
+</li>
+<li><p>参照标准：RBG24</p>
+</li>
+<li><p>总共有 64 个数据块，针对 16 个像素，也就是每个像素 4 位</p>
+</li>
+<li><p>压缩比 &#x3D; 24 &#x2F; 4 &#x3D; 6:1</p>
+</li>
+<li><p><strong>对于 ETC1 不支持 Alpha 通道的解决方案</strong></p>
+</li>
+<li><p>采用两张纹理混合的方式</p>
+</li>
+<li><p><strong>ETC1 的适用情况</strong></p>
+</li>
+<li><p>长宽为 2 的幂次的贴图</p>
+</li>
+<li><p>不适用于带透明通道的贴图</p>
+</li>
+<li><p>适用于基本所有安卓设备</p>
+</li>
+</ul>
+<h4 id="ETC2"><a href="#ETC2" class="headerlink" title="ETC2"></a>ETC2</h4><ul>
+<li>TEC2 是 ETC1 的扩展，支持了 Alpha 通道（内存占用大于 ETC1）</li>
+<li>硬件要求 OpenGL ES3.0 和 OpenGL4.3 以上</li>
+</ul>
+<h3 id="4、ASTC"><a href="#4、ASTC" class="headerlink" title="4、ASTC"></a>4、ASTC</h3><ul>
+<li><p>ASTC 是由 ARM 和 AMD 联合开发的纹理压缩格式</p>
+</li>
+<li><p><strong>优点：</strong></p>
+</li>
+<li><p>可以根据不同图片选择不同压缩率的算法</p>
+</li>
+<li><p>图片长宽不需要是 2 的次幂</p>
+</li>
+<li><p>同时支持 HDR 和 LDR</p>
+</li>
+<li><p><strong>缺点：</strong></p>
+</li>
+<li><p>兼容性不够完善</p>
+</li>
+<li><p>解码时间较长</p>
+</li>
+<li><p>无法在 iphone6 以下的设备运行</p>
+</li>
+<li><p><strong>基本思想：</strong></p>
+</li>
+<li><p>同样是基于块的压缩算法，与 BC7 类似</p>
+</li>
+<li><p>数据块大小固定为 128 位</p>
+</li>
+<li><p>块中的像素数量可变，从 4×4 到 12×12 像素都有</p>
+</li>
+<li><p><strong>每个数据块中存储了两个插值端点</strong></p>
+</li>
+<li><p>存储的不一定是颜色信息，也可能是 Layer 信息，这样可以用来对 Normal 或 Alpha 进行更好的压缩（根据贴图类型进行针对性压缩）</p>
+</li>
+<li><p><strong>块中的每个纹素，存储其对应插值点的权重值</strong></p>
+</li>
+<li><p>权重值数量可以少于纹素数量，可以通过插值得到每个纹素的权重值，再进行颜色计算</p>
+</li>
+<li><p><strong>128 位数据块中存储的信息：</strong></p>
+</li>
+<li><p>11 位，权重、高度信息、特殊块标识</p>
+</li>
+<li><p>2 位，Part 数量</p>
+</li>
+<li><p>4 位，16 中插值端点模式（LDR&#x2F;HDR、RGB&#x2F;RGBA）</p>
+</li>
+<li><p>111 位，插值端点信息、纹素权重值、配置信息</p>
+</li>
+</ul>
+<h3 id="5、PVRTC"><a href="#5、PVRTC" class="headerlink" title="5、PVRTC"></a>5、PVRTC</h3><ul>
+<li><p>PVRTC 是由 Imagination 公司专为 PowerVR 显卡设计的压缩格式（iphone、ipad，部分安卓机）</p>
+</li>
+<li><p>不是基于块的算法，而是将图像分为了低频和高频信号</p>
+</li>
+<li><p>低频信号由两张低分辨率图像 AB 组成</p>
+</li>
+<li><p>高频信号则是一张记录了每个像素混合的权重值的全分辨率低精度的调制图像</p>
+</li>
+<li><p>解码时，AB 图像经过双线性插值放大，然后根据调制图像权重进行混合</p>
+</li>
+<li><p><strong>压缩原理</strong></p>
+</li>
+<li><p>分为 4-bpp 和 2-bpp（bpp &#x3D; Bit Per Pixel，即每个像素占的位数）</p>
+</li>
+<li><p><strong>4-bpp 为例：</strong></p>
+</li>
+<li><p>把 4×4 的像素单元压成一个 64 位数据块</p>
+</li>
+<li><p>64 位数据块中包含了 A、B 两张图（在原图基础上压缩到 1&#x2F;4 的低分辨率图像）</p>
+</li>
+<li><p>不同模式下每个像素调制数据可以得到不同的混合值，根据这个混合值用 A 和 B 混合得出最终颜色值</p>
+</li>
+<li><p>位数占比：</p>
+</li>
+<li><p>32 位的调制数据（2*16）</p>
+</li>
+<li><p>1 位的调制标志（也称为模式）</p>
+</li>
+<li><p>15 位的颜色 A（554 或 4433），1 位颜色 A 的不透明标志</p>
+</li>
+<li><p>14 位颜色 B（555 或 4443），1 位颜色 B 的不透明标志</p>
+</li>
+<li><p>共计：32 +1 + 16 + 15 &#x3D; 64 位</p>
+</li>
+<li><p><strong>压缩率</strong></p>
+</li>
+<li><p>以 RGB 为参照标准</p>
+</li>
+<li><p>压缩率 &#x3D; 24 &#x2F; (64&#x2F;16) &#x3D; 6:1</p>
+</li>
+<li><p>以 RGBA 为参照标准</p>
+</li>
+<li><p>压缩率 &#x3D; 32 &#x2F; (64&#x2F;16) &#x3D; 8:1</p>
+</li>
+<li><p><strong>2-bpp</strong></p>
+</li>
+<li><p>把一个 8×4 的像素单元压成了 64 位数据块</p>
+</li>
+</ul>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><h3 id="1、画质比较"><a href="#1、画质比较" class="headerlink" title="1、画质比较"></a>1、画质比较</h3><ul>
+<li>RGBA &gt; ASTC 4×4&gt; ASTC6×6 &gt; TEC2 ≈ ETC1</li>
+<li>&#x2F;&#x2F;注：画质较为主观，且不同的贴图针对不同压缩格式也不同，仅供参考</li>
+</ul>
+<h3 id="2、压缩比"><a href="#2、压缩比" class="headerlink" title="2、压缩比"></a>2、压缩比</h3><ul>
+<li>DXT1 6:1</li>
+<li>DXT2&#x2F;3 4:1</li>
+<li>DXT4&#x2F;5 4:1</li>
+<li>ATI1 4:1</li>
+<li>ATI2 4:1</li>
+<li>BC6 6:1</li>
+<li>BC7 3:1</li>
+<li>ETC1 6:1</li>
+<li>PVRTC 6:1</li>
+<li>ASTC 4:1~35.95:1</li>
+</ul>
+<h3 id="3、实际应用中的选择"><a href="#3、实际应用中的选择" class="headerlink" title="3、实际应用中的选择"></a>3、实际应用中的选择</h3><p><strong>PC</strong></p>
+<ul>
+<li>① 低质量使用 DXT1 格式不支持 A 通道，使用 DXT5 格式支持 A 通道；</li>
+<li>② 高质量使用 BC7 格式，支持 A 通道；</li>
+</ul>
+<p><strong>安卓</strong></p>
+<ul>
+<li>① 低质量使用 ETC1 格式，但不支持 A 通道；</li>
+<li>② 低质量使用 ETC2 格式，支持 A 通道，需要在 OpenGL ES 3.0&#x2F;OpenGL 4.3 以上版本；</li>
+<li>③ 高质量使用 ASTC 格式，需要在 Android 5.0&#x2F;OpenGL ES 3.1 以上版本；</li>
+</ul>
+<p><strong>IOS</strong></p>
+<ul>
+<li>① 高质量使用 ASTC 格式，需要 Iphone6 以上版本；</li>
+<li>② 低质量使用 PVRTC2 格式，支持 Iphone6 以下版本；</li>
+</ul>
+<p><strong>补充</strong></p>
+<ul>
+<li><p>实际手机端项目中，我们比较常用 ASTC（安卓和 IOS 通用）</p>
+</li>
+<li><p>英伟达和 Unity 官方对于不同类型贴图给出了不同的压缩方案建议，感兴趣的同学可以看下：</p>
+</li>
+<li><p>Using ASTC Texture Compression for Game Assets | NVIDIA Developer</p>
+</li>
+<li><p>Unity - Manual: Recommended, default, and supported texture compression formats, by platform (unity3d. com)</p>
+</li>
+</ul>
+<p>五、其他补充</p>
+<h2 id="①常见分辨率及纹理压缩格式下的内存占比分析"><a href="#①常见分辨率及纹理压缩格式下的内存占比分析" class="headerlink" title="①常见分辨率及纹理压缩格式下的内存占比分析"></a>①常见分辨率及纹理压缩格式下的内存占比分析</h2><ul>
+<li><p>在 Ben Cloward 大佬的视频里也有提过几嘴纹理压缩的问题，有个表还挺直观，在这里也摘过来：</p>
+</li>
+<li><p>具体可以看看我这篇笔记：<a target="_blank" rel="noopener" href="https://www.yuque.com/sugelameiyoudi-jadcc/okgm7e/wypves">https://www.yuque.com/sugelameiyoudi-jadcc/okgm7e/wypves</a></p>
+</li>
+</ul>
+<h1 id="7-各种-Map-的的实现"><a href="#7-各种-Map-的的实现" class="headerlink" title="7 各种 Map 的的实现"></a>7 各种 Map 的的实现</h1><p>Map 都可翻译成贴图，对应实现的功能称为映射 Maping。<br>如法线贴图-&gt;法线映射</p>
+<h2 id="NormalMap"><a href="#NormalMap" class="headerlink" title="NormalMap"></a>NormalMap</h2><h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p>使用法线贴图要先把坐标从切线空间转换到世界空间（TBN 矩阵）<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315326.png" alt="Pasted image 20221007190257"> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315328.png" alt="Pasted image 20221007190456"><br>法线贴图通常存储为常规 RGB 图像，其中 RGB 分量分别对应于表面法线的 X，Y 和 Z 坐标。<br>法线的每个分量的值的范围是 [−1,1] ，而 RGB 分量的值的范围是 [0,1] 。所以，在将法线存储为 RGB 图像时，需要对每个分量做一个映射：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vec3rgb_normal = normal ∗ 0.5 + 0.5</span><br></pre></td></tr></table></figure>
+<p>这里要注意，<strong>将法线存储到法线贴图的过程中，需要进行上述操作。当我们从法线贴图中读取到法线数据后，需要进行上述变换的</strong><font color="#ff0000">逆变换</font>，即从 [0,1] 映射到 [−1,1] 。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">normal = 2 * vec3rgb_normal - 1</span><br></pre></td></tr></table></figure>
+<p><strong>Unity 内置函数 <code>UnpackNormal</code>，可以实现该功能（并且支持跨平台转换）。记得纹理类型改为 NormalMap。</strong></p>
+<p>切线空间保存切线的一个优点：可以压缩。因为切线空间的法线 z 方向总是正方向，因此可以仅存储 xy 方向，从而推到 z 方向（normal 是单位向量，用勾股定理由 xy 得出 z，取 z 为正的一个即可）。而模型空间的法线纹理方向各异，无法压缩。<strong>对应法线贴图在 Unity 中的压缩格式：</strong></p>
+<blockquote>
+<p>[!note]</p>
+<ul>
+<li>在非移动平台上，会把法线贴图转化为 DXRT5nm 格式。这个格式只有两个有效 GA 通道（就是上边说的只存 xy，推出 z） ，分别对应法线的 y、x 分量可以节省空间。</li>
+<li>在移动平台上，使用传统 RGB 通道。</li>
+</ul>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315329.png" alt="Pasted image 20221023230557"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315330.png" alt="Pasted image 20221023230559"></p>
+<ul>
+<li>关于 normal. xy *&#x3D; scale；的解释</li>
+<li>是对法线的扰动效果进行缩放</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315331.png" alt="Pasted image 20221007191501"><br>**切线空间中是右手法则！！！计算副切线时需要乘上 tangent w 是因为 unity 引擎历史遗留问题。</p>
+<blockquote>
+<p>[!note]<br>转置矩阵：<br>设有矩阵 x，y。x 的转置矩阵为 x<sup>T</sup>，以下式子相等<br>mul（x<sup>T</sup>，y） &#x3D; mul（y，x）</p>
+</blockquote>
+<p>代码如下，主要区别在于采样后计算漫反射和高光都要使用 NormalMap 转换到世界空间后的坐标替代 world_normal。</p>
+<h3 id="Unity-中的法线纹理类型"><a href="#Unity-中的法线纹理类型" class="headerlink" title="Unity 中的法线纹理类型"></a>Unity 中的法线纹理类型</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315332.png" alt="Pasted image 20221206102034|300"><br>把纹理类型设置为 Normal map 才能使用 UNity 的内置函数 <code>UnpackNormal</code> 来计算法线方向。<br><code>Create form Grayscale</code> 适用于另一种凹凸映射的方法——高度图。整个复选框适用于从高度图生成法线纹理的。高度图本身记录的是相对高度，是一张灰度图，白色表示更高，黑色表示更低。当我们把一高度图导入 unity 后除了要设置 normal map 还要勾选这个，这样就可以把高度图和切线空间下的法线纹理同等对待了。Bumpiness 控制凹凸成都，Filtering 决定用哪种方式计算凹凸程度。</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315333.png" alt="Pasted image 20221206101713|300"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line">Shader <span class="string">&quot;Unlit/NormalMap&quot;</span>  </span><br><span class="line">&#123;  </span><br><span class="line">    Properties  </span><br><span class="line">    &#123;  </span><br><span class="line">        _MainTex (<span class="string">&quot;Texture&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;  </span><br><span class="line">        _NormalMap(<span class="string">&quot;NormalMap&quot;</span>,<span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;  </span><br><span class="line">        _Color(<span class="string">&quot;Color&quot;</span>,Color) = (<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>)  </span><br><span class="line">          </span><br><span class="line">        [Header(BlinnPhong)]  </span><br><span class="line">        [Space(<span class="number">15</span>)]  </span><br><span class="line">        _NormalMapScale(<span class="string">&quot;NormalMapScale&quot;</span>,Float) = <span class="number">1</span>  </span><br><span class="line">        _PowerValue(<span class="string">&quot;PowerValue&quot;</span>, Float) = <span class="number">4</span>  </span><br><span class="line">        _PowerScale(<span class="string">&quot;PowerScale&quot;</span>,Float) = <span class="number">1</span>  </span><br><span class="line">        &#125;  </span><br><span class="line">    SubShader  </span><br><span class="line">    &#123;  </span><br><span class="line">        Tags &#123; <span class="string">&quot;RenderType&quot;</span>=<span class="string">&quot;Opaque&quot;</span> <span class="string">&quot;LightMode&quot;</span> = <span class="string">&quot;ForwardBase&quot;</span> <span class="string">&quot;Queue&quot;</span> = <span class="string">&quot;Geometry&quot;</span>&#125;  </span><br><span class="line">  </span><br><span class="line">        Pass  </span><br><span class="line">        &#123;  </span><br><span class="line">            CGPROGRAM  </span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> vertex vert   </span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> fragment frag  </span></span><br><span class="line">  </span><br><span class="line">            <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;UnityCG.cginc&quot;</span>  </span></span><br><span class="line">            <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;AutoLight.cginc&quot;</span>  </span></span><br><span class="line">  </span><br><span class="line">            <span class="keyword">struct</span> appdata  </span><br><span class="line">            &#123;  </span><br><span class="line">                float4 vertex : POSITION;  </span><br><span class="line">                float2 uv : TEXCOORD0;  </span><br><span class="line">                float3 nomral : NORMAL;  </span><br><span class="line">                float4 tangent : TANGENT;  </span><br><span class="line">                float4 vertexColor : COLOR;  </span><br><span class="line">            &#125;;  </span><br><span class="line">  </span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">v2f</span>  </span></span><br><span class="line"><span class="class">            &#123;</span>  </span><br><span class="line">                float4 pos : SV_POSITION;  </span><br><span class="line">                float2 uv : TEXCOORD0;  </span><br><span class="line">                float3 normal : TEXCOORD1;  </span><br><span class="line">                float3 tangent : TEXCOORD2;  </span><br><span class="line">                float3 bitangent : TEXCOORD3;  </span><br><span class="line">                float4 worldPostion : TEXCOORD4;  </span><br><span class="line">                float3 localPosition : TEXCOORD5;  </span><br><span class="line">                float3 localNormal : TEXCOORD6;  </span><br><span class="line">                float4 vertexColor : TEXCOORD7;  </span><br><span class="line">            &#125;;  </span><br><span class="line">  </span><br><span class="line">            sampler2D _MainTex;  </span><br><span class="line">            float4 _MainTex_ST;  </span><br><span class="line">            sampler2D _NormalMap;  </span><br><span class="line">            float4 _NormalMap_ST;  </span><br><span class="line">            <span class="type">float</span> _NormalMapScale;  </span><br><span class="line">            <span class="type">float</span> _PowerValue, _PowerScale;  </span><br><span class="line">  </span><br><span class="line">            v2f <span class="title function_">vert</span> <span class="params">(appdata v)</span>  </span><br><span class="line">            &#123;  </span><br><span class="line">                v2f o;  </span><br><span class="line">                o.pos = UnityObjectToClipPos(v.vertex);  </span><br><span class="line">                o.uv = TRANSFORM_TEX(v.uv, _MainTex);  </span><br><span class="line">                o.normal = UnityObjectToWorldNormal(v.nomral);  </span><br><span class="line">                o.tangent = UnityObjectToWorldDir(v.tangent);  </span><br><span class="line">                o.bitangent = cross(o.normal, o.tangent) * v.tangent.w;  </span><br><span class="line">                o.worldPostion = mul(unity_ObjectToWorld, v.vertex);  </span><br><span class="line">                o.localPosition = v.vertex.xyz;  </span><br><span class="line">                o.localNormal = v.nomral;  </span><br><span class="line">                o.vertexColor = v.vertexColor;  </span><br><span class="line">                  </span><br><span class="line">                <span class="keyword">return</span> o;  </span><br><span class="line">            &#125;  </span><br><span class="line">  </span><br><span class="line">            fixed4 <span class="title function_">frag</span> <span class="params">(v2f i)</span> : SV_Target  </span><br><span class="line">            &#123;  </span><br><span class="line">                <span class="comment">// 用 TBN 矩阵处理 NormalMap  </span></span><br><span class="line">                float3 T = normalize (i.tangent);  </span><br><span class="line">                float3 B = normalize(i.bitangent);  </span><br><span class="line">                float3 N = normalize(i.normal);  </span><br><span class="line">                float3x3 TBN = float3x3(T,B,N);  </span><br><span class="line">                  </span><br><span class="line">                float3 NormalMap = UnpackNormal((tex2D(_NormalMap, i.uv)));  </span><br><span class="line">                  </span><br><span class="line">                <span class="comment">//控制凹凸程度  </span></span><br><span class="line">                NormalMap.xy *= _NormalMapScale;  </span><br><span class="line">                NormalMap.z = <span class="built_in">sqrt</span>(<span class="number">1</span>-saturate(dot(NormalMap.xy,NormalMap.xy)));  </span><br><span class="line">                  </span><br><span class="line">                <span class="comment">// 将NormalMap从切线空间转换到世界空间  </span></span><br><span class="line">                float3 world_NormalMap = normalize(mul(NormalMap, TBN));  </span><br><span class="line">  </span><br><span class="line">                <span class="comment">// 光照计算  </span></span><br><span class="line">                float3 world_LightDir = normalize(UnityWorldSpaceLightDir(i.worldPostion));  </span><br><span class="line">                float3 world_ViewPos = normalize(UnityWorldSpaceViewDir(i.worldPostion));  </span><br><span class="line">                float3 world_HalfVector = normalize(world_LightDir + world_ViewPos);  </span><br><span class="line">                  </span><br><span class="line">                float4 albedo = tex2D(_MainTex, i.uv);  </span><br><span class="line">  </span><br><span class="line">                <span class="comment">// Diffuse  </span></span><br><span class="line">                <span class="type">float</span> Lambert = max(<span class="number">0</span>, dot(world_NormalMap, world_LightDir));  <span class="comment">//注意这里 法线方向 用 NormalMap 来替代  </span></span><br><span class="line">                <span class="comment">//Specular  </span></span><br><span class="line">                <span class="type">float</span> NH = dot(world_NormalMap, world_HalfVector);  <span class="comment">//注意这里 法线方向 用 NormalMap 来替代  </span></span><br><span class="line">                <span class="type">float</span> BlinnPhong = <span class="built_in">pow</span>(max(<span class="number">0</span>,NH) ,_PowerValue) * _PowerScale;  </span><br><span class="line">  </span><br><span class="line">                float4 Ambient = UNITY_LIGHTMODEL_AMBIENT;  </span><br><span class="line">                float4 Diffuse = Lambert;  </span><br><span class="line">                float4 Specular = BlinnPhong;  </span><br><span class="line">                float4 finalColor = (Ambient + Diffuse) * albedo + Specular;  </span><br><span class="line">                <span class="keyword">return</span> finalColor;  </span><br><span class="line">            &#125;  </span><br><span class="line">            ENDCG  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>凹凸控制部分的解释：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NormalMap.xy *= _NormalMapScale;  </span><br><span class="line">NormalMap.z *= <span class="built_in">sqrt</span>(<span class="number">1</span>-saturate(dot(NormalMap.xy,NormalMap.xy)));</span><br></pre></td></tr></table></figure>
+<p>xy 分量乘上_NormalMapScale。因为 z 轴是原法线方向，所以可以想象一下，将向量的 xy 分量进行缩放后，它就更加朝着原来的偏移方向倾斜了，所以就变的更凹进或者更凸起。<br>因为 normal 需要是一个单位向量，所以变换了 xy 之后需要重新计算 z, 假设法线向量为 (x, y, z)，它可以由 (x, y, 0)和 (0,0, z)两条边组成，既然法线向量是一条单位向量，这两条边构成的三角形又是直角三角形，那么其实只要知道一条边长，就可以用勾股定理计算出另一条边长。实际上法线纹理只存储了 xy 信息. 可以明白这句代码正是勾股定理。</p>
+<h2 id="CubeMap"><a href="#CubeMap" class="headerlink" title="CubeMap"></a>CubeMap</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315334.png" alt="Pasted image 20221007232013"><br>对 NormalMap 章节代码进行修改，NormalMap 结合 CubeMap。<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315335.png" alt="Pasted image 20221007235616|300"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line">Shader <span class="string">&quot;Unlit/CubeMap&quot;</span>  </span><br><span class="line">&#123;  </span><br><span class="line">    Properties  </span><br><span class="line">    &#123;  </span><br><span class="line">        _MainTex (<span class="string">&quot;Texture&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;  </span><br><span class="line">        _NormalMap(<span class="string">&quot;NormalMap&quot;</span>,<span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;  </span><br><span class="line">        _CubeMap(<span class="string">&quot;CubeMap&quot;</span>,Cube) = <span class="string">&quot;white&quot;</span> &#123;&#125;  </span><br><span class="line">        _Color(<span class="string">&quot;Color&quot;</span>,Color) = (<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>)  </span><br><span class="line">          </span><br><span class="line">        [Header(BlinnPhong)]  </span><br><span class="line">        [Space(<span class="number">15</span>)]  </span><br><span class="line">        _NormalMapScale(<span class="string">&quot;NormalMapScale&quot;</span>,Float) = (<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>)  </span><br><span class="line">        _PowerValue(<span class="string">&quot;PowerValue&quot;</span>, Float) = <span class="number">4</span>  </span><br><span class="line">        _PowerScale(<span class="string">&quot;PowerScale&quot;</span>,Float) = <span class="number">1</span>  </span><br><span class="line">        &#125;  </span><br><span class="line">    SubShader  </span><br><span class="line">    &#123;  </span><br><span class="line">        Tags &#123; <span class="string">&quot;RenderType&quot;</span>=<span class="string">&quot;Opaque&quot;</span> <span class="string">&quot;LightMode&quot;</span> = <span class="string">&quot;ForwardBase&quot;</span> <span class="string">&quot;Queue&quot;</span> = <span class="string">&quot;Geometry&quot;</span>&#125;  </span><br><span class="line">  </span><br><span class="line">        Pass  </span><br><span class="line">        &#123;  </span><br><span class="line">            CGPROGRAM  </span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> vertex vert  </span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> fragment frag  </span></span><br><span class="line">  </span><br><span class="line">            <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;UnityCG.cginc&quot;</span>  </span></span><br><span class="line">            <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;AutoLight.cginc&quot;</span>  </span></span><br><span class="line">  </span><br><span class="line">            <span class="keyword">struct</span> appdata  </span><br><span class="line">            &#123;  </span><br><span class="line">                float4 vertex : POSITION;  </span><br><span class="line">                float2 uv : TEXCOORD0;  </span><br><span class="line">                float3 nomral : NORMAL;  </span><br><span class="line">                float4 tangent : TANGENT;  </span><br><span class="line">                float4 vertexColor : COLOR;  </span><br><span class="line">            &#125;;  </span><br><span class="line">  </span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">v2f</span>  </span></span><br><span class="line"><span class="class">            &#123;</span>  </span><br><span class="line">                float4 pos : SV_POSITION;  </span><br><span class="line">                float2 uv : TEXCOORD0;  </span><br><span class="line">                float3 normal : TEXCOORD1;  </span><br><span class="line">                float3 tangent : TEXCOORD2;  </span><br><span class="line">                float3 bitangent : TEXCOORD3;  </span><br><span class="line">                float4 worldPosition : TEXCOORD4;  </span><br><span class="line">                float3 localPosition : TEXCOORD5;  </span><br><span class="line">                float3 localNormal : TEXCOORD6;  </span><br><span class="line">                float4 vertexColor : TEXCOORD7;  </span><br><span class="line">            &#125;;  </span><br><span class="line">  </span><br><span class="line">            sampler2D _MainTex;  </span><br><span class="line">            float4 _MainTex_ST;  </span><br><span class="line">            sampler2D _NormalMap;  </span><br><span class="line">            float4 _NormalMap_ST;  </span><br><span class="line">            samplerCUBE _CubeMap;  </span><br><span class="line">            float4 _NormalMapScale;  </span><br><span class="line">            <span class="type">float</span> _PowerValue, _PowerScale;  </span><br><span class="line">              </span><br><span class="line">            v2f <span class="title function_">vert</span> <span class="params">(appdata v)</span>  </span><br><span class="line">            &#123;  </span><br><span class="line">                v2f o;  </span><br><span class="line">                o.pos = UnityObjectToClipPos(v.vertex);  </span><br><span class="line">                o.uv = TRANSFORM_TEX(v.uv, _MainTex);  </span><br><span class="line">                o.normal = UnityObjectToWorldNormal(v.nomral);  </span><br><span class="line">                o.tangent = UnityObjectToWorldDir(v.tangent);  </span><br><span class="line">                o.bitangent = cross(o.normal, o.tangent) * v.tangent.w;  </span><br><span class="line">                o.worldPosition = mul (unity_ObjectToWorld, v.vertex);  </span><br><span class="line">                o.localPosition = v.vertex.xyz;  </span><br><span class="line">                o.localNormal = v.nomral;  </span><br><span class="line">                o.vertexColor = v.vertexColor;  </span><br><span class="line">                  </span><br><span class="line">                <span class="keyword">return</span> o;  </span><br><span class="line">            &#125;  </span><br><span class="line">  </span><br><span class="line">            fixed4 <span class="title function_">frag</span> <span class="params">(v2f i)</span> : SV_Target  </span><br><span class="line">            &#123;  </span><br><span class="line">                <span class="comment">// 用 TBN 矩阵处理 NormalMap  </span></span><br><span class="line">                float3 T = normalize(i.tangent);  </span><br><span class="line">                float3 B = normalize(i.bitangent);  </span><br><span class="line">                float3 N = normalize(i.normal);  </span><br><span class="line">                float3 NormalMap = UnpackNormal((tex2D(_NormalMap, i.uv)));  </span><br><span class="line">  </span><br><span class="line">                <span class="comment">//对NormalMap进行插值  </span></span><br><span class="line">                <span class="comment">//作用：float3(0,0,1)视为初始法线方向,可以修改_NormalMapScale的w分量对其插值，实现NomalMap影响CubeMap。  </span></span><br><span class="line">                NormalMap = lerp(float3(<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>), NormalMap, _NormalMapScale.w);  </span><br><span class="line">  </span><br><span class="line">                float3x3 TBN = float3x3(T,B,N);  </span><br><span class="line">                NormalMap *= _NormalMapScale;  </span><br><span class="line">                <span class="comment">// 将NormalMap从切线空间转换到世界空间  </span></span><br><span class="line">                float3 world_NormalMap = normalize(mul(NormalMap, TBN));  </span><br><span class="line">  </span><br><span class="line">                float4 cubemap = texCUBE(_CubeMap, world_NormalMap);  </span><br><span class="line">                <span class="keyword">return</span> cubemap;  </span><br><span class="line">            &#125;  </span><br><span class="line">            ENDCG  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="MatCap"><a href="#MatCap" class="headerlink" title="MatCap"></a>MatCap</h2><p><a target="_blank" rel="noopener" href="https://github.com/ipud2/matcaps">https://github.com/ipud2/matcaps</a> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315336.png" alt="Pasted image 20221009103455"> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315337.png" alt="Pasted image 20221009104221"><br>优点：省资源，快速模拟出材质<br>缺点：适合固定视角，360 视角查看时高光方向只能是一个方向。高光方向根据 matcap 图决定<br>代码在 normalMap 代码基础上进行修改：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">_MatCap(<span class="string">&quot;MatCap&quot;</span>,<span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">sampler2D  _MatCap;  </span><br><span class="line">float4 _MatCap_ST;</span><br><span class="line"></span><br><span class="line"><span class="comment">//视角空间下的法线当做uv去采样MatCap</span></span><br><span class="line">float3 N_ViewSpace = mul(unity_MatrixV, N); </span><br><span class="line"><span class="comment">//float3 N_ViewSpace = mul(Unity_WorldToCamera, N);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//使用NormalMap效果</span></span><br><span class="line"><span class="comment">//float3 N_ViewSpace = mul(unity_MatrixV, world_NormalMap); </span></span><br><span class="line"></span><br><span class="line">float3 N01_ViewSpace = N_ViewSpace * <span class="number">0.5</span> + <span class="number">0.5</span>;</span><br><span class="line"></span><br><span class="line">float3 MatCap = tex2D(_MatCap,N01_ViewSpace.xy);  </span><br><span class="line"><span class="keyword">return</span> float4(MatCap.xyz,<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="Parallax-Map"><a href="#Parallax-Map" class="headerlink" title="Parallax Map"></a>Parallax Map</h2><h3 id="视差贴图"><a href="#视差贴图" class="headerlink" title="视差贴图"></a>视差贴图</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315338.png" alt="Pasted image 20221009111354"> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315339.png" alt="Pasted image 20221009115044"></p>
+<p><strong>光栅立体画效果：</strong><br>原理：两层视差贴图 lerp 一下 <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315340.png" alt="Pasted image 20221009111726"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315341.png" alt="Pasted image 20221009115007"> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315342.png" alt="parel (2)"></p>
+<h3 id="地形"><a href="#地形" class="headerlink" title="地形"></a>地形</h3><p>HeightMap 中的 uv 相当于 xz，存储的值相当于 y（高度）<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315343.png" alt="Pasted image 20221009111512"></p>
+<h2 id="FlowMap"><a href="#FlowMap" class="headerlink" title="FlowMap"></a>FlowMap</h2><p>（1）RG 通道记录的是 uv 流动的方向<br>（2）FlowMap 就是一张记录了<strong>2D 向量信息</strong>的纹理，纹理颜色通常用 RG 两个通道来表现。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315344.png" alt="Pasted image 20221010221753|300"><br>我们定义了中间（128,128）的位置为静止状态，那么（0,0）表示左下方向，（255,255）表示右上方向。同时也有相对应的颜色值。默认 B 通道为 0，黄色（255,255,0）右上方向，（0，0，0）左下方向。我们人眼去理解 FlowMap 贴图，就可以这样理解。<br>但实际在 Unity shader 的应用里，颜色的范围是[0,1], 那么计算机采样的时候怎么知道（1,1）就可以代表右上呢？<br>需要再次将[0,1]范围映射到[-1,1], 那么在采样时，偏移的方向就可以通过加法直接跟原 UV 位置相加获得最终效果。即要进行一次重映射（代码第二行）：映射到（-1，1）有四个象限，可以表示各个方向。<br>（3）绘制 FlowMap 可以使用软件 <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315345.png" alt="Pasted image 20221010222139"><br>（3）周围黄色：uv 没有流动<br>               尾部红色：R 值比较大，向 u 方向流动<br>               左下角绿色：G 值比较大，向 v 方向流动</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315346.png" alt="Pasted image 20221009205147"></p>
+<p>注意事项：</p>
+<ol>
+<li>FlowMap 是线性的，不需要勾选 sRGB<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315347.png" alt="Pasted image 20221009210426|300"></li>
+<li>把 FlowMap 贴图的压缩修改为无损压缩<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315348.png" alt="Pasted image 20221010221610|300"><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">Shader <span class="string">&quot;Unlit/FlowMap&quot;</span>  </span><br><span class="line">&#123;  </span><br><span class="line">    Properties  </span><br><span class="line">    &#123;  </span><br><span class="line">        _MainTex (<span class="string">&quot;Texture&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;  </span><br><span class="line">        _FlowMap (<span class="string">&quot;FlowMap&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;  </span><br><span class="line">        <span class="comment">//_FlowSpeed控制流动速度，_FlowPower控制流动力度  </span></span><br><span class="line">        _FlowSpeed(<span class="string">&quot;FlowSpeed&quot;</span>,<span class="type">float</span>) = <span class="number">1</span>  </span><br><span class="line">        _FlowPower(<span class="string">&quot;FlowStrength&quot;</span>,<span class="type">float</span>) = <span class="number">1</span>  </span><br><span class="line">    &#125;  </span><br><span class="line">    SubShader  </span><br><span class="line">    &#123;  </span><br><span class="line">        Tags &#123; <span class="string">&quot;RenderType&quot;</span>=<span class="string">&quot;Opaque&quot;</span> &#125;  </span><br><span class="line">        LOD <span class="number">100</span>  </span><br><span class="line">  </span><br><span class="line">        Pass  </span><br><span class="line">        &#123;  </span><br><span class="line">            CGPROGRAM  </span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> vertex vert  </span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> fragment frag  </span></span><br><span class="line">            <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;UnityCG.cginc&quot;</span>  </span></span><br><span class="line">  </span><br><span class="line">            <span class="keyword">struct</span> appdata  </span><br><span class="line">            &#123;  </span><br><span class="line">                float4 vertex : POSITION;  </span><br><span class="line">                float2 uv : TEXCOORD0;  </span><br><span class="line">            &#125;;  </span><br><span class="line">  </span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">v2f</span>  </span></span><br><span class="line"><span class="class">            &#123;</span>  </span><br><span class="line">                float2 uv : TEXCOORD0;  </span><br><span class="line">                float4 vertex : SV_POSITION;  </span><br><span class="line">            &#125;;  </span><br><span class="line">  </span><br><span class="line">            sampler2D _MainTex;  </span><br><span class="line">            float4 _MainTex_ST;  </span><br><span class="line">            sampler2D _FlowMap;  </span><br><span class="line">            float4 _FlowMap_ST;  </span><br><span class="line">            <span class="type">float</span> _FlowSpeed;  </span><br><span class="line">            <span class="type">float</span> _FlowPower;  </span><br><span class="line">              </span><br><span class="line">            v2f <span class="title function_">vert</span> <span class="params">(appdata v)</span>  </span><br><span class="line">            &#123;  </span><br><span class="line">                v2f o;  </span><br><span class="line">                o.uv = v.uv;  </span><br><span class="line">                o.vertex = UnityObjectToClipPos(v.vertex);  </span><br><span class="line">                <span class="keyword">return</span> o;  </span><br><span class="line">            &#125;  </span><br><span class="line">  </span><br><span class="line">            fixed4 <span class="title function_">frag</span> <span class="params">(v2f i)</span> : SV_Target  </span><br><span class="line">            &#123;  </span><br><span class="line">                <span class="type">float</span> time01 = frac(_Time.y * _FlowSpeed);  </span><br><span class="line">                float2 flowMap = tex2D(_FlowMap, i.uv) * <span class="number">2.0</span> - <span class="number">1.0</span>;  </span><br><span class="line">                float2 uv1 = i.uv - flowMap * _FlowPower * time01;  </span><br><span class="line">                float2 uv2 = i.uv - flowMap * _FlowPower * frac(time01+<span class="number">0.5</span>);  </span><br><span class="line">                float4 color1 = tex2D(_MainTex,uv1);  </span><br><span class="line">                float4 color2 = tex2D(_MainTex,uv2);  </span><br><span class="line">                float4 finalColor = lerp(color1,color2,<span class="built_in">abs</span>(time01<span class="number">-0.5</span>)/<span class="number">0.5</span>);  </span><br><span class="line">                  </span><br><span class="line">                <span class="keyword">return</span> finalColor;  </span><br><span class="line">            &#125;  </span><br><span class="line">            ENDCG  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="RampMap"><a href="#RampMap" class="headerlink" title="RampMap"></a>RampMap</h2><p>渐变纹理）特点：<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315349.png" alt="Pasted image 20221005233058"><br>三阶明度，过渡卡硬  （卡硬：有过度，很硬 &#x2F;卡死：没过度）-》卡硬不卡死<br>暗部细节通过色相变化，离暗部比较进的偏暖一点，离暗部比较远的偏冷一点。少用明度变化！</p>
+<p>使用渐变纹理<strong>控制漫反射光照</strong><br>渐变纹理贴图特点：v 轴纵向颜色相同<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315350.png" alt="Pasted image 20230628163052"><br>渐变纹理的映射非常简单，核心思想是在对贴图进行采样时，不使用的常规的模型的 uv 采样，而是自己构建一个 uv。<br>ramp 图实际是一维纹理（在纵轴方向不变），u 轴我们可以使用半兰伯特（因为半兰伯特范围为 $[0,1]$）。v 轴则随便指定一个 $[0,1]$ 内的范围的常数即可。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">float</span> HL = (<span class="number">0.5</span> * NdotL + <span class="number">0.5</span>); <span class="comment">//半兰伯特</span></span><br><span class="line">float4 tex = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, float2(HL,<span class="number">0.5</span>));</span><br><span class="line"><span class="comment">//float4 tex = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv); //普通采样</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>需要注意的事，我们需要把渐变纹理的 WrapMode 设为 Clamp，防止对纹理边缘采样时由于浮点数精度而造成的问题</strong>。因为半兰伯特范围为 $[0,1]$，但可能会有 1.00001 这样的值出现，如果使用 Repeat 模式，则会舍弃整数部分，只保留小数，得到 0.00001，采样的 uv 位置就会出错。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315351.png" alt="Pasted image 20230628162914"></p>
+<h1 id="8-凹凸映射-Bump-Map"><a href="#8-凹凸映射-Bump-Map" class="headerlink" title="8 凹凸映射 Bump Map"></a>8 凹凸映射 Bump Map</h1><p>[[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/574361162#ref_4]]">https://zhuanlan.zhihu.com/p/574361162#ref_4]]</a></p>
+<p>[[图形学&#x2F;4 书籍&#x2F;《RTR3》&#x2F;第六章 · 纹理贴图及相关技术&#x2F;README#8.1 凹凸贴图 Bump Mapping]]<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315352.png" alt="Pasted image 20221029194237"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315353.png" alt="Pasted image 20221029194339"></p>
+<h2 id="物体细节的尺度"><a href="#物体细节的尺度" class="headerlink" title="物体细节的尺度"></a>物体细节的尺度</h2><p>在毛星云的这篇文章中，提到了<strong>三个尺度</strong>：<br>![[4 法线分布函数#一、基于物理的渲染理念：从宏观表现到微观细节]]</p>
+<p>**本科中，老师给出了描述一个物体绘制在屏幕上（表达物体的细节）的三个尺度</p>
+<ul>
+<li><p><strong>宏观尺度</strong></p>
+</li>
+<li><p>特征可能覆盖很多个像素</p>
+</li>
+<li><p>由顶点、三角形、其他几何图元表示</p>
+</li>
+<li><p>例如：角色的四肢、头部</p>
+</li>
+<li><p><strong>中观尺度</strong></p>
+</li>
+<li><p>特征可能覆盖几个像素</p>
+</li>
+<li><p>描述了宏观和微观尺度之间的特征</p>
+</li>
+<li><p>包含的细节比较复杂，无法用单个三角形进行渲染，</p>
+</li>
+<li><p>细节相对较大，可以被观察者看到几个像素以上的变化</p>
+</li>
+<li><p>例如：人脸上的皱纹、肌肉的褶皱、砖头的缝隙</p>
+</li>
+<li><p><strong>微观尺度</strong></p>
+</li>
+<li><p>特征可能是一个像素</p>
+</li>
+<li><p>通常在着色模型，写在像素着色器中，并且使用纹理贴图作为参数</p>
+</li>
+<li><p>模拟了物体表面微观几何的相互作用</p>
+</li>
+<li><p>例如：</p>
+</li>
+<li><p>有光泽的物体表面是光滑的、漫反射的物体，在微观下表面是粗糙的</p>
+</li>
+<li><p>角色的皮肤和衣服看起来也是不同的，因为使用了不同的着色模型&#x2F;不同的参数</p>
+</li>
+</ul>
+<h2 id="Bump-Mapping"><a href="#Bump-Mapping" class="headerlink" title="Bump Mapping"></a>Bump Mapping</h2><p>模拟<strong>中观尺度</strong>的常用方法之一，可以让观察者感受到比模型尺度更小的细节<br>法线贴图所带来的凹凸感是怎么来的？是改变了【光照信息】（NdotL）而来。我们视觉上认为，较亮的向光面与较暗的背光面会组成一个“立体”的事物。</p>
+<p><strong>基本思想</strong>：</p>
+<ul>
+<li>在纹理中将尺度相关的信息编码进去</li>
+<li>着色过程中，用受到干扰的表面去代替真实的表面</li>
+<li>这样一来，表面就会有小尺度的细节</li>
+</ul>
+<p><strong>原理</strong>：</p>
+<ul>
+<li><p><strong>对物体表面贴图进行变化然后再进行光照计算的一种技术</strong></p>
+</li>
+<li><p>主要的原理是通过改变表面光照方程的法线，而不是表面的几何法线，或对每个待渲染的像素在计算照明之前都要加上一个从高度图中找到的扰动，来模拟凹凸不平的视觉特征</p>
+</li>
+<li><p>例如：</p>
+</li>
+<li><p>给法线分量添加噪音（法线映射贴图）</p>
+</li>
+<li><p>在一个保存扰动值的纹理图中进行查找（视差映射、浮雕映射贴图）</p>
+</li>
+<li><p>是一种提升物体真实感的有效方法，且不用提升额外的几何复杂度（不用改模型）</p>
+</li>
+<li><p>列举一个使用法线贴图的效果<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315354.png" alt="Pasted image 20221029193834"></p>
+</li>
+<li><p>可以看到，使用了法线贴图的有了明显的立体感和细节</p>
+</li>
+<li><p>对于中间的高亮部分，左边的都是均匀的，而右边即使是很高亮度的部分也能看到阴影</p>
+</li>
+</ul>
+<h2 id="Normal-Mapping"><a href="#Normal-Mapping" class="headerlink" title="Normal Mapping"></a>Normal Mapping</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315355.png" alt="Pasted image 20221029194529"></p>
+<p>![[TA101#NormalMap]]</p>
+<h2 id="视差映射-Parallax-Mapping"><a href="#视差映射-Parallax-Mapping" class="headerlink" title="视差映射 Parallax Mapping"></a>视差映射 Parallax Mapping</h2><p>参考：[[zhihu.com)](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/574361162|%E3%80%90UnityShader%E3%80%91ParallaxMapping">https://zhuanlan.zhihu.com/p/574361162|【UnityShader】ParallaxMapping</a> 视差映射（7） - 知乎 (zhihu.com)]]</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><ul>
+<li>视差贴图 Parallax Mapping，又称为 Offset Mapping</li>
+<li>主要为了赋予模型表面遮挡关系的细节。引入了一张高度图</li>
+<li>可以和法线贴图一起使用，来产生一些真实的效果</li>
+<li>高度图一般视为顶点位移来使用，此时需要三角形足够多，模型足够精细，否则看起来会有块状</li>
+<li>如果在有限的三角形面的情况下，怎么办？这就用到了视差映射技术</li>
+<li><strong>视差映射技术</strong>：<br> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315356.png" alt="Pasted image 20221030144850"><blockquote>
+<p>左：无视差右：基础视差</p>
+</blockquote>
+</li>
+<li>核心：改变纹理坐标</li>
+<li>需要一张存储模型信息的高度图，利用模型表面高度信息来对纹理进行偏移（例如：低位置的信息被高位置的信息遮挡掉了，所以会采样更高的信息）</li>
+</ul>
+<h3 id="视差映射的实现"><a href="#视差映射的实现" class="headerlink" title="视差映射的实现"></a>视差映射的实现</h3><ul>
+<li><p>和法线贴图一样，是欺骗眼睛的做法（只改变纹路，不增加三角形）</p>
+</li>
+<li><p>我们的模型在<strong>切线空间</strong>下，所有的点都位于切线和副切线组成的平面内（图中 0.0 点），但实际上物体要有更丰富的细节。</p>
+</li>
+<li><p>例如图中的情况</p>
+</li>
+<li><p>如果不使用视差贴图，要计算当前视角下，片元 A 点（黄色）的信息，就是图中的 Ha</p>
+</li>
+<li><p>实际使用视差贴图时，真实的情况应该是视线和 A 点延长线和物体的交点，也就是 B 点，相应的就是<font color="#ff0000">Hb</font><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315357.png" alt="Pasted image 20221029211242"></p>
+</li>
+<li><p><strong>视差映射的具体算法</strong>：如何在知道 A 的 uv 值的情况下，算出 B 的 uv 值</p>
+</li>
+<li><p>知道 AB 两者的偏移量即可</p>
+</li>
+<li><p><strong>偏移量的获得</strong>：用近似的方法去求解</p>
+</li>
+<li><p>首先拿 A 的高度信息进行采样，得到物体表面距离水平面（0.0）的深度值 Ha。</p>
+</li>
+<li><p>用深度值 Ha 和视线的三角关系算出物体上等比的偏移方向，算出近似的 B 点（可以看到图中近似点 B 和实际点 B 还是有挺大差距的，所以模拟度比较低）<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315358.png" alt="Pasted image 20221029211255"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315359.png" alt="Pasted image 20221029211302"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// uv高度图采样</span></span><br><span class="line"><span class="type">float</span> height = tex2D(_HeightMap,i.uv).r;  </span><br><span class="line"><span class="comment">//根据高度图信息计算出uv偏移量</span></span><br><span class="line">float3 tangent_ViewDir = normalize(mul(TBN, world_ViewDir));  </span><br><span class="line">float2 offsetUV = tangent_ViewDir.xy / tangent_ViewDir.z * height * _HeightScale;  </span><br><span class="line">i.uv += offsetUV;</span><br></pre></td></tr></table></figure>
+<p>得到偏移之后 B 点的 uv，再去对法线贴图进行采样、计算时，就不会采样 A 点了，而是 B 点</p>
+</li>
+</ul>
+<p>其中 <code>viewDir.xy / viewDir.z</code> 为什么能代表 uvOffset？见下图：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315360.png" alt="Pasted image 20221029233656"></p>
+<blockquote>
+<p>不同视线的 uv offset 应该不一样<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315361.png" alt="Pasted image 20221029233719"></p>
+<ol>
+<li>以 90°角直视表面时，切线空间中的视图方向等于表面法线（0、0、1），因此不会发生位移。视角越浅，投影越大，位移效果越大。  </li>
+<li>xy&#x2F;z 之所以能得到正确的 offset，是由于定义高度差为 1，使用“相似三角形”原理而来。<br>1 &#x2F; offset &#x3D; z &#x2F; (x, y) &#x3D;&gt; offset &#x3D; xy&#x2F;z</li>
+</ol>
+</blockquote>
+<ul>
+<li><p><strong>理解：视差贴图是如何产生遮挡效果的</strong></p>
+</li>
+<li><p>当视线看到的是 A 点这样深度吗比较大的，那么视差贴图计算出的偏移值也是非常大的，这样 A 点最终被渲染出来的机会就比较小（偏移后就被采样到其他点上了）</p>
+</li>
+<li><p>当视线看到 B 点这样深度比较小的点，计算出来的偏移就比较下，甚至原来点的附近，所以被采样的机会就比较大</p>
+</li>
+<li><p>深度大的点很容易被深度小的点覆盖掉，这样就会表现出遮挡的效果</p>
+</li>
+</ul>
+<h2 id="陡峭视差映射-Steep-Parallax-Mapping"><a href="#陡峭视差映射-Steep-Parallax-Mapping" class="headerlink" title="陡峭视差映射 Steep Parallax Mapping"></a>陡峭视差映射 Steep Parallax Mapping</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315362.png" alt="Pasted image 20221029212354"></p>
+<ul>
+<li>也是近似解，但比视差映射精确</li>
+</ul>
+<p>  <strong>基本思想</strong>：<br>  采用了<strong>光线步进</strong>（RayMarching）的方法。</p>
+<ul>
+<li>将物体表面分为若干层，从最顶端开始采样，<strong>每次沿着视角方向偏移一定的值</strong></li>
+<li>如果当前采样的层数，<strong>大于</strong>实际采样的层数，就停止采样。</li>
+<li>例如图中 D 点，采样到 0.75 层，实际是 0.5 层，就停止采样，返回偏移坐标</li>
+</ul>
+<p> <strong>陡视差映射的算法</strong>：（计算偏移点的过程）<br> 定义步长、循环采样、判断高度信息、得到偏移量。</p>
+<ul>
+<li>首先对 A 点采样，得到深度大约为 0.8 的位置，而其对应视线深度为 0.0，不符合我们的基本思想，继续采样</li>
+<li>采样 B 点，深度为 1，视线深度为 0.25，不符合，继续采样</li>
+<li>采样 C 点，深度大约为 0.8，视线深度为 0.5，不符合，继续采样</li>
+<li>采样 D 点，采样深度为 0.5，视线深度约为 0.75，符合上述的条件，认为是比较合理的一个偏移点，就返回结果（return）。</li>
+</ul>
+<p><strong>陡视差的问题</strong>：</p>
+<ul>
+<li>在于分层机制，如果</li>
+<li>分层多，性能开销就会大；</li>
+<li>分层小，渲染锯齿就比较明显。</li>
+<li>一种做法：可以根据视角 v 和法线 n 的角度限定采样层数</li>
+<li><strong>锯齿问题会在浮雕贴图上做改善</strong></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 陡峭视察映射 光线步进算法  </span></span><br><span class="line">float2 <span class="title function_">SteepParallaxMapping</span><span class="params">(float2 uv, float3 tangent_viewDir)</span>  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="type">float</span> numLayers = <span class="number">20</span>;   <span class="comment">//最大步进次数, 步进次数越多，效果越好,开销也越大。</span></span><br><span class="line">    <span class="type">float</span> layerHeight = <span class="number">1</span> / numLayers;  <span class="comment">//单层步进高度  </span></span><br><span class="line">    float2 deltaUV = tangent_viewDir.xy / tangent_viewDir.z * _HeightScale / numLayers; <span class="comment">//单次uv偏移量  </span></span><br><span class="line">  </span><br><span class="line">    <span class="type">float</span> currentLayerHeight = <span class="number">0</span>;   <span class="comment">//步进初始高度（视线深度）  </span></span><br><span class="line">    float2 currentUV = uv;           <span class="comment">//当前UV  </span></span><br><span class="line">    float2 offsetUV = float2(<span class="number">0</span>, <span class="number">0</span>);  <span class="comment">//初始化偏移量  </span></span><br><span class="line">    <span class="type">float</span> currentHeightMapValue = tex2D(_HeightMap, currentUV).r;  <span class="comment">//采样初始高度信息(采样深度)  </span></span><br><span class="line">  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;numLayers;i++)  </span><br><span class="line">    &#123;  </span><br><span class="line">        <span class="keyword">if</span>(currentLayerHeight &gt; currentHeightMapValue)  </span><br><span class="line">        &#123;  </span><br><span class="line">            <span class="keyword">return</span> offsetUV;  </span><br><span class="line">        &#125;  </span><br><span class="line">        offsetUV += deltaUV;  </span><br><span class="line">        currentHeightMapValue = tex2D(_HeightMap, currentUV + offsetUV).r;  </span><br><span class="line">        currentLayerHeight += layerHeight;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> offsetUV;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322234.png" alt="Pasted image 20221030144926"></p>
+<blockquote>
+<p>numLayers 不同时的采样结果（数值递增）</p>
+</blockquote>
+<p>从上述图我们也能看出，采样次数较少的时候，结果有很明显的分层感。这也是 RayMarching 系特效的通病。</p>
+<p>那么其他的 RayMarching 是怎么解决采样次数过少所导致的问题呢？一个屡试不爽的万精油解法就是——<strong>Jitter（抖动）</strong>。</p>
+<p>当我们想使用抖动时，需要确定 2 个东西：抖动的噪声，抖动噪声确定，抖动最大 step 次数。</p>
+<h2 id="浮雕映射-Relief-Mapping"><a href="#浮雕映射-Relief-Mapping" class="headerlink" title="浮雕映射 Relief Mapping"></a>浮雕映射 Relief Mapping</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322236.png" alt="Pasted image 20221029212425"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322237.png" alt="Pasted image 20221029212436"></p>
+<ul>
+<li><p>浮雕映射一般用<strong>光线步进</strong>和<strong>二分查找</strong>来<strong>决定 uv 偏移量</strong></p>
+</li>
+<li><p>第一步：光线步进部分，和视差贴图一样</p>
+</li>
+<li><p>后边：二分查找部分：通过光线步进找到合适的步进后，在此步进内使用二分查找来找到精确的偏移值（可能要查找多次，性能可以继续优化，由此提出改进方法 POM，见下一节）</p>
+</li>
+<li><p><strong>为什么不直接使用二分查找？</strong></p>
+</li>
+<li><p>会产生比较大的误差</p>
+</li>
+<li><p>如果直接使用二分查找，在深度 0 和 1 的中间的 1 点，进一步为 2 点 -&gt; 3 点 -&gt;Q 点。但我们要的结果是 P 点，可以看到结果很明显是错误的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 浮雕贴图  </span></span><br><span class="line">float2 <span class="title function_">ReliefMapping</span><span class="params">(float2 uv, float3 tangent_viewDir)</span>  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="type">float</span> numLayers = <span class="number">30</span>;   <span class="comment">//最大步进次数  </span></span><br><span class="line">    <span class="type">float</span> layerHeight = <span class="number">1</span> / numLayers;  <span class="comment">//单层步进高度  </span></span><br><span class="line">    float2 deltaUV = tangent_viewDir.xy / tangent_viewDir.z * _HeightScale / numLayers; <span class="comment">//单次uv偏移量  </span></span><br><span class="line">  </span><br><span class="line">    <span class="type">float</span> currentLayerHeight = <span class="number">0</span>;   <span class="comment">//步进初始高度（视线深度）  </span></span><br><span class="line">    float2 currentUV = uv;           <span class="comment">//当前UV  </span></span><br><span class="line">    float2 offsetUV = float2(<span class="number">0</span>, <span class="number">0</span>);  <span class="comment">//初始化偏移量  </span></span><br><span class="line">    <span class="type">float</span> currentHeightMapValue = tex2D(_HeightMap, currentUV).r;  <span class="comment">//采样初始高度信息(采样深度)  </span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 光线步进  </span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;numLayers;i++)  </span><br><span class="line">    &#123;  </span><br><span class="line">         <span class="keyword">if</span>(currentLayerHeight &gt; currentHeightMapValue)  </span><br><span class="line">        &#123;  </span><br><span class="line">            <span class="keyword">break</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">        offsetUV += deltaUV;  </span><br><span class="line">        currentHeightMapValue = tex2D(_HeightMap, currentUV + offsetUV).r;  </span><br><span class="line">        currentLayerHeight += layerHeight;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">//二分查找(是否可以继续优化？)  </span></span><br><span class="line">    float2 P2 = uv + offsetUV;  <span class="comment">//步进停止点  </span></span><br><span class="line">    float2 P1 = P2 - deltaUV;   <span class="comment">//停止点的上一个点  </span></span><br><span class="line">  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">20</span>; j++)  </span><br><span class="line">    &#123;  </span><br><span class="line">        float2 P = (P1 + P2) / <span class="number">2</span>;   <span class="comment">//中间点  </span></span><br><span class="line">        <span class="type">float</span> P_LayerHeight =  currentLayerHeight / <span class="number">2</span>;  <span class="comment">//该点视线深度为P2点的二分之一  </span></span><br><span class="line">        <span class="type">float</span> P_HeightMapValue = tex2D(_HeightMap, P).r; <span class="comment">//采样深度  </span></span><br><span class="line">        <span class="keyword">if</span>(P_LayerHeight &gt; P_HeightMapValue)  </span><br><span class="line">        &#123;  </span><br><span class="line">            P2 = P;  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">else</span>  </span><br><span class="line">        &#123;  </span><br><span class="line">            P1 = P;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> (P1 + P2) / <span class="number">2</span> - uv;;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="视差闭塞映射（POM-Parallax-Occlusion-Mapping）"><a href="#视差闭塞映射（POM-Parallax-Occlusion-Mapping）" class="headerlink" title="视差闭塞映射（POM &#x3D; Parallax Occlusion Mapping）"></a>视差闭塞映射（POM &#x3D; Parallax Occlusion Mapping）</h2><ul>
+<li><p>相对于浮雕贴图，不同之处在于最后一步</p>
+</li>
+<li><p>浮雕贴图是在确认最后步进之后进行二分查找（在迭代次数比较多的情况下，还是挺耗的）</p>
+</li>
+<li><p><strong>视差闭塞贴图是在最后步进的两端 uv 值进行采样（下图红色箭头），采样之后再对这两个结果进行插值，插值的结果作为 P 点最终的偏移值</strong></p>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322238.png" alt="Pasted image 20221029213350"></p>
+</li>
+<li><p>优点：</p>
+</li>
+<li><p>相对于浮雕映射，性能更好（最后只做插值，而浮雕要做二分查找）</p>
+</li>
+<li><p>相对于陡视差贴图，精确性更好</p>
+</li>
+<li><p>要求：</p>
+</li>
+<li><p>因为最后要做插值，所以要求表面是相对比较平滑&#x2F;连续的，如果有莫名的凸起结果可能会出错</p>
+</li>
+</ul>
+<h2 id="代码集合"><a href="#代码集合" class="headerlink" title="代码集合"></a>代码集合</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br></pre></td><td class="code"><pre><span class="line">Shader <span class="string">&quot;Unlit/normalmap&quot;</span>  </span><br><span class="line">&#123;  </span><br><span class="line">    Properties  </span><br><span class="line">    &#123;  </span><br><span class="line">        _MainTex (<span class="string">&quot;Texture&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;  </span><br><span class="line">        _NormalMap(<span class="string">&quot;NormalMap&quot;</span>, <span class="number">2</span>D)= <span class="string">&quot;gray&quot;</span> &#123;&#125;  </span><br><span class="line">        _NormalScale(<span class="string">&quot;NormalScale&quot;</span>,<span class="type">float</span>) = <span class="number">1</span>  </span><br><span class="line">        _HeightMap(<span class="string">&quot;_HeightMap&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;blue&quot;</span> &#123;&#125;  </span><br><span class="line">        _HeightScale(<span class="string">&quot;HeightScale&quot;</span>,<span class="type">float</span>) = <span class="number">1</span>  </span><br><span class="line">        _SpecularExp(<span class="string">&quot;SpecularExp&quot;</span>,<span class="type">float</span>) = <span class="number">1</span>  </span><br><span class="line">        _SpecularScale(<span class="string">&quot;SpecularScale&quot;</span>,<span class="type">float</span>) = <span class="number">1</span>  </span><br><span class="line">    &#125;  </span><br><span class="line">    SubShader  </span><br><span class="line">    &#123;  </span><br><span class="line">        Tags &#123; <span class="string">&quot;RenderType&quot;</span>=<span class="string">&quot;Opaque&quot;</span> &#125;  </span><br><span class="line">        LOD <span class="number">100</span>  </span><br><span class="line">  </span><br><span class="line">        Pass  </span><br><span class="line">        &#123;  </span><br><span class="line">            CGPROGRAM  </span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> vertex vert  </span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> fragment frag  </span></span><br><span class="line">  </span><br><span class="line">            <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;UnityCG.cginc&quot;</span>  </span></span><br><span class="line">  </span><br><span class="line">            <span class="keyword">struct</span> appdata  </span><br><span class="line">            &#123;  </span><br><span class="line">                float4 vertex : POSITION;  </span><br><span class="line">                float4 normal : NORMAL;  </span><br><span class="line">                float4 tangent : TANGENT;  </span><br><span class="line">                float2 uv : TEXCOORD0;  </span><br><span class="line">            &#125;;  </span><br><span class="line">  </span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">v2f</span>  </span></span><br><span class="line"><span class="class">            &#123;</span>  </span><br><span class="line">                float4 pos : SV_POSITION;  </span><br><span class="line">                float2 uv : TEXCOORD0;  </span><br><span class="line">                float3 normal : TEXCOORD1;  </span><br><span class="line">                float3 tangent : TEXCOORD2;  </span><br><span class="line">                float3 bitangent : TEXCOORD3;  </span><br><span class="line">                float4 worldPosion : TEXCOORD4;  </span><br><span class="line">            &#125;;  </span><br><span class="line">  </span><br><span class="line">            sampler2D _MainTex;  </span><br><span class="line">            sampler2D _NormalMap;  </span><br><span class="line">            sampler2D _HeightMap;  </span><br><span class="line">              </span><br><span class="line">            <span class="type">float</span> _NormalScale;  </span><br><span class="line">            <span class="type">float</span> _HeightScale;  </span><br><span class="line">            <span class="type">float</span> _SpecularExp;  </span><br><span class="line">            <span class="type">float</span> _SpecularScale;  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">            <span class="comment">// 陡峭视察映射光线步进函数  </span></span><br><span class="line">            float2 <span class="title function_">SteepParallaxMapping</span><span class="params">(float2 uv, float3 tangent_viewDir)</span>  </span><br><span class="line">            &#123;  </span><br><span class="line">                <span class="type">float</span> numLayers = <span class="number">30</span>;   <span class="comment">//最大步进次数  </span></span><br><span class="line">                <span class="type">float</span> layerHeight = <span class="number">1</span> / numLayers;  <span class="comment">//单层步进高度  </span></span><br><span class="line">                float2 deltaUV = tangent_viewDir.xy / tangent_viewDir.z * _HeightScale / numLayers; <span class="comment">//单次uv偏移量  </span></span><br><span class="line">  </span><br><span class="line">                <span class="type">float</span> currentLayerHeight = <span class="number">0</span>;   <span class="comment">//步进初始高度（视线深度）  </span></span><br><span class="line">                float2 currentUV = uv;           <span class="comment">//当前UV  </span></span><br><span class="line">                float2 offsetUV = float2(<span class="number">0</span>, <span class="number">0</span>);  <span class="comment">//初始化偏移量  </span></span><br><span class="line">                <span class="type">float</span> currentHeightMapValue = tex2D(_HeightMap, currentUV).r;  <span class="comment">//采样初始高度信息(采样深度)  </span></span><br><span class="line">  </span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i&lt;numLayers; i++)  </span><br><span class="line">                &#123;  </span><br><span class="line">                    <span class="keyword">if</span>(currentLayerHeight &gt; currentHeightMapValue)  </span><br><span class="line">                    &#123;  </span><br><span class="line">                        <span class="keyword">return</span> offsetUV;  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    offsetUV += deltaUV;  </span><br><span class="line">                    currentHeightMapValue = tex2D(_HeightMap, currentUV + offsetUV).r;  </span><br><span class="line">                    currentLayerHeight += layerHeight;  </span><br><span class="line">                &#125;  </span><br><span class="line">                <span class="keyword">return</span> offsetUV;  </span><br><span class="line">            &#125;  </span><br><span class="line">  </span><br><span class="line">            <span class="comment">// 浮雕贴图  </span></span><br><span class="line">            float2 <span class="title function_">ReliefMapping</span><span class="params">(float2 uv, float3 tangent_viewDir)</span>  </span><br><span class="line">            &#123;  </span><br><span class="line">                <span class="type">float</span> numLayers = <span class="number">30</span>;   <span class="comment">//最大步进次数  </span></span><br><span class="line">                <span class="type">float</span> layerHeight = <span class="number">1</span> / numLayers;  <span class="comment">//单层步进高度  </span></span><br><span class="line">                float2 deltaUV = tangent_viewDir.xy / tangent_viewDir.z * _HeightScale / numLayers; <span class="comment">//单次uv偏移量  </span></span><br><span class="line">  </span><br><span class="line">                <span class="type">float</span> currentLayerHeight = <span class="number">0</span>;   <span class="comment">//步进初始高度（视线深度）  </span></span><br><span class="line">                float2 currentUV = uv;           <span class="comment">//当前UV  </span></span><br><span class="line">                float2 offsetUV = float2(<span class="number">0</span>, <span class="number">0</span>);  <span class="comment">//初始化偏移量  </span></span><br><span class="line">                <span class="type">float</span> currentHeightMapValue = tex2D(_HeightMap, currentUV).r;  <span class="comment">//采样初始高度信息(采样深度)  </span></span><br><span class="line">  </span><br><span class="line">                <span class="comment">// 光线步进  </span></span><br><span class="line">                <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;numLayers;i++)  </span><br><span class="line">                &#123;  </span><br><span class="line">                     <span class="keyword">if</span>(currentLayerHeight &gt; currentHeightMapValue)  </span><br><span class="line">                    &#123;  </span><br><span class="line">                        <span class="keyword">break</span>;  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    offsetUV += deltaUV;  </span><br><span class="line">                    currentHeightMapValue = tex2D(_HeightMap, currentUV + offsetUV).r;  </span><br><span class="line">                    currentLayerHeight += layerHeight;  </span><br><span class="line">                &#125;  </span><br><span class="line">  </span><br><span class="line">                <span class="comment">//二分查找  </span></span><br><span class="line">                float2 P2 = uv + offsetUV;  <span class="comment">//步进停止点  </span></span><br><span class="line">                float2 P1 = P2 - deltaUV;   <span class="comment">//停止点的上一个点  </span></span><br><span class="line">  </span><br><span class="line">                <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">20</span>; j++)  </span><br><span class="line">                &#123;  </span><br><span class="line">                    float2 P = (P1 + P2) / <span class="number">2</span>;   <span class="comment">//中间点  </span></span><br><span class="line">                    <span class="type">float</span> P_LayerHeight =  currentLayerHeight / <span class="number">2</span>;  <span class="comment">//该点视线深度为P2点的二分之一  </span></span><br><span class="line">                    <span class="type">float</span> P_HeightMapValue = tex2D(_HeightMap, P).r; <span class="comment">//采样深度  </span></span><br><span class="line">                    <span class="keyword">if</span>(P_LayerHeight &gt; P_HeightMapValue)  </span><br><span class="line">                    &#123;  </span><br><span class="line">                        P2 = P;  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    <span class="keyword">else</span>  </span><br><span class="line">                    &#123;  </span><br><span class="line">                        P1 = P;  </span><br><span class="line">                    &#125;  </span><br><span class="line">                &#125;  </span><br><span class="line">                <span class="keyword">return</span> (P1 + P2) / <span class="number">2</span> - uv;;  </span><br><span class="line">            &#125;  </span><br><span class="line">              </span><br><span class="line">            v2f <span class="title function_">vert</span> <span class="params">(appdata v)</span>  </span><br><span class="line">            &#123;  </span><br><span class="line">                v2f o;  </span><br><span class="line">                o.pos = UnityObjectToClipPos(v.vertex);  </span><br><span class="line">                o.uv = v.uv;  </span><br><span class="line">                o.normal = UnityObjectToWorldNormal(v.normal);  </span><br><span class="line">                o.tangent = UnityObjectToWorldDir(v.tangent);  </span><br><span class="line">                o.bitangent = cross(o.normal, o.tangent) * v.tangent.w;  </span><br><span class="line">                o.worldPosion = mul (unity_ObjectToWorld,v.vertex);   </span><br><span class="line">                <span class="keyword">return</span> o;  </span><br><span class="line">            &#125;  </span><br><span class="line">  </span><br><span class="line">            fixed4 <span class="title function_">frag</span> <span class="params">(v2f i)</span> : SV_Target  </span><br><span class="line">            &#123;  </span><br><span class="line">                float3 world_LightDir = normalize(UnityWorldSpaceLightDir(i.worldPosion));  </span><br><span class="line">                float3 world_ViewDir = normalize(UnityWorldSpaceViewDir(i.worldPosion));  </span><br><span class="line">                float3 world_HalfVector = normalize(world_LightDir + world_ViewDir);  </span><br><span class="line">                  </span><br><span class="line">                <span class="comment">//TBN  </span></span><br><span class="line">                float3x3 TBN = float3x3 (i.tangent,normalize (i.bitangent),i.normal);  </span><br><span class="line">  </span><br><span class="line">                <span class="comment">// NormalMap  </span></span><br><span class="line">                float3 NormalMap = UnpackNormal((tex2D(_NormalMap, i.uv)));  </span><br><span class="line">                fixed4 col = tex2D(_MainTex, i.uv);  </span><br><span class="line">                NormalMap *= _NormalScale;  </span><br><span class="line">                float3 world_NormalMap = normalize(mul(NormalMap,TBN));  </span><br><span class="line">                  </span><br><span class="line">                <span class="comment">// Parallax Mapping  </span></span><br><span class="line">                <span class="comment">/*                </span></span><br><span class="line"><span class="comment">                float height = tex2D(_HeightMap,i.uv).r;                </span></span><br><span class="line"><span class="comment">                float3 tangent_ViewDir = normalize(mul(TBN, world_ViewDir));                </span></span><br><span class="line"><span class="comment">                float2 offsetUV = tangent_ViewDir.xy / tangent_ViewDir.z * height * _HeightScale;                </span></span><br><span class="line"><span class="comment">                i.uv += offsetUV;                </span></span><br><span class="line"><span class="comment">                */</span>                      </span><br><span class="line">                          </span><br><span class="line">                <span class="comment">// Steep Parallax Mapping  </span></span><br><span class="line">                <span class="comment">/*                </span></span><br><span class="line"><span class="comment">                float3 tangent_ViewDir = normalize(mul(TBN, world_ViewDir));                </span></span><br><span class="line"><span class="comment">                float2 offsetUV = SteepParallaxMapping(i.uv, tangent_ViewDir);                </span></span><br><span class="line"><span class="comment">                i.uv += offsetUV;               </span></span><br><span class="line"><span class="comment">                 */</span>           </span><br><span class="line">                                      </span><br><span class="line">                 <span class="comment">//Relief Mapping  </span></span><br><span class="line">                float3 tangent_ViewDir = normalize(mul(TBN, world_ViewDir));  </span><br><span class="line">                float2 offsetUV = ReliefMapping(i.uv, tangent_ViewDir);  </span><br><span class="line">                i.uv += offsetUV;  </span><br><span class="line">                  </span><br><span class="line">                  </span><br><span class="line">                float3 Basecolor = tex2D(_MainTex, i.uv);  </span><br><span class="line">                float3 Diffuse = dot(world_NormalMap,world_LightDir) * <span class="number">0.5</span> + <span class="number">0.5</span>;  </span><br><span class="line">                float3 Specular = <span class="built_in">pow</span>(max(<span class="number">0</span>, dot(world_NormalMap,world_HalfVector)), _SpecularExp) * _SpecularScale;  </span><br><span class="line">                float3 FinalColor = (Diffuse + Specular) * Basecolor;  </span><br><span class="line">                <span class="keyword">return</span> float4(FinalColor,<span class="number">1</span>);  </span><br><span class="line">            &#125;  </span><br><span class="line">            ENDCG  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="9-FlowMap"><a href="#9-FlowMap" class="headerlink" title="9  FlowMap"></a>9  FlowMap</h1><h2 id="什么是-FlowMap"><a href="#什么是-FlowMap" class="headerlink" title="什么是 FlowMap"></a>什么是 FlowMap</h2><h3 id="1-FlowMap"><a href="#1-FlowMap" class="headerlink" title="1. FlowMap"></a>1. FlowMap</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322239.png" alt="Pasted image 20221030195248"></p>
+<ul>
+<li>是 Valve 在 2010 年 GDC 中介绍的一种在求生之路 2 中用来实现水面流动效果的技术</li>
+<li>容易实现，且运算量较小（所以到现在还在被使用）</li>
+<li>使用了一张被称为 flowmap 的贴图（右图），来达到控制场景中水面流向的效果</li>
+</ul>
+<h3 id="2-FlowMap-的实质"><a href="#2-FlowMap-的实质" class="headerlink" title="2. FlowMap 的实质"></a>2. FlowMap 的实质</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322240.png" alt="Pasted image 20221030195419"></p>
+<blockquote>
+<p>发现左图和中图颜色不对应？下一小节会讲原因</p>
+</blockquote>
+<ul>
+<li>是一张记录了 2D 向量信息的纹理</li>
+<li><strong>理解</strong>：</li>
+<li>假设有一个 2D 平面，平面上每个点都对应一个向量，这个向量指向这个点接下来要运动的方向。</li>
+<li>我们通过颜色的色值（<strong>RG 两个通道</strong>）来记录这些向量的信息，就得到了一张 flowmap</li>
+<li>在 shader 中干扰 uv（偏移 uv），对纹理进行采样，这样就得到了一个模拟流动的效果</li>
+</ul>
+<h3 id="3-回顾：UV-映射（纹理映射）"><a href="#3-回顾：UV-映射（纹理映射）" class="headerlink" title="3. 回顾：UV 映射（纹理映射）"></a>3. 回顾：UV 映射（纹理映射）</h3><ul>
+<li>对一个贴图进行纹理查找，就要用到 uv 坐标</li>
+<li><strong>理解</strong>：</li>
+<li>如图为 Unity 中的 uv 坐标，类似于 xy 轴，用此 uv 坐标查找右边贴图的颜色值，采样会得到和贴图一模一样的结果<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322241.png" alt="Pasted image 20221030195659"></li>
+<li>如图，如果改变查找时的 uv 坐标，让每一列都有相同的 v 值，那么采样结果就是右图的条纹状的结果<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322242.png" alt="Pasted image 20221030195810"><br>如图，如果用同一个 uv 值采样的话，结果就会是同一的颜色, 下图采样（0，0）即左下角颜色<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322243.png" alt="Pasted image 20221030195841"></li>
+<li><strong>也就是说，uv 贴图上颜色相同的地方：意味着采样纹理时使用了同一位置</strong></li>
+</ul>
+<h3 id="4-Flowmap-的原理"><a href="#4-Flowmap-的原理" class="headerlink" title="4. Flowmap 的原理"></a>4. Flowmap 的原理</h3><ul>
+<li><p>通过所带有的向量场信息对 uv 进行了一个偏移，来干扰我们采样时候的这个过程。</p>
+</li>
+<li><p>如图可以看到，经过 flowmap 发生偏移后，让原本正常的采样变成了一个扭曲的效果</p>
+</li>
+<li><p><strong>注意</strong>：</p>
+</li>
+<li><p><strong>不同软件的不同 uv 坐标：UE4 与 Unity 相比，反转了绿通道</strong>，所以使用的 flowmap 也会发生变化。（根据不同的引擎需求进行调整）<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322244.png" alt="Pasted image 20221030195932"></p>
+</li>
+</ul>
+<h3 id="5-为什么要使用-flowmap"><a href="#5-为什么要使用-flowmap" class="headerlink" title="5. 为什么要使用 flowmap"></a>5. 为什么要使用 flowmap</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322245.png" alt="Pasted image 20221030200104"></p>
+<h2 id="FlowMap-shader"><a href="#FlowMap-shader" class="headerlink" title="FlowMap shader"></a>FlowMap shader</h2><h3 id="1-基本流程"><a href="#1-基本流程" class="headerlink" title="1. 基本流程"></a>1. 基本流程</h3><ul>
+<li><ol>
+<li>采样 flowmap 获取向量场信息</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>用向量场信息，使采样贴图时的 uv 随时间变化</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>对同一贴图以半个周期的相位差采集两次，并线性插值，使贴图<strong>流动连续</strong></li>
+</ol>
+</li>
+</ul>
+<h3 id="2-实现思路"><a href="#2-实现思路" class="headerlink" title="2. 实现思路"></a>2. 实现思路</h3><p><strong>目标：根据 flowmap 上的值，使纹理随时间偏移</strong></p>
+<ul>
+<li><p><strong>操作 1</strong>：最简单的 uv 随时间偏移的方法： <strong>uv - time</strong></p>
+</li>
+<li></li>
+<li><p><strong>关于为什么是相减</strong>：</p>
+</li>
+<li><p>先理解一下相加的情况：模型上的某个点（u，v）+（time，0）</p>
+</li>
+<li><p>可以理解为随着 time 增加，采样到的像素越远</p>
+</li>
+<li><p>这个效果在视觉上可以形容为：更远距离的像素偏移向这个点，也就是说和我们直观认识到的运算法则是<strong>相反</strong>的。</p>
+</li>
+<li><p>用 uv 值作为向量时，是遵守运算法则的</p>
+</li>
+<li><p>uv 偏移并没有改变顶点位置，只是采样到了更远的像素</p>
+</li>
+<li><p><strong>操作 2</strong>：从 flowmap 获取流动方向</p>
+</li>
+<li><p>从 flowmap 获取流动的方向，再乘 time，就可以达到让某个点根据 flowmap 流动的目的</p>
+</li>
+<li><p>flowmap 不能直接使用，先将 flowmap 上的色值从 $[0，1]$ 映射到方向向量的 $[-1，1]$</p>
+</li>
+<li><p><strong>操作 3</strong>：流动无缝循环，把偏移控制在一定的范围内（随着时间进行，变形太过夸张）<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322246.png" alt="Pasted image 20221030201326"></p>
+</li>
+<li><p>构造两个相位相差半个周期的波形函数<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322247.png" alt="Pasted image 20221030201416"></p>
+</li>
+<li><p>用相位差半个周期的两层采样进行加权混合，用纹理流动另一层采样来覆盖一个周期重新开始时的不自然情况</p>
+</li>
+</ul>
+<p><strong>代码</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322248.png" alt="Pasted image 20221030202010"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322249.png" alt="Pasted image 20221030202017"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322250.png" alt="Pasted image 20221030202025"></p>
+<h3 id="3-用-flowmap-修改法线贴图"><a href="#3-用-flowmap-修改法线贴图" class="headerlink" title="3. 用 flowmap 修改法线贴图"></a>3. 用 flowmap 修改法线贴图</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292322251.png" alt="Pasted image 20221030201822"></p>
+<h2 id="Flowmap-的制作"><a href="#Flowmap-的制作" class="headerlink" title="Flowmap 的制作"></a>Flowmap 的制作</h2><h3 id="1-Flowmap-Painter"><a href="#1-Flowmap-Painter" class="headerlink" title="1.  Flowmap Painter"></a>1.  Flowmap Painter</h3><ul>
+<li><p><strong>Flowmap Painter</strong></p>
+</li>
+<li><p>下载地址：<a target="_blank" rel="noopener" href="http://teckartist.com/?page_id=107">http://teckartist.com/?page_id&#x3D;107</a></p>
+</li>
+<li><p>直接上手绘制即可，很简单</p>
+</li>
+<li><p>可以使用反转 UV 通道选项，以便不同符合不同的引擎需求</p>
+</li>
+<li><p><strong>注意</strong>：使用 Flowmap Painter 绘制得到的贴图为<strong>线性空间下的颜色</strong>，不需要伽马校正。（Unity 里不用勾选 sRGB）<br>UE 引擎烘焙时要勾选 File Red 选项。</p>
+</li>
+</ul>
+<h3 id="3-注意事项"><a href="#3-注意事项" class="headerlink" title="3. 注意事项"></a>3. 注意事项</h3><ul>
+<li>flowmap 贴图的设置：</li>
+<li>要使用无压缩或高质量</li>
+<li>确认色彩空间</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/18856.html">http://liuke101.github.io/post/18856.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315854.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/28735.html" title="【图形系统09】阴影"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292335674.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【图形系统09】阴影</div></div></a></div><div class="next-post pull-right"><a href="/post/60368.html" title="【图形系统05】模板测试"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292323410.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【图形系统05】模板测试</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/56109.html" title="【图形系统03】光照模型"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292308147.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统03】光照模型</div></div></a></div><div><a href="/post/61142.html" title="【图形系统01】渲染管线"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292307876.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统01】渲染管线</div></div></a></div><div><a href="/post/18785.html" title="【图形系统02】光栅化"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292307530.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统02】光栅化</div></div></a></div><div><a href="/post/60368.html" title="【图形系统05】模板测试"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292323410.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统05】模板测试</div></div></a></div><div><a href="/post/33842.html" title="【图形系统07】混合和剔除"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292331423.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统07】混合和剔除</div></div></a></div><div><a href="/post/60367.html" title="【图形系统06】深度测试"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292328888.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统06】深度测试</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">文章主要迁移自个人的obsidian仓库，存在部分md语法冲突，导致显示异常，暂未修复...</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84-TextureMapping"><span class="toc-text">1 纹理映射 TextureMapping</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Projector"><span class="toc-text">Projector</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UV-Mapping"><span class="toc-text">UV Mapping</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%BA%B9%E7%90%86%E8%BF%87%E6%BB%A4"><span class="toc-text">2 纹理过滤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E7%BA%B9%E7%90%86%E5%88%86%E8%BE%A8%E7%8E%87%E8%BF%87%E5%B0%8F"><span class="toc-text">2.1 纹理分辨率过小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%8F%8C%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC-Bilinear-Interpolation"><span class="toc-text">2.2 双线性插值 (Bilinear Interpolation)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E7%BA%B9%E7%90%86%E5%88%86%E8%BE%A8%E7%8E%87%E8%BF%87%E5%A4%A7"><span class="toc-text">2.3 纹理分辨率过大</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%A4%9A%E7%BA%A7%E6%B8%90%E8%BF%9C%E7%BA%B9%E7%90%86-Mipmap"><span class="toc-text">2.3 多级渐远纹理 Mipmap</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%8E%BB%E7%A1%AE%E5%AE%9A%E4%BD%BF%E7%94%A8%E5%93%AA%E4%B8%AA-level-%EF%BC%9F"><span class="toc-text">如何去确定使用哪个 level ？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E5%90%84%E5%90%91%E5%BC%82%E6%80%A7%E8%BF%87%E6%BB%A4-Mipmap"><span class="toc-text">2.4 各向异性过滤 Mipmap</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A%E5%90%84%E5%90%91%E5%BC%82%E6%80%A7%E8%BF%87%E6%BB%A4%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="toc-text">附录：各向异性过滤实现步骤</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E7%BA%B9%E7%90%86%E5%AF%BB%E5%9D%80%E6%A8%A1%E5%BC%8F"><span class="toc-text">3 纹理寻址模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E7%BA%B9%E7%90%86%E6%95%B0%E6%8D%AE%E6%BA%90"><span class="toc-text">4 纹理数据源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E7%BA%B9%E7%90%86%E5%BA%94%E7%94%A8"><span class="toc-text">5 纹理应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%8E%A7%E5%88%B6%E7%9D%80%E8%89%B2%E4%BF%A1%E6%81%AF"><span class="toc-text">一、控制着色信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%8E%A7%E5%88%B6%E7%89%87%E5%85%83%E9%80%8F%E6%98%8E%E5%BA%A6"><span class="toc-text">二、控制片元透明度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%94%B9%E5%8F%98%E6%B3%95%E7%BA%BF"><span class="toc-text">三、改变法线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%94%B9%E5%8F%98%E8%A1%A8%E9%9D%A2%E7%BB%93%E6%9E%84"><span class="toc-text">四、改变表面结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%94%B9%E5%8F%98%E5%85%89%E6%BA%90"><span class="toc-text">五、改变光源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E9%98%B4%E5%BD%B1%E8%B4%B4%E5%9B%BE"><span class="toc-text">六、阴影贴图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E7%8E%AF%E5%A2%83%E8%B4%B4%E5%9B%BE-Environment-Mapping"><span class="toc-text">七、环境贴图 (Environment Mapping)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9"><span class="toc-text">6  纹理压缩</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9"><span class="toc-text">一、什么是纹理压缩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9"><span class="toc-text">二、为什么要使用纹理压缩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9%E6%A0%BC%E5%BC%8F"><span class="toc-text">三、常见的纹理压缩格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9%E6%A0%BC%E5%BC%8F"><span class="toc-text">非纹理压缩格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81DXTC-%E7%B3%BB%E5%88%97"><span class="toc-text">1、DXTC 系列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#DXT1%EF%BC%88BC1%EF%BC%89"><span class="toc-text">DXT1（BC1）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DXT2-3%EF%BC%88BC2%EF%BC%89"><span class="toc-text">DXT2&#x2F;3（BC2）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DXT4-5%EF%BC%88BC3%EF%BC%89"><span class="toc-text">DXT4&#x2F;5（BC3）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E7%9F%A5%E8%AF%86"><span class="toc-text">扩展知识</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81ATI-%E7%B3%BB%E5%88%97"><span class="toc-text">2、ATI 系列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ATI1-2%EF%BC%88BC4%E3%80%81BC5%EF%BC%89"><span class="toc-text">ATI1&#x2F;2（BC4、BC5）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BC6-7"><span class="toc-text">BC6&#x2F;7</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81ETC-%E7%B3%BB%E5%88%97"><span class="toc-text">3、ETC 系列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ETC1"><span class="toc-text">ETC1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ETC2"><span class="toc-text">ETC2</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E3%80%81ASTC"><span class="toc-text">4、ASTC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%E3%80%81PVRTC"><span class="toc-text">5、PVRTC</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-text">四、总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E7%94%BB%E8%B4%A8%E6%AF%94%E8%BE%83"><span class="toc-text">1、画质比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E5%8E%8B%E7%BC%A9%E6%AF%94"><span class="toc-text">2、压缩比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E4%B8%AD%E7%9A%84%E9%80%89%E6%8B%A9"><span class="toc-text">3、实际应用中的选择</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%91%A0%E5%B8%B8%E8%A7%81%E5%88%86%E8%BE%A8%E7%8E%87%E5%8F%8A%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9%E6%A0%BC%E5%BC%8F%E4%B8%8B%E7%9A%84%E5%86%85%E5%AD%98%E5%8D%A0%E6%AF%94%E5%88%86%E6%9E%90"><span class="toc-text">①常见分辨率及纹理压缩格式下的内存占比分析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-%E5%90%84%E7%A7%8D-Map-%E7%9A%84%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">7 各种 Map 的的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#NormalMap"><span class="toc-text">NormalMap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90"><span class="toc-text">解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Unity-%E4%B8%AD%E7%9A%84%E6%B3%95%E7%BA%BF%E7%BA%B9%E7%90%86%E7%B1%BB%E5%9E%8B"><span class="toc-text">Unity 中的法线纹理类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CubeMap"><span class="toc-text">CubeMap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MatCap"><span class="toc-text">MatCap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Parallax-Map"><span class="toc-text">Parallax Map</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%86%E5%B7%AE%E8%B4%B4%E5%9B%BE"><span class="toc-text">视差贴图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%B0%E5%BD%A2"><span class="toc-text">地形</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FlowMap"><span class="toc-text">FlowMap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RampMap"><span class="toc-text">RampMap</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-%E5%87%B9%E5%87%B8%E6%98%A0%E5%B0%84-Bump-Map"><span class="toc-text">8 凹凸映射 Bump Map</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%A9%E4%BD%93%E7%BB%86%E8%8A%82%E7%9A%84%E5%B0%BA%E5%BA%A6"><span class="toc-text">物体细节的尺度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bump-Mapping"><span class="toc-text">Bump Mapping</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Normal-Mapping"><span class="toc-text">Normal Mapping</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%B7%AE%E6%98%A0%E5%B0%84-Parallax-Mapping"><span class="toc-text">视差映射 Parallax Mapping</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%86%E5%B7%AE%E6%98%A0%E5%B0%84%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">视差映射的实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%A1%E5%B3%AD%E8%A7%86%E5%B7%AE%E6%98%A0%E5%B0%84-Steep-Parallax-Mapping"><span class="toc-text">陡峭视差映射 Steep Parallax Mapping</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%AE%E9%9B%95%E6%98%A0%E5%B0%84-Relief-Mapping"><span class="toc-text">浮雕映射 Relief Mapping</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%B7%AE%E9%97%AD%E5%A1%9E%E6%98%A0%E5%B0%84%EF%BC%88POM-Parallax-Occlusion-Mapping%EF%BC%89"><span class="toc-text">视差闭塞映射（POM &#x3D; Parallax Occlusion Mapping）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%9B%86%E5%90%88"><span class="toc-text">代码集合</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9-FlowMap"><span class="toc-text">9  FlowMap</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-FlowMap"><span class="toc-text">什么是 FlowMap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-FlowMap"><span class="toc-text">1. FlowMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-FlowMap-%E7%9A%84%E5%AE%9E%E8%B4%A8"><span class="toc-text">2. FlowMap 的实质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%9B%9E%E9%A1%BE%EF%BC%9AUV-%E6%98%A0%E5%B0%84%EF%BC%88%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84%EF%BC%89"><span class="toc-text">3. 回顾：UV 映射（纹理映射）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Flowmap-%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-text">4. Flowmap 的原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8-flowmap"><span class="toc-text">5. 为什么要使用 flowmap</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FlowMap-shader"><span class="toc-text">FlowMap shader</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="toc-text">1. 基本流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%9E%E7%8E%B0%E6%80%9D%E8%B7%AF"><span class="toc-text">2. 实现思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%94%A8-flowmap-%E4%BF%AE%E6%94%B9%E6%B3%95%E7%BA%BF%E8%B4%B4%E5%9B%BE"><span class="toc-text">3. 用 flowmap 修改法线贴图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flowmap-%E7%9A%84%E5%88%B6%E4%BD%9C"><span class="toc-text">Flowmap 的制作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Flowmap-Painter"><span class="toc-text">1.  Flowmap Painter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">3. 注意事项</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/64863.html" title="全局光照GI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300005318.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="全局光照GI"/></a><div class="content"><a class="title" href="/post/64863.html" title="全局光照GI">全局光照GI</a><time datetime="2024-04-29T23:06:00.000Z" title="发表于 2024-04-30 00:06:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/55802.html" title="环境光照IBL"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300003151.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="环境光照IBL"/></a><div class="content"><a class="title" href="/post/55802.html" title="环境光照IBL">环境光照IBL</a><time datetime="2024-04-29T23:03:00.000Z" title="发表于 2024-04-30 00:03:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/49886.html" title="光线追踪理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292358872.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="光线追踪理论"/></a><div class="content"><a class="title" href="/post/49886.html" title="光线追踪理论">光线追踪理论</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/38389.html" title="路径追踪"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300000048.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="路径追踪"/></a><div class="content"><a class="title" href="/post/38389.html" title="路径追踪">路径追踪</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/19081.html" title="PBR理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292357277.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PBR理论"/></a><div class="content"><a class="title" href="/post/19081.html" title="PBR理论">PBR理论</a><time datetime="2024-04-29T22:57:00.000Z" title="发表于 2024-04-29 23:57:00">2024-04-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315854.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>

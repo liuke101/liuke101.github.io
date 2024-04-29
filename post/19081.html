@@ -1,0 +1,909 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>PBR理论 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="基于物理的渲染（Physically Based Rendering） 是指使用基于物理原理和微表面理论建模的着色&#x2F;光照模型，以及使用从现实中测量的表面参数来准确表示真实世界材质的渲染理念。 三大组成部分：  基于物理的材质（Material） 基于物理的光照（Lighting） 基于物理的摄像机（Camera） SIGGRAPH 2014 《Moving Frostbite to PB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PBR理论">
+<meta property="og:url" content="http://liuke101.github.io/post/19081.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="基于物理的渲染（Physically Based Rendering） 是指使用基于物理原理和微表面理论建模的着色&#x2F;光照模型，以及使用从现实中测量的表面参数来准确表示真实世界材质的渲染理念。 三大组成部分：  基于物理的材质（Material） 基于物理的光照（Lighting） 基于物理的摄像机（Camera） SIGGRAPH 2014 《Moving Frostbite to PB">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292357277.png">
+<meta property="article:published_time" content="2024-04-29T22:57:00.000Z">
+<meta property="article:modified_time" content="2024-04-29T23:01:23.367Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="图形学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292357277.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/19081.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PBR理论',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-30 00:01:23'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292357277.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">PBR理论</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-29T22:57:00.000Z" title="发表于 2024-04-29 23:57:00">2024-04-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-29T23:01:23.367Z" title="更新于 2024-04-30 00:01:23">2024-04-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">15.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>59分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="PBR理论"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/19081.html#post-comment"><span class="waline-comment-count" data-path="/post/19081.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><strong>基于物理的渲染</strong>（Physically Based Rendering） 是指使用基于物理原理和微表面理论建模的着色&#x2F;光照模型，以及使用从现实中测量的表面参数来准确表示真实世界材质的渲染理念。</p>
+<p><strong>三大组成部分：</strong></p>
+<ol>
+<li><strong>基于物理的材质</strong>（Material）</li>
+<li>基于物理的光照（Lighting）</li>
+<li>基于物理的摄像机（Camera）<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356963.jpg" alt="0aacbee6a7db7477fc451dfab16366a9_MD5"><blockquote>
+<p>SIGGRAPH 2014 《Moving Frostbite to PBR》</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="1-PBR-基础基础理论"><a href="#1-PBR-基础基础理论" class="headerlink" title="1 PBR 基础基础理论"></a>1 PBR 基础基础理论</h1><p>满足以下条件的光照模型才能称之为 PBR 光照模型（基于物理的材质三大条件）：</p>
+<ul>
+<li>基于微表面理论的表面模型</li>
+<li>能量守恒</li>
+<li>使用基于物理的双向反射分布函数 BRDF</li>
+</ul>
+<h2 id="微表面理论"><a href="#微表面理论" class="headerlink" title="微表面理论"></a>微表面理论</h2><p><strong>微表面理论</strong>将物体表面建模成无数个微观尺度上有随机朝向的<strong>理想镜面反射</strong>的微小平面（microfacet）。</p>
+<blockquote>
+<p>[!NOTE] 理想镜面反射<br>理想镜面反射即严格遵循反射定律，反射角等于入射角</p>
+</blockquote>
+<p>光在与非光学平坦表面（Non-Optically-Flat Surfaces）的交互时，非光学平坦表面表现得像一个微小的光学平面表面的大集合。表面上的每个点都会以略微不同的方向对入射光反射，而最终的表面外观是许多具有不同表面取向的点的聚合结果（聚合结果即图红的绿色圆弧范围，这个范围称为<strong>波瓣</strong>）。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356964.png" alt="Pasted image 20230703155510"></p>
+<blockquote>
+<p>微表面理论：在微观尺度上，表面越粗糙，反射越分散。表面越光滑，反射越集中，就会有更明显的高光。</p>
+</blockquote>
+<p>从微观角度来说，没有任何表面是完全光滑的。由于这些微表面已经微小到无法逐像素地继续对其进行细分，因此我们只有假设一个 Roughness 参数，然后用<strong>统计学方法</strong>来概略的估算微表面的粗糙程度。</p>
+<p>我们可以基于一个平面的粗糙度来计算出<strong>某个向量的方向与微表面平均取向方向一致的概率</strong>。这个向量便是位于光线向量 $l$ 和视线向量 $v$ 之间的中间向量，被称为**半角向量 (Halfway Vector)**。  </p>
+<p> ![[1679148476577.png##pic_center]]<br>$$h &#x3D; \frac{v+l}{|v+l|}$$</p>
+<h2 id="能量守恒"><a href="#能量守恒" class="headerlink" title="能量守恒"></a>能量守恒</h2><p><strong>能量守恒</strong> ：出射光线的能量永远不能大于入射光线的能量。</p>
+<p>当光线折射进入内部的时候会与物体的微小粒子不断发生碰撞并散射到随机方向，同时在碰撞的过程中一部分光线的能量会被吸收转换为热能，有些光线在多次碰撞之后能量消耗殆尽，则表示该光线完全被物体吸收。<br>还有一部分折射到物体内部的光线会因为散射方向的随机性重新离开表面，而这部分光线就形成了漫反射。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356965.png" alt="Pasted image 20230703155647"></p>
+<p><strong>通常情况下，PBR 会简化折射光，将平面上所有折射光都视为被完全吸收而不会散开。</strong> 而有一些被称为次表面散射 (Subsurface Scattering) 技术的着色器技术会计算折射光散开后的模拟，它们可以显著提升一些材质（如皮肤、大理石或蜡质）的视觉效果，不过性能也会随着下降。</p>
+<p>金属 (Metallic) 材质会立即吸收所有折射光，故而金属只有镜面反射，而没有折射光引起的漫反射。</p>
+<p>回到能量守恒话题。被表面反射出去的光无法再被材质吸收。故而，<strong>进入材质内部的折射光就是入射光减去反射光后余下的能量。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356966.png" alt="Pasted image 20230703155640"></p>
+<blockquote>
+<p>基于微表面理论，我们可以观察到随着粗糙度的上升镜面反射区域的面积会增加。<br>基于能量守恒，我们可以观察到镜面反射区域的平均亮度则会下降。</p>
+</blockquote>
+<h2 id="渲染方程和反射方程"><a href="#渲染方程和反射方程" class="headerlink" title="渲染方程和反射方程"></a>渲染方程和反射方程</h2><p>如何实现能量守恒➡渲染方程<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356954.png" alt="|450"><br><strong>渲染方程</strong> (Render Equation) 是用来模拟光的视觉效果最好的模型：<br>$$L_o(p,\omega_o) &#x3D; L_{e}(p,\omega_{o})+\int\limits_{\Omega} f_r(p,\omega_i,\omega_o) L_i(p,\omega_i) n \cdot \omega_i d\omega_i$$</p>
+<ul>
+<li>$L_{e}(p,\omega_{o})$：$p 点的自发光辐射率$</li>
+</ul>
+<p>在实时渲染中，我们常用的**反射方程(The Reflectance Equation)**，则是渲染方程的简化版本，或者说是一个特例：</p>
+<p>$$L_o(p,\omega_o) &#x3D; \int\limits_{\Omega} f_r(p,\omega_i,\omega_o) L_i(p,\omega_i) n \cdot \omega_i d\omega_i$$</p>
+<ul>
+<li>$p$：点</li>
+<li>$n$：$p$ 点法线</li>
+<li>$w_i,w_o$：无限小的入射光（光源方向）和出射光（观察方向）的立体角，可以看作方向向量。方向由 $p$ 点指向光源或观察者眼睛</li>
+<li>$(n\cdot w_i)$：入射光与法线的点乘，用来衡量入射光与平面法线夹角 $\cos \theta$ 对能量衰减的影响</li>
+<li>$f_r(p,\omega_i,\omega_o)$： BxDF（通常为 BRDF）。描述了入射光反射后在各个方向如何分布</li>
+<li>$L_i(p,\omega_i)$ ：入射光辐射率</li>
+<li>$L_o(p,\omega_o)&#x3D;\int\limits_{\Omega} … d\omega_i$：对所有光源方向的半球积分，即从各个方向 $\omega_i$ 射入半球 $\Omega$ 并打中点 $p$ 的入射光，经过反射函数 $f_r$ 进入观察者眼睛的所有反射光 $L_o$ 的辐射率之和。因为计算了所有光源方向的单位立体角，所以<strong>总辐射率&#x3D;辐照度，即我们最终得到了 $p$ 点的辐照度。</strong></li>
+</ul>
+<blockquote>
+<p>在涉及遮挡阴影计算的方程中，还要添加<strong>可见性测试项</strong>，方程如下：<br>$$L_o(p,\omega_o) &#x3D; \int\limits_{\Omega} V_i(p,\omega _i)f_r(p,\omega_i,\omega_o) L_i(p,\omega_i) n \cdot \omega_i d\omega_i$$ $V_i (p,\omega _i)$：如果点 $P$ 可以被看见就返回1，否则返回0（也就是光线不被遮挡才能有贡献）。</p>
+</blockquote>
+<p><strong>反射方程计算了点 $p$ 在所有视线方向 $\omega_0$ 上被反射出来的辐射率 $L_o(p,\omega_o)$ 的总和。换言之：$L_0$ 计算的是在 $\omega_o$ 方向的眼睛观察到的 $p$ 点的辐照度。</strong></p>
+<p>反射方程里面使用的辐照度，必须要包含所有以 $p$ 点为中心的<strong>半球</strong> $\Omega$ 内的入射光，而不单单只是某一个方向的入射光。这个半球指的是围绕面法线 $n$ 的那一个半球：  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356956.png"></p>
+<blockquote>
+<p>[!question] 为什么只计算半球而不计算整个球体呢？<br>因为另外一边的半球因与视线方向相反，不能被观察，也就是辐射通量贡献量为 0，所以被忽略。</p>
+</blockquote>
+<p><strong>入射光辐射度可以由光源处获得，此外还可以利用一个环境贴图来测算所有入射方向上的辐射度。</strong></p>
+<p>至此，反射方程中，只剩下 $f_r$ 项未描述。$f_r$ 通常是<strong>双向反射分布函数</strong> (Bidirectional Reflectance DistributionFunction, BRDF)，<strong>它的作用是基于表面材质属性来对入射辐射度进行缩放或者加权。</strong> 后文将对其进行推导。</p>
+<blockquote>
+<p>[!quote]<br>积分计算面积的方法，有<strong>解析 (analytically)</strong> 和<strong>渐近 (numerically)</strong> 两种方法。目前尚没有可以满足渲染计算的解析法，所以只能选择离散渐近法来解决这个积分问题。</p>
+<p>具体做法是在半球 $\Omega$ 按一定的步长将反射方程离散地求解，然后再按照步长大小将所得到的结果平均化，这种方法被称为**黎曼和 (Riemann sum)**。下面是实现的伪代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> steps = <span class="number">100</span>; <span class="comment">// 分段计算的数量，数量越多，计算结果越准确。</span></span><br><span class="line"><span class="built_in">float</span> dW  = <span class="number">1.0f</span> / steps;</span><br><span class="line">vec3 P    = ...;</span><br><span class="line">vec3 Wo   = ...;</span><br><span class="line">vec3 N    = ...;</span><br><span class="line"><span class="built_in">float</span> sum = <span class="number">0.0f</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; steps; ++i) </span><br><span class="line">&#123;</span><br><span class="line">    vec3 Wi = getNextIncomingLightDir(i);</span><br><span class="line">    sum += Fr(P, Wi, Wo) * L(P, Wi) * dot(N, Wi) * dW;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>dW</code> 的值越小结果越接近正确的积分函数的面积或者说体积，衡量离散步长的 <code>dW</code> 可以看作反射方程中的 $d\omega_i$。积分计算中我们用到的 $d\omega_i$ 是线性连续的符号，跟代码中的 <code>dW</code> 并没有直接关系，但是这种方式有助于我们理解，而且这种离散渐近的计算方法总是可以得到一个很接近正确结果的值。值得一提的是，通过增加步骤数 <code>steps</code> 可以提高黎曼和的准确性，但计算量也会增大。</p>
+</blockquote>
+<h3 id="双向反射分布函数（BRDF）"><a href="#双向反射分布函数（BRDF）" class="headerlink" title="双向反射分布函数（BRDF）"></a>双向反射分布函数（BRDF）</h3><p>材质由 BRDF 决定，或者说材质就是 BRDF。</p>
+<h4 id="数学建模"><a href="#数学建模" class="headerlink" title="数学建模"></a>数学建模</h4><p><strong>双向反射分布函数</strong>（Bidirectional Reflectance Distribution Function，BRDF）是一个使用入射光方向 $\omega_i$ 作为输入参数的函数，输出参数为出射光 $\omega_o$，表面法线为 $n$，参数 $a$ 表示的是微表面的粗糙度。</p>
+<p>为了进一步建模，我们只考虑光线的 <strong>局部反射 (local reflection)</strong> 情况，即光线击中表面，然后从交点向外反射 包括表面的镜面反射和次表面散射）出来。<strong>但在局部反射中，可以把它们统一看作从宏观表面交点反射出来的光线。</strong></p>
+<p>局部反射由 BRDF 量化，表示为 $f_r(\omega_i,\omega_o)$。<strong>BRDF 被定义在均匀表面 (uniform surfaces)，这意味着任意点的 BRDF 相同。并且假设给定波长的入射光以相同的波长反射。</strong></p>
+<p><strong>光线沿 $\omega_i$ 打到表面上某一面积微元上后，光线的辐照度 $dE (\omega_i)$ 会在交点处沿不同方向辐射出辐射率 $dL_r(x,\omega_r)$。</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356967.png" alt="Pasted image 20230713132522"></p>
+<p>反射光线的分布受到宏观表面的微观几何影响。当微观尺度越粗糙，反射波瓣越分散，而微观尺度越平滑，反射波瓣越集中。</p>
+<ul>
+<li>@ 因此，BRDF 就是描述光线从不同方向入射后，反射光线的分布情况。具体来说，BRDF 为朝某个方向发出反射光辐射率 radiance 与入射光辐照度 irrandiance 的比值。<br>$$BRDF&#x3D;\frac{反射光辐射率(单方向的反射光)}{入射光辐照度(所有方向入射光)}$$<br>用数学式表达就是</li>
+</ul>
+<p>$$f_{r}(w_{i}, w_{r})&#x3D;\frac{dL_{r}(w_{r})}{dE_{i}(w_{i})}&#x3D;\frac{dL_{r}(w_{r})}{L_{i}(w_{i}cos\theta_{i}d\omega_{i})}~~[\frac{1}{sr}]$$</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356968.jpg" alt="9fada69e566c10e4ac9847dd065da360_MD5"><br><strong>BRDF 材质 有三个特性：</strong></p>
+<ol>
+<li><strong>可逆性</strong>： <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Helmholtz_reciprocity">Helmholtz reciprocity</a> 即交换 BRDF 的两个输入向量，BRDF 的值不变。（光追采用这个思想，反过来算） $f_r(\omega_i,\omega_o)&#x3D;f_r(\omega_o,\omega_i)$</li>
+<li><strong>能量守恒</strong>。比如反射光能量总和永远不应该超过入射光。技术上来说，Blinn-Phong 光照模型跟 BRDF 一样使用了 $\omega_i$ 跟 $\omega_o$ 作为输入参数，但是没有像基于物理的渲染这样严格地遵守能量守恒定律。</li>
+<li><strong>各向同性和各向异性</strong></li>
+</ol>
+<h4 id="Cook-Torrance-BRDF"><a href="#Cook-Torrance-BRDF" class="headerlink" title="Cook-Torrance BRDF"></a>Cook-Torrance BRDF</h4><p>BRDF 有好几种模拟表面光照的算法，然而，基本上所有的<strong>实时</strong>渲染管线使用的都是 <strong>Cook-Torrance BRDF</strong>。</p>
+<p>Cook-Torrance BRDF 分为漫反射和高光反射两个部分：</p>
+<p>$$f_r &#x3D; k_d f_{lambert} + k_s f_{cook-torrance}$$</p>
+<ul>
+<li>$k_d$ ：漫反射比例</li>
+<li>$k_s$ ：高光反射比例</li>
+<li>$f_{lambert}$ ：漫反射部分，这部分叫做兰伯特漫反射（Lambertian Diffuse）。它类似于我们之前的漫反射着色，是一个恒定的算式：</li>
+</ul>
+<p>$$f_{lambert} &#x3D; \frac{c}{\pi}$$</p>
+<p>其中 $c$ 代表的是反射率 Albedo 或漫反射颜色颜色，**除以 $\pi$ 是因为 $\int_{2\pi}cos\theta_od\omega_o&#x3D;\pi$ ，如果不除 $\pi$ 表示的是反射到半球方向的总能量，而我们眼睛看到的是一个立体角方向，所以需要除π。</p>
+<blockquote>
+<p>[!quote]<br>此处的兰伯特漫反射跟以前用的漫反射之间的关系：以前的漫反射是用表面的漫反射颜色乘以法线与面法线的点积，这个点积依然存在，只不过是被移到了 BRDF 外面，写作 $n \cdot \omega_i$，放在反射方程 $L_o$ 靠后的位置。</p>
+</blockquote>
+<ul>
+<li>BRDF 的高光（镜面）反射部分更复杂：<br>$$f_{cook-torrance} &#x3D; \frac{DFG}{4(\omega_o \cdot n)(\omega_i \cdot n)}$$</li>
+</ul>
+<p>Cook-Torrance 镜面反射 BRDF 由 3 个函数（$D$，$F$，$G$）和一个标准化因子构成。$D$，$F$，$G$ 符号各自近似模拟了特定部分的表面反射属性：</p>
+<ul>
+<li>**$D$ (Normal Distribution Function，NDF)**：法线分布函数，描述的是微表面的法线方向与半角向量对齐的概率，如果对齐那么认为该反射光可以被看到，否则没有。这是用来估算微表面的主要函数。</li>
+<li>**$F$ (Fresnel equation)**：菲涅尔方程，描述的是在不同的表面角下表面反射的光线所占的比率。</li>
+<li>**$G$ (Geometry function)**：几何函数，描述了微表面自成阴影的属性。当一个平面相对比较粗糙的时候，平面表面上的微表面有可能挡住其他的微表面从而减少表面所反射的光线。</li>
+</ul>
+<p>以上的每一种函数都是用来估算相应的物理参数的，而且你会发现用来实现相应物理机制的每种函数都有不止一种形式。它们有的非常真实，有的则性能高效。你可以按照自己的需求任意选择自己想要的函数的实现方法。</p>
+<p>Epic Games 公司的 Brian Karis 对于这些函数的多种近似实现方式进行了大量的研究。这里将采用 Epic Games 在 Unreal Engine 4 中所使用的函数，其中 $D$ 使用 Trowbridge-Reitz GGX，$F$ 使用 Fresnel-Schlick 近似法 (Approximation)，而 $G$ 使用 Smith’s Schlick-GGX。</p>
+<h4 id="D：GGX-TR"><a href="#D：GGX-TR" class="headerlink" title="D：GGX&#x2F;TR"></a>D：GGX&#x2F;TR</h4><p>对于微表面模型的一个重要性质即每个微平面都有自己的微平面法线 $m$ 。微平面法线的分布被称为表面的 <strong>法线分布函数 (NDF, normal distribution function)</strong> $D(m)$ 。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356969.png" alt="Pasted image 20221211101035"></p>
+<blockquote>
+<p>如果一个微表面法线分布集中我们认为他是 glossy（光滑） 材质，如果分布分散则认为是漫反射材质</p>
+</blockquote>
+<p>法线分布函数，从统计学上近似的表示了与某些（如中间向量 $h$）向量取向一致（即微平面法线 $n$ 与半角向量 $h$ 重合）的微表面在微观几何中的<strong>密度</strong>。</p>
+<blockquote>
+<p>只有当微平面的微平面法线 $n$ 是 $l$ 和 $v$ 的 <strong>半程向量 (half vector)</strong> $h&#x3D;\frac{l+v}{||l+v||}$ 时，这个微平面才会将能量反射进眼睛，否则这个微平面的能量贡献为 0。</p>
+</blockquote>
+<blockquote>
+<p>[!quote]  数学定义</p>
+<p> $D(m)&#x3D;\int_{\cal M}\delta_{m}(m),d p_{m} ~~~~[\frac{m^{2}}{sr}]$<br>微表面法线分布 $D(m)$ 描述了微表面上表面法线 $m$ 的统计分布。给定以 $m$ 为中心的无穷小立体角 $dω$ 和无穷小的宏观表面积 $dS$，$D(m)dωdS$ 是相应微表面部分的总面积，其法线位于指定的立体角内。因此 $D$ 是单位为 1&#x2F;sr 的密度函数。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356970.jpg" alt="24a7fb676f8588ade097e727c0b28bfb_MD5"></p>
+<blockquote>
+<p>如上图微表面侧视图所示，则 NDF 函数 $D(m)$ 服从等式： $A&#x3D;D(m)d\omega dS$ 其中， $A$ 为所有微平面法线为 $m$ 的微表面面积 (上图红线面积)， $\omega$ 为微平面法线 $m$ 的立体角， $dS$ 为无穷小的保证为 flat 的宏观表面面积微元，但它大于微表面面积微元。</p>
+</blockquote>
+<p>通过这个等式，我们可以得出 $D(m)$ 的物理含义，即<strong>每单位面积，每单位立体角，所有法向为 m 的微平面的面积</strong>。</p>
+<blockquote>
+</blockquote>
+<p>我们将微平面总面积规定为 1，<strong>那么 $\frac{D(m)}{1}&#x3D;D(m)$ 就是我们要的结果, 即密度！</strong></p>
+<p>目前有很多种 NDF 都可以从统计学上来估算微表面的总体取向度，只要给定一些粗糙度的参数以及一个我们马上将会要用到的参数 Trowbridge-Reitz GGX（GGXTR）：</p>
+<p>$$NDF_{GGX TR}(n, h, \alpha) &#x3D; \frac{\alpha^2}{\pi((n \cdot h)^2 (\alpha^2 - 1) + 1)^2}$$</p>
+<ul>
+<li>$h$ ：半角向量</li>
+<li>$\alpha$ ：粗糙度</li>
+<li>$n$ ：法线。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356957.png"></p>
+<blockquote>
+<p>GGX 有更好的高光长尾</p>
+</blockquote>
+<p>使用不同的粗糙度作为参数，可以得到下面的效果：  </p>
+<p>m<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356958.png"></p>
+<blockquote>
+<p>当粗糙度很低（表面很光滑）时，与中间向量 $h$ 取向一致的微表面会高度集中在一个很小的半径范围内。由于这种集中性，NDF 最终会生成一个非常明亮的斑点。但是当表面比较粗糙的时候，微表面的取向方向会更加的随机，与向量 $h$ 取向一致的微表面分布在一个大得多的半径范围内，但是较低的集中性也会让最终效果显得更加灰暗。</p>
+</blockquote>
+<p>Trowbridge-Reitz GGX 的 NDF 实现代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//D法线分布函数：GGX/TR</span></span><br><span class="line"><span class="type">float</span> <span class="title function_">D_GGXTR</span><span class="params">(float3 N, float3 H, <span class="type">float</span> Roughness)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">float</span> a2 = Roughness * Roughness;</span><br><span class="line">    <span class="type">float</span> a4 = a2 * a2; <span class="comment">//这里是参考的ue4，原公式使用a的二次方进行计算</span></span><br><span class="line">    <span class="type">float</span> NdotH2 = <span class="built_in">pow</span>(max(<span class="number">0</span>,dot(N, H)), <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">float</span> nominator = a2; <span class="comment">//分子</span></span><br><span class="line">    <span class="type">float</span> denominator = PI * <span class="built_in">pow</span>(NdotH2 * (a2 - <span class="number">1</span>) + <span class="number">1</span>, <span class="number">2</span>); <span class="comment">//分母</span></span><br><span class="line">    <span class="keyword">return</span> nominator / max(<span class="number">0.00001</span>, denominator); <span class="comment">//防止分母为0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="F：Fresnel-Schlick"><a href="#F：Fresnel-Schlick" class="headerlink" title="F：Fresnel-Schlick"></a>F：Fresnel-Schlick</h4><p><strong>菲涅尔效应 (fresnel effect)</strong> 指的是反射随着 <strong>掠射角 (glancing angle, 入射光与表面的夹角)</strong> 的增大而增强。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356971.png" alt="Pasted image 20230709222844|354"><br>当光线碰撞到一个表面的时候，<strong>菲涅尔方程会根据观察角度告诉我们被反射的光线所占的百分比（即高光反射比例）。根据这个比例和能量守恒定律我们可以直接知道剩余的能量就是会被折射的能量。</strong></p>
+<p>当我们垂直观察每个表面或者材质时都有一个基础反射率，当我们以任意一个角度观察表面时所有的反射现象都会变得更明显（反射率高于基础反射率）。你可以从你身边的任意一件物体上观察到这个现象，当你以平视（0 度）观察你的桌面你会法线反射现象将会变得更加的明显，理论上以完美的 0 度观察任意材质的表面都应该会出现全反射现象（所有物体、材质都有菲涅尔现象）。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356972.png" alt="Pasted image 20230703160302|450"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356973.png" alt="Pasted image 20230703160305|253"></p>
+<blockquote>
+<p>越远（夹角越小）反射越强</p>
+</blockquote>
+<p>菲涅尔（Fresnel）方程很复杂，计算量很大，实时渲染中广泛采用 Fresnel-Schlick 近似式，因为计算成本低廉，而且精度足够：</p>
+<p>$$F_{Schlick}(h, v, F_0) &#x3D; F_0 + (1 - F_0) ( 1 - (h \cdot v))^5$$<br>$$<br>F_0&#x3D;\left(\frac{n_1-n_2}{n_1+n_2}\right)^2<br>$$</p>
+<ul>
+<li>$h$：半角向量</li>
+<li>$v$：观察方向</li>
+<li>$F_0$ ：表面基础反射率</li>
+<li>$n1,n2$ ：两种介质的真实折射率（即相对于真空的折射率），一般 $n_2$ 取取 $1$为空气的折射率</li>
+</ul>
+<blockquote>
+<p>[!NOTE] $h \cdot v$ 还是 $n \cdot v$?</p>
+<ol>
+<li><p>使用 nv 的菲涅尔方程是宏观的，即菲涅尔方程确实由表面法线和视角方向求得。但在这里我们处理的不是宏观平面而是由法线分布函数 D 筛选出的法线为 h 的微平面，故这里实际用的应该是 vh。也可以这么理解，微观上半角向量 h 就是微平面的法线。</p>
+</li>
+<li><p>闫老师：在实时渲染中，人们提到的这几个角度都是可以互换的，结果十分相似。视为 $\cos \theta$：</p>
+</li>
+</ol>
+<ul>
+<li>$h \cdot v$</li>
+<li>$h \cdot l$</li>
+<li>$n \cdot v$</li>
+<li>$n \cdot l$</li>
+</ul>
+<ol start="3">
+<li>Unity 对此做了一个优化：<a target="_blank" rel="noopener" href="http://filmicworlds.com/blog/optimizing-ggx-shaders-with-dotlh/">Optimizing GGX Shaders with dot(L,H) – Filmic Worlds</a> 使用 $l\cdot h$</li>
+</ol>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356959.png"></p>
+<blockquote>
+<p>菲涅尔方程运用在球面上的效果，观察方向越是接近<strong>掠射角</strong>（grazing angle，又叫切线角，与正视角相差 90 度），菲涅尔现象导致的反射就越强</p>
+</blockquote>
+<p>菲涅尔方程中有几个微妙的地方，菲涅尔方程仅仅对电介质（绝缘体）或者说非金属表面有定义，而对于导体表面，使用它们的折射率（导体的折射率为负数）计算并不能得出正确的结果。这样我们就需要使用一种不同的菲涅尔方程来对导体表面进行计算，但是这样很不方便。所以我们<strong>预先计算出导体的基础反射率，然后用 Schlick 方法来对其进行插值</strong>估算。这样我们就能对金属和非金属材质使用同一个公式了。</p>
+<p>下面是一些常见材质的基础反射率：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356960.png"></p>
+<p>这里可以观察到的一个有趣的现象，所有电介质材质表面的基础反射率都不会高于 0.17，这其实是例外而非普遍情况。导体材质表面的基础反射率起点更高一些并且（大多）在 0.5 和 1.0 之间变化。此外，对于导体或者金属表面而言基础反射率一般是带有色彩的，这也是为什么要用 RGB 三原色来表示的原因（法向入射的反射率可随波长不同而不同）。这种现象我们只能在金属表面观察的到。</p>
+<p>金属表面这些和电介质表面相比所独有的特性引出了所谓的金属工作流的概念。也就是我们需要额外使用一个被称为金属度 (Metalness) 的参数来参与编写表面材质。金属度用来描述一个材质表面是金属还是非金属的。</p>
+<p><strong>通过预先计算物体的基础反射率的值，我们可以对两种类型的表面使用相同的Fresnel-Schlick近似，但是如果是金属表面的话就需要对基础反射率添加色彩。我们一般是按下面这个样子来实现的：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Fresnel F0：插值区分非金属和金属不同的F0值，非金属的FO数值较小，金属FO的数值较大</span></span><br><span class="line"><span class="type">float</span> F0 = lerp(<span class="number">0.04</span>,BaseColor,Metallic); </span><br></pre></td></tr></table></figure>
+
+<p>我们为大多数电介质表面定义了一个近似的基础反射率。$F_0$ 取最常见的电解质表面的平均值，这又是一个近似值。不过<strong>对于大多数电介质表面而言使用 0.04 作为基础反射率已经足够好了</strong>，而且可以在不需要输入额外表面参数的情况下得到物理可信的结果。<strong>然后，基于金属表面特性，我们要么使用电介质的基础反射率要么就使用 $F_0$ 作来为表面颜色。因为金属表面会吸收所有折射光线而没有漫反射，所以我们可以直接使用表面颜色纹理来作为它们的基础反射率。</strong></p>
+<p>Fresnel Schlick 近似可以用 HLSL 代码实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//F菲涅尔方程：Schlick近似</span></span><br><span class="line"><span class="comment">//直接光部分 NV或VH均可</span></span><br><span class="line">float3 <span class="title function_">F_FresnelSchlick</span><span class="params">(<span class="type">float</span> VdotH, float3 F0)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> F0 + (<span class="number">1.0</span> - F0) * <span class="built_in">pow</span>(<span class="number">1.0f</span> - VdotH, <span class="number">5.0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//间接光部分 只能使用NV并引入粗糙度</span></span><br><span class="line">float3 <span class="title function_">F_SchlickRoughness</span><span class="params">(<span class="type">float</span> NdotV,float3 F0,<span class="type">float</span> Roughness)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">float</span> smoothness = <span class="number">1.0</span> - Roughness;</span><br><span class="line">    <span class="keyword">return</span> F0 + (max(smoothness.xxx, F0) - F0) * <span class="built_in">pow</span>(<span class="number">1.0</span> - NdotV, <span class="number">5.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="G：Schlick-GGX-Smith-G2"><a href="#G：Schlick-GGX-Smith-G2" class="headerlink" title="G：Schlick-GGX+ Smith G2"></a>G：Schlick-GGX+ Smith G2</h4><p>几何函数从统计学上近似的求得了微表面间相互遮蔽（自遮挡现象）的比率，这种相互遮蔽会损耗光线的能量。(除了被吸收，还有被遮蔽带来的能量损耗）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356961.png"></p>
+<blockquote>
+<p>[!quote] 数学定义<br>我们是使用的微表面理论，也就是说每个面单独计算互不干扰。但现实世界中，物体的表面的凹凸存在相互遮蔽的情况。主要受粗糙度影响。对于渲染来说，我们只关心可见的微表面。</p>
+<p>基于上述事实，我们可以提出另外一种统计微平面法线到视角垂平面的投影面积：<strong>统计所有可见微平面法线到视角垂平面的投影面积</strong>。如下图，我们只考虑可见的红线部分的投影贡献。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356974.jpg" alt="22be779d5b79650eaf1533fe67a753df_MD5"></p>
+<p>我们可以通过定义 <strong>遮蔽函数 (masking function)</strong> $G_{1}(m,v)$ 来数学的表示这一点，<strong>该函数给出法线为 $m$ 且沿视角 $v$ 可见的微平面比例。</strong></p>
+<p> $\int_{m\in\Theta}G_{1}(m,v)D(m)(v\cdot m)^{+}dm&#x3D;v\cdot n$</p>
+<p>其中， $(v\cdot m)^{+}$ 表示钳位到 0，它表示不可见的背微平面不会被计算。 $G_{1}(m,v)D(m)$ 为 **可见法线分布 (distrubition of visible normals)**。</p>
+</blockquote>
+<p>对于给定法线分布函数 D (m)，可以有无数个遮蔽函数 G (m)。这是因为 D (m) 并没有完全指定微表面，它只告诉了微表面法线的分布，但不知道它们的排列。</p>
+<blockquote>
+<p>[!note]  Smith G1 和 Smith Shadow-Masking G2<br>一个被广泛使用的 G1 遮蔽函数为 <strong>The Smith G1</strong> 函数，它最初是针对高斯正态分布推导出来的，后来推广到任意的 NDFs 上。</p>
+<p> $\begin{align} G_{1}(\mathbf{m},\mathbf{v})&amp;&#x3D;{\frac{\chi^{+}(\mathbf{m}\cdot\mathbf{v})}{1+\Lambda(\mathbf{v})}},\ \chi^{+}(x)&amp;&#x3D;\left{\begin{matrix}1,<del>where~x&gt;0.\0,</del>where~x\leq 0.\end{matrix}\right. \end{align}$</p>
+<p>其中， $m$ 为微平面法线， $v$ 为观察向量， $\Lambda$ 函数视 NDF 而不同。</p>
+<p><strong>正如上面讨论的那样，遮蔽函数 G1 只考虑了微表面对视线的遮挡，即 Masking。而还存在微表面对光线的遮挡，即 Shadowing。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356975.jpg" alt="8c71e0b51185e84c583ab7a1df499b63_MD5"></p>
+<p><strong>为了考虑 Masking 对可见法线的影响，提出了联合遮蔽 - 阴影函数 (joint masking-shadowing function) $G_{2}(l,v,m)$，也被称为几何函数 (geometry function) 。</strong></p>
+<p>实际应用中，常用 <strong>The Smith Shadow-Masking G2</strong> 函数，它将 Shadowing 和 Masking 分开考虑。由于光路的可逆性，我们可以认为两种情况是近似等效的。</p>
+<p> $$G_{2}(l,v,m)&#x3D;G_{1}(v,m)G_{1}(l,m)$$</p>
+<p>它建立在 Shadowing 和 Masking 不相关的基础上，但实际上它们是相关的。<strong>使用这个 G2 会导致 BRDFs 结果偏暗。</strong></p>
+</blockquote>
+<p>类似 NDF，几何函数也使用粗糙度作为输入参数。几何函数使用由 GGX 和 Schlick-Beckmann 组合而成的模拟函数 Schlick-GGX：</p>
+<p>$$G_{SchlickGGX}(n, v, k) &#x3D; \frac{n \cdot v} {(n \cdot v)(1 - k) + k }$$</p>
+<p>这里的 $k$ 是使用粗糙度 $\alpha$ 计算而来的，用于直接光照和 IBL 光照 (间接光)的几何函数的参数：</p>
+<p>$$\begin{eqnarray*} k_{direct} &amp;&#x3D;&amp; \frac{(\alpha + 1)^2}{8} \ k_{IBL} &amp;&#x3D;&amp; \frac{\alpha^2}{2} \end{eqnarray*}$$</p>
+<p>需要注意的是这里 $\alpha$ 的值取决于你的引擎怎么将粗糙度转化成 $\alpha$。</p>
+<p>为了有效地模拟几何体，我们需要同时考虑两个视角，观察方向（几何遮挡）跟光源方向（几何阴影），我们可以用 <strong>Smith G2 函数</strong>将两部分放到一起：</p>
+<p>$$G_2(n, v, l, k) &#x3D; G_{1}(n, v, k) G_{1}(n, l, k)$$</p>
+<ul>
+<li>$n$：法线</li>
+<li>$v$ ：观察方向</li>
+<li>$G_{1}(n, v, k)$ ：观察方向的几何遮挡</li>
+<li>$l$ ：光源方向</li>
+<li>$G_{1}(n, l, k)$ 表示光源方向的几何阴影。使用 Smith 函数与 Schlick-GGX 作为 $G_{1}$ 可以得到如下所示不同粗糙度 R 的视觉效果：</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356962.png"></p>
+<blockquote>
+<p>几何函数是一个值域为 $[0.0, 1.0]$ 的乘数，其中白色 (1.0) 表示没有微表面阴影，而黑色 (0.0) 则表示微表面彻底被遮蔽。</p>
+</blockquote>
+<p>使用 GLSL 编写的几何函数代码如下：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//G几何遮蔽函数:Schlick-GGX + SmithG2</span></span><br><span class="line"><span class="function"><span class="built_in">float</span> <span class="title">G_SchlickGGX</span>(<span class="params"><span class="built_in">float</span> NdotV, <span class="built_in">float</span> Roughness</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">float</span> k_direct = pow(Roughness + <span class="number">1</span>, <span class="number">2</span>) / <span class="number">8</span>;</span><br><span class="line">    <span class="built_in">float</span> noninator = NdotV;</span><br><span class="line">    <span class="built_in">float</span> denominator = NdotV * (<span class="number">1</span> - k_direct) + k_direct;</span><br><span class="line">    <span class="keyword">return</span> noninator / max(<span class="number">0.00001</span>, denominator);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">float</span> <span class="title">G_SmithG2</span>(<span class="params">float3 N,float3 V,float3 L,<span class="built_in">float</span> Roughness</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">float</span> NdotV = max(<span class="number">0</span>,dot(N, V));</span><br><span class="line">    <span class="built_in">float</span> NdotL = max(<span class="number">0</span>,dot(N, L));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">float</span> G1 = G_SchlickGGX(NdotV, Roughness); <span class="comment">//观察方向的几何遮挡</span></span><br><span class="line">    <span class="built_in">float</span> G2 = G_SchlickGGX(NdotL, Roughness); <span class="comment">//光源方向的几何阴影</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> G1*G2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Cook-Torrance-反射方程"><a href="#Cook-Torrance-反射方程" class="headerlink" title="Cook-Torrance 反射方程"></a>Cook-Torrance 反射方程</h4><p>Cook-Torrance 反射方程中的每一个部分我们我们都用基于物理的 BRDF 替换，可以得到最终的反射方程：</p>
+<p>$$L_o(p,\omega_o) &#x3D; \int\limits_{\Omega} (k_d\frac{c}{\pi} + k_s\frac{DFG}{4(\omega_o \cdot n)(\omega_i \cdot n)}) L_i(p,\omega_i) n \cdot \omega_i d\omega_i$$</p>
+<p>上面的方程并非完全数学意义上的正确。前面提到菲涅尔项 $F$ 代表光在表面的反射比率，它直接影响 $k_s$ 因子，意味着反射方程的镜面反射部分已经隐含了因子 $k_s$。因此，最终的 Cook-Torrance 反射方程如下（去掉了 $k_s$）：</p>
+<p>$$L_o(p,\omega_o) &#x3D; \int\limits_{\Omega} (k_d\frac{c}{\pi} + \frac{D(n, h, \alpha)F(h, \omega_o, F_0)G(n, \omega_o, \omega_i, k)}{4(\omega_o \cdot n)(\omega_i \cdot n)}) L_i(p,\omega_i) n \cdot \omega_i d\omega_i$$</p>
+<ul>
+<li>对于分母中的点积，仅仅避免负值是不够的，也必须避免零值。通常通过在常规的 clamp 或绝对值操作之后添加非常小的正值来完成。</li>
+</ul>
+<p>这个方程完整地定义了一个基于物理的渲染模型，也就是我们一般所说的基于物理的渲染（PBR）。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 直接光 */</span></span><br><span class="line"><span class="comment">//Cook-Torrance BRDF</span></span><br><span class="line"><span class="comment">//漫反射部分</span></span><br><span class="line">float3 Ks = F_FresnelSchlick(VdotH, F0); <span class="comment">//菲涅尔项描述了光被反射的比例</span></span><br><span class="line">float3 Kd = (<span class="number">1</span> - Ks) * (<span class="number">1</span> - Metallic);   </span><br><span class="line"><span class="comment">//float3 Diffuse = Kd * BaseColor / PI;</span></span><br><span class="line">float3 Diffuse = Kd * BaseColor; <span class="comment">//unity内置的PBR没有除以 PI, 颜色亮一些</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//高光反射部分</span></span><br><span class="line"><span class="built_in">float</span> D = D_GGXTR(N, H, Roughness);</span><br><span class="line">float3 F = Ks;</span><br><span class="line"><span class="built_in">float</span> G = G_SmithG2(N, V, L, Roughness);</span><br><span class="line">float3 Specular = D * F * G / max(<span class="number">0.0001</span>, <span class="number">4</span> * NdotV * NdotL);</span><br><span class="line"></span><br><span class="line">float3 DirectLightColor = (Diffuse + Specular) * mainLight.color * NdotL;</span><br></pre></td></tr></table></figure>
+<h4 id="能量补偿项"><a href="#能量补偿项" class="headerlink" title="能量补偿项"></a>能量补偿项</h4><p>通过包含 G2 函数，Microfacet BRDF 能够考虑遮蔽 (masking) 和阴影 (shadowing)，但依然没有考虑微平面之间的互反射 (interreflection)，或多表面反射 (multiple surface bounce)。而缺少微平面互反射 (interreflection) 是业界主流 Microfacet BRDF 的共有的限制。如图，虽然在小球上没有出现任何掠射角的问题，但随着粗糙度的变大，渲染的结果越来越暗。即使认为最左边是抛光，最右边的是哑光，这个结果也是错误的。如果对小球材质进行白炉测试 ( $F(i,h)\equiv 1$ ， $uniform irrdiance &#x3D; 1$ 的天光，检测材质反射能量是否未 1)，这种现象更为明显。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356976.png" alt="Pasted image 20230710202811"><br>出现这种问题的原因是标准 Microfacet BRDF 模型虽然能量守恒 (即不会产生任何能量)，但它们也不能在高粗糙度时维持能量 (即能量损失)。这是**由于建模微平面模型时所做出的单散射假设，没有模拟微表面上的多次散射，即缺少微平面互反射 (interreflection)。单散射的在高粗糙度时会有较大的能量损失，从而显得过暗。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356977.png" alt="Pasted image 20230710202818"></p>
+<p>对此，在实时渲染中常用的处理方法是对原先的模型添加一个<strong>能量补偿项</strong>来补足损失的能量。<strong>核心思想</strong>是将反射光看作两种情况：当不被遮挡时，这些光会被看到；当反射光被微表面遮挡时，这些遮挡住的光将会进行后续的弹射，直到能被看到。</p>
+<p><strong>【Kulla-Conty 近似】</strong> 通过经验去补全多次反射丢失的能量，其实是创建了一个多次反射表面反射的附加 BRDF 波瓣，利用这个 BRDF 算出消失的能量作为能量补偿项。<br><strong>预计算出一张图表示 $E_{avg}$ ，代入 $f_{ms}$ 中，进而求出消失的能量 $E_{ms}$ 。</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356978.png" alt="Pasted image 20230710203604|250"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356979.png" alt="Pasted image 20230710204205|700"></p>
+<p>k 次间接反射的能量为 $F^{k}{avg}(1-E{avg})^{k}\cdot F_{avg}E_{avg}$ 将以上所有能量累加，得 $\frac{F_{avg}E_{avg}}{1-F_{avg}(1-E_{avg})}$ ，再与无色 $f_{ms}$ 相乘，即可得到有色的能量补偿项。</p>
+<p>最后，考虑了能量补偿项的渲染方程如下：</p>
+<p> $L_{o}(p,\omega_{o})&#x3D;\int_{\Omega^{+}}L_{i}(p,\omega_{i})(f_{r}(p,\omega_{i},\omega_{o})+f_{ms}(\omega_{i}.\omega_{o}))cos\theta_{i}d\omega_{i}$</p>
+<p>增加颜色项后的结果如下所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356980.png" alt="Pasted image 20230710204422"></p>
+<h3 id="BxDF"><a href="#BxDF" class="headerlink" title="BxDF"></a>BxDF</h3><p>目前计算机图形渲染领域，基于物理的渲染方式主要有：</p>
+<ul>
+<li><p><strong>辐射度（Radiance）</strong>：计算光源的镜面反射和漫反射占总的辐射能量的比例，从而算出颜色。在实时渲染领域，是最主流的渲染方式。BRDF 大多数都是基于此种方式，包括 Cook-Torrance。</p>
+</li>
+<li><p><strong>光线追踪（Ray Tracing）</strong>：即光线追踪技术，它的做法是将摄像机的位置与渲染纹理的每个像素构造一条光线，从屏幕射出到虚拟世界，每遇到几何体就计算一次光照，同时损耗一定比例的能量，继续分拆成反射光线和折射光线，如此递归地计算，直到初始光线及其所有分拆的光线能量耗尽为止。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356981.png" alt="1679148482590|500"></p>
+<p>由于这种方式开销非常大，特别是场景复杂度高的情况，所以常用于离线渲染，如影视制作、动漫制作、设计行业等。</p>
+<p>近年来，随着 NVIDIA 的 RTX 系列和 AMD 的 RX 系列显卡问世，它们的共同特点是硬件级别支持光线追踪，从而将高大上的光线追踪技术带入了实时渲染领域。</p>
+</li>
+<li><p><strong>路径追踪（Path Tracing）</strong>：实际上路径追踪是光线追踪的一种改进方法。它与光线追踪不同的是，引入了蒙特卡洛方法，利用 BRDF 随机跟踪多条反射光线，随后根据这些光线的贡献计算该点的颜色值。<br>这种方法更加真实（下图），但同时也更加耗时，通常用于离线渲染领域。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356982.png" alt="1679148482649|350"></p>
+</li>
+</ul>
+<p>上章已经详细描述了基于辐射度的 Cook-Torrance 的 BRDF 模型的理论和实现。实际上，Cook-Torrance 模型在整个渲染体系中，只是冰山一角。下面是 BRDF 光照模型体系：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356983.png" alt="1679148482675"></p>
+<p>限于篇幅和本文主题，下面将介绍基于辐射度方式的 BxDF 光照模型。</p>
+<p><strong>BxDF 一般而言是对 BRDF、BTDF、BSDF、BSSRDF 等几种双向分布函数的一个统一的表示。可细分为以下几类：</strong></p>
+<ul>
+<li><p><strong>BRDF</strong>（双向反射分布函数，Bidirectional Reflectance Distribution Function）：用于<strong>非透明</strong>材质的光照计算。<strong>Cook-Torrance 就是 BRDF 的一种实现方式</strong>。</p>
+</li>
+<li><p><strong>BTDF</strong>（双向透射分布函数，Bidirectional Transmission Distribution Function）：用于<strong>透明材质</strong>的光照计算。折射光穿透介质进入另外一种介质时的光照计算模型，只对有透明度的介质适用。</p>
+</li>
+<li><p><strong>BSDF</strong>（双向散射分布函数，Bidirectional Scattering Distribution Function）：实际上是 BRDF 和 BTDF 的综合体，简单地用公式表达：<strong>BSDF &#x3D; BRDF + BTDF</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356984.png" alt="1679148482726|350"></p>
+</li>
+<li><p><strong>SVBRDF</strong>（空间变化双向反射分布函数，Spatially Varying Bidirectional Reflectance Distribution Function）：<strong>将含有双参数的柯西分布替代常规高斯分布</strong>引入微面元双向反射分布函数 (BRDF) 模型，同时考虑了目标自身辐射强度的方向依赖性，在此基础上推导了长波红外偏振的数学模型，并在合理范围内对模型做简化与修正使之适用于仿真渲染。</p>
+</li>
+<li><p><strong>BTF</strong>（双向纹理函数，Bidirectional Texture Function）：主要用于<strong>模拟非平坦表面</strong>，参数跟 SVBRDF 一致。但是，BTF 包含了非局部的散射效果，比如阴影、遮挡、相互反射、次表面散射等。用 BTF 给表面的每个点建模的方法被成为 <strong>Apparent BRDFs</strong>（表面双向反射分布函数）。</p>
+</li>
+<li><p><strong>SSS</strong>（次表面散射，也称 3S，Subsurface Scattering）：它是<strong>模拟光进入半透明或者有一定透明深度的材质（皮肤、玉石、大理石、蜡烛等）后，在内部散射开来，然后又通过表面反射出来的光照模拟技术</strong>。下面是用 SSS 模拟的玉石效果图：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356985.png" alt="1679148482775|400"><br>关于次表面散射方面的研究，比较好的是 Jensen 的文章《A Practical Model for Subsurface Light Transport》，该文提出了一个较为全面的 SSS 模型，将它建模成一个双向表面散射反射分布函数 (BSSRDF)。 ^c36ln4</p>
+</li>
+<li><p><strong>BSSRDF</strong>（双向表面散射分布函数，Bidirectional Surface Scattering Reflectance Distribution Function）：它常用于<strong>模拟透明材质</strong>，目前是主流技术。它<strong>和 BRDF 的不同之处在于，BSSRDF 可以再现光线透射材质的效果，还可以指定不同的光线入射位置和出射位置：</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356986.png" alt="1679148482799|600"> ^lxo1ef</p>
+</li>
+</ul>
+<p><strong>从上面可以看出，BxDF 的形式多种多样，但由于它们都是基于辐射度的光照模型，所以最终可以用以下公式抽象出来：</strong></p>
+<p>$$L_o(p,\omega_o) &#x3D; \int\limits_{\Omega} f_r(p,\omega_i,\omega_o) L_i(p,\omega_i) n \cdot \omega_i d\omega_i$$</p>
+<p>用更简洁的方式描述，入射光 $\omega_i$ 在 $p$ 点的颜色的计算公式：</p>
+<p>$$\begin{eqnarray*} p点颜色 &amp; &#x3D; &amp; 光源颜色 \times 材质颜色 \times 反射系数 \times 光照函数 \ 光照函数 &amp; &#x3D; &amp; f(n_{法线}, \omega_{光源方向}, v_{视点方向}) \end{eqnarray*}$$</p>
+<p>值得一提的是，BRDF 最终的光照计算结果是几何函数和油墨算法（ink-selection）结合的结果。其中油墨算法描述了如何计算各颜色分量的反射率，可参看论文 <a target="_blank" rel="noopener" href="https://pdfs.semanticscholar.org/9e56/8b13ea51ca3c669186624566f672eb547857.pdf">《A Multi-Ink Color-Separation Algorithm Maximizing Color Constancy》</a>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356987.png" alt="1679148483056|500"></p>
+<h3 id="Disney"><a href="#Disney" class="headerlink" title="Disney"></a>Disney</h3><h2 id="其他-DFG"><a href="#其他-DFG" class="headerlink" title="其他 DFG"></a>其他 DFG</h2><h3 id="法线分布函数-D"><a href="#法线分布函数-D" class="headerlink" title="法线分布函数 D"></a>法线分布函数 D</h3><p>对于镜面反射 BRDF，法线分布函数 D 的常见模型可总结如下：</p>
+<ul>
+<li>Beckmann[1963]</li>
+<li>Blinn-Phong[1977]</li>
+<li>GGX [2007] &#x2F; Trowbridge-Reitz[1975]</li>
+<li>Generalized-Trowbridge-Reitz (GTR) [2012]</li>
+<li>Anisotropic Beckmann[2012]</li>
+<li>Anisotropic GGX [2015]</li>
+</ul>
+<p><strong>业界主流的法线分布函数是 GGX</strong>。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356988.png" alt="Pasted image 20230710195651"></p>
+<blockquote>
+<p>红线 Backmann，绿线 GGX。右图，左边为 GGX，右边为Backmann</p>
+</blockquote>
+<h4 id="Beckmann"><a href="#Beckmann" class="headerlink" title="Beckmann"></a>Beckmann</h4><p>Beckmann 是一种定义在坡度空间上的<strong>类高斯分布</strong>模型，这个函数<strong>可以描述不同粗糙程度的表面，不同粗糙程度的意思是 NDF 中 lobe 是集中在一个点上，还是分布得比较开</strong>。它的表达式为</p>
+<p> $$D_{Beckmann}(h)&#x3D;\frac{e^{-\frac{tan^{2}\theta_{h}}{\alpha^{2}}}}{\pi\alpha^{2}cos^{4}\theta_{h}}$$</p>
+<p> $h$ ：半程向量<br> $\alpha$ ：粗糙系数，粗糙程度这个值越小，表面就越光滑<br>  $\theta_{h}&#x3D;(\hat{n}\cdot \hat{m})$ ：半程向量与宏观法线的夹角<br>  高斯分布函数 $X\sim N(\mu,\sigma^{2})&#x3D;\frac{1}{\sqrt{2\pi}\sigma}^{-\frac{(x-\mu)^{2}}{2\sigma^{2}}}$ 中， $\sigma$ 控制胖瘦程度，同样的，在 Beckmann 表达式中， $\alpha$ 控制胖瘦程度。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356989.jpg" alt="fb9c19a8c393df03c7975ec33c889e0e_MD5"></p>
+<p>之所以幂的分子上使用 $tan\theta_{h}$ ，而不直接使用 $\theta_{h}$ 是因为 Beckmann 定义在<strong>坡度空间</strong>上，需要满足高斯部分的定义域无限大的性质，保证函数无论何时都具有对应的非负值，并且避免微表面出现法线朝下的问题 (但无法避免反射光朝下)。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356990.jpg" alt="ff979cf2a41139cb4a5100491c7ea536_MD5"></p>
+<blockquote>
+<p>如图，随着 $\theta$ 不断增大不断增大，红色的向量永远不会朝下</p>
+</blockquote>
+<h4 id="GGX"><a href="#GGX" class="headerlink" title="GGX"></a>GGX</h4><p>GGX 模型的表达式为</p>
+<p> $$D_{GGX}(h)&#x3D;\frac{\alpha^{2}}{\pi(cos^{2}\theta_{h}(\alpha^{2}-1)+1)^{2}}$$</p>
+<p>其中， $h$ 为微观半程向量； $\alpha$ 为粗糙系数，粗糙程度这个值越小，表面就越光滑； $\theta_{h}&#x3D;(\hat{n}\cdot \hat{m})$ 是半程向量与宏观法线的夹角。 GGX 相对于 Beckmann 在工业界得到了更为广泛的应用，因为它具有更好的高光拖尾 (Long tail 性质，衰减更加柔和)。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356991.jpg" alt="b55bc08e7043ee7b754a3e565fbaf616_MD5"></p>
+<p>这会带来两个好处：</p>
+<ul>
+<li>Beckmann 的高光会逐渐消失，而 GGX 的高光会减少而不会消失，这就意味着高光的周围我们看到一种光晕的现象。</li>
+<li>GGX 除了高光部分，其余部分会像 Diffuse 的感觉。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356992.png" alt="Pasted image 20230710200154"></p>
+<h4 id="GTR"><a href="#GTR" class="headerlink" title="GTR"></a>GTR</h4><p>Generalized Trowbridge-Reitz (GGX&#x2F;TR 模型增强版)</p>
+<p>GTR 是根据对 GGX 等分布的观察，提出的<strong>广义法线分布函数</strong>，其目标是允许更多地控制 NDF 的形状，特别是分布的尾部。它的表达式为：<br> $$D_{GTR}(h)&#x3D;\frac{c}{(1+cos^{2}\theta_{h}(\alpha^{2}-1))^{\gamma}}$$</p>
+<p>其中， $h$ 为微观半程向量； $\alpha$ 为粗糙系数，粗糙程度这个值越小，表面就越光滑； $\theta_{h}&#x3D;(\hat{n}\cdot \hat{m})$ 是半程向量与宏观法线的夹角。 $\gamma$ 参数用于控制尾部形状。当 $\gamma&#x3D;2$ 时，GTR 等同于 GGX。随着 $\gamma$ 的值减小，分布的尾部变得更长。而随着 $\gamma$ 值的增加，分布的尾部变得更短。越来越接近Backmann</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356993.jpg" alt="4a7b3f86070440b46ab2f2c113de242b_MD5"></p>
+<h3 id="菲涅尔项-F"><a href="#菲涅尔项-F" class="headerlink" title="菲涅尔项 F"></a>菲涅尔项 F</h3><p>对于镜面反射 BRDF，菲涅尔项 F 的常见模型可以总结如下：</p>
+<ul>
+<li>Cook-Torrance [1982]</li>
+<li>Schlick [1994]</li>
+<li>Gotanta [2014]</li>
+</ul>
+<p><strong>业界方案一般都采用 Schlick 的 Fresnel 近似</strong>，因为计算成本低廉，而且精度足够：</p>
+<p> $F_{S c h l i c k}({\mathbf{v},\mathbf{h}})&#x3D;F_{0}+({\mathbf{l}}-F_{0}){\bigl(}{\textbf{l}}-(v\cdot h){\bigr)}^{5}$</p>
+<h3 id="几何函数-G"><a href="#几何函数-G" class="headerlink" title="几何函数 G"></a>几何函数 G</h3><p>对于镜面反射 BRDF，几何函数 G 的常见模型可以总结如下：</p>
+<ul>
+<li>Smith [1967]</li>
+<li>Cook-Torrance [1982]</li>
+<li>Neumann [1999]</li>
+<li>Kelemen [2001]</li>
+<li>Implicit [2013]</li>
+</ul>
+<p>另外，Eric Heitz 在 [Heitz14] 中展示了 Smith 几何阴影函数是正确且更准确的 G 项，并将其拓展为 Smith 联合遮蔽阴影函数 (Smith Joint Masking-Shadowing Function)，该函数具有四种形式：</p>
+<ul>
+<li>分离遮蔽阴影型 (Separable Masking and Shadowing)</li>
+<li>高度相关掩蔽阴影型 (Height-Correlated Masking and Shadowing)</li>
+<li>方向相关掩蔽阴影型 (Direction-Correlated Masking and Shadowing)</li>
+<li>高度 - 方向相关掩蔽阴影型 (Height-Direction-Correlated Masking and Shadowing)</li>
+</ul>
+<p>目前较为常用的是其中最为简单的形式，分离遮蔽阴影 (Separable Masking and Shadowing Function)。</p>
+<p>该形式将几何项 G 分为两个独立的部分：光线方向 (light) 和视线方向 (view)，并对两者用相同的分布函数来描述。根据这种思想，结合法线分布函数 (NDF) 与 Smith 几何阴影函数，于是有了以下新的 Smith 几何项：</p>
+<ul>
+<li>Smith-GGX</li>
+<li>Smith-Beckmann</li>
+<li>Smith-Schlick</li>
+<li>Schlick-Beckmann</li>
+<li>Schlick-GGX</li>
+</ul>
+<p>其中 UE4 的方案是上面列举中的 <strong>“Schlick-GGX”</strong> ，即基于 Schlick 近似，将 k 映射为 k&#x3D;a&#x2F;2, 去匹配 GGX Smith 方程：</p>
+<p>$\begin{align} k&amp;&#x3D;\frac{\alpha}{2}\ \alpha&amp;&#x3D;(\frac{roughness+1}{2})^{2}\ G_{1}(v)&amp;&#x3D;\frac{n\cdot v}{(n\cdot v)(1-k)+k}\ G(l,v,h)&amp;&#x3D;G_{1}(l)G_{1}v \end{align}$</p>
+<h1 id="2-PBR-扩展"><a href="#2-PBR-扩展" class="headerlink" title="2 PBR 扩展"></a>2 PBR 扩展</h1><h2 id="LTC-多边形光源渲染"><a href="#LTC-多边形光源渲染" class="headerlink" title="LTC 多边形光源渲染"></a>LTC 多边形光源渲染</h2><p>Linearly Transformed Cosines：线性变换余弦分布</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356994.png" alt="Pasted image 20230710210648"></p>
+<p><strong>多边形光源</strong>下的渲染我们需要取光源上很多采样点，并且与 shaing point 连线, 如果不考虑连线是否与场景有交点则不考虑 shadow, 如果需要考虑 shadow 还需要做一下 shadow test。<br>但不论如何都需要采样, 那么不可避免地会使速度变慢。为了避免采样光源带来的开销问题，可以应用 LTC 技术来避免采样，满足实时渲染的要求。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356995.png" alt="Pasted image 20230710211040"></p>
+<blockquote>
+<p>lobe：波瓣（函数图像如同花瓣）</p>
+</blockquote>
+<p>简单来说就行，将反射方程中原本需要采样才能计算的 BRDF (原始球面分布)通过一个 M 矩阵变换为余弦分布（新球面分布）（注意余弦分布不是常见的 cos，而是一个球面分布函数），而 M 可以<strong>预计算</strong>，余弦分布可以<strong>解析计算</strong>积分，所以能快速计算 BRDF 积分而避免了采样，这种方法就是线性变换余弦 (Linearly Transformed Cosines, LTCs)。</p>
+<p>代码实现: [[03 利用 LTC 实现实时多边形面积光]]</p>
+<h2 id="Disney’s-principle-BRDF"><a href="#Disney’s-principle-BRDF" class="headerlink" title="Disney’s principle BRDF"></a><strong>Disney’s principle BRDF</strong></h2><p>首先我们来讨论一下为什么还需要 Disney’s principle BRDF:</p>
+<p>因为微表面模型是由一些问题的:</p>
+<p><strong>1. 微表面模型无法解释多层材质</strong><br>我们来举个例子, 我们有一个木头桌子, 我们知道木头是 diffuse 的, 在桌子的表面刷一层清漆。从而我们的桌子变成了多层材质: 清漆 + 木头。清漆是无色的, 由于清漆是平坦的, 因此在光线打入时, 一部分反射出去产生了高光现象。另一部分打入内部并打到桌子上以 diffuse 发散出去, 因此我们应该会看到高光和 diffuse. 这是微表面模型无法做到的, 因为<strong>微表面模型无法解释多层材质。</strong></p>
+<blockquote>
+<p>清漆 ClearCoat，又名<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%87%A1%E7%AB%8B%E6%B0%B4/9978483">凡立水</a>，是由<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%A0%91%E8%84%82/281282">树脂</a>为主要<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%88%90%E8%86%9C%E7%89%A9%E8%B4%A8">成膜物质</a>再加上溶剂组成的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%B6%82%E6%96%99/2503539">涂料</a>。由于涂料和涂膜都是透明的，因而也称透明涂料。涂在物体表面，干燥后形成光滑薄膜，显出物面原有的纹理。</p>
+</blockquote>
+<p><strong>2. 微表面模型对艺术家来说并不好用</strong></p>
+<p>我们知道 PBR, PBR, 都是基于物理的, 我们以金属反射率来说，反射率由 n 和 k 这两个参数定义。对于 artist 来说, 他们是不知道的怎么调。因此 PBR 材质对于艺术家来说不好用。</p>
+<ul>
+<li>Disney’s principle BRDF 诞生的首要目的就是为了让 artist 使用方便, 因此它并不要求在物理上完全正确.</li>
+<li>但是在 RTR 中我们认为 Disney’s principle BRDF 也算是 PBR 材质.</li>
+</ul>
+<p><strong>Disney’s principle BRDF 有几个重要的设计原则:</strong></p>
+<ol>
+<li>应该使用更直观的名词而不是使用物理名词参数, 比如使用平缓, 饱和度等</li>
+<li>让 brdf 框架不太复杂, 也就是让参数数量少一点</li>
+<li>最好有一个拖动条左边最小值, 右边最大值供艺术家们进行调整</li>
+<li>有时候为了特殊的效果允许将参数值超过范围, 也就是允许小于 0 或大于 1</li>
+<li>所有参数的组合应尽可能可靠和合理, 也就是不论如何调整参数最后的结果应该是正常的.</li>
+</ol>
+<p>因此在这套设计原则下, artist 可以根据自己需要去定义自己想得到的 BRDF:<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356996.png" alt="Pasted image 20230710213136"></p>
+<ul>
+<li>subsurface: 次表面反射, 为了在 BRDF 中给你一种比 diffuse 还要平的效果. 可以看出当 subsurface 为 1 时与 0 相比像是被压扁了一样.</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356997.png" alt="2551fe83ada6e138c25626fe73749a96_MD5"></p>
+<ul>
+<li>metallic: 金属性, 顾名思义看起来像金属的程度.</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356998.png" alt="bc4a549ff7fbdc5d159a481651c53d96_MD5"></p>
+<ul>
+<li>specular: 控制有多少镜面反射的内容, 0 为完全没有镜面反射内容, diffuse, 1 则表示全是镜面反射内容.</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356999.png" alt="e4d933eae00a5ad3f4df0846b52821d3_MD5"></p>
+<ul>
+<li>specular tint: 镜面反射出的颜色无色 (为 0), 还是偏向于自己物体本身的颜色 (1).</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356000.png" alt="671ef64bfd5f8d2c97526a43c4f22482_MD5"></p>
+<ul>
+<li>roughness: 粗糙度, 为 0 表示全是镜面反射, 为 1 表示没有镜面反射.</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356001.png" alt="ce23c41e089a420eb52b7eda260f68c6_MD5"></p>
+<ul>
+<li>anisotropic: 各向异性程度, 可以理解为当为 1 的时候带来一种像是被刷过一样的效果.</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356002.png" alt="e791eeb270d82ab760161a1fbede89fa_MD5"></p>
+<ul>
+<li>sheen: 可以理解为, 在物体表面法线方向上长了绒毛, 这让你在 grazing angle (外圈) 处看起来有一种雾化的感觉.</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356003.png" alt="8b09eed3621623e4dbe668359e661671_MD5"></p>
+<ul>
+<li>sheen tint: 可以理解为绒毛造成的雾化效果颜色是无色, 还是偏向物体本身的颜色.</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356004.png" alt="0f0858a058d023ab34408103752c9795_MD5"></p>
+<ul>
+<li>clearcoat: 可以理解为透明层的明显程度, 0 时表示没有透明层, 1 则表示有一层透明层 (涂了一层清漆).</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356005.png" alt="2cee53fe70af566ce4635a27d0146bb0_MD5"></p>
+<ul>
+<li>clearcoat gloss: 透明层的光泽层度, 为 0 就像被磨砂了一样, 为 1 则表示完全光滑.</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356006.png" alt="21607352efb99fcaaa82648a04312b72_MD5"></p>
+<p><strong>Disney’s principle BRDF 的优点:</strong></p>
+<ol>
+<li>容易理解和使用各参数 (属性)</li>
+<li>参数的混合组合使得可以在一个模型上显示出很多不同的材质.</li>
+<li>开源</li>
+</ol>
+<p><strong>Disney’s principle BRDF 的缺点:</strong></p>
+<ol>
+<li>并不是完全基于物理的</li>
+<li>巨大的参数空间使得拥有强大的表示能力, 但是会造成冗余现象.</li>
+</ol>
+<h2 id="渲染方程不等式近似"><a href="#渲染方程不等式近似" class="headerlink" title="渲染方程不等式近似"></a>渲染方程不等式近似</h2><p>在微积分中有很多有用的不等式, 如图中的两个不等式为例：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356007.png" alt="Pasted image 20230622211119"></p>
+<p><strong>在实时渲染中, 我们只关心近似约等, 我们不考虑不等的情况, 因此我们将这些不等式当约等式来使用。</strong></p>
+<p><strong>在 RTR 中一个重要的近似式：</strong></p>
+<p>$$<br>\int_\Omega f(x)g(x)\mathrm{<del>d}x\approx\frac{\int_\Omega f(x)\mathrm{</del>d}x}{\int_\Omega\mathrm{<del>d}x}\cdot\int_\Omega g(x)\mathrm{</del>d}x<br>$$</p>
+<blockquote>
+<p>如果你有两个函数的乘积, 你又想把他们的乘积积分起来, 你可以将其拆出来, 也就是:<strong>两个函数乘积的积分 $≈$ 两个函数积分的乘积</strong></p>
+</blockquote>
+<p><strong>例如：在 shadowmap 计算时，我们把渲染方程代入这个约等式中:</strong><br>我们把 $V(\mathrm{p},\omega_i)$ 看作是 $f(x)$, 提取出来并作归一化处理:<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356008.png" alt="Pasted image 20230622212736"></p>
+<p>红色区域部分是 $V(\mathrm{p},\omega_i)$, 那么剩下的 $g(x)$ 部分, 也就是 shading 的结果.</p>
+<p>因此其表示的意义就是, 我们计算每个点的 shading，然后去乘这个点的 V 项得到的就是最后的渲染结果。</p>
+<p>该不等式的另一应用，计算 IBL：[[05 环境光照IBL#^x7aaaa|环境光照原理]]</p>
+<ul>
+<li>? <strong>为什么右边第一个函数多了个分母？</strong><br><strong>分母这一项的作用是为了保证左右能量相同而做的归一化操作。</strong></li>
+</ul>
+<p>我们来用一个例子来解释这个归一化操作。我们假设 $f(x)$ 是一个<strong>常值函数</strong>, 也就是 $f(x) &#x3D; 2$, 我们的积分域恒为 $\int_0^3$.</p>
+<p>那么约等式左边, 把 $f(x) &#x3D; 2$ 代入, 则可以提出来变为 $2$ 倍的 $g(x)$ 积分</p>
+<p>而等式右侧第一个函数代入 $f(x)$ 的积分是 $\int_0^3 2dx&#x3D;2x|_0^3&#x3D;2 * 3 &#x3D;6$，分母的积分是 $\int_0^3 dx&#x3D;x|_0^3&#x3D;3$，结果也正好是 $2$. 正好也是 $2$ 倍的 $g(x)$ 积分.</p>
+<ul>
+<li>? <strong>那么什么时候这个约等式比较正确呢？</strong>   ^ptjnu8<ol>
+<li>g (x) 积分域足够小（small support），也就是说我们只有一个点光源或者方向光源。环境光不行。</li>
+<li>g (x) 在积分域内变化不大（Smooth integrand），也就是说 brdf 的部分变化足够小，那么这个 brdf 部分是 diffuse 的。gloss  brdf 不行。</li>
+<li>我们还要保证光源各处的 radience 变化也不大，类似于一个面光源。</li>
+</ol>
+</li>
+</ul>
+<h1 id="3-PBR-实现"><a href="#3-PBR-实现" class="headerlink" title="3 PBR 实现"></a>3 PBR 实现</h1><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356009.png" alt="Pasted image 20221101211713"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356010.png" alt="Pasted image 20221102144938"></p>
+<p>直接光通常数量有限，使用反射方程计算将结果相加即可。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">float</span> F0 = lerp(<span class="number">0.04</span>, BaseColor, Metallic); <span class="comment">//Fresnel F0</span></span><br><span class="line"><span class="comment">/* Cook-Torrance BRDF */</span></span><br><span class="line"><span class="comment">/* 直接光 */</span></span><br><span class="line"><span class="comment">//漫反射部分</span></span><br><span class="line">float3 Ks = F_FresnelSchlick(VdotH, F0); <span class="comment">//菲涅尔项描述了光被反射的比例</span></span><br><span class="line">float3 Kd = (<span class="number">1</span> - Ks) * (<span class="number">1</span>-Metallic);</span><br><span class="line">float3 Diffuse = Kd/PI * BaseColor ;</span><br><span class="line"></span><br><span class="line"><span class="comment">//高光反射部分</span></span><br><span class="line"><span class="built_in">float</span> D = D_GGXTR(NdotH, Roughness);</span><br><span class="line">float3 F = Ks;</span><br><span class="line"><span class="built_in">float</span> G = G_SmithG2_direct(NdotV,NdotL, Roughness);</span><br><span class="line">float3 Specular = D * F * G / <span class="number">4</span> * NdotV * NdotL;</span><br><span class="line"></span><br><span class="line">float3 DirectLightColor = (Diffuse + Specular) * mainLight.color * NdotL;</span><br></pre></td></tr></table></figure>
+
+<p>间接光照数量无限，计算间接光要使用积分，但是实时渲染中出于性能的考虑，通常使用预计算方法—— IBL（Image-Based Lighting）。</p>
+<p>Cook-Torrance 反射方程：<br>$$L_o(p,\omega_o) &#x3D; \int\limits_{\Omega} (k_d\frac{c}{\pi} + k_s\frac{DFG}{4(\omega_o \cdot n)(\omega_i \cdot n)}) L_i(p,\omega_i) n \cdot \omega_i d\omega_i$$ 将其拆开，分别为漫反射部分和高光反射部分：</p>
+<p>$$<br>\begin{aligned}L_o(p,\omega_o)&amp;&#x3D;\int_\Omega(k_d\frac{c}{\pi})L_i(p,\omega_i)n\cdot\omega_id\omega_i+\int_\Omega(k_s\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_i(p,\omega_i)n\cdot\omega_id\omega_i\end{aligned}<br>$$</p>
+<h2 id="间接光漫反射"><a href="#间接光漫反射" class="headerlink" title="间接光漫反射"></a>间接光漫反射</h2><p>间接光照的漫反射本质是对<strong>光照探针</strong>进行采样，得到 $L_i(p,\omega_i)$ 入射光辐射率<br>Unity 使用光照探针采样环境光照信息，用球谐函数存储。<br>得到 $L_i(p,\omega_i)$ 之后带入反射方程即可</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">float3 Ks_Ami = F_SchlickRoughness(NdotV, F0, Roughness);</span><br><span class="line">float3 Kd_Ami = (<span class="number">1</span> - Ks_Ami) * (<span class="number">1</span> - Metallic);</span><br><span class="line">float3 SHcolor = SampleSH(N); <span class="comment">//球谐函数计算环境光照Li</span></span><br><span class="line">float3 Diffuse_Ami = Kd_Ami/PI * BaseColor * SHcolor;</span><br></pre></td></tr></table></figure>
+<h2 id="间接光照的高光反射"><a href="#间接光照的高光反射" class="headerlink" title="间接光照的高光反射"></a>间接光照的高光反射</h2><p>间接光照的高光反射本质是对于<strong>反射探针</strong>生成的 CubeMap 进行采样。<br>用 <code>SplitSum</code> 算法将高光反射部分拆开为两部分：</p>
+<p>$$<br>\int_\Omega(k_s\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_i(p,\omega_i)n\cdot\omega_id\omega_i<br>$$<br>$$<br>&#x3D;\int_{\Omega}L_i(p,\omega_i)d\omega_i\cdot\int_{\Omega}(k_s\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})n\cdot\omega_id\omega_i<br>$$<br><strong>使用预过滤 IBL 计算第一部分（引擎中采样反射探针生成的 CubeMap，自带 7 级mipmap）</strong><br><strong>使用预计算 LUT 或数值拟合方法计算第二部分</strong></p>
+<h3 id="part1-预过滤-IBL"><a href="#part1-预过滤-IBL" class="headerlink" title="part1 预过滤 IBL"></a>part1 预过滤 IBL</h3><p>[[05 环境光照IBL#（1）预过滤IBL]]<br>使用反射探针捕获场景信息，存储在 CubeMap 中，7 级 mipmap。<br>采样得到 $L_i(p,\omega_i)$ 入射光辐射率</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//采样反射探针</span></span><br><span class="line">float3 R = reflect(-V, N);</span><br><span class="line"><span class="built_in">float</span> mipmapRoughness = Roughness*(<span class="number">1.7</span><span class="number">-0.7</span>*Roughness);</span><br><span class="line">float4 cubemapMipmap = SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0, sampler_unity_SpecCube0, R,mipmapRoughness*UNITY_SPECCUBE_LOD_STEPS);</span><br><span class="line"><span class="comment">// 根据材质的粗糙度,得到对应mip级别的预过滤环境贴图</span></span><br><span class="line">float3 EnvSpecularPrefilted = DecodeHDREnvironment(cubemapMipmap, unity_SpecCube0_HDR); <span class="comment">//得到Li</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="part2-预计算-LUT-实时数值拟合"><a href="#part2-预计算-LUT-实时数值拟合" class="headerlink" title="part2 预计算 LUT &#x2F;实时数值拟合"></a>part2 预计算 LUT &#x2F;实时数值拟合</h3><p>有两种方法，Unity 使用了数值拟合方法</p>
+<h4 id="BRDF-LUT"><a href="#BRDF-LUT" class="headerlink" title="BRDF LUT"></a>BRDF LUT</h4><p>将原公式结果离线生成出来。[[05 环境光照IBL#（2）预计算 BRDF LUT]]<br>LUT：Look Up Table  查找表<br>假设每个方向的入射光都是白色的 $L(p,x)&#x3D; 1.0$，就可以在给定粗糙度，光线 $\omega_i$ 法线 $N$ 夹角 $N·\omega_i$ 的情况，预计算 BRDF 的响应结果。以 x 轴的法线与入射光的夹角（NL01），以 Y 轴为粗糙度，将计算的结果存储在一张 2D 贴图上（lut），该帖图称为为<strong>BRDF 积分贴图</strong>。积分的结果分别储存在贴图的<strong>RG 通道</strong>中。使用的时候直接采样该帖图即可。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356011.png" alt="Pasted image 20221101234002|300"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356012.png" alt="Pasted image 20221101233948|450"></p>
+<blockquote>
+<p>参考： <a target="_blank" rel="noopener" href="https://www.gamedevs.org/uploads/real-shading-in-unreal-engine-4.pdf">https://www.gamedevs.org/uploads/real-shading-in-unreal-engine-4.pdf</a></p>
+</blockquote>
+<h4 id="数值拟合"><a href="#数值拟合" class="headerlink" title="数值拟合"></a>数值拟合</h4><p><strong>这里以使命召唤黑色行动 2 的函数拟合为例</strong><br>如果输出该 float2 值，会发现和 Lut 贴图很相似。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">float2 BRDF_Ami = AmiBRDFApprox(i.uv.y, i.uv.x);  </span><br><span class="line"><span class="keyword">return</span> <span class="built_in">pow</span>(float4(BRDF_Ami,<span class="number">0</span>,<span class="number">0</span>),<span class="number">2.2</span>);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356013.png" alt="Pasted image 20221102201016|300"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356014.png" alt="Pasted image 20221102143359"></p>
+<blockquote>
+<p>参考： <a target="_blank" rel="noopener" href="https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf">https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf</a></p>
+</blockquote>
+<h3 id="案例：PBR-头盔"><a href="#案例：PBR-头盔" class="headerlink" title="案例：PBR 头盔"></a>案例：PBR 头盔</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292356015.png" alt="Pasted image 20221102205521|450"></p>
+<h4 id="builtin-实现"><a href="#builtin-实现" class="headerlink" title="builtin 实现"></a>builtin 实现</h4><figure class="highlight c"><figcaption><span>fold title:builtin实现</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br></pre></td><td class="code"><pre><span class="line">Shader <span class="string">&quot;Unlit/MyHelmet&quot;</span></span><br><span class="line">&#123;</span><br><span class="line">    Properties</span><br><span class="line">    &#123;</span><br><span class="line">        _BRDFLUTTex (<span class="string">&quot;BRDFLUT&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">        _BaseColorTex (<span class="string">&quot;BaseColor&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">        _MetallicTex (<span class="string">&quot;Metallic&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">        _RoughnessTex (<span class="string">&quot;Roughness&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">        _EmissionTex (<span class="string">&quot;Emission&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">        [HDR]_EmissionColor(<span class="string">&quot;Emission Color&quot;</span>,Color)=(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>)</span><br><span class="line">        _NormalTex (<span class="string">&quot;Normal&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;black&quot;</span> &#123;&#125;</span><br><span class="line">        _AOTex (<span class="string">&quot;AO&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    SubShader</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//LightMode 设置为ForwardBase，否则ShadeSH9()会出错。</span></span><br><span class="line">        Tags &#123; <span class="string">&quot;RenderType&quot;</span>=<span class="string">&quot;Opaque&quot;</span> <span class="string">&quot;LightMode&quot;</span>=<span class="string">&quot;ForwardBase&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            CGPROGRAM</span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> vertex vert</span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> fragment frag</span></span><br><span class="line"></span><br><span class="line">            <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;UnityCG.cginc&quot;</span></span></span><br><span class="line">            <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;UnityGlobalIllumination.cginc&quot;</span> <span class="comment">//ShadeSH9()头文件</span></span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">struct</span> appdata</span><br><span class="line">            &#123;</span><br><span class="line">                float4 vertex : POSITION;</span><br><span class="line">                float2 uv : TEXCOORD0;</span><br><span class="line">                float3 normal : NORMAL;</span><br><span class="line">                float4 tangent : TANGENT;</span><br><span class="line">                </span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">v2f</span></span></span><br><span class="line"><span class="class">            &#123;</span></span><br><span class="line">                float4 pos : SV_POSITION;</span><br><span class="line">                float2 uv : TEXCOORD0;</span><br><span class="line">                float3 normal : TEXCOORD1;</span><br><span class="line">                float3 tangent : TEXCOORD2;</span><br><span class="line">                float3 bitangent : TEXCOORD3;</span><br><span class="line">                float3 worldPos : TEXCOORD4;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            sampler2D _MainTex;</span><br><span class="line">            float4 _MainTex_ST;</span><br><span class="line"></span><br><span class="line">            <span class="type">float</span>  _Value, _RangeValue;</span><br><span class="line">            float4 _Color, _BaseColor;</span><br><span class="line"></span><br><span class="line">            <span class="type">float</span> _Metallic, _Roughness;</span><br><span class="line">            sampler2D _BRDFLUTTex;</span><br><span class="line">            <span class="comment">// samplerCUBE _EnvCubeMap;</span></span><br><span class="line"></span><br><span class="line">            sampler2D _BaseColorTex, _MetallicTex, _RoughnessTex;</span><br><span class="line">            sampler2D _EmissionTex, _AOTex, _NormalTex;</span><br><span class="line">            float4 _EmissionColor;</span><br><span class="line">            </span><br><span class="line">            <span class="meta">#<span class="keyword">define</span> PI 3.14159265358979323846</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">/* D法线分布函数：GGX */</span></span><br><span class="line">            <span class="type">float</span> <span class="title function_">D_DistributionGGX</span><span class="params">(float3 N, float3 H, <span class="type">float</span> Roughness)</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="type">float</span> a = Roughness * Roughness;</span><br><span class="line">                <span class="type">float</span> a2 = a * a;  <span class="comment">//为什么取a的四次方，这里是参考的ue4，也可以使用a的二次方进行计算</span></span><br><span class="line">                <span class="type">float</span> NH =  max(<span class="number">0</span>, dot(N,H));</span><br><span class="line">                <span class="type">float</span> NH2 = NH * NH;</span><br><span class="line">                <span class="type">float</span> nominator = a2; <span class="comment">//分子</span></span><br><span class="line">                <span class="type">float</span> denominator = (NH2*(a2<span class="number">-1.0</span>)+<span class="number">1.0</span>);  <span class="comment">//分母</span></span><br><span class="line">                denominator = PI * denominator * denominator;  </span><br><span class="line">                <span class="keyword">return</span> nominator / max(<span class="number">0.00001</span>, denominator);  <span class="comment">//防止分母为0</span></span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">/* G几何（遮蔽）函数 ：Schlick-GGX + Smith */</span></span><br><span class="line">            <span class="comment">// G_SchlickGGX  </span></span><br><span class="line">            <span class="type">float</span> <span class="title function_">G_SchlickGGX</span><span class="params">(<span class="type">float</span> NV, <span class="type">float</span> Roughness)</span>  </span><br><span class="line">            &#123;  </span><br><span class="line">                <span class="type">float</span> a = Roughness + <span class="number">1.0</span>;  </span><br><span class="line">                <span class="type">float</span> k = a * a / <span class="number">8.0</span>;  <span class="comment">//直接光  </span></span><br><span class="line">                <span class="type">float</span> nominator = NV;  </span><br><span class="line">                <span class="type">float</span> denominator = NV * (<span class="number">1.0</span> - k) + k;  </span><br><span class="line">                </span><br><span class="line">                <span class="keyword">return</span> nominator / max(<span class="number">0.00001</span>, denominator); </span><br><span class="line">             &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// G_Smith  </span></span><br><span class="line">            <span class="type">float</span> <span class="title function_">G_Smith</span><span class="params">(float3 N, float3 V, float3 L, <span class="type">float</span> Roughness)</span>  </span><br><span class="line">            &#123;  </span><br><span class="line">                <span class="type">float</span> NV = max(<span class="number">0</span>, dot(N,V));  </span><br><span class="line">                <span class="type">float</span> NL = max(<span class="number">0</span>, dot(N,L)); </span><br><span class="line">                </span><br><span class="line">                <span class="type">float</span> GGX1 = G_SchlickGGX(NV, Roughness);  </span><br><span class="line">                <span class="type">float</span> GGX2 = G_SchlickGGX(NL,Roughness);  </span><br><span class="line">              </span><br><span class="line">                <span class="keyword">return</span> GGX1 * GGX2;  </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">/* F菲涅尔方程：Schlick近似  */</span></span><br><span class="line">            <span class="comment">// 直接光部分 NV或VH均可</span></span><br><span class="line">            float3 <span class="title function_">F_Schlick</span><span class="params">(<span class="type">float</span> VH,float3 F0)</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> F0 +(<span class="number">1.0</span> - F0)*<span class="built_in">pow</span>(<span class="number">1.0</span>-VH,<span class="number">5</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//间接光部分 只能使用NV并引入粗糙度</span></span><br><span class="line">            float3 <span class="title function_">F_SchlickRoughness</span><span class="params">(<span class="type">float</span> NV,float3 F0,<span class="type">float</span> Roughness)</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="type">float</span> smoothness = <span class="number">1.0</span> - Roughness;</span><br><span class="line">                <span class="keyword">return</span> F0 + (max(smoothness.xxx, F0) - F0) * <span class="built_in">pow</span>(<span class="number">1.0</span> - NV, <span class="number">5.0</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">/* 数值拟合 */</span></span><br><span class="line">            <span class="comment">// 使命召唤黑色行动2 的函数拟合</span></span><br><span class="line">            <span class="comment">// float2 AmiBRDFApprox(float Roughness, float NV)</span></span><br><span class="line">            <span class="comment">// &#123;</span></span><br><span class="line">            <span class="comment">//     float g = 1 -Roughness;</span></span><br><span class="line">            <span class="comment">//     float4 t = float4(1/0.96, 0.475, (0.0275 - 0.25*0.04)/0.96, 0.25);</span></span><br><span class="line">            <span class="comment">//     t *= float4(g, g, g, g);</span></span><br><span class="line">            <span class="comment">//     t += float4(0, 0, (0.015 - 0.75*0.04)/0.96, 0.75);</span></span><br><span class="line">            <span class="comment">//     float A = t.x * min(t.y, exp2(-9.28 * NV)) + t.z;</span></span><br><span class="line">            <span class="comment">//     float B = t.w;</span></span><br><span class="line">            <span class="comment">//     return float2 ( t.w-A,A);</span></span><br><span class="line">            <span class="comment">// &#125;</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">// UE4 在黑色行动2 上的修改版本</span></span><br><span class="line">            float2 <span class="title function_">AmiBRDFApprox</span><span class="params">(<span class="type">float</span> Roughness, <span class="type">float</span> NoV )</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// [ Lazarov 2013, &quot;Getting More Physical in Call of Duty: Black Ops II&quot; ]</span></span><br><span class="line">                <span class="comment">// Adaptation to fit our G term.</span></span><br><span class="line">                <span class="type">const</span> float4 c0 = &#123; <span class="number">-1</span>, <span class="number">-0.0275</span>, <span class="number">-0.572</span>, <span class="number">0.022</span> &#125;;</span><br><span class="line">                <span class="type">const</span> float4 c1 = &#123; <span class="number">1</span>, <span class="number">0.0425</span>, <span class="number">1.04</span>, <span class="number">-0.04</span> &#125;;</span><br><span class="line">                float4 r = Roughness * c0 + c1;<span class="comment">//mad:multiply add</span></span><br><span class="line">                <span class="type">float</span> a004 = min( r.x * r.x, exp2( <span class="number">-9.28</span> * NoV ) ) * r.x + r.y;<span class="comment">//mad</span></span><br><span class="line">                float2 AB = float2( <span class="number">-1.04</span>, <span class="number">1.04</span> ) * a004 + r.zw;<span class="comment">//mad</span></span><br><span class="line">                <span class="keyword">return</span> AB;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">/* 色调映射 ToneMapping */</span></span><br><span class="line">            float3 <span class="title function_">ACESToneMapping</span><span class="params">(float3 x)</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="type">float</span> a = <span class="number">2.51f</span>;</span><br><span class="line">                <span class="type">float</span> b = <span class="number">0.03f</span>;</span><br><span class="line">                <span class="type">float</span> c = <span class="number">2.43f</span>;</span><br><span class="line">                <span class="type">float</span> d = <span class="number">0.59f</span>;</span><br><span class="line">                <span class="type">float</span> e = <span class="number">0.14f</span>;</span><br><span class="line">                <span class="keyword">return</span> saturate((x*(a*x+b))/(x*(c*x+d)+e));</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            float4 <span class="title function_">ACESToneMapping</span><span class="params">(float4 x)</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="type">float</span> a = <span class="number">2.51f</span>;</span><br><span class="line">                <span class="type">float</span> b = <span class="number">0.03f</span>;</span><br><span class="line">                <span class="type">float</span> c = <span class="number">2.43f</span>;</span><br><span class="line">                <span class="type">float</span> d = <span class="number">0.59f</span>;</span><br><span class="line">                <span class="type">float</span> e = <span class="number">0.14f</span>;</span><br><span class="line">                <span class="keyword">return</span> saturate((x*(a*x+b))/(x*(c*x+d)+e));</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            v2f <span class="title function_">vert</span> <span class="params">(appdata v)</span></span><br><span class="line">            &#123;</span><br><span class="line">                v2f o;</span><br><span class="line">                o.pos = UnityObjectToClipPos(v.vertex);</span><br><span class="line">                o.uv = v.uv;</span><br><span class="line">                o.normal = UnityObjectToWorldNormal(v.normal);</span><br><span class="line">                o.tangent = UnityObjectToWorldDir(v.tangent);</span><br><span class="line">                o.bitangent = normalize(cross(o.normal, o.tangent) * v.tangent.w);</span><br><span class="line">                o.worldPos = mul(unity_ObjectToWorld, v.vertex);</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">return</span> o;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line">            fixed4 <span class="title function_">frag</span> <span class="params">(v2f i)</span> : SV_Target</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// 纹理采样</span></span><br><span class="line">                float3 BaseColor = tex2D(_BaseColorTex, i.uv);</span><br><span class="line">                float3 NormalMap = UnpackNormal(tex2D(_NormalTex,i.uv));</span><br><span class="line">                <span class="type">float</span> Roughness = tex2D(_RoughnessTex, i.uv).r;</span><br><span class="line">                <span class="type">float</span> Metallic = tex2D(_MetallicTex, i.uv).r;</span><br><span class="line">                float3 Emission = tex2D(_EmissionTex, i.uv);</span><br><span class="line">                float3 AO = tex2D(_AOTex, i.uv);</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 变量准备</span></span><br><span class="line">                float3 L = normalize(UnityWorldSpaceLightDir(i.worldPos));</span><br><span class="line">                float3 V = normalize(UnityWorldSpaceViewDir(i.worldPos));</span><br><span class="line">                float3 H = normalize(L + V);</span><br><span class="line">                float3x3 TBN = float3x3(i.tangent, i.bitangent, i.normal);</span><br><span class="line">                float3 N = normalize(mul(NormalMap, TBN));</span><br><span class="line">                </span><br><span class="line">                <span class="type">float</span> VH = max(<span class="number">0</span>, dot(V, H));</span><br><span class="line">                <span class="type">float</span> NV = max(<span class="number">0</span>, dot(N, V));</span><br><span class="line">                <span class="type">float</span> NL = max(<span class="number">0</span>,dot(N,L));</span><br><span class="line">                </span><br><span class="line">                float3 F0 = lerp(<span class="number">0.04</span>, BaseColor, Metallic); <span class="comment">//Fresnel F0：插值区分非金属和金属不同的F0值，非金属的FO数值较小，金属FO的数值较大</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">/*  直接光（主光） */</span></span><br><span class="line">                <span class="comment">// Cook-Torrance BRDF</span></span><br><span class="line">                <span class="comment">// 漫反射部分</span></span><br><span class="line">                float3 Ks = F_Schlick(VH, F0); <span class="comment">//菲涅尔描述了光被反射的比例</span></span><br><span class="line">                float3 Kd = (<span class="number">1</span>-Ks) * (<span class="number">1</span> - Metallic);</span><br><span class="line">                float3 Diffuse = Kd * BaseColor / PI; </span><br><span class="line">                <span class="comment">//float3 Diffuse = Kd * BaseColor; //unity内置的PBR没有除以 PI, 颜色亮一些</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 高光反射部分</span></span><br><span class="line">                <span class="type">float</span> D = D_DistributionGGX(N, H, Roughness);</span><br><span class="line">                float3 F = Ks; </span><br><span class="line">                <span class="type">float</span> G = G_Smith(N, V, L, Roughness);</span><br><span class="line">                float3 Specular = D * F * G / max(<span class="number">0.0001</span>, <span class="number">4</span> * NV * NL);</span><br><span class="line"></span><br><span class="line">                float3 DirectLightColor = (Diffuse + Specular) * NL * _LightColor0.rgb; <span class="comment">//NL在这里起到了阴影贴图的作用，背光处变暗</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">/*  间接光（环境光ambient） */</span></span><br><span class="line">                <span class="comment">// 漫反射部分</span></span><br><span class="line">                float3 Ks_Ami = F_SchlickRoughness(NV, F0, Roughness);</span><br><span class="line">                float3 Kd_Ami = (<span class="number">1</span> - Ks_Ami) * (<span class="number">1</span> - Metallic);</span><br><span class="line">                float3 irradiance =  ShadeSH9(float4(N, <span class="number">1</span>));  <span class="comment">// 球谐函数</span></span><br><span class="line">                float3 Diffuse_Ami = irradiance * BaseColor * Kd_Ami / PI;</span><br><span class="line">                <span class="comment">//float3 Diffuse_Ami = irradiance * BaseColor * Kd_Ami; //没有除以 PI</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 高光反射部分</span></span><br><span class="line">                float3 F_Ami = Ks_Ami;</span><br><span class="line">                <span class="comment">// PartOne</span></span><br><span class="line">                float3 R = reflect(-V, N);</span><br><span class="line">                <span class="comment">//UNITY_SPECCUBE_LOD_STEPS在&quot;UnityStandardConfig.cginc&quot;中// #define UNITY_SPECCUBE_LOD_STEPS (6)</span></span><br><span class="line">                <span class="comment">//根据材质的粗糙度，映射到某个粗糙度区间，然后把计算结果保存到不同的LOD等级中(Unity默认6级)</span></span><br><span class="line">                <span class="type">float</span> mip = Roughness * (<span class="number">1.7</span> - <span class="number">0.7</span> * Roughness) * UNITY_SPECCUBE_LOD_STEPS;</span><br><span class="line">                <span class="comment">// 得到预过滤环境贴图 pre-filtered environment map</span></span><br><span class="line">                float4 rgb_mip = UNITY_SAMPLE_TEXCUBE_LOD(unity_SpecCube0, R, mip);</span><br><span class="line">                <span class="comment">// 采样：光滑的地方采样清晰，粗造的地方采样模糊</span></span><br><span class="line">                float3 preFilteredEnvironmentMap = DecodeHDR(rgb_mip,unity_SpecCube0_HDR);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// PartTwo</span></span><br><span class="line">                <span class="comment">//LUT采样</span></span><br><span class="line">                <span class="comment">//float2 env_brdf = tex2D(_BRDFLUTTex, float2(NV, Roughness)).rg; //0.356</span></span><br><span class="line">                <span class="comment">//float2 env_brdf = tex2D(_BRDFLUTTex, float2(lerp(0, 0.99, NV), lerp(0, 0.99, Roughness))).rg;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 数值拟合</span></span><br><span class="line">                float2 BRDF_Ami = AmiBRDFApprox(Roughness, NV);</span><br><span class="line">                <span class="comment">// float2 BRDF_Ami = AmiBRDFApprox(i.uv.y,i.uv.x);</span></span><br><span class="line">                <span class="comment">//  return pow(float4(BRDF_Ami,0,0),2.2);</span></span><br><span class="line">                </span><br><span class="line">                float3 Specular_Ami = preFilteredEnvironmentMap  * (F_Ami * BRDF_Ami.r + BRDF_Ami.g);</span><br><span class="line"></span><br><span class="line">                float3 AmbientLightColor = (Diffuse_Ami + Specular_Ami) * AO;</span><br><span class="line"></span><br><span class="line">                <span class="comment">/*  颜色混合 */</span></span><br><span class="line">                float3 FinalColor = DirectLightColor + AmbientLightColor + (Emission * _EmissionColor);</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">return</span> float4(FinalColor,<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            ENDCG</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="URP-实现"><a href="#URP-实现" class="headerlink" title="URP 实现"></a>URP 实现</h4><figure class="highlight c"><figcaption><span>fold title:URP</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br></pre></td><td class="code"><pre><span class="line">Shader <span class="string">&quot;Custom/PBR&quot;</span></span><br><span class="line">&#123;</span><br><span class="line">    Properties</span><br><span class="line">    &#123;</span><br><span class="line">        _BaseColorTex (<span class="string">&quot;BaseColor&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">        _MetallicTex (<span class="string">&quot;Metallic&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">        _RoughnessTex (<span class="string">&quot;Roughness&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">        _EmissionTex (<span class="string">&quot;Emission&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">        [HDR]_EmissionColor(<span class="string">&quot;Emission Color&quot;</span>,Color)=(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>)</span><br><span class="line">        [Normal] _NormalMap(<span class="string">&quot;NormalMap&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;bump&quot;</span> &#123;&#125;</span><br><span class="line">        _NormalScale(<span class="string">&quot;NormalScale&quot;</span>, Float) = <span class="number">1</span></span><br><span class="line">        _AOTex (<span class="string">&quot;AO&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">        _BRDFLUTTex (<span class="string">&quot;BRDFLUT&quot;</span>, <span class="number">2</span>D) = <span class="string">&quot;white&quot;</span> &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    HLSLINCLUDE</span><br><span class="line">    <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl&quot;</span></span></span><br><span class="line">    <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Packages/com.unity.render-pipelines.universal/ShaderLibrary/lighting.hlsl&quot;</span></span></span><br><span class="line">    <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;CookTorrance.hlsl&quot;</span></span></span><br><span class="line"></span><br><span class="line">    CBUFFER_START(UnityPerMaterial)</span><br><span class="line">    float4 _BaseColorTex_ST;</span><br><span class="line">    <span class="type">float</span> _NormalScale;</span><br><span class="line">    float4 _EmissionColor;</span><br><span class="line">    CBUFFER_END</span><br><span class="line"></span><br><span class="line">    <span class="title function_">TEXTURE2D</span><span class="params">(_BaseColorTex)</span>;</span><br><span class="line">    SAMPLER(sampler_BaseColorTex);</span><br><span class="line">    TEXTURE2D(_MetallicTex);</span><br><span class="line">    SAMPLER(sampler_MetallicTex);</span><br><span class="line">    TEXTURE2D(_RoughnessTex);</span><br><span class="line">    SAMPLER(sampler_RoughnessTex);</span><br><span class="line">    TEXTURE2D(_EmissionTex);</span><br><span class="line">    SAMPLER(sampler_EmissionTex);</span><br><span class="line">    TEXTURE2D(_NormalMap);</span><br><span class="line">    SAMPLER(sampler_NormalMap);</span><br><span class="line">    TEXTURE2D(_AOTex);</span><br><span class="line">    SAMPLER(sampler_AOTex);</span><br><span class="line">    TEXTURE2D(_BRDFLUTTex);</span><br><span class="line">    SAMPLER(sampler_BRDFLUTTex);</span><br><span class="line">    SAMPLER(sampler_unity_SpecCube0);</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Attributes</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">        float4 positionOS : POSITION;</span><br><span class="line">        float4 color : COLOR;</span><br><span class="line">        float3 normalOS : NORMAL;</span><br><span class="line">        float4 tangentOS : TANGENT;</span><br><span class="line">        float2 uv : TEXCOORD0;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Varyings</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">        float4 positionCS : SV_POSITION;</span><br><span class="line">        float4 color : COLOR0;</span><br><span class="line">        float2 uv : TEXCOORD0;</span><br><span class="line">        float3 positionWS: TEXCOORD1;</span><br><span class="line">        float3 normalWS : TEXCOORD2;</span><br><span class="line">        float4 tangentWS : TEXCOORD3;</span><br><span class="line">        float3 bitangentWS : TEXCOORD4;</span><br><span class="line">        float3 viewDirWS : TEXCOORD5;</span><br><span class="line">    &#125;;</span><br><span class="line">    ENDHLSL</span><br><span class="line"></span><br><span class="line">    SubShader</span><br><span class="line">    &#123;</span><br><span class="line">        Tags</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;RenderPipeline&quot;</span> = <span class="string">&quot;UniversalPipeline&quot;</span></span><br><span class="line">            <span class="string">&quot;RenderType&quot;</span>=<span class="string">&quot;Opaque&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            Tags</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">&quot;LightMode&quot;</span>=<span class="string">&quot;UniversalForward&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            HLSLPROGRAM</span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> vertex vert</span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> fragment frag</span></span><br><span class="line"></span><br><span class="line">            Varyings vert(Attributes i)</span><br><span class="line">            &#123;</span><br><span class="line">                Varyings o = (Varyings)<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">                o.positionCS = TransformObjectToHClip(i.positionOS.xyz);</span><br><span class="line">                o.uv = i.uv.xy * _BaseColorTex_ST.xy + _BaseColorTex_ST.zw;</span><br><span class="line">                o.positionWS = TransformObjectToWorld(i.positionOS.xyz);</span><br><span class="line">                o.normalWS = TransformObjectToWorldNormal(i.normalOS);</span><br><span class="line">                o.tangentWS.xyz = TransformObjectToWorldDir(i.tangentOS.xyz);</span><br><span class="line">                o.viewDirWS = normalize(_WorldSpaceCameraPos.xyz - o.positionWS);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">return</span> o;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            float4 <span class="title function_">frag</span><span class="params">(Varyings i)</span> : SV_Target</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//主光源</span></span><br><span class="line">                Light mainLight = GetMainLight();</span><br><span class="line"></span><br><span class="line">                <span class="comment">//纹理采样</span></span><br><span class="line">                float3 BaseColor = SAMPLE_TEXTURE2D(_BaseColorTex, sampler_BaseColorTex, i.uv);</span><br><span class="line">                float3 normalMap = UnpackNormalScale(</span><br><span class="line">                    SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, i.uv), _NormalScale);</span><br><span class="line">                <span class="type">float</span> Roughness = SAMPLE_TEXTURE2D(_RoughnessTex, sampler_RoughnessTex, i.uv).r;</span><br><span class="line">                <span class="type">float</span> Metallic = SAMPLE_TEXTURE2D(_MetallicTex, sampler_MetallicTex, i.uv).r;</span><br><span class="line">                float3 Emission = SAMPLE_TEXTURE2D(_EmissionTex, sampler_EmissionTex, i.uv);</span><br><span class="line">                <span class="type">float</span> AO = SAMPLE_TEXTURE2D(_AOTex, sampler_AOTex, i.uv).r;</span><br><span class="line"></span><br><span class="line">                <span class="comment">//变量准备</span></span><br><span class="line">                float3x3 TBN = CreateTangentToWorld(i.normalWS, i.tangentWS.xyz, i.tangentWS.w);</span><br><span class="line">                float3 N = TransformTangentToWorld(normalMap, TBN, <span class="literal">true</span>);</span><br><span class="line">                float3 L = normalize(mainLight.direction);</span><br><span class="line">                float3 V = normalize(i.viewDirWS);</span><br><span class="line">                float3 H = normalize(L + V);</span><br><span class="line">                <span class="type">float</span> NdotL = max(<span class="number">0</span>,dot(N, L));</span><br><span class="line">                <span class="type">float</span> NdotH = max(<span class="number">0</span>,dot(N, H));</span><br><span class="line">                <span class="type">float</span> NdotV = max(<span class="number">0</span>,dot(N, V));</span><br><span class="line">                <span class="type">float</span> VdotH = max(<span class="number">0</span>,dot(V, H));</span><br><span class="line">                <span class="type">float</span> F0 = lerp(<span class="number">0.04</span>, BaseColor, Metallic); <span class="comment">//Fresnel F0：插值区分非金属和金属不同的F0值，非金属的FO数值较小，金属FO的数值较大</span></span><br><span class="line">                <span class="comment">/* Cook-Torrance BRDF */</span></span><br><span class="line">                <span class="comment">/* 直接光 */</span></span><br><span class="line">                <span class="comment">//漫反射部分</span></span><br><span class="line">                float3 Ks = F_FresnelSchlick(VdotH, F0); <span class="comment">//菲涅尔项描述了光被反射的比例</span></span><br><span class="line">                float3 Kd = (<span class="number">1</span> - Ks) * (<span class="number">1</span>-Metallic);</span><br><span class="line">                float3 Diffuse = Kd/PI * BaseColor ;</span><br><span class="line">                <span class="comment">//float3 Diffuse = Kd * BaseColor; //unity内置的PBR没有除以 PI, 颜色亮一些</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">//高光反射部分</span></span><br><span class="line">                <span class="type">float</span> D = D_GGXTR(NdotH, Roughness);</span><br><span class="line">                float3 F = Ks;</span><br><span class="line">                <span class="type">float</span> G = G_SmithG2_direct(NdotV,NdotL, Roughness);</span><br><span class="line">                float3 Specular = D * F * G / <span class="number">4</span> * NdotV * NdotL;</span><br><span class="line">                </span><br><span class="line">                float3 DirectLightColor = (Diffuse + Specular) * mainLight.color * NdotL;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">/* 间接光 */</span></span><br><span class="line">                <span class="comment">// 漫反射部分</span></span><br><span class="line">                float3 Ks_Ami = F_SchlickRoughness(NdotV, F0, Roughness);</span><br><span class="line">                float3 Kd_Ami = (<span class="number">1</span> - Ks_Ami) * (<span class="number">1</span> - Metallic);</span><br><span class="line">                float3 SHcolor = SampleSH(N); <span class="comment">//球谐函数计算环境光照Li</span></span><br><span class="line">                float3 Diffuse_Ami = Kd_Ami/PI * BaseColor * SHcolor;</span><br><span class="line">                <span class="comment">//float3 Diffuse_Ami = Kd_Ami * BaseColor * irradiance; //unity内置的PBR没有除以 PI, 颜色亮一些</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 高光反射部分</span></span><br><span class="line">                float3 F_Ami = Ks_Ami;</span><br><span class="line">                <span class="comment">//Part One</span></span><br><span class="line">                <span class="comment">//采样反射探针</span></span><br><span class="line">                float3 R = reflect(-V, N);</span><br><span class="line">                <span class="type">float</span> mipmapRoughness = Roughness*(<span class="number">1.7</span><span class="number">-0.7</span>*Roughness);</span><br><span class="line">                float4 cubemapMipmap = SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0, sampler_unity_SpecCube0, R,mipmapRoughness*UNITY_SPECCUBE_LOD_STEPS);</span><br><span class="line">                <span class="comment">// 根据材质的粗糙度,得到对应mip级别的预过滤环境贴图</span></span><br><span class="line">                float3 EnvSpecularPrefilted = DecodeHDREnvironment(cubemapMipmap, unity_SpecCube0_HDR); <span class="comment">//得到Li</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">//Part Two</span></span><br><span class="line">                <span class="comment">//LUT采样</span></span><br><span class="line">                <span class="comment">//float2 env_brdf = tex2D(_BRDFLUTTex, float2(NV, Roughness)).rg; //0.356</span></span><br><span class="line">                <span class="comment">//float2 env_brdf = tex2D(_BRDFLUTTex, float2(lerp(0, 0.99, NV), lerp(0, 0.99, Roughness))).rg;</span></span><br><span class="line"></span><br><span class="line">                <span class="comment">//数值拟合</span></span><br><span class="line">                float2 BRDF_Ami = AmiBRDFApprox(Roughness, NdotV);</span><br><span class="line">                </span><br><span class="line">                float3 Specular_Ami = EnvSpecularPrefilted * (F_Ami * BRDF_Ami.r + BRDF_Ami.g);</span><br><span class="line">                </span><br><span class="line">                float3 AmbientLightColor = (Diffuse_Ami + Specular_Ami) * AO;</span><br><span class="line">                float3 finalColor = DirectLightColor + AmbientLightColor + (Emission * _EmissionColor);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">return</span> float4(finalColor, <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            ENDHLSL</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight c"><figcaption><span>fold title:CookTorrance.hlsl</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> COOKTORRANCE_BRDF</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> COOKTORRANCE_BRDF</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PI 3.14159265358979323846</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//D法线分布函数：GGX/TR</span></span><br><span class="line"><span class="type">float</span> <span class="title function_">D_GGXTR</span><span class="params">(<span class="type">float</span> NdotH, <span class="type">float</span> Roughness)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">float</span> a2 = Roughness * Roughness;</span><br><span class="line">    <span class="type">float</span> NdotH2 = NdotH * NdotH;</span><br><span class="line"></span><br><span class="line">    <span class="type">float</span> nominator = a2; <span class="comment">//分子</span></span><br><span class="line">    <span class="type">float</span> denominator = NdotH2 * (a2 - <span class="number">1</span>) + <span class="number">1</span>; <span class="comment">//分母</span></span><br><span class="line">    denominator = denominator * denominator * PI; </span><br><span class="line">    <span class="keyword">return</span> nominator / denominator; <span class="comment">//防止分母为0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//F菲涅尔方程：Schlick近似</span></span><br><span class="line"><span class="comment">//直接光部分 NV或VH均可</span></span><br><span class="line">float3 <span class="title function_">F_FresnelSchlick</span><span class="params">(<span class="type">float</span> VdotH, float3 F0)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> F0 + (<span class="number">1.0</span> - F0) * <span class="built_in">pow</span>(<span class="number">1.0f</span> - VdotH, <span class="number">5.0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//间接光部分 只能使用NV并引入粗糙度</span></span><br><span class="line">float3 <span class="title function_">F_SchlickRoughness</span><span class="params">(<span class="type">float</span> NdotV,float3 F0,<span class="type">float</span> Roughness)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">float</span> smoothness = <span class="number">1.0</span> - Roughness;</span><br><span class="line">    <span class="keyword">return</span> F0 + (max(smoothness.xxx, F0) - F0) * <span class="built_in">pow</span>(<span class="number">1.0</span> - NdotV, <span class="number">5.0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//G几何遮蔽函数:Schlick-GGX + SmithG2</span></span><br><span class="line"><span class="type">float</span> <span class="title function_">G_SchlickGGX</span><span class="params">(<span class="type">float</span> NdotV, <span class="type">float</span> k)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">float</span> noninator = NdotV;</span><br><span class="line">    <span class="type">float</span> denominator = NdotV * (<span class="number">1</span> - k) + k;</span><br><span class="line">    <span class="keyword">return</span> noninator / denominator;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">float</span> <span class="title function_">G_SmithG2_direct</span><span class="params">(<span class="type">float</span> NdotV,<span class="type">float</span> NdotL,<span class="type">float</span> Roughness)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">float</span> k = (<span class="number">1</span>+Roughness)*(<span class="number">1</span>+Roughness)/<span class="number">8</span>;</span><br><span class="line">    <span class="type">float</span> G1 = G_SchlickGGX(NdotV, k); <span class="comment">//观察方向的几何遮挡</span></span><br><span class="line">    <span class="type">float</span> G2 = G_SchlickGGX(NdotL, k); <span class="comment">//光源方向的几何阴影</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> G1*G2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">float</span> <span class="title function_">G_SmithG2_IBL</span><span class="params">(<span class="type">float</span> NdotV,<span class="type">float</span> NdotL,<span class="type">float</span> Roughness)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">float</span> k = Roughness*Roughness/<span class="number">2</span>;</span><br><span class="line">    <span class="type">float</span> G1 = G_SchlickGGX(NdotV, k); <span class="comment">//观察方向的几何遮挡</span></span><br><span class="line">    <span class="type">float</span> G2 = G_SchlickGGX(NdotL, k); <span class="comment">//光源方向的几何阴影</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> G1*G2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 数值拟合 */</span></span><br><span class="line"><span class="comment">// 使命召唤黑色行动2 的函数拟合</span></span><br><span class="line"><span class="comment">// float2 AmiBRDFApprox(float Roughness, float NV)</span></span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//     float g = 1 -Roughness;</span></span><br><span class="line"><span class="comment">//     float4 t = float4(1/0.96, 0.475, (0.0275 - 0.25*0.04)/0.96, 0.25);</span></span><br><span class="line"><span class="comment">//     t *= float4(g, g, g, g);</span></span><br><span class="line"><span class="comment">//     t += float4(0, 0, (0.015 - 0.75*0.04)/0.96, 0.75);</span></span><br><span class="line"><span class="comment">//     float A = t.x * min(t.y, exp2(-9.28 * NV)) + t.z;</span></span><br><span class="line"><span class="comment">//     float B = t.w;</span></span><br><span class="line"><span class="comment">//     return float2 ( t.w-A,A);</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">            </span><br><span class="line"><span class="comment">// UE4 在黑色行动2 上的修改版本</span></span><br><span class="line">float2 <span class="title function_">AmiBRDFApprox</span><span class="params">(<span class="type">float</span> Roughness, <span class="type">float</span> NoV)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// [ Lazarov 2013, &quot;Getting More Physical in Call of Duty: Black Ops II&quot; ]</span></span><br><span class="line">    <span class="comment">// Adaptation to fit our G term.</span></span><br><span class="line">    <span class="type">const</span> float4 c0 = &#123; <span class="number">-1</span>, <span class="number">-0.0275</span>, <span class="number">-0.572</span>, <span class="number">0.022</span> &#125;;</span><br><span class="line">    <span class="type">const</span> float4 c1 = &#123; <span class="number">1</span>, <span class="number">0.0425</span>, <span class="number">1.04</span>, <span class="number">-0.04</span> &#125;;</span><br><span class="line">    float4 r = Roughness * c0 + c1;<span class="comment">//mad:multiply add</span></span><br><span class="line">    <span class="type">float</span> a004 = min( r.x * r.x, exp2( <span class="number">-9.28</span> * NoV ) ) * r.x + r.y;<span class="comment">//mad</span></span><br><span class="line">    float2 AB = float2( <span class="number">-1.04</span>, <span class="number">1.04</span> ) * a004 + r.zw;<span class="comment">//mad</span></span><br><span class="line">    <span class="keyword">return</span> AB;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/19081.html">http://liuke101.github.io/post/19081.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292357277.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/6103.html" title="辐射度量学"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292355395.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">辐射度量学</div></div></a></div><div class="next-post pull-right"><a href="/post/38389.html" title="路径追踪"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300000048.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">路径追踪</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/56109.html" title="【图形系统03】光照模型"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292308147.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统03】光照模型</div></div></a></div><div><a href="/post/61142.html" title="【图形系统01】渲染管线"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292307876.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统01】渲染管线</div></div></a></div><div><a href="/post/18856.html" title="【图形系统04】纹理"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292315854.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统04】纹理</div></div></a></div><div><a href="/post/18785.html" title="【图形系统02】光栅化"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292307530.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统02】光栅化</div></div></a></div><div><a href="/post/60368.html" title="【图形系统05】模板测试"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292323410.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统05】模板测试</div></div></a></div><div><a href="/post/33842.html" title="【图形系统07】混合和剔除"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292331423.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【图形系统07】混合和剔除</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">文章主要迁移自个人的obsidian仓库，存在部分md语法冲突，导致显示异常，暂未修复...</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-PBR-%E5%9F%BA%E7%A1%80%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA"><span class="toc-text">1 PBR 基础基础理论</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E8%A1%A8%E9%9D%A2%E7%90%86%E8%AE%BA"><span class="toc-text">微表面理论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%BD%E9%87%8F%E5%AE%88%E6%81%92"><span class="toc-text">能量守恒</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E6%96%B9%E7%A8%8B%E5%92%8C%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B"><span class="toc-text">渲染方程和反射方程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E5%90%91%E5%8F%8D%E5%B0%84%E5%88%86%E5%B8%83%E5%87%BD%E6%95%B0%EF%BC%88BRDF%EF%BC%89"><span class="toc-text">双向反射分布函数（BRDF）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1"><span class="toc-text">数学建模</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cook-Torrance-BRDF"><span class="toc-text">Cook-Torrance BRDF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#D%EF%BC%9AGGX-TR"><span class="toc-text">D：GGX&#x2F;TR</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#F%EF%BC%9AFresnel-Schlick"><span class="toc-text">F：Fresnel-Schlick</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#G%EF%BC%9ASchlick-GGX-Smith-G2"><span class="toc-text">G：Schlick-GGX+ Smith G2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cook-Torrance-%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B"><span class="toc-text">Cook-Torrance 反射方程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%83%BD%E9%87%8F%E8%A1%A5%E5%81%BF%E9%A1%B9"><span class="toc-text">能量补偿项</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BxDF"><span class="toc-text">BxDF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Disney"><span class="toc-text">Disney</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96-DFG"><span class="toc-text">其他 DFG</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%95%E7%BA%BF%E5%88%86%E5%B8%83%E5%87%BD%E6%95%B0-D"><span class="toc-text">法线分布函数 D</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Beckmann"><span class="toc-text">Beckmann</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GGX"><span class="toc-text">GGX</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GTR"><span class="toc-text">GTR</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8F%B2%E6%B6%85%E5%B0%94%E9%A1%B9-F"><span class="toc-text">菲涅尔项 F</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%A0%E4%BD%95%E5%87%BD%E6%95%B0-G"><span class="toc-text">几何函数 G</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-PBR-%E6%89%A9%E5%B1%95"><span class="toc-text">2 PBR 扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#LTC-%E5%A4%9A%E8%BE%B9%E5%BD%A2%E5%85%89%E6%BA%90%E6%B8%B2%E6%9F%93"><span class="toc-text">LTC 多边形光源渲染</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Disney%E2%80%99s-principle-BRDF"><span class="toc-text">Disney’s principle BRDF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E6%96%B9%E7%A8%8B%E4%B8%8D%E7%AD%89%E5%BC%8F%E8%BF%91%E4%BC%BC"><span class="toc-text">渲染方程不等式近似</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-PBR-%E5%AE%9E%E7%8E%B0"><span class="toc-text">3 PBR 实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%B4%E6%8E%A5%E5%85%89%E6%BC%AB%E5%8F%8D%E5%B0%84"><span class="toc-text">间接光漫反射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%B4%E6%8E%A5%E5%85%89%E7%85%A7%E7%9A%84%E9%AB%98%E5%85%89%E5%8F%8D%E5%B0%84"><span class="toc-text">间接光照的高光反射</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#part1-%E9%A2%84%E8%BF%87%E6%BB%A4-IBL"><span class="toc-text">part1 预过滤 IBL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#part2-%E9%A2%84%E8%AE%A1%E7%AE%97-LUT-%E5%AE%9E%E6%97%B6%E6%95%B0%E5%80%BC%E6%8B%9F%E5%90%88"><span class="toc-text">part2 预计算 LUT &#x2F;实时数值拟合</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BRDF-LUT"><span class="toc-text">BRDF LUT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E5%80%BC%E6%8B%9F%E5%90%88"><span class="toc-text">数值拟合</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%EF%BC%9APBR-%E5%A4%B4%E7%9B%94"><span class="toc-text">案例：PBR 头盔</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#builtin-%E5%AE%9E%E7%8E%B0"><span class="toc-text">builtin 实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#URP-%E5%AE%9E%E7%8E%B0"><span class="toc-text">URP 实现</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/64863.html" title="全局光照GI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300005318.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="全局光照GI"/></a><div class="content"><a class="title" href="/post/64863.html" title="全局光照GI">全局光照GI</a><time datetime="2024-04-29T23:06:00.000Z" title="发表于 2024-04-30 00:06:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/55802.html" title="环境光照IBL"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300003151.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="环境光照IBL"/></a><div class="content"><a class="title" href="/post/55802.html" title="环境光照IBL">环境光照IBL</a><time datetime="2024-04-29T23:03:00.000Z" title="发表于 2024-04-30 00:03:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/49886.html" title="光线追踪理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292358872.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="光线追踪理论"/></a><div class="content"><a class="title" href="/post/49886.html" title="光线追踪理论">光线追踪理论</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/38389.html" title="路径追踪"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300000048.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="路径追踪"/></a><div class="content"><a class="title" href="/post/38389.html" title="路径追踪">路径追踪</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/19081.html" title="PBR理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292357277.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PBR理论"/></a><div class="content"><a class="title" href="/post/19081.html" title="PBR理论">PBR理论</a><time datetime="2024-04-29T22:57:00.000Z" title="发表于 2024-04-29 23:57:00">2024-04-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292357277.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>

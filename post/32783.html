@@ -1,0 +1,665 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【公式推导03】光照向量 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="[!NOTE] 约定本文用列向量&#x2F;右手坐标系进行说明以及推导。若需转换到行向量&#x2F;左手坐标系，需要对变换矩阵做转置  法线法线分类当一个模型有很多凹凸细节时，模型的顶点网格会很密（数据量大），随之而来的就是性能问题。模型凹凸对应的是顶点的高度偏移，高度偏移影响的是法线方向，因而我们视觉上看到模型的凹凸（光影计算）其实只和模型法线有关，因此可以修改模型原本的法线信息，让模型看起来">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【公式推导03】光照向量">
+<meta property="og:url" content="http://liuke101.github.io/post/32783.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="[!NOTE] 约定本文用列向量&#x2F;右手坐标系进行说明以及推导。若需转换到行向量&#x2F;左手坐标系，需要对变换矩阵做转置  法线法线分类当一个模型有很多凹凸细节时，模型的顶点网格会很密（数据量大），随之而来的就是性能问题。模型凹凸对应的是顶点的高度偏移，高度偏移影响的是法线方向，因而我们视觉上看到模型的凹凸（光影计算）其实只和模型法线有关，因此可以修改模型原本的法线信息，让模型看起来">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292237904.jpg">
+<meta property="article:published_time" content="2024-04-29T21:34:25.000Z">
+<meta property="article:modified_time" content="2024-04-29T21:44:29.695Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="3D数学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292237904.jpg"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/32783.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【公式推导03】光照向量',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-29 22:44:29'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292237904.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【公式推导03】光照向量</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-29T21:34:25.000Z" title="发表于 2024-04-29 22:34:25">2024-04-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-29T21:44:29.695Z" title="更新于 2024-04-29 22:44:29">2024-04-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">10.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>37分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【公式推导03】光照向量"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/32783.html#post-comment"><span class="waline-comment-count" data-path="/post/32783.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>[!NOTE] 约定<br>本文用<strong>列向量&#x2F;右手坐标</strong>系进行说明以及推导。<br>若需转换到行向量&#x2F;左手坐标系，需要对变换矩阵做转置</p>
+</blockquote>
+<h1 id="法线"><a href="#法线" class="headerlink" title="法线"></a>法线</h1><h2 id="法线分类"><a href="#法线分类" class="headerlink" title="法线分类"></a>法线分类</h2><p>当一个模型有很多凹凸细节时，模型的顶点网格会很密（数据量大），随之而来的就是性能问题。模型凹凸对应的是顶点的高度偏移，高度偏移影响的是法线方向，因而我们视觉上看到模型的凹凸（光影计算）其实只和模型法线有关，因此可以<strong>修改模型原本的法线信息</strong>，让模型<strong>看起来有凹凸</strong>，但是实际却是网格稀疏的低面几何体。</p>
+<ul>
+<li>如下图，左侧是一个面很少，并不平滑的几何体，用原法线计算光照后会看到平面（红色线部分），右侧是<strong>将几何体原本的法线信息经过插值处理</strong>，经光照计算后，就会看起来像是平滑（凸出）过渡的曲面（浅紫色部分）。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234237.webp" alt="4c56eb834105859868c0fbf67cede838_MD5 1"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234238.webp" alt="57933f5cbe773bcc5cf659fa76199ed4_MD5 1|450"></p>
+<p><strong>四种法线：</strong></p>
+<ol>
+<li><strong>顶点法线 （vertex normal）</strong>：模型自带的信息</li>
+<li><strong>面法线 （face normal ）</strong> ：很容易算，三角形两个边的向量进行叉积即可得到垂直于该面的法向量。</li>
+<li><strong>插值法线 （interpolated normal）</strong>：用 vertex normal 经过插值得到的逐像素的法线</li>
+<li><strong>平均顶点法线（averaged normal）</strong>：<br>实际工作中，模型有很多面，顶点被多个面共用，如何确定这个顶点的 vertex normal 使得后续多个面插值得到的插值法线更平滑？<br>运用一种被称为<strong>求顶点法线平均值 ( vertex normal averaging )</strong> 的计算方法。此方法通过对网格中共享顶点 v 的多边形的平面法线求取平均值，从而获得网各中任意顶点 v 处的顶点法线 n。例如，图中网格中的四个多边形共用顶点 v，因此, v 处的顶点法线求法如下:<br>$$<br>\boldsymbol{n}_{\mathrm{avg}}&#x3D;\frac{\boldsymbol{n}_0+\boldsymbol{n}_1+\boldsymbol{n}_2+\boldsymbol{n}_3}{\left|\boldsymbol{n}_0+\boldsymbol{n}_1+\boldsymbol{n}_2+\boldsymbol{n}_3\right|}<br>$$</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234239.png" alt="Pasted image 20230508214912"><br>为了得到更为精准的结果，我们还可以采用更加复杂的求平均值方法，比如说，根据多边形的面积来确定权重（如面积大的多边形的权重要大于面积小的多边形)，以求取加权平均值。</p>
+<h2 id="法线变换"><a href="#法线变换" class="headerlink" title="法线变换"></a>法线变换</h2><p>法向量的变换比较特殊，简单来说就是<strong>法向量左乘模型变换矩阵（模型空间到世界空间）的逆转置矩阵，这样可以在非统一变换中保持法线和切线垂直。</strong></p>
+<h3 id="Unity-shader-中的法线变换"><a href="#Unity-shader-中的法线变换" class="headerlink" title="Unity shader 中的法线变换"></a>Unity shader 中的法线变换</h3><blockquote>
+<p>[!NOTE] Title<br>总结：两种方法将法线从模型空间转换到世界空间</p>
+<ol>
+<li>使用模型变换矩阵的逆转置矩阵对法线进行变换，首先的得到模型空间到世界空间的逆矩阵 <code>unity_WorldToObject</code>，然后通过调换他在 <code>mul</code> 函数中的位置得到和转置矩阵相同的矩阵乘法。由于法线是一个三维矢量，所以需要用（float3x3）截取。<br><code>o.worldNormal =  mul (v.normal, (float3x3) unity_WorldToObject); </code></li>
+<li>直接使用 unity 内置函数<br><code>o.worldNormal = UnityObjectToWorldNormal (v.normal);</code></li>
+</ol>
+</blockquote>
+<p>在做 blinn-phong 光照计算时，法线信息必不可少。而在 shader 中，可以得到 app 传入 vertex shader 的模型空间的的法线信息（一个顶点含有一个法向量），但是计算时往往需要<strong>将法线从模型空间转换为世界空间</strong>，同时模型顶点的坐标也需要转换到世界空间，只有坐标空间一致才能进行计算。</p>
+<p><strong>对比顶点与法线的空间变换会产生疑问：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">o.worldNormal =  mul(v.normal,(float3x3)unity_WorldToObject);<span class="comment">//为什么这个是右乘矩阵？为什么要(float3x3)</span></span><br><span class="line">o.worldVertexPos = mul(unity_ObjectToWorld, v.vertex).xyz;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>问题 1 ：为什么法线做变换时，需要用 (float3x3)来取得变换矩阵的前三行三列？</strong></li>
+</ul>
+<p>产生这种差别的原因是法线和切线都是方向向量（只有方向，会进行旋转和缩放变换，而不考虑平移的影响），而顶点是空间中的位置。同时注意法线用于计算最终是要 normalize 的，长度是 1。因此法线变换是需要取变换矩阵的 (float3x3)，最后一列是平移变换部分，舍弃。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234240.webp" alt="edbe940120b79257d9e58b5eeb57ce5f_MD5 1"></p>
+<ul>
+<li>**问题 2 ：为什么同样是模型空间转换到世界空间，法线用的是 unity_WorldToObject 变换矩阵，且是矩阵右乘向量，而顶点用的是 unity_ObjectToWorld 矩阵，且是矩阵左乘向量？</li>
+</ul>
+<p>从上述矩阵中看出，前三行列包含了缩放变换，<strong>当向量进行不成比例的缩放时，就会影响到向量的方向：法线将不会与几何体表面垂直</strong>（顶点的法向量是该顶点所在几个表面法向量的平均值）。如何才能让法线进行变换仍能保持正确的方向？<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234241.webp" alt="f1475b5b6f7dd2cf8776b4470df446e7_MD5 1"></p>
+<p>此时要对法向量进行正确的变换, 应该是对其进行相反的缩放 (比如 xy 是 1: 2 缩放, 那么法向量 xy 就要2:1缩放。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234242.webp" alt="2b6c42a78361d58b6db9d7f1d58dddcc_MD5 1"></p>
+<p>所以法向量的变换矩阵中<strong>缩放矩阵应该是原来顶点变换缩放矩阵的逆矩阵</strong>，而法向量的<strong>旋转矩阵保持不变。</strong><br>由于旋转矩阵是正交矩阵，因此旋转矩阵的转置&#x3D;逆矩阵。而<strong>缩放矩阵不是正交矩阵，因此无法通过转置求得逆矩阵</strong>，但缩放矩阵是对角矩阵，转置后不会发生改变。因此可以这样做：<br><strong>对 unity_ObjectToWorld 求逆矩阵</strong>得到 unity_WorldToObject（同时得到旋转和缩放矩阵的逆），<strong>再做转置</strong>。这样我们就得到了旋转矩阵和缩放矩阵的逆转置，保持了旋转矩阵不变，同时得到了缩放矩阵的逆。</p>
+<p>在 Unity shader 计算法线向量有以下两种等价写法<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234243.webp" alt="fabef4bd1bae1f73cf5b1135a8096048_MD5 1"><br>本质原因mul 函数有两种形式，改变了向量的行列形式：  </p>
+<ol>
+<li><code>mul(v, M)</code>：行向量 v 乘以矩阵 M  </li>
+<li><code>mul(M, v)</code>：矩阵乘以列向量 v</li>
+</ol>
+<p>还有一个重要的数学推导：列向量 v 左乘变换矩阵 M 等于行向量 v 右乘变换矩阵 M 的<strong>转置</strong></p>
+<blockquote>
+<p>[!NOTE]<br>注：unity_ObjectToWorld 是一个点从模型空间转换到世界空间的变换矩阵，unity_WorldToObject 则相反，两者是逆变换，因此两个矩阵互为逆矩阵。</p>
+</blockquote>
+<h3 id="法线变换矩阵公式推导"><a href="#法线变换矩阵公式推导" class="headerlink" title="法线变换矩阵公式推导"></a>法线变换矩阵公式推导</h3><p>前面是用具象的理解得到矩阵，如何更加严谨地得出法线的正确变换矩阵呢？——&gt; 利用切线进行公式推导</p>
+<p>那么，应该使用哪个矩阵来变换法线呢? 我们可以由数学约束条件来推出这个矩阵。我们知道**同一个顶点的切线 $T_A$ 和法线 $N_A$ 必须满足垂直条件，即 $T_A·N_A&#x3D;0$**。给定变换矩阵 $M_{A\rightarrow B}$，我们已经知道 $T_B&#x3D;M_{A\rightarrow B}T_A$。我们现在想要找到一个矩阵 $G$ 来变换法线 $N_A$，使得变换后的法线仍然与切线垂直。即<br>$$<br>\mathrm{T}<em>B\cdot\mathrm{N}<em>B&#x3D;(M</em>{A\rightarrow B}\mathrm{T}<em>A)\cdot(G\mathrm{N}<em>A)&#x3D;0<br>$$<br>对上式进行一些推导后可得：<br>$$<br>(M</em>{A\to B}\mathbf{T}</em>{A})\cdot(G\mathbf{N}</em>{A})&#x3D;(M_{A\to B}\mathbf{T}<em>{A})^{\top}(G\mathbf{N}</em>{A})&#x3D;\mathbf{T}<em>{A}^{\top}M</em>{A\to B}^{\top}G\mathbf{N}<em>{A}&#x3D;\mathbf{T}</em>{A}^{\top}(M_{A\to B}^{\top}G)\mathbf{N}_{A}&#x3D;0\quad<br>$$</p>
+<blockquote>
+<p>为什么 $(M_{A\to B}\mathbf{T}<em>{A})\cdot (G\mathbf{N}</em>{A})&#x3D;(M_{A\to B}\mathbf{T}<em>{A})^{\top}(G\mathbf{N}</em>{A})$？</p>
+</blockquote>
+<p>因为第一个公式是矢量点乘，可以注意到中间有个黑点。然后为了推导到矩阵里面，因此把矢量运算替换成了等价的矩阵乘法，因为默认矢量可以当成是列矩阵，所以第二个公式就是把它们当成列矩阵进行矩阵乘法。转置是因为矩阵乘法有行列规则，不转置的话这个乘法是没法进行的，不符合矩阵乘法定义。你可以在纸上画一画，第二个那个转置矩阵乘法后也是一个标量，和第一个矢量点乘的结果是相同的。</p>
+<blockquote>
+<p>例如： $\begin{pmatrix}2\3\end{pmatrix}\cdot\begin{pmatrix}1\2\end{pmatrix}&#x3D;2<em>1+2</em>3&#x3D;\begin{bmatrix}2\3\end{bmatrix}^T\begin{bmatrix}1\2\end{bmatrix}&#x3D;8$</p>
+</blockquote>
+<p>由于 $T_A\cdot N_A&#x3D;0$，因此如果 $M_{A\to B}^{\top}G&#x3D;E$，那么上式既可成立。</p>
+<p>也就是说，如果 $G&#x3D;\left(M_{A\to B}^{\top}\right)^{-1}&#x3D;\left(M_{A\to B}^{-1}\right)^{\top}$,即使用原变换矩阵的逆转置矩阵来变换法线就可以得到正确的结果。</p>
+<p><strong>三种情况：</strong></p>
+<ul>
+<li>如果变换<strong>只包括旋转变换</strong>，那么变换矩阵 $M_{A\rightarrow B}$ 就是正交矩阵, 那么 $M_{A\to B}^{-1}&#x3D;M_{A\to B}^{\top}$，因此 $\left(M_{A\to B}^{\top}\right)^{-1}&#x3D;M_{A\to B}$ ，也就是说我们可以使用用于变换顶点的变换矩阵来直接变换法线。</li>
+<li>如果变换<strong>只包含旋转和统一缩放，而不包含非统一缩放</strong>，我们利用统一缩放系数 $k$ 来得到变换矩阵 $M_{A\rightarrow B}$ 的逆转置矩阵 $\left(M_{A\rightarrow B}^{T}\right)^{-1}&#x3D;\frac{1}{k}M_{A\rightarrow B}$ 。这样就可以避免计算逆矩阵的过程。</li>
+<li>如果变换中<strong>包含了非统一变换</strong>，那么我们就必须要求解逆矩阵来得到变换法线的矩阵。</li>
+</ul>
+<p>公式推导中提到了切线与法线不变的垂直关系，由此引申出图形学中十分重要的知识点：切线空间</p>
+<h2 id="切线空间"><a href="#切线空间" class="headerlink" title="切线空间"></a>切线空间</h2><h3 id="切线空间中的法线"><a href="#切线空间中的法线" class="headerlink" title="切线空间中的法线"></a>切线空间中的法线</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234244.png" alt="Pasted image 20230629231955"></p>
+<blockquote>
+<p>纹理贴在物体上的坐标，与纹理空间的区别就是多了一个法线轴，数据变为了三维。</p>
+</blockquote>
+<p>法线是向量，向量则必然需要指定坐标系&#x2F;坐标空间，可以用模型空间、世界空间、切线空间来表示。模型和世界空间大家一定很熟悉，那么什么是切线空间呢？</p>
+<p>一个坐标空间就是一个坐标系，只要有三个正交坐标轴 xyz 作为基轴就可以定义坐标空间中任意一点。切线空间是位于三角形表面之上的空间，<strong>切线空间中的 xyz 轴分别是 t 轴（切线方向）、b 轴（副切线方向）和 n（法线方向） 轴</strong>。</p>
+<p>确定的一点是：<strong>切线空间的 z 轴（向上的轴）与法线 n 同向。那么 x 与 y 轴要如何定义呢？</strong></p>
+<p>我们都知道，一条曲线上某点的切线只有一条，而一个曲面上某点却有一个切平面，该平面上过该点的任意一条线都是该点的切线，所以<strong>切线有无数条</strong>。有多种不同的 x 和 y 轴组合, 每种组合生成的点法向量是不一致的, 所以需要<strong>规定一套固定的 x 和 y 轴</strong>, 大家遵守同样的规则，<strong>建模软件在计算切线的时候会选择和 UV 展开方向相同的那个方向作为切线方向。</strong></p>
+<blockquote>
+<p>根据 [[03 光照向量#UV 与 TB 的关系]] 中的证明，在 TBN 推导进行最后的正交化之前，T 的方向对应 u 的方向，B 对应 V 的方向。正交化之后则不一定</p>
+</blockquote>
+<h2 id="法线贴图-Normal-Map"><a href="#法线贴图-Normal-Map" class="headerlink" title="法线贴图 Normal Map"></a>法线贴图 Normal Map</h2><h3 id="计算法线贴图（二维）"><a href="#计算法线贴图（二维）" class="headerlink" title="计算法线贴图（二维）"></a>计算法线贴图（二维）</h3><p>下图中红色线为原始的表面，蓝色曲线为使用法线贴图后的效果。，我们讨论平面上点 $p$ 的法线</p>
+<ul>
+<li>$p$ 点原来的法线朝上，即 $n(p) &#x3D; (0, 1)$</li>
+<li>通过求 $p$ 点的导数 $dp &#x3D; c*[h(p+1) - h(p)]$ 求出两点的高度差。其中 c 为常数表示凹凸贴图的影响程度，h 为高度 p 点、p+1 点对应高度。</li>
+<li>因此切线可表示为 $t(p)&#x3D;(1,dp)$。</li>
+<li>切线与法线垂直，因此 $n(p) &#x3D; (-dp, 1)$， $n(p)$ 要归一化</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234245.webp" alt="59188f6b18a7ca67c543bacd8a52bfac_MD5 1"></p>
+<h3 id="计算法线贴图（三维）"><a href="#计算法线贴图（三维）" class="headerlink" title="计算法线贴图（三维）"></a>计算法线贴图（三维）</h3><p>三维的情况下有 u、v 两个方向的变换。</p>
+<p>实际情况下法线方向不一定朝上，这里的例子是基于一个局部坐标系确定的。</p>
+<ul>
+<li>$p$ 点原来法线为： $n(p) &#x3D; (0, 0,1)$</li>
+<li>求 $p$ 点的倒数：<ul>
+<li>$dp&#x2F;du &#x3D; c1 * [h(u+1) - h(u)]$</li>
+<li>$dp&#x2F;dv &#x3D; c2 * [h(v+1) - h(v)]$</li>
+</ul>
+</li>
+<li>$n(p) &#x3D; (-dp&#x2F;du, -dp&#x2F;dv, 1)$, $n(p)$ 要归一化</li>
+</ul>
+<p>注意以上计算发生在模型空间。</p>
+<h3 id="法线贴图的存储方式"><a href="#法线贴图的存储方式" class="headerlink" title="法线贴图的存储方式"></a>法线贴图的存储方式</h3><p>插值就可以得到平滑过渡，那么对 <strong>vertex normal</strong> 做各种各样的偏移，得到用于计算的 <strong>interpolated normal</strong>，就能得到各种凹凸起伏的光影结果。偏移是相对于原法线信息的偏移，因此以原法线方向作为 z 轴正方向，定义一个切线空间，并在切线空间中用三个坐标值就可以表示出偏移后的法线信息，用贴图存储模型空间与切线空间的法线数据，这个贴图叫做<strong>法线贴图</strong>：</p>
+<blockquote>
+<p>[!NOTE] 模型空间和切线空间的法线贴图<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234246.png" alt="Pasted image 20230106162114|200"> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234247.png" alt="Pasted image 20230106162128|200"><br>左图是模型空间的法线贴图，右图是切线空间的法线贴图。<strong>使用右图需要使用 TBN 矩阵将贴图中提取出的法线从切线空间变换到计算光照使用的空间。</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234248.png" alt="Pasted image 20230508211144"><br><strong>左图是模型空间</strong>，因法线方向各不相同，所以看起来五颜六色的；<br><strong>右图是切线空间</strong>，每个法线方向所在的坐标空间是不一样的，即是表面每点各自的切线空间，这种法线纹理其实存储了<strong>每个点在各自的切线空间中的 shading 法线偏移（扰动）方向，如果一个点的法线方向不变，那么在其切线空间中，新的法线方向就是 z 轴方向。即值为（0,0,1），映射到颜色即（0.5,0.5,1)浅蓝色。蓝色说明顶点的大部分 shader 法线和模型本身法线一样，无需改变</strong></p>
+</blockquote>
+<blockquote>
+<p>[!tip] 模型空间与切线空间存储 shading normal 的优缺点对比</p>
+<p><strong>模型空间存储：</strong></p>
+<ul>
+<li>优点：简单直观</li>
+<li>问题：当模型有顶点变化时（如骨骼动画），则面片都变化了，此时无法计算新的法线。（法线应当随着面片变化同样变化）</li>
+</ul>
+<p><strong>切线空间存储有更多优势，我们常用切线空间的法线贴图：</strong></p>
+<ul>
+<li>切线空间存储的是相对法线信息，因此换个网格（或者网格变换 deforming）应用该纹理，也能得到合理的结果。</li>
+<li>可以进行 uv 动画，通过移动该纹理的 uv 坐标实现凹凸移动的效果</li>
+<li>可以重用法线纹理，比如, 一个砖块, 我们仅使用一张法线纹理就可以用到所有的 6 个面。</li>
+<li>可以<strong>压缩</strong>：[[#法线贴图的压缩]]。因为切线空间的法线 z 方向总是正方向，因此可以<strong>仅存储 xy（rg） 方向</strong>，从而推到 z (b) 方向（normal 是单位向量，用勾股定理由 xy 得出 z，取 z 为正的一个即可）。而模型空间的法线纹理方向各异，无法压缩。</li>
+</ul>
+</blockquote>
+<p>利用法线贴图计算光照就可以实现法线映射 Normal Mapping，法线映射与 Phong shading 的主要差别在哪呢？<br>在于我们掌握信息的多少。在 Phong shading 时，用到三角形每个顶点的法线(插值获取其内像素的法线)，而法线映射使用法线贴图纹理能提供相当多的法线(多到每个像素都有对应法线，而无需插值获取)，显著改善渲染细节。</p>
+<h3 id="读取法线贴图数据"><a href="#读取法线贴图数据" class="headerlink" title="读取法线贴图数据"></a>读取法线贴图数据</h3><p>切线空间中法线的每个分量的值的范围是 $[−1,1]$，而 RGB 分量的值的范围是 $[0,1]$ 。所以，在将法线存储为 RGB 图像时，需要对每个分量做一个映射，所得的 RGB 图像呈蓝紫色：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vec3 rgb_normal = （normal + <span class="number">1</span>）/ <span class="number">2</span>;</span><br><span class="line">vec3 rgb_normal = normal ∗ <span class="number">0.5</span> + <span class="number">0.5</span>;  <span class="comment">// 等价</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234249.webp" alt="a910497ae7cffe8579620a29e1ab5132_MD5 1|650"></p>
+<p>这里要注意，<strong>将法线存储到法线贴图的过程中，需要进行上述操作。当我们从法线贴图中读取法线数据后，需要进行重映射，即上述变换的</strong><font color="#ff0000">逆变换</font>，即从$[0,1]$ 映射到 $[−1,1]$ 。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">normal = <span class="number">2</span> * vec3rgb_normal - <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>切线空间中的法线是相对于真实法线的偏移（又称扰动）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234250.webp" alt="bf88c99394c2c215b3577e05fed7a9b5_MD5 1"></p>
+<h3 id="法线贴图的压缩"><a href="#法线贴图的压缩" class="headerlink" title="法线贴图的压缩"></a>法线贴图的压缩</h3><p><strong>法线贴图的压缩，DXT compression 压缩技术。</strong> （unity 和 ue 会自动做此事，我们需要的是正确读取法线贴图中的数据）</p>
+<ul>
+<li>只保留 rg 两个颜色通道<br>因为 normal 是归一化向量，其大小为 1；又因为切线空间的法线 z 方向总是正方向，所以可以只存 x 和 y 就可以用勾股定理计算出 z 值（因为正方向所以取正值）。所以只保存 rg 两个通道。</li>
+<li>但是如果只有一个通道那向量压缩质量更好。所以只用 g 通道，并将<strong>r 通道</strong>的值存入<strong>alpha 透明通道</strong></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234251.jpg" alt="Pasted image 20240226211555"><br>Z 计算方法为：${Z &#x3D; sqrt(1 - (x <em>x + y</em>y))}$</p>
+<h3 id="利用法线贴图的信息计算模型光照"><a href="#利用法线贴图的信息计算模型光照" class="headerlink" title="利用法线贴图的信息计算模型光照"></a>利用法线贴图的信息计算模型光照</h3><p>首先要从贴图中提取出法线信息：先映射范围，所以采样纹理后，也要从像素先计算出真正的法线值才行。如果纹理是经过了压缩的，则还要再加一步，提取出真正的 pixel normal 值。</p>
+<p>要做基于法线的光照计算，在同样的坐标空间中点乘什么的才有意义。一般<strong>利用计算光照时，有 3 条路</strong>：</p>
+<ol>
+<li>在世界空间中计算：将变量（顶点位置、光照方向、法线方向等）转换到世界空间运算。</li>
+<li>在模型空间中计算：将同上变量转换到模型空间运算。</li>
+<li>在切线空间中计算。</li>
+</ol>
+<p>而从一个坐标空间变换到另一个坐标空间需要一个<strong>变换矩阵</strong>，如同 unity 中的 unity_WorldToObject 和 unity_ObjectToWorld 矩阵一样，用来在世界空间和模型空间之间变换。因此此处的变换则需要<strong>TBN 矩阵，将从贴图中提取出的</strong>pixel normal 变换到世界空间或模型空间。</p>
+<h2 id="TBN-矩阵"><a href="#TBN-矩阵" class="headerlink" title="TBN 矩阵"></a>TBN 矩阵</h2><p><strong>TBN 矩阵定义了一个点从切线空间变换到世界空间或者模型空间的变换矩阵：当 N 是模型空间中的法线时，计算出的 TBN 则是 TBN_Object，该矩阵对贴图中取得的 pixel normal 数据做变换后，会得到模型空间</strong>的 final shading normal 。同理如果 N 是世界空间中的法线时，计算出的 TBN 则是 TBN_World，做变换会得到<strong>世界空间</strong>中的 final shading normal 。</p>
+<ul>
+<li>两种 TBN 矩阵的计算流程示意（下图）：中间的绿色线条上部属于顶点着色器中的内容（法线、切线都是模型空间中的）、绿色线条下部属于像素着色器中的内容（法线、切线都是在顶点着色器中变换到世界空间，传入像素着色器计算）。<strong>由于使用 TBN_World 的方法在片段着色器中计算量更小，因此常常用 TBN_World 做计算</strong>（尽管顶点着色器中计算量大，但通常顶点着色器通常比片段着色器运行的少）。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234252.webp" alt="80c01dfab4d4cb8fa085554148f0396c_MD5 1"></p>
+<p>注意区分：TBN 中的 N，则是指的是，模型顶点的真实法线。而 <code>matrix（T，B，N）* n</code> 的这个 <code>n</code>，才是从法线贴图中还原出来的，通过贴图像素值计算的法线。 <code>final shading normal =matrix（T，B，N）* n</code> ;的这个 final shading normal 是转换到正确空间后的最终用于光照计算的法线。</p>
+<ul>
+<li>@ （final shading normal、pixel normal 、TBN_World、TBN_Obect 都是我自创的用于理解的名字而已，无特殊含义）</li>
+</ul>
+<p>**在切线空间中计算：将光照方向、视角方向在 Vertex Shader 里面从模型空间变换到切线空间去计算光照，这样更省，可以不必再 Fragment Shader 里面进行更耗时的计算。从模型空间变换到切线空间的矩阵如何得到呢？</p>
+<p>我们前面已经知道了从切线空间-&gt;模型空间的矩阵（即用模型空间中的法线计算 TBN_Object）。因此<strong>模型空间转换到切线空间的矩阵是</strong>TBN_Object 的逆矩阵，此处冯女神给出了求逆矩阵的算法：</p>
+<h3 id="TBN-推导"><a href="#TBN-推导" class="headerlink" title="TBN 推导"></a>TBN 推导</h3><p>$$<br>\begin{bmatrix}t_x&amp;b_x&amp;n_x\ t_y&amp;b_y&amp;n_y\ t_z&amp;b_z&amp;n_z\end{bmatrix}\begin{bmatrix}v_x\ v_y\ v_z\end{bmatrix}&#x3D;\begin{bmatrix}t_x v_x+b_x v_y+n_x v_z\ t_y v_x+b_y v_y+n_y v_z\ t_z v_x+b_z v_y+n_z v_z\end{bmatrix}<br>$$</p>
+<p><strong>我们可以根据纹理坐标和模型坐标求出 TB</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234253.jpg" alt="Pasted image 20230106224534"></p>
+<p>这张图描述了模型中每个三角形所在的纹理坐标系与切线空间坐标系的联系。<br>对于模型中每一个三角形的顶点，我们有其位置坐标以及纹理坐标，这个技术就要通过这两组坐标得到 TBN 矩阵。</p>
+<p>如图对于每个三角形在切线中的两个边向量用 $E_1$ 和 $E_2$ (对应图中为 $e_0e_1$)来表示：<br>$$<br>\begin{array}{c}E_1&#x3D;\Delta U_1T+\Delta V_1B\ \ E_2&#x3D;\Delta U_2T+\Delta V_2B\end{array}<br>$$<br>使用矩阵来表示：<br>$$<br>\begin{bmatrix}E_{1x}&amp;E_{1y}&amp;E_{1z}\ E_{2x}&amp;E_{2y}&amp;E_{2z}\end{bmatrix}&#x3D;\begin{bmatrix}\Delta U_1&amp;\Delta V_1\ \Delta U_2&amp;\Delta V_2\end{bmatrix}\begin{bmatrix}T_x&amp;T_y&amp;T_z\ B_x&amp;B_y&amp;B_z\end{bmatrix}<br>$$</p>
+<p>继而推导出：<br>$$<br>\begin{bmatrix}T_x&amp;T_y&amp;T_z\ B_x&amp;B_y&amp;B_z\end{bmatrix}&#x3D;\frac{1}{\Delta U_1\Delta V_2-\Delta U_2\Delta V_1}\begin{bmatrix}\Delta V_2&amp;-\Delta V_1\ -\Delta U_2&amp;\Delta U_1\end{bmatrix}\begin{bmatrix}E_{1x}&amp;E_{1y}&amp;E_{1z}\ E_{2x}&amp;E_{2y}&amp;E_{2z}\end{bmatrix}<br>$$</p>
+<p>以上就是在一个三角形中，通过顶点坐标与纹理坐标获得 $T, B$ 向量的过程。</p>
+<p>注意：这里解出的 $T$ 或者 $B$ 不是最终需要的，$T$ 向量需要进一步的与 $N$ 向量正交化，所以我们只需要解出 $T$，然后通过$B &#x3D; cross（N，T）$，这才是最终的 $B$。有了 $T, B$ 就可以计算得到 $N$，从而构建出 $TBN$ 矩阵。</p>
+<h3 id="MikktSpace"><a href="#MikktSpace" class="headerlink" title="MikktSpace"></a>MikktSpace</h3><p>MikktsSpace 是作为一中 TBN 计算标准，用于解决软件之间切线空间计算不统一。目</p>
+<p>关于切线空间法线贴图的一个常见误解是，这种表示在某种程度上与资产无关。然而，从高分辨率曲面采样&#x2F;捕捉然后变换到切线空间的法线更像是一种编码。因此，为了反转原始捕获的法线场，用于解码的变换必须与用于编码的变换完全相反。  </p>
+<p>这带来了一个问题，因为没有切线空间生成的实现标准。每个法线贴图烘焙器都使用不同的实现，此外，对于如何使用插值帧将法线转换为切线空间，没有标准。  </p>
+<p>由于法线贴图烘焙器和用于渲染的像素着色器之间的这种不匹配而产生的数学错误会导致对接缝进行着色。这些是不需要的硬边，当模型被照亮&#x2F;着色时，这些硬边会变得可见。</p>
+<p>更糟糕的是，仅仅使用相同的切线空间生成代码是不够的。大多数实现都具有顺序依赖性，这可能导致不同的切线空间，这取决于面的顺序或顶点的顺序。如果索引列表发生更改（多个&#x2F;单个&#x2F;重复顶点），则其他索引列表会生成不同的结果。如果去除非法的基元，其他基元会再次产生不同的结果。  </p>
+<p>顺序依赖关系还导致镜像网格不总是获得正确的镜像切线空间。</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>Morten S.Mikkelsen 的切线空间生成码克服了这些问题。具体而言，该实现旨在使切线空间的生成对从一个应用程序移动到另一个应用的3D 模型尽可能具有弹性。也就是说，即使索引列表、面&#x2F;顶点的排序和&#x2F;或非法的基元的移除发生变化，也会生成相同的切线空间。同时支持三角形和四边形。  </p>
+<p>这个实现是由 Morten S.Mikkelsen 在他的硕士论文开发过程中完成的，任何人都可以免费使用。它包含在两个独立的文件 <a target="_blank" rel="noopener" href="https://github.com/mmikk/MikkTSpace/blob/master/mikktspace.h" title="mikktspace.h">mikktspace.h</a>和 <a target="_blank" rel="noopener" href="https://github.com/mmikk/MikkTSpace/blob/master/mikktspace.c" title="mikktspace.c">mikktspace.c</a> 中。这使得任何人都可以轻松地将实现集成到自己的应用程序中，从而复制相同的切线空间。这也使得代码成为实现标准的完美候选者。我们希望该标准将被尽可能多的开发人员采用。  </p>
+<p>The standard is used in Blender 2.57 and is also used by default in xNormal since version 3.17.5 in the form of a built-in tangent space plugin (binary and code).<br>该标准在Blender 2.57中使用，自3.17.5版本以来，xNormal也默认使用该标准，形式为内置切线空间插件（二进制和代码）。  </p>
+<h4 id="仍存在的问题"><a href="#仍存在的问题" class="headerlink" title="仍存在的问题"></a>仍存在的问题</h4><p>Even though mikktspace supports quads these will eventually be split into triangles before baking and pixel shading. Furthermore, though mikktspace guarantees a consistent choice of tangent frame, at the quad vertices, the interpolated tangent frame is heavily affected by which diagonal split is chosen later on. This is not a big issue when the tangent frame transitions slowly across the face. For a well-behaved low polygonal mesh this is true for most regions.<br>尽管mikktspace支持四边形，但在烘焙和像素着色之前，这些四边形最终会被分割成三角形。此外，尽管mikktspace保证了切线框架的一致选择，但在四边形顶点处，插值的切线框架会受到稍后选择的对角线分割的严重影响。当切线框架在面上缓慢过渡时，这不是一个大问题。对于表现良好的低多边形网格，大多数区域都是如此。  </p>
+<p>When there is a great change in the tangent frame a problem occurs when the tools pipeline (prior to pixel shading) and the baker do not choose the same diagonal split. One possible solution is to choose your split based on an order-independent strategy. For instance, split all quads by the shortest diagonal using the vertex positions. If these have the same length then split by the shortest diagonal using the texture coordinates. This will lead to an order-independent choice and works with mirrored meshes. The triangulator in xNormal has supported this since 3.17.5 and triangulation is performed after the mikktspace plugin is done. Reproducing the same splits in your own tools pipeline is trivial to do.<br>当切线框架发生巨大变化时，当工具管道（在像素着色之前）和面包师没有选择相同的对角线分割时，就会出现问题。一个可能的解决方案是根据订单独立策略选择拆分。例如，使用顶点位置按最短对角线分割所有四边形。如果这些具有相同的长度，则使用纹理坐标按最短对角线分割。这将导致一个与顺序无关的选择，并适用于镜像网格。xNormal中的三角测量器从3.17.5开始就支持这一点，并且三角测量是在mikktspace插件完成后执行的。在您自己的工具管道中复制相同的分割是微不足道的。  </p>
+<p>Another more trivial solution which any artist can perform on his&#x2F;her own is to simply triangulate the model before baking and export which will also ensure consistent triangulation. However, this way the quad information is lost which may or may not be of any importance depending on the game engine and how the asset is to be used.<br>任何艺术家都可以自己完成的另一个更琐碎的解决方案是在烘焙和导出之前简单地对模型进行三角测量，这也将确保一致的三角测量。然而，通过这种方式，四元信息会丢失，根据游戏引擎和资产的使用方式，这可能具有任何重要性，也可能不具有任何重要性。  </p>
+<p>We stress that in most cases this is NOT a visible issue. But in the few cases where it is a problem this section explains why and how to deal with it.<br>我们强调，在大多数情况下，这不是一个明显的问题。但在少数情况下，这是一个问题，本节解释了为什么以及如何处理它。</p>
+<h3 id="在-unity-shader-中的-TBN-矩阵？"><a href="#在-unity-shader-中的-TBN-矩阵？" class="headerlink" title="在 unity shader 中的 TBN 矩阵？"></a>在 unity shader 中的 TBN 矩阵？</h3><p>untiy 中我们可以直接拿到 tangent，进而与 normal 叉乘得到 bitangent，轻松构建出 TBN 矩阵。</p>
+<p>unity shader 中，模型的顶点数据（包括顶点位置、顶点法线、uv 坐标、切线矢量 tangent）通过 appdata 传给顶点着色器，在顶点结构中通过语义获得，语义 TANGENT 标示切线数据（如：<strong>float4 tangent : TANGENT，tangent 变量存储了切线矢量数据</strong>）。</p>
+<p>TANGENT 矢量是切线矢量，是四维向量，由 xyzw 四个分量。**v.tangent. xyz 是切线方向，即 tbn 中的 t；v.tangent. w 的值为+1 或者-1，w 分量代表了什么呢？</p>
+<p>在 Unity 中，只有切线矢量 t 存储在顶点中，<strong>而副切线 b（也称双切线或副法线）是从读取的法线值和该切线值做叉乘得出，叉乘能得到垂直于 t 与 n 的矢量 b。</strong> 前面说过平面上某点的切线有无数的方向，一般模型会用模型 uv 展开相同的方向作为切线方向，因此 uv 方向（即切线的选择）就影响到了叉乘的结果 b 的方向，因此 w 会再存储一个信息。<strong>叉乘的结果会得到一个方向，w 分量又进一步决定了取叉乘结果的正方形还是反方向。</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//计算副切线 </span></span><br><span class="line">float3 bitangent = cross( v.normal, v.tangent.xyz ) * v.tangent.w;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>世界空间下的 TBN_World 的计算：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Construct a matrix that transforms a point/vector from tangent space to world space</span></span><br><span class="line">fixed3 worldNormal = UnityObjectToWorldNormal(v.normal);  </span><br><span class="line">fixed3 worldTangent = UnityObjectToWorldDir(v.tangent.xyz);  </span><br><span class="line">fixed3 worldBinormal = cross(worldNormal, worldTangent) * v.tangent.w;</span><br><span class="line">float3x3 worldToTangent = float3x3(worldTangent, worldBinormal, worldNormal);</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>注：上述代码中此处用了 unity 内置计算方向的函数<strong>UnityObjectToWorldNormal，因此兼容模型非均匀缩放的情况</strong>。如果不用内置函数，则要注意向量计算时模型非均匀缩放的问题了。</p>
+<h2 id="疑难解析"><a href="#疑难解析" class="headerlink" title="疑难解析"></a>疑难解析</h2><ol>
+<li><p><strong>Tangent 轴的方向与 u 轴方向相同，Bitangent 轴的方向与 v 轴方向相同？</strong><br><strong>Tangent、Bitangent 轴只在正交化前与 UV 轴方向分别相同</strong>，因此这句话一半对，一半错。<strong>对于规范的 TBN 矩阵而言，TB 二轴与 UV 轴方向极大多数情况很可能并不相同</strong>。当顶点法线在建模软件中被修改为不垂直于该面片时，TB 平面甚至不在三角形面片上；当 uv 经过拉伸时，因 TB 二轴在正交化前与 UV 方向相同，故正交化后 TB 二轴必然与 uv 方向是有所偏差的，而对于一个多面片的模型 uv 展开，这种拉伸旋转的情况简直司空见惯。</p>
+</li>
+<li><p><strong>uv 二轴在三维面片上的映射向量相互垂直，对吗？</strong><br>根据下图，uv 二轴在三维空间下的方向很可能不垂直。</p>
+</li>
+<li><p><strong>切线空间 tbn 中的 N（Normal）轴是怎么得到的，其与 uv 二轴在三维面片上的映射方向的向量是垂直吗？</strong><br>切线空间的 N 轴就是顶点法线。（在此提及一点，建模软件中但凡是出现单个顶点包含多条法线（split vertex normal）的，在实际导出后，都是变为多个重合顶点，一个顶点只有一条法线，这是任何时候都不会改变的事实。） uv 二轴在三维平面的投影方向就是三角面片所在的平面，n 轴并不一定与其垂直。</p>
+</li>
+<li><p><strong>顶点法线可以直接根据相邻面的法线取平均得到，对吗？</strong><br>这个属于常见带有误导色彩的言论，在此特意申明，顶点法线爱怎么调整怎么调整，与面法线并无关联。面法线只是垂直于面的一条向量，规定了面的正反，而顶点法线才是用于光照信息的处理。即便是建模软件中，顶点法线的最初是的默认情况也并非是面法线的平均，只有当在建模软件中对物体进行了平滑着色后，才会根据面法线平均得到顶点法线（如 blender 中为 shader smooth 命令）。这其中的逻辑不要弄混。</p>
+</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234230.png"></p>
+<h4 id="UV-与-TB-的关系"><a href="#UV-与-TB-的关系" class="headerlink" title="UV 与 TB 的关系"></a>UV 与 TB 的关系</h4><p>我们知道，一个顶点结构中包含很多信息，其中就有顶点在三维空间中的位置信息，以及顶点在展开的 uv 中的 uv 坐标，且三维空间下三角形中的每一个点都必能在 uv 上找到对应的点，反之亦然。下图是三角形的 uv 展开图以及其俯视图，我们可以很容易的在三维空间与 uv 空间下对任意一个点进行映射，因为该 uv 没有任何拉伸旋转，甚至可以说是标准完美得过分了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234231.png"></p>
+<p>若设 A（x1，y1，z1），uv 坐标为（u1，v1）、B（x2，y2，z2），uv 坐标为（u2，v2）、C（x3，y3，z3），uv 坐标为（u3，v3）。且将向量 AC 记录为 E1、向量 AB 记录为 E2，则对于这条公式而言，</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234232.png"></p>
+<p>在这种特殊情况下，<strong>此时的 T 显然恰好与 U 在三维空间上的映射方向相同、同理 B 也与 V 方向相同。直观上，该公式描述的数学意义是，如何将一个点从 uv 空间映射到三维空间，其中 TB 作为基矢，以 uv 空间中的 u 和 v 的增长作为控制参数。假设三角形中存在一点 P，则向量 AP&#x3D;u（p）<em>T+v（p）</em>B，只要知道 P 点的 uv 坐标值，即可得到 P 点的三维坐标值。</strong></p>
+<p>如果我们在三维空间下将三角形做一点拉伸，变成如下图所示，则 UV 向量在三维空间的方向将不再垂直，但是有 Color Grid 图的帮助，我们依然可以很方便的辨认出 uv 映射的位置。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234233.png"></p>
+<p><strong>不过在这种情况下，向量 T 与 B 依然会与 UV 保持方向相同吗？答案是肯定的</strong>，将上述式子进行简单求解，可看到 T 与 B 的表达式。为了直观判断，这里笔者将该物体导入 unity，通过 geometry shader 进行可视化生成该方式计算的 TB 向量，为了连贯性，代码与步骤将放在附录 1 中提供。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234234.png"></p>
+<p>代码中的 TB 向量严格遵守上述推导结果，下图将计算出来的 T 以蓝线表示，B 以切线表示，可以看到该公式计算出来的 T 与 B 确实与 uv 方向相同。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234235.png"></p>
+<p><strong>目前算出来的 TB 还不是真正的切线与副切线，需要经过正交化得到 TBN 矩阵，其中的计算规范由下图给出</strong>：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234236.png"></p>
+<p>其中 n 是建模软件中规定的顶点法线，可以看到 n 在正交化过程中不会受到影响，该过程是对 TB 向量进行方向的调整以及长度的归一化。TB 在此过程后会相互垂直，此时将不再一定与 UV 方向保持相同。<strong>特别的，当调整顶点法线后，TB 平面甚至将于三维空间中的三角形平面不同，形成的切线空间实际上是不够直观的。</strong>（值得一提的是，在 npr 渲染中，法线的更改是十分常见的，没事更改顶点法线并非太闲。）</p>
+<h1 id="光的散射（scattering）"><a href="#光的散射（scattering）" class="headerlink" title="光的散射（scattering）"></a>光的散射（scattering）</h1><ul>
+<li>? 区分？<br>透射 (Transmission)<br>反射 (Reflection)<br>折射 (Refraction)<br>衍射 (Diffraction)<br>吸收 (Absorption)<br>散射 (Scattering)</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234254.png" alt="Pasted image 20230615000306"></p>
+<p>光线由光源发射出来后，就会与一些物体相交。通常，相交的结果有两个：<strong>散射 (scattering)和吸收（absorption）</strong><br><strong>散射只改变光线的方向，但不改变光线的密度和颜色，而吸收只改变光线的密度和颜色。</strong><br>光线在物体表面经过散射后，有两种方向： </p>
+<ul>
+<li>一种将会散射到物体内部，这种现象被称为<strong>折射 (refraction) 或透射 (transmission)</strong></li>
+<li>另一种将会散射到外部，这种现象被称为<strong>反射 (reflection)</strong> 。<br>对于不透明物体，折射进入物体内部的光线还会继续与内部的颗粒进行相交，其中一些光线最后会重新发射出物体表面，而另一些则被物体吸收。那些从物体表面重新发射出的光线将具有和入射光线不同的方向分布和颜色。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234255.png" alt="Pasted image 20230510101634|550"></li>
+</ul>
+<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><blockquote>
+<p>[!NOTE]<br>$i$：光源指向目标方向（HLSL 中 <code>reflect(i, n)</code>) 函数是该情况）<br>$$r&#x3D;i-2(i\cdot n)n$$<br>$l$：目标指向光源方向<br>$$r&#x3D;2(l\cdot n)n-l$$</p>
+</blockquote>
+<p>$i$ 入射向量<br>$r$ 反射向量<br>将向量 $v$ 在界面法线 $n$ 方向上的投影记为 $v_\perp$，在界面方向上的投影记为 $v_{||}$。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234256.png" alt="Pasted image 20230402195533"><br>根据反射定律，反射角等于入射角：$\theta_i&#x3D;\theta_r$</p>
+<p>因为<br>$$<br>\begin{array}{l}i_{\perp}&#x3D;-|i_{\perp}|n&#x3D;(i\cdot n)n\ i_{||}&#x3D;i-i_{\perp}\end{array}<br>$$</p>
+<p>然后因为 $r_{||}$ 是 $i_{||}$  的等向量， $r_⊥$ 是 $i_⊥$ 的反向量<br>$$<br>r&#x3D;r_{||}+r_{\perp}&#x3D;i_{||}-i_{\perp}&#x3D;i-2i_{\perp}&#x3D;i-2(i\cdot n)n<br>$$</p>
+<p>注意这里计算使用的 $i$ 是光源指向目标，在光照计算时我们通常使用 $i$ 相反方向的向量 $l$：从目标指向光源<br>此时的反射向量计算结果为：<br>$$r&#x3D;2(l\cdot n)n-l$$</p>
+<h2 id="折射"><a href="#折射" class="headerlink" title="折射"></a>折射</h2><blockquote>
+<p>[!NOTE]<br>$$r&#x3D;\begin{cases}\frac{\eta_1}{\eta_2}i-(\frac{\eta_1}{\eta_2}(i\cdot n)+\sqrt{1-(\frac{\eta_1}{\eta_2})^2(1-(i\cdot n)^2)})n&amp;\text{if}:1-(\frac{\eta_1}{\eta_2})^2(1-(i\cdot n)^2)\ge0\ 0&amp;\text{if}:1-(\frac{\eta_1}{\eta_2})^2(1-(i\cdot n)^2)&lt;0\end{cases}$$</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234257.png" alt="Pasted image 20230402200218"><br>根据<strong>斯涅尔定律（Snell’s Law，又称从折射定律）</strong>，介质折射率和正弦的乘积一定相等。<br>$$<br>\eta_{1}sin\theta_{i}&#x3D;\eta_{2}sin\theta_{r}<br>$$</p>
+<p>因 $r_{||}$ 和 $i_{||}$ 平行且指向相同方向<br>$$<br>r_{||}&#x3D;\dfrac{|r_{||}|}{|i_{||}|}i_{||}&#x3D;\dfrac{sin\theta_r}{sin\theta_i}i_{||}&#x3D;\dfrac{\eta_1}{\eta_2}i_{||}&#x3D;\dfrac{\eta_1}{\eta_2}(i+cos\theta_i n))\qquad(1)<br>$$<br>根据勾股定理<br>$$<br>|r_\perp|&#x3D;\sqrt{|r|^2-|r_||^2}&#x3D;\sqrt{1-sin^2\theta_r}<br>$$<br>所以<br>$$<br>r_{\perp}&#x3D;-|r_{\perp}|n&#x3D;-\sqrt{1-sin^2\theta_r}n<br>$$<br>再根据斯涅尔定律<br>$$<br>sin^2\theta_r&#x3D;(\dfrac{\eta_1}{\eta_2})^2sin^2\theta_i&#x3D;(\dfrac{\eta_1}{\eta_2})^2(1-cos^2\theta_i)<br>$$<br>代入得<br>$$<br>r_{\perp}&#x3D;-\sqrt{1-(\dfrac{\eta_1}{\eta_2})^2(1-cos^2\theta_i)}n\quad\quad\quad(2)<br>$$<br>将式子 $(1)$ 和式子 $(2)$ 代入<br>$$<br>\begin{aligned}r&amp;&#x3D;r_{||}+r_{\perp}\ &amp;&#x3D;\frac{\eta_1}{\eta_2}(i+cos\theta_in)-\sqrt{1-(\frac{\eta_1}{\eta_2})^2(1-cos^2\theta_i)}n\ &amp;&#x3D;\frac{\eta_1}{\eta_2}i+(\frac{\eta_1}{\eta_2}cos\theta_i-\sqrt{1-(\frac{\eta_1}{\eta_2})^2(1-cos^2\theta_i)})n\end{aligned}<br>$$<br>最后因为<br>$$<br>cos\theta_i&#x3D;-i\cdot n<br>$$<br>得到<br>$$<br>r&#x3D;\dfrac{\eta_1}{\eta_2}i-(\dfrac{\eta_1}{\eta_2}(i\cdot n)+\sqrt{1-(\dfrac{\eta_1}{\eta_2})^2(1-(i\cdot n)^2)})n<br>$$<br>需要注意的是，上述式子在根号内的值大于等于 0 时才成立。当 $\eta_1\leqslant\eta_2$ 时，根号内始终不小于 0。当 $\eta_1&gt;\eta_2$ 时，则在特定入射角度（超过临界角）会发生<strong>全内反射</strong>的现象。此时折射分量为 0。<br>$$<br>r&#x3D;\begin{cases}\frac{\eta_1}{\eta_2}i-(\frac{\eta_1}{\eta_2}(i\cdot n)+\sqrt{1-(\frac{\eta_1}{\eta_2})^2(1-(i\cdot n)^2)})n&amp;\text{if}:1-(\frac{\eta_1}{\eta_2})^2(1-(i\cdot n)^2)\ge0\ 0&amp;\text{if}:1-(\frac{\eta_1}{\eta_2})^2(1-(i\cdot n)^2)&lt;0\end{cases}<br>$$</p>
+<h1 id="菲涅尔方程（Fresnel）"><a href="#菲涅尔方程（Fresnel）" class="headerlink" title="菲涅尔方程（Fresnel）"></a>菲涅尔方程（Fresnel）</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/198201029">从Lambert模型到PBR模型6：推导镜面反射和漫反射的菲涅尔部分 - 知乎 (zhihu.com)</a><br>随着物体表面法线与视线的角度增大，物体的反射能力增大，这种现象称之为<strong>菲涅尔效应</strong>，万物皆有菲涅尔效应。</p>
+<p>角度跟法线角度越小，越容易穿透介质，发生折射、散射、漫反射。</p>
+<p>角度跟法线角度越大，越难穿透介质，就越容易发生镜面反射。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234258.png" alt="Pasted image 20230509112225"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234259.png" alt="Pasted image 20230509112057"><br><strong>菲涅尔方程</strong>（Fresnel Equations），用来描述光在不同折射率的介质之间的行为的方程。</p>
+<p>菲涅尔（Fresnel）方程很复杂，计算量很大<br>实时渲染中广泛采用 <strong>Schlick 的 Fresnel 近似</strong>，因为计算成本低廉，而且精度足够：<br>$$<br>F_{Schlick}(v,n) &#x3D; F_0  + (1-F_0)(1- v\cdot n)^5<br>$$</p>
+<p><strong>Empricial 近似：</strong><br>$$<br>F_{Empricial}(v,n) &#x3D; \max(0,\min(1,bias+scale \times (1-v\cdot n)^{power}))<br>$$<br>$F_0$：反射系数，用于控制菲涅尔反射的强度<br>$v$：观察方向<br>$n$：表面法线<br>$bias、scale、power$ 为控制项</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234260.png" alt="Pasted image 20230707144026|450"></p>
+<h1 id="光源"><a href="#光源" class="headerlink" title="光源"></a>光源</h1><h2 id="平行光（定向光）"><a href="#平行光（定向光）" class="headerlink" title="平行光（定向光）"></a>平行光（定向光）</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234261.png" alt="Pasted image 20230513215912"><br>距离极远，视为光向量不变。<br>定向光均匀分布，并且不会像点光源那样随距离衰减</p>
+<h2 id="点光源"><a href="#点光源" class="headerlink" title="点光源"></a>点光源</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234262.png" alt="Pasted image 20230513094316|250"></p>
+<blockquote>
+<p>点光源的辐照度随着距离的平方而减小</p>
+</blockquote>
+<p>假设有一个各向同性（强度在所有方向都是相同的）点光源发射 1 瓦特辐射功率（power），将该光源放在半径为 1 米的空心球体的中心。所有光的功率都落在球体内表面并均匀分布。整个表面积为 $4\pi$，所以单位面积的辐射功率密度为 $\displaystyle\frac{1}{4\pi}W&#x2F;m^2$。<br>由此，当光源发射的功率为 $P$ 时，辐照度 $\displaystyle E&#x3D;\frac{P}{4\pi}\frac{1}{r^2}&#x3D;\frac{I}{r^{2}}$ ，其中 $I&#x3D;\frac{P}{4\pi}$ 是光源强度。</p>
+<p>结合兰伯特余弦定律得，$\displaystyle E&#x3D;I\frac{n\cdot l}{r^{2}}&#x3D;I\frac{\cos \theta}{r^{2}}$ </p>
+<p><strong>衰减算法：</strong><br>用衰减因子乘以漫反射来影响光照。</p>
+<ol>
+<li>线性衰减：<br>d 为光源到物体表面的距离：$d&#x3D;length(\vec {LightPos} -\vec{WorldVertexPos})$<br>FalloffEnd 是最大衰减距离，FalloffStart 是开始衰减距离。</li>
+</ol>
+<p>$\displaystyle F_{Attenuation} &#x3D;\fracNaNNaN$</p>
+<ol start="2">
+<li>曲线衰减：<br>$\displaystyle F_{Attenuation} &#x3D;\frac{1}NaN$<br>使用三个衰减因子控制衰减<br>c: 常数衰减因子<br>l: 线性衰减因子<br>d: 平方衰减因子</li>
+</ol>
+<h2 id="聚光灯"><a href="#聚光灯" class="headerlink" title="聚光灯"></a>聚光灯</h2><p>范围呈圆锥体的光： 手电筒</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234263.png" alt="Pasted image 20230513215821"></p>
+<p>光源位置 $Q$<br>目标点 $P$</p>
+<p>定义<strong>光向量</strong>与光传播的方向相反，即光向量的方向是由点 $P$ 指向点光源 $Q$:<br>$$L&#x3D;\frac{Q-P}{||Q-P||}$$</p>
+<p>由图可知，当且仅当位于 $-L$ 与 $d$ 之间的夹角 $\phi$ 小于圆锥体的半顶角 $\phi_{max}$ 时，P 才位于聚光灯的圆锥体范围之中（所以它才可以被光照射到)。而且，聚光灯圆锥体范围内所有光线的强度也不尽相同。位于圆锥体中心处的光线（即 $Qd$ 这条向量上的光线）光强应该是最强的，而随着角 $\phi$ 由 0 增加至 $\phi_{max}$ ，光强会逐渐趋近于0。</p>
+<p><strong>衰减算法：</strong></p>
+<ol>
+<li><p>根据 $\phi$ 计算（光的角度是 180 度的平面光）：<br>$\displaystyle F_{Attenuation}&#x3D;max(0,\cos\phi)&#x3D;max(0,-L\cdot d)^{power}$</p>
+</li>
+<li><p>根据内角外角（可以灵活调整光的角度和衰减）:<br>定义内角 $\phi_1$ 和外角 $\phi_2$ ，内外角的差角记作 $\phi_{distance}&#x3D;\phi_2-\phi_1$<br>$\displaystyle F_{Attenuation}&#x3D;\frac{\phi_{distance}-(\phi-\phi_{distance})}{\phi_{distance}}$<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292234264.png" alt="Pasted image 20230517212438|450"></p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/32783.html">http://liuke101.github.io/post/32783.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/3D%E6%95%B0%E5%AD%A6/">3D数学</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292237904.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/22003.html" title="【公式推导04】纹理映射"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【公式推导04】纹理映射</div></div></a></div><div class="next-post pull-right"><a href="/post/50070.html" title="3D数学"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292248855.gif" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">3D数学</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/50070.html" title="3D数学"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292248855.gif" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">3D数学</div></div></a></div><div><a href="/post/34215.html" title="【公式推导01】三维旋转"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227539.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【公式推导01】三维旋转</div></div></a></div><div><a href="/post/9181.html" title="【公式推导02】空间变换"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292230524.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【公式推导02】空间变换</div></div></a></div><div><a href="/post/22003.html" title="【公式推导04】纹理映射"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【公式推导04】纹理映射</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">文章主要迁移自个人的obsidian仓库，存在部分md语法冲突，导致显示异常，暂未修复...</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%95%E7%BA%BF"><span class="toc-text">法线</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%95%E7%BA%BF%E5%88%86%E7%B1%BB"><span class="toc-text">法线分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%95%E7%BA%BF%E5%8F%98%E6%8D%A2"><span class="toc-text">法线变换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Unity-shader-%E4%B8%AD%E7%9A%84%E6%B3%95%E7%BA%BF%E5%8F%98%E6%8D%A2"><span class="toc-text">Unity shader 中的法线变换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%95%E7%BA%BF%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5%E5%85%AC%E5%BC%8F%E6%8E%A8%E5%AF%BC"><span class="toc-text">法线变换矩阵公式推导</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E7%BA%BF%E7%A9%BA%E9%97%B4"><span class="toc-text">切线空间</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%87%E7%BA%BF%E7%A9%BA%E9%97%B4%E4%B8%AD%E7%9A%84%E6%B3%95%E7%BA%BF"><span class="toc-text">切线空间中的法线</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%95%E7%BA%BF%E8%B4%B4%E5%9B%BE-Normal-Map"><span class="toc-text">法线贴图 Normal Map</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%B3%95%E7%BA%BF%E8%B4%B4%E5%9B%BE%EF%BC%88%E4%BA%8C%E7%BB%B4%EF%BC%89"><span class="toc-text">计算法线贴图（二维）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%B3%95%E7%BA%BF%E8%B4%B4%E5%9B%BE%EF%BC%88%E4%B8%89%E7%BB%B4%EF%BC%89"><span class="toc-text">计算法线贴图（三维）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%95%E7%BA%BF%E8%B4%B4%E5%9B%BE%E7%9A%84%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="toc-text">法线贴图的存储方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%B3%95%E7%BA%BF%E8%B4%B4%E5%9B%BE%E6%95%B0%E6%8D%AE"><span class="toc-text">读取法线贴图数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%95%E7%BA%BF%E8%B4%B4%E5%9B%BE%E7%9A%84%E5%8E%8B%E7%BC%A9"><span class="toc-text">法线贴图的压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%B3%95%E7%BA%BF%E8%B4%B4%E5%9B%BE%E7%9A%84%E4%BF%A1%E6%81%AF%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B%E5%85%89%E7%85%A7"><span class="toc-text">利用法线贴图的信息计算模型光照</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TBN-%E7%9F%A9%E9%98%B5"><span class="toc-text">TBN 矩阵</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TBN-%E6%8E%A8%E5%AF%BC"><span class="toc-text">TBN 推导</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MikktSpace"><span class="toc-text">MikktSpace</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">仍存在的问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8-unity-shader-%E4%B8%AD%E7%9A%84-TBN-%E7%9F%A9%E9%98%B5%EF%BC%9F"><span class="toc-text">在 unity shader 中的 TBN 矩阵？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%96%91%E9%9A%BE%E8%A7%A3%E6%9E%90"><span class="toc-text">疑难解析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UV-%E4%B8%8E-TB-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text">UV 与 TB 的关系</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%89%E7%9A%84%E6%95%A3%E5%B0%84%EF%BC%88scattering%EF%BC%89"><span class="toc-text">光的散射（scattering）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84"><span class="toc-text">反射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%98%E5%B0%84"><span class="toc-text">折射</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%8F%B2%E6%B6%85%E5%B0%94%E6%96%B9%E7%A8%8B%EF%BC%88Fresnel%EF%BC%89"><span class="toc-text">菲涅尔方程（Fresnel）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%89%E6%BA%90"><span class="toc-text">光源</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B3%E8%A1%8C%E5%85%89%EF%BC%88%E5%AE%9A%E5%90%91%E5%85%89%EF%BC%89"><span class="toc-text">平行光（定向光）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%82%B9%E5%85%89%E6%BA%90"><span class="toc-text">点光源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%9A%E5%85%89%E7%81%AF"><span class="toc-text">聚光灯</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/64863.html" title="全局光照GI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300005318.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="全局光照GI"/></a><div class="content"><a class="title" href="/post/64863.html" title="全局光照GI">全局光照GI</a><time datetime="2024-04-29T23:06:00.000Z" title="发表于 2024-04-30 00:06:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/55802.html" title="环境光照IBL"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300003151.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="环境光照IBL"/></a><div class="content"><a class="title" href="/post/55802.html" title="环境光照IBL">环境光照IBL</a><time datetime="2024-04-29T23:03:00.000Z" title="发表于 2024-04-30 00:03:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/49886.html" title="光线追踪理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292358872.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="光线追踪理论"/></a><div class="content"><a class="title" href="/post/49886.html" title="光线追踪理论">光线追踪理论</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/38389.html" title="路径追踪"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300000048.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="路径追踪"/></a><div class="content"><a class="title" href="/post/38389.html" title="路径追踪">路径追踪</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/19081.html" title="PBR理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292357277.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PBR理论"/></a><div class="content"><a class="title" href="/post/19081.html" title="PBR理论">PBR理论</a><time datetime="2024-04-29T22:57:00.000Z" title="发表于 2024-04-29 23:57:00">2024-04-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292237904.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>

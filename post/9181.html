@@ -1,0 +1,800 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【公式推导02】空间变换 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="[!NOTE] 约定本文以 GAMES101 课程中的标准进行推导，详情如下：  本文用列向量&#x2F;所有空间均为右手坐标系进行说明以及推导（若需转换到行向量&#x2F;左手坐标系，需要对变换矩阵做转置，因为列向量 v 左乘变换矩阵 M 等于行向量 v 右乘变换矩阵 M 的转置） Camera 的 LookAt （Forward）方向为 $- z$ 轴方向，和 OpenGL 一致。 推导投影">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【公式推导02】空间变换">
+<meta property="og:url" content="http://liuke101.github.io/post/9181.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="[!NOTE] 约定本文以 GAMES101 课程中的标准进行推导，详情如下：  本文用列向量&#x2F;所有空间均为右手坐标系进行说明以及推导（若需转换到行向量&#x2F;左手坐标系，需要对变换矩阵做转置，因为列向量 v 左乘变换矩阵 M 等于行向量 v 右乘变换矩阵 M 的转置） Camera 的 LookAt （Forward）方向为 $- z$ 轴方向，和 OpenGL 一致。 推导投影">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292230524.png">
+<meta property="article:published_time" content="2024-04-29T21:30:25.000Z">
+<meta property="article:modified_time" content="2024-04-29T21:31:14.939Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="3D数学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292230524.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/9181.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【公式推导02】空间变换',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-29 22:31:14'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292230524.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【公式推导02】空间变换</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-29T21:30:25.000Z" title="发表于 2024-04-29 22:30:25">2024-04-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-29T21:31:14.939Z" title="更新于 2024-04-29 22:31:14">2024-04-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">13k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>55分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【公式推导02】空间变换"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/9181.html#post-comment"><span class="waline-comment-count" data-path="/post/9181.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>[!NOTE] 约定<br>本文以 GAMES101 课程中的标准进行推导，详情如下：</p>
+<ol>
+<li>本文用<strong>列向量&#x2F;所有空间均为右手坐标系</strong>进行说明以及推导（<strong>若需转换到行向量&#x2F;左手坐标系，需要对变换矩阵做转置</strong>，因为列向量 v 左乘变换矩阵 M 等于行向量 v 右乘变换矩阵 M 的<strong>转置</strong>）</li>
+<li><strong>Camera 的 LookAt （Forward）方向为 $- z$ 轴方向</strong>，和 OpenGL 一致。</li>
+<li>推导投影矩阵时近、远裁面坐标 $n、f$ 使用<strong>矩阵值（带符号）</strong>，因此 $f&lt;n&lt;0$。和 OpenGL 不一致不一致，OpenGL 使用<strong>距离值</strong>。</li>
+<li><strong>NDC 空间范围</strong> $[-1,1]^3$ ，和 OpenGL 一致</li>
+<li>由于 View space 和 NDC space 都是右手系，所以变换后 $z$ 轴方向并没有变化，因此 $n$ 被映射到了 $1$，而 $f$ 被映射到了 $-1$，仍然符合 $f &lt; n$。（这个地方不如 OpenGL 直观，在 OpenGL 中，View Space 是右手坐标系，而 Clip Space 与 NDC Space 是左手坐标系，因此 $n$ 被映射到 $-1$，$f$ 被映射到 $1$）</li>
+</ol>
+<p>和 OpenGL 标准的具体差异，可以查看 <a target="_blank" rel="noopener" href="https://happyfire.blog.csdn.net/article/details/122535066?spm=1001.2014.3001.5502">GAMES101投影矩阵推导详解和分析</a><br>OpenGL 标准下的矩阵推导见小节 7</p>
+</blockquote>
+<blockquote>
+<p>[!info]  OpenGL 标准</p>
+<ol>
+<li>列向量</li>
+<li>模型空间、世界空间、观察空间是右手坐标系，而裁剪空间与 NDC 是左手坐标系</li>
+<li>Camera 的 LookAt （Forward）方向为 $- z$ 轴方向</li>
+<li><strong>NDC 空间范围</strong> $[-1,1]^3$ </li>
+<li>OpenGL 使用<strong>距离值</strong>表示 $n、f$。$n$ 被映射到 $-1$，$f$ 被映射到 $1$</li>
+</ol>
+</blockquote>
+<p><strong>视图变换的目的就是将三f维空间中以 $(x,y,z)$ 表示的物体变换到到二维坐标系中，以像素（pixels）为基本单位表示。</strong></p>
+<p>从模型变换到视口变换，都属于渲染管线的[[01 渲染管线#2 几何处理阶段|几何处理阶段]]</p>
+<h1 id="1-模型变换（模型空间-世界空间）"><a href="#1-模型变换（模型空间-世界空间）" class="headerlink" title="1 模型变换（模型空间-&gt;世界空间）"></a>1 模型变换（模型空间-&gt;世界空间）</h1><p>世界空间是以世界原点（0，0，0）为中心的空间。<br>模型空间（model space）又称对象空间（object space）或者局部空间（local space），是以模型原点为中心的空间。</p>
+<ul>
+<li>当模型放在场景中之后，就会产生一个基于模型原点模型空间。<ul>
+<li>游戏引擎中，如果模型有父层级，那么编辑器中显示的位置，旋转，缩放信息都是模型空间的信息。（相对于父模型原点的空间）</li>
+</ul>
+</li>
+<li>如果没有父层级，那么编辑器中显示的都是世界空间的信息。（相对于世界原点的空间）</li>
+</ul>
+<p>模型变换矩阵即<strong>先缩放，再旋转，后平移</strong>的仿射变换矩阵</p>
+<p><strong>模型变换矩阵的列向量从左到右分别描述了模型空间的 x 轴、y 轴、z 轴、原点相对于世界空间的齐次坐标。</strong><br>$W&#x3D;\begin{bmatrix}u_x &amp; v_x &amp; w_x &amp; Q_x \ u_y &amp; v_y &amp; w_y &amp; Q_y \ u_z &amp; v_z &amp; w_z &amp; Q_x \ 0 &amp; 0 &amp; 0 &amp; 1\end{bmatrix}$</p>
+<h1 id="2-观察变换（世界空间-观察空间-摄像机空间-）"><a href="#2-观察变换（世界空间-观察空间-摄像机空间-）" class="headerlink" title="2 观察变换（世界空间-&gt;观察空间(摄像机空间)）"></a>2 观察变换（世界空间-&gt;观察空间(摄像机空间)）</h1><p>观察空间是以相机原点为中心的空间。</p>
+<h2 id="定义相机"><a href="#定义相机" class="headerlink" title="定义相机"></a>定义相机</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227186.png" alt="Pasted image 20230412213953|450"></p>
+<ul>
+<li>$\vec{p}$：<strong>世界空间中的位置</strong>（Position），即 Camera 的坐标</li>
+<li>$\vec{l}$ （单位向量）：<strong>观察方向</strong>（LookAt）：即 Camera 指向哪个方向</li>
+<li>$\vec{u}$ （单位向量）： <strong>指向摄像机上方的向量</strong>（UpDirection）：即 Camera 的 y 轴向量。</li>
+</ul>
+<p>例如若 Camera 的 y 轴和世界坐标系的 y 轴平行，则看见的画面是正的，若 Camera 的 y 轴绕 z 轴旋转，则看见的画面也会跟着旋转。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227173.png"></p>
+<p>通过相对运动我们知道，如果摄像机所观察的物体和摄像机一起运动，那么摄像机所观察到的画面是保持不变的，例如下图中，两个摄像机的位置朝向都不相同，看见的画面确是一样的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227174.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227175.png"></p>
+<h2 id="把任意点相机移到原点"><a href="#把任意点相机移到原点" class="headerlink" title="把任意点相机移到原点"></a>把任意点相机移到原点</h2><p>那么假如有个变换矩阵 $\mathbf{V}$ ，使我们的摄像机变换为<strong>位置在世界坐标原点，看向 - z 方向，摄像机的 y 轴即为世界坐标 y 轴</strong>。那么摄像机所观察的物体同样使用矩阵 $\mathbf{V}$ 进行变换，即可保持所观察到的画面不变。这样的操作就是我们所谓的<strong>观察变换，变换矩阵</strong> $\mathbf{V}$ <strong>即为观察变换矩阵。</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227187.png" alt="Pasted image 20230412214450|500"><br>至于我们<strong>为什么要执行观察变换，是为了使后续在执行投影变换时，简化计算，看正交投影部分的推导就知道了：</strong></p>
+<ul>
+<li>[[02 空间变换#^o76mnn]] </li>
+<li>[[02 空间变换#^3jin7h]]</li>
+</ul>
+<h2 id="观察变换矩阵推导"><a href="#观察变换矩阵推导" class="headerlink" title="观察变换矩阵推导"></a>观察变换矩阵推导</h2><p>接下来我们来看看矩阵 $\mathbf{V}$ 的值应该如何计算，根据前面的描述我们可以把观察变换拆分为如下几步：</p>
+<ol>
+<li>通过平移变换，将 Camera 移到原点位置，即使 $\vec{p}$ 变为 $(0,0,0)$</li>
+<li>通过旋转变换，使 Camera 看向 $- z$ 方向且自身的 $y$ 轴与世界坐标的 $y$ 轴重叠，即使 $\vec{l}$ 变为 $(0,0,-1)$， $\vec{u}$ 变为 $(0,1,0)$。</li>
+</ol>
+<p>通过复合变换我们可知，只需要把上面两部所对应的矩阵相乘得到的结果即是我们的视图变化矩阵 $\mathbf{V}$ 的值。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227188.png" alt="Pasted image 20230412214456|500"></p>
+<h3 id="先平移（从-vec-p-到原点）"><a href="#先平移（从-vec-p-到原点）" class="headerlink" title="先平移（从 $\vec{p}$ 到原点）"></a>先平移（从 $\vec{p}$ 到原点）</h3><p>首先是平移变换的矩阵，这个很简单，设 $\vec{p} &#x3D; (p_x,p_y,p_z)$ ，我们只需要移动 $(-p_x,-p_y,-p_z)$ 即可将摄像机移动到原点，对应矩阵（设为 $\mathbf{M}$ ）即为：</p>
+<p>$\mathbf{M}&#x3D;\begin{bmatrix} 1 &amp;0 &amp;0 &amp;-p_x \ 0 &amp;1 &amp;0 &amp; -p_y\ 0 &amp;0 &amp; 1 &amp; -p_z\ 0 &amp;0 &amp; 0 &amp;1 \end{bmatrix}$</p>
+<h3 id="再旋转（-vec-l-旋转到-z-方向，-vec-u-旋转到-y-方向）"><a href="#再旋转（-vec-l-旋转到-z-方向，-vec-u-旋转到-y-方向）" class="headerlink" title="再旋转（ $\vec{l}$ 旋转到 $-z$ 方向， $\vec{u}$ 旋转到 $+y$ 方向）"></a>再旋转（ $\vec{l}$ 旋转到 $-z$ 方向， $\vec{u}$ 旋转到 $+y$ 方向）</h3><ul>
+<li><strong>直接旋转不好算，先算逆旋转矩阵</strong></li>
+<li><strong>利用旋转矩阵是正交矩阵的性质，逆矩阵求转置得旋转矩阵</strong></li>
+</ul>
+<p>移动到原点后，我们要通过旋转，使 $\vec{l} &#x3D; (l_x,l_y,l_z)$ 变为 (0,0,-1) ， $\vec{u}&#x3D;(u_x,u_y,u_z)$ 变为 (0,1,0)。这一步我们有点无从下手，因为我们之前讨论旋转矩阵时都是绕什么什么轴旋转多少多少度，而在这里我们并不知道应该绕什么轴旋转多少度。</p>
+<p>那么应该如何解决呢？这里有一个逆向思维，即：我们不知道如何将 $\vec{l} &#x3D; (l_x,l_y,l_z)$ 变为 (0,0,-1) ， $\vec{u}&#x3D;(u_x,u_y,u_z)$ 变为 (0,1,0)，但是我们能够知道如何将 (0,0,-1) 变为 $\vec{l} &#x3D; (l_x,l_y,l_z)$ ，(0,1,0) 变为 $\vec{u}&#x3D;(u_x,u_y,u_z)$ ，也就是上诉旋转的<strong>逆变换</strong>，我们假设我们原先要求的矩阵为 $\mathbf{R}$ ，那么它的逆变换矩阵即为 $\mathbf{R}^{-1}$ 。</p>
+<p>因为通过前面的知识我们知道，<strong>旋转矩阵中的值即为 x,y,z 三个轴的单位向量旋转后的值。</strong> 在这里 (0,1,0) 变为 $\vec{u}&#x3D;(u_x,u_y,u_z)$ ，(0,0,1) 变为了 $-\vec{l} &#x3D; (-l_x,-l_y,-l_z)$ ，因为 $\vec{l}$ 代表的是摄像机自身的 - z 轴方向， $\vec{u}$ 代表的是摄像机自身的 y 轴方向，根据<strong>叉乘</strong>的定义可得摄像机自身的 x 轴方向即为 $\vec{l} \times \vec{u}$ ，即 $(1,0,0)$ 变为 $\vec{l} \times \vec{u}$ 。</p>
+<p>那么我们就可得：</p>
+<p>$\mathbf{R}^{-1}&#x3D;\begin{bmatrix} (\vec{l}\times\vec{u})_x &amp; u_x &amp; -l_x &amp; 0\ (\vec{l}\times\vec{u})_y &amp; u_y &amp; -l_y &amp; 0\ (\vec{l}\times\vec{u})_z &amp; u_z &amp; -l_z &amp; 0\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+<p>同时又因为我们的旋转矩阵为<strong>正交矩阵</strong>，其逆矩阵即等于转置矩阵（这一点在之前的文章着重介绍和证明过了）， $\mathbf{R}^{-1}&#x3D;\mathbf{R}^{T}$ ，两边同时转置得， $\mathbf{R} &#x3D; {(\mathbf{R}^{-1})}^{T}$ 的转置，可得：</p>
+<p>$R&#x3D;\begin{bmatrix} (\vec{l}\times\vec{u})_x &amp; (\vec{l}\times\vec{u})_y &amp; (\vec{l}\times\vec{u})_z &amp; 0\ u_x &amp; u_y &amp; u_z &amp; 0\ -l_x &amp; -l_y &amp; -l_z &amp; 0\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+<h3 id="观察变换矩阵"><a href="#观察变换矩阵" class="headerlink" title="观察变换矩阵"></a>观察变换矩阵</h3><p>所以即可求得视图变化矩阵 $\mathbf{V}$ 的值，即为上面两个矩阵相乘：</p>
+<p>$\mathbf{V}&#x3D;\mathbf{R}\mathbf{M}&#x3D;\begin{bmatrix} (\vec{l}\times\vec{u})_x &amp; (\vec{l}\times\vec{u})_y &amp; (\vec{l}\times\vec{u})_z &amp; 0\ u_x &amp; u_y &amp; u_z &amp; 0\ -l_x &amp; -l_y &amp; -l_z &amp; 0\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}\begin{bmatrix} 1 &amp;0 &amp;0 &amp;-p_x \ 0 &amp;1 &amp;0 &amp; -p_y\ 0 &amp;0 &amp; 1 &amp; -p_z\ 0 &amp;0 &amp; 0 &amp;1 \end{bmatrix}$</p>
+<p>$&#x3D;\begin{bmatrix} (\vec{l}\times\vec{u})_x &amp; (\vec{l}\times\vec{u})_y &amp; (\vec{l}\times\vec{u})_z &amp;(\vec{l}\times\vec{u})\cdot -p \ u_x &amp; u_y &amp; u_z &amp;u\cdot -p\ -l_x &amp; -l_y &amp; -l_z &amp;-l\cdot -p\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}$（可以看出第四列就是向量<strong>点积</strong>的结果）</p>
+<p>$&#x3D;\begin{bmatrix} (\vec{l}\times\vec{u})_x &amp; (\vec{l}\times\vec{u})_y &amp; (\vec{l}\times\vec{u})_z &amp;-p_x(\vec{l}\times\vec{u})_x-p_y(\vec{l}\times\vec{u})_y-p_z(\vec{l}\times\vec{u})_z\ u_x &amp; u_y &amp; u_z &amp;-p_xu_x-p_yu_y-p_zu_z\ -l_x &amp; -l_y &amp; -l_z &amp;p_xl_x+p_yl_y+p_zl_z\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+<h2 id="LookAt-矩阵推导"><a href="#LookAt-矩阵推导" class="headerlink" title="LookAt 矩阵推导"></a>LookAt 矩阵推导</h2><p>图形 API 通常使用 Lookat 矩阵来计算观察变换矩阵。看起来计算方式有点差异，实际上原理相同。</p>
+<h3 id="定义相机-1"><a href="#定义相机-1" class="headerlink" title="定义相机"></a>定义相机</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227186.png" alt="Pasted image 20230412213953|450"></p>
+<ul>
+<li>$\vec{p}$：<strong>世界空间中的位置</strong>（Position），即 Camera 的坐标</li>
+<li>$\vec{l}$ （单位向量）：<strong>观察方向</strong>（LookAt），即 Camera 指向哪个方向，Camera 的 z 轴方向</li>
+<li>$\vec{u}$ （单位向量）： <strong>指向摄像机上方的向量</strong>（UpDirection），即 Camera 的 y 轴向量。</li>
+</ul>
+<p>计算过程涉及的参数<br>$\vec{r}$：<strong>观察空间的右向量</strong>（Right）, 即 Camera 的 $x$ 轴向量<br>$\vec{worldup}$：<strong>Camera 世界空间竖直向上的向量</strong>，我们将其定义为 $(0,1,0)$<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227188.png" alt="Pasted image 20230412214456|500"><br>左下角坐标为世界空间坐标的世界原点，右上角为观察空间的摄像机位置</p>
+<h3 id="摄像机世界空间位置-p"><a href="#摄像机世界空间位置-p" class="headerlink" title="摄像机世界空间位置 p"></a>摄像机世界空间位置 p</h3><p>摄像机世界空间位置简单来说就是世界空间中一个指向摄像机位置的向量。</p>
+<blockquote>
+<p>不要忘记正 z 轴是从屏幕指向你的，如果我们希望摄像机向后移动，我们就沿着 z 轴的正方向移动。</p>
+</blockquote>
+<h3 id="观察向量-l"><a href="#观察向量-l" class="headerlink" title="观察向量 l"></a>观察向量 l</h3><p><strong>观察向量</strong>指的是指向摄像机正 Z 轴方向的向量。</p>
+<p>用摄像机位置减去指向的物体位置即可得到观察向量。<br> $$\vec{l} &#x3D;   \vec{p} -  \vec{objectpos}$$ </p>
+<h3 id="右向量-r"><a href="#右向量-r" class="headerlink" title="右向量 r"></a>右向量 r</h3><p><strong>右向量</strong>(Right Vector)，它代表摄像机空间的 x 轴的正方向。</p>
+<p>计算方法：</p>
+<ol>
+<li>定义一个世界空间竖直向上的向量 $\vec{worldup}&#x3D;(0,1,0)$。(实际上，我们也可以先定义向右的向量进行计算，只是计算顺序不同罢了)</li>
+<li>$\vec{worldup}$ 和 $\vec{l}$ 叉乘得 $\vec{r}$。<br> $$\vec{r} &#x3D;   mul(\vec{worldup} ,  \quad \vec{l})$$</li>
+</ol>
+<h3 id="上向量-u"><a href="#上向量-u" class="headerlink" title="上向量 u"></a>上向量 u</h3><p>现在我们已经有了观察空间的 x 轴向量（$\vec{r}$）和 z 轴向量（$\vec{l}$），获取一个指向摄像机的正 y 轴向量就相对简单了： $\vec{l}$  叉乘 $\vec{r}$ 得到 $\vec{u}$<br> $$\vec{u} &#x3D;   mul(\vec{l} ,  \quad\vec{r})$$</p>
+<h3 id="Look-At"><a href="#Look-At" class="headerlink" title="Look At"></a>Look At</h3><p><strong>使用矩阵的好处之一是如果你使用 3 个相互垂直（或非线性）的轴定义了一个坐标空间，你可以用这 3 个轴外加一个平移向量来创建一个矩阵，并且你可以用这个矩阵乘以任何向量来将其变换到那个坐标空间。</strong> 这正是<strong>LookAt</strong>矩阵所做的，现在我们有了 3 个相互垂直的轴和一个定义摄像机空间的位置坐标，我们可以创建我们自己的 LookAt 矩阵了：</p>
+<p>$$<br>LookAt&#x3D;\begin{bmatrix}R_x&amp;R_y&amp;R_x&amp;0\ U_x&amp;U_y&amp;U_z&amp;0\ -L_x&amp;-L_y&amp;-L_z&amp;0\ 0&amp;0&amp;0&amp;1\end{bmatrix}*\begin{bmatrix}1&amp;0&amp;0&amp;-P_x\ 0&amp;1&amp;0&amp;-P_y\ 0&amp;0&amp;1&amp;-P_z\ 0&amp;0&amp;0&amp;1\end{bmatrix}<br>$$</p>
+<p><strong>其中 R 是右向量 $\vec{r}$ ，U 是上向量 $\vec{u}$ ，L 是观察向量 $\vec{l}$，P 是摄像机时间空间位置 $\vec{p}$。</strong></p>
+<p><strong>LookAt 矩阵就像它的名字表达的那样：它会创建一个看着 (Look at)给定目标的观察矩阵。</strong></p>
+<p>对比矩阵推导得出的变换矩阵：可以看出来是对应的。<br>$\mathbf{M}&#x3D;\begin{bmatrix} 1 &amp;0 &amp;0 &amp;-p_x \ 0 &amp;1 &amp;0 &amp; -p_y\ 0 &amp;0 &amp; 1 &amp; -p_z\ 0 &amp;0 &amp; 0 &amp;1 \end{bmatrix}$</p>
+<p>$R&#x3D;\begin{bmatrix} (\vec{l}\times\vec{u})_x &amp; (\vec{l}\times\vec{u})_y &amp; (\vec{l}\times\vec{u})_z &amp; 0\ u_x &amp; u_y &amp; u_z &amp; 0\ -l_x &amp; -l_y &amp; -l_z &amp; 0\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+<h1 id="3-投影变换-裁剪（观察空间-裁剪空间）"><a href="#3-投影变换-裁剪（观察空间-裁剪空间）" class="headerlink" title="3 投影变换+裁剪（观察空间-&gt;裁剪空间）"></a>3 投影变换+裁剪（观察空间-&gt;裁剪空间）</h1><p>摄像机对好要拍摄的物体后，就差最后按下快门变成照片这一步了，而这一步也就是我们的投影变换，即从三维变成二维。在图形学中，投影变换分为如下两种，分别为正交投影和透视投影。</p>
+<h3 id="正交投影（Orthographic-projection）"><a href="#正交投影（Orthographic-projection）" class="headerlink" title="正交投影（Orthographic projection）"></a>正交投影（Orthographic projection）</h3><p>正交投影为右图：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227191.png" alt="Pasted image 20230104154537"><br>​可以发现，正交投影没有近大远小的现象，视线是互相平行的，类似于平行光照，这种投影更多的用于工程图。图中我们还可发现有一个 Near clip plane 和一个 Far clip plane，它们分别代表该摄像机能看见的最近的距离以及最远距离，即摄像机只能看见两个平面之间的物体。在正交投影中，Near clip plane 的大小等于 Far clip plane，能被摄像机拍摄到的空间即为一个长方体。</p>
+<h4 id="观察变换确定范围"><a href="#观察变换确定范围" class="headerlink" title="观察变换确定范围"></a>观察变换确定范围</h4><p>由于已经进行过了观察变换，即摄像机在原点，看向 $- z$ 轴方向，摄像机的 $y$ 轴与世界坐标 $y$ 轴重叠。因此我们的所拍摄的空间也能够确定下来，如下图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227176.png"><br><strong>以相机为原点可以确定以下参数：</strong></p>
+<ul>
+<li>​该空间的<strong>宽度</strong>为 $L$ 点和 $R$ 点的距离，设 $L$ 点和 $R$ 点的 $x$ 轴坐标分别为 $l$ 和 $r$ ，</li>
+<li><strong>高度</strong>为 $T$ 点和 $B$ 点的距离，设 $T$ 点和 $B$ 点的 $y$ 轴坐标分别为 $t$ 和 $b$ </li>
+<li><strong>长度</strong>为 $N$ 点和 $F$ 点的距离，设 $N$ 点和 $F$ 点的 $z$ 轴坐标分别为 $n$ 和 $f$ 。</li>
+<li>可得：$r$ &gt; $l$ 和 $t$ &gt; $b$，但是 $f$ &lt; $n$，因为是看向 $- z$ 方向，所以更远的位置 z 的值越小。</li>
+</ul>
+<p>同时还要注意，虽然摄像机看向 $- z$ 轴方向，但是 $N$ 点并不一定是 Near clip plane 的中心点，因此 $r$ 和 $l$ 的绝对值不一定相等， $t$ 和 $b$ 的绝对值也不一定相等。（若为中点，则为<strong>对称视锥体</strong>，可以简化计算）</p>
+<p><strong>上面的定义也证明了我们观察变换的必要性，如果没有观察变换把摄像机给规定到原点等，我们就很难用上面这些变量来形容出摄像机所观测的空间。</strong> ^o76mnn</p>
+<p>从图中我们也可以发现当从三维变为二维时，空间内的物体的 $x$ 轴和 $y$ 轴位置不会发生变换，而是在 $z$ 轴方向进行了压缩。<strong>我们可以把空间中的物体的 $z$ 轴都设置为 $0$，那么空间中的所有物体都会被压缩到 $xy$ 平面上，也就是变为二维的了。</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227192.png" alt="Pasted image 20230104154745"></p>
+<h4 id="标准方式"><a href="#标准方式" class="headerlink" title="标准方式"></a>标准方式</h4><p>然而更规范化的做法是将上述摄像机所观测的空间（即长方体，设为 $S$ ）变换成一个<strong>标准立方体</strong>（<strong>canonical cube</strong>）。何为标准立方体？即以原点为中心，边长为 $2$ 的立方体，也就是立方形在 x，y，z 三个轴上都是从 $- 1$ 到 $1$ ($[-1,-1]^3$)。</p>
+<p>整个变换过程就是我们的<strong>正交投影变换</strong>，其对应矩阵即为正交投影变换矩阵。该变换我们可以分为如下两步（这也体现了观察变换的重要性，使得我们做投影变换变得很简单）： ^3jin7h</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227193.png" alt="Pasted image 20230412222358"></p>
+<ol>
+<li>平移变换，将长方体 $S$ 平移到原点。</li>
+<li>缩放变换，将长方体 $S$ 的长宽高缩放到边长为 2 的立方体 $[-1,-1]^3$</li>
+</ol>
+<h5 id="平移变换"><a href="#平移变换" class="headerlink" title="平移变换"></a>平移变换</h5><p>首先是移到原点的平移变换，即把长方体 $S$ 的中心点移动到原点，那么我们就要求出长方体中心点的坐标。根据前面的数据，我们可以知道：</p>
+<p>中心点 x 的坐标即为 $\displaystyle\frac{r+l}{2}$ ，中心点 y 的坐标即为 $\displaystyle\frac{t+b}{2}$ ，中心点 x 的坐标即为 $\displaystyle\frac{n+f}{2}$</p>
+<p>因此平移矩阵（设为 $\mathbf{M}$ ）即为：</p>
+<p>$\mathbf{M}&#x3D;\begin{bmatrix} 1 &amp;0 &amp;0 &amp; -\frac{r+l}{2}\ 0 &amp;1 &amp;0 &amp; -\frac{t+b}{2}\ 0 &amp;0 &amp;1 &amp; -\frac{n+f}{2}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}$</p>
+<h5 id="缩放变换"><a href="#缩放变换" class="headerlink" title="缩放变换"></a>缩放变换</h5><p>接着是将长方体 $S$ 变为边长为 $2$ 的立方体的缩放变换，那么我们只需要知道长方体的长宽高即可。我们设 x 轴方向的为长度，即为 $r-l$ ，$y$ 轴方向的为高度，即为 $t-b$ ，$z$ 轴方向的为宽度，即为 $n-f$ 。</p>
+<p>所以缩放矩阵（设为 $\mathbf{S}$ ）即为：</p>
+<p>$\mathbf{S}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp; 0 &amp;0 &amp;0 \ 0&amp; \frac{2}{t-b} &amp;0 &amp;0 \ 0&amp; 0 &amp; \frac{2}{n-f} &amp;0 \ 0&amp;0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+<h5 id="正交投影变换矩阵"><a href="#正交投影变换矩阵" class="headerlink" title="正交投影变换矩阵"></a>正交投影变换矩阵</h5><p>因此可以得出最终的正交投影变换矩阵（设为 $\mathbf{P}_{ortho}$ ）为：</p>
+<p>$\mathbf{P}_{ortho}&#x3D;\mathbf{S}\mathbf{M}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp; 0 &amp;0 &amp;0 \ 0&amp; \frac{2}{t-b} &amp;0 &amp;0 \ 0&amp; 0 &amp; \frac{2}{n-f} &amp;0 \ 0&amp;0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} 1 &amp;0 &amp;0 &amp; -\frac{r+l}{2}\ 0 &amp;1 &amp;0 &amp; -\frac{t+b}{2}\ 0 &amp;0 &amp;1 &amp; -\frac{n+f}{2}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}&#x3D; \begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; -\frac{r+l}{r-l}\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; -\frac{t+b}{t-b}\ 0 &amp;0 &amp;\frac{2}{n-f} &amp; -\frac{n+f}{n-f}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}$</p>
+<p>注：</p>
+<ul>
+<li>该变化会导致物体的被拉伸（因为长方体变成了立方体），在后续的<strong>视口变换</strong>过程中会复原：[[02 空间变换#^v33wj5]]</li>
+<li>因为我们往-z 方向看，所以物体越远 z 值越小，越近 z 值越大。</li>
+</ul>
+<h3 id="透视投影（Perspective-projection）"><a href="#透视投影（Perspective-projection）" class="headerlink" title="透视投影（Perspective projection）"></a>透视投影（Perspective projection）</h3><p>透视投影为左图：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227191.png" alt="Pasted image 20230104154537"></p>
+<p>​与正交投影不同的是，透视投影会有近大远小的现象，类似于我们的人眼或者照相机拍照，这种投影更具有真实感，被广泛使用。从图中我们可以看出 Far clip plane 的面积要大于 Near clip plane，因此我们摄像机所观测的区域不再是一个长方体，而是变成了一个四棱台（即四棱锥去掉顶部），也就是我们常说的<strong>视锥体</strong>（Frustum）。</p>
+<p>我们来看下在观察变换后，透视投影在坐标系中的样子，如下图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227177.png"></p>
+<p>​通过前面我们知道，投影变换是把相机观测的空间压缩成一个标准立方体，对于这个视锥体我们应该如何压缩呢？有个思路是这样的：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227195.png" alt="Pasted image 20230104155922"></p>
+<ol>
+<li>我们先通过某种变换把这个视锥体压缩成一个长方体</li>
+<li>再把长方体移到原点上压缩成标准立方体，即等于执行正交投影变换</li>
+</ol>
+<ul>
+<li><strong>规定</strong>：<ul>
+<li>近平面（z 值为 n）上的任何点挤压后不会发生变化</li>
+<li>远平面（z 值为 f）挤压后 z 值不变，远平面中心点（x，y 均为0）不变</li>
+</ul>
+</li>
+</ul>
+<h4 id="“压扁”操作"><a href="#“压扁”操作" class="headerlink" title="“压扁”操作"></a>“压扁”操作</h4><p>那么我们只需要计算出第一步的变换矩阵（设为 $\mathbf{T}$ ），然后将它乘以正交投影变换矩阵，即可得到我们的透视投影变换矩阵（设为 $\mathbf{P}_{persp}$ ）了。</p>
+<p>要使视锥体变为长方体，首先我们要使 $T_1T_2$ 变为 $y&#x3D;T_1N$ 的直线（ $T_1N$ 表示 $T_1$ 点到 N 点的距离，后面同理）， $B_1B_2$ 变为 $y&#x3D;-B_1N$ 的直线， $L_1L_2$ 变为 $x&#x3D;-L_1N$ 的直线， $R_1R_2$ 变为 $x&#x3D;R_1N$ 的直线。</p>
+<p>首先我们来看看如何使 $T_1T_2$ 变为 $y&#x3D;T_1N$ 的直线，做这一步前我们可以从 x 轴方向看向 yz 平面，来观察这个视锥体，方便理解。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227178.png"></p>
+<p>设 $N$ 点的 $z$ 值为 $n$，$F$ 点的 $z$ 值为 $f$ ，（<strong>f &lt; n &lt; 0</strong>）。</p>
+<p>通过图中我们可以发现， $\bigtriangleup T_1ON$ 和 $\bigtriangleup T_2OF$ 是相似三角形，可得： $\displaystyle\frac{T_1N}{n}&#x3D;\frac{T_2F}{f}$ ，即 $\displaystyle T_2F \frac{n}{f} &#x3D; T_1N$ 。</p>
+<p>扩展开来可得在 $T_1T_2$ 直线上的任意一点，设 $(x,y,z)$，其 $y$ 值只需乘以 $\displaystyle\frac{n}{z}$ 即可与 $T_1$ 点的 $Y$ 值相等，这样直线 $T_1T_2$ 即变为一条 $y&#x3D;T_1N$ 的水平线， $B_1B_2$ 也是同理。</p>
+<p>对于 $L_1L_2$ 和 $R_1R_2$ ，我们只需要从 $y$ 轴方向观察 $xz$ 平面即可，同样是乘以 $\displaystyle\frac{n}{z}$ 即可。</p>
+<p><strong>抽象计算方式如下：</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227196.png" alt="Pasted image 20230104160406"><br>利用相似三角形求出 y 轴的位置<br>同理可以得到 $x’&#x3D;(n&#x2F;z) x$</p>
+<p><strong>因此对应视锥体里的任意一点 (x,y,z)，我们只需要将其 x 和 y 的值乘以 $\frac{n}{z}$ 即可使该视锥体变为长方体。</strong></p>
+<h4 id="z-值如何处理？"><a href="#z-值如何处理？" class="headerlink" title="z 值如何处理？"></a>z 值如何处理？</h4><p>但是此时 z 值是否会发生变化我们暂时还不知道，先当做未知来处理（看着似乎不会变换，但实际上并不是这样，后面会在解释）。</p>
+<p>关于上面的结论，我们可以得到如下一个变换矩阵：</p>
+<p>$\begin{bmatrix} \frac{n}{z} &amp; 0 &amp; 0\ 0 &amp; \frac{n}{z} &amp; 0\ ? &amp; ? &amp; ? \end{bmatrix}\begin{bmatrix} x\ y\ z \end{bmatrix}&#x3D;\begin{bmatrix} x\frac{n}{z}\ y\frac{n}{z}\ ? \end{bmatrix}$</p>
+<p>这个矩阵有个问题，那就是<strong>矩阵中的 z 是一个变量，导致该矩阵并不是一个常量</strong>。</p>
+<p>因此我们这里需要引入齐次坐标的概念，设我们有个常量 k，通过齐次坐标我们可以知道，$(x,y,z,1)$ 是等价于 $(kx,ky,kz,k)$ 的，那么可以得知，同时乘 z 后：</p>
+<p>$\begin{bmatrix} x\frac{n}{z}\ y\frac{n}{z}\ ? \1 \end{bmatrix} &#x3D;\begin{bmatrix} xn\ yn\ ? \z \end{bmatrix}$</p>
+<p>因此我们可以把上面的矩阵修改为：</p>
+<p>$\begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ ? &amp; ? &amp; ? &amp; ? \0&amp;0&amp;1&amp;0\end{bmatrix}\begin{bmatrix} x\ y\ z\1\end{bmatrix}&#x3D;\begin{bmatrix} xn\ yn\ ? \z \end{bmatrix}$</p>
+<p>这样我们矩阵中的变量 z 就被消灭掉了。</p>
+<p>接下来我们要看看 z 值的变换，从图中我们可得知的信息为变为长方体后：</p>
+<p>1.Near clip plane 上的任意点，设为 $(i,j,n)$，它的 z 值不变依旧为 n。<br>2.Far clip plane 上的任意点，设为 $(k,l,f)$，它的 z 值不变依旧为 f。</p>
+<p>可得如下两个方程：</p>
+<p>$\left{\begin{matrix} \begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ ? &amp; ? &amp; ? &amp; ? \0&amp;0&amp;1&amp;0\end{bmatrix}\begin{bmatrix} i\ j\ n\1\end{bmatrix}&#x3D;\begin{bmatrix} in\ jn\ n^2 \n \end{bmatrix}\ \ \ \begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ ? &amp; ? &amp; ? &amp; ? \0&amp;0&amp;1&amp;0\end{bmatrix}\begin{bmatrix} k\ l\ f\1\end{bmatrix}&#x3D;\begin{bmatrix} kf\ lf\ f^2 \f \end{bmatrix} \end{matrix}\right.$</p>
+<p>设我们矩阵中的四个未知数分别为 $A，B，C，D$，可得：</p>
+<p>$\left{\begin{matrix} Ai+Bj+Cn+D&#x3D;n^2\ Ak+Bl+Cf+D&#x3D;f^2 \end{matrix}\right.$</p>
+<p>从中可知 A&#x3D;B&#x3D;0，简化得：</p>
+<p>$\left{\begin{matrix} Cn+D&#x3D;n^2\ Cf+D&#x3D;f^2 \end{matrix}\right.$</p>
+<p>即可算出，$C&#x3D;n+f$，$D&#x3D;-nf$，因此视锥体压缩为长方体的矩阵为：</p>
+<p>$\mathbf{T}&#x3D;\begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ 0 &amp; 0 &amp; n+f &amp; -nf \0&amp;0&amp;1&amp;0\end{bmatrix}$</p>
+<h4 id="透视投影变换矩阵"><a href="#透视投影变换矩阵" class="headerlink" title="透视投影变换矩阵"></a>透视投影变换矩阵</h4><p>变成长方体后，只需在执行一次正交投影变换即可，因此我们的透视投影变换矩阵为：</p>
+<p>$\mathbf{P}<em>{persp}&#x3D;\mathbf{P}</em>{ortho}\mathbf{T}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; -\frac{r+l}{r-l}\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; -\frac{t+b}{t-b}\ 0 &amp;0 &amp;\frac{2}{n-f} &amp; -\frac{n+f}{n-f}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}\begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ 0 &amp; 0 &amp; n+f &amp; -nf \0&amp;0&amp;1&amp;0\end{bmatrix} &#x3D;$<br>$$<br>\begin{bmatrix} \frac{2n}{r-l} &amp;0 &amp; -\frac{r+l}{r-l} &amp; 0 \ 0 &amp;\frac{2n}{t-b} &amp; -\frac{t+b}{t-b} &amp;0 \ 0 &amp;0 &amp;\frac{n+f}{n-f} &amp; \frac{-2nf}{n-f} \ 0 &amp;0 &amp;1 &amp;0 \end{bmatrix}<br>$$</p>
+<h4 id="思考：挤压后-z-值为-n-f-2的点会挤向-n-还是-f"><a href="#思考：挤压后-z-值为-n-f-2的点会挤向-n-还是-f" class="headerlink" title="思考：挤压后 z 值为(n+f)&#x2F;2的点会挤向 n 还是 f"></a>思考：挤压后 z 值为(n+f)&#x2F;2的点会挤向 n 还是 f</h4><p><strong>在该变换过程中，任意点的 z 的值可能是会发生变化的</strong>。举个例子，视锥体 z 值为 $\frac{n+f}{2}$ 的中心点 $\displaystyle(0,0,\frac{n+f}{2})$ 变换后为：<br>$$\begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ 0 &amp; 0 &amp; n+f &amp; -nf \0&amp;0&amp;1&amp;0\end{bmatrix}\begin{bmatrix} 0\ 0\ \frac{n+f}{2}\ 1 \end{bmatrix} &#x3D; \begin{bmatrix} 0\ 0\ \frac{(n+f)^2}{2}-nf\ \frac{n+f}{2} \end{bmatrix}&#x3D; \begin{bmatrix} 0\ 0\ \frac{n^2+f^2}{n+f}\ 1 \end{bmatrix}$$</p>
+<p>我们来比下大小：</p>
+<p>$\displaystyle\frac{n+f}{2}-\frac{n^2+f^2}{n+f}&#x3D;\frac{n^2+f^2+2nf-2n^2-2f^2}{2(n+f)}&#x3D;\frac{-(n-f)^2}{2(n+f)}$</p>
+<p>由于 $f &lt; n &lt; 0$，所以 $-(n-f)^2&lt;0$ ，$2(n+f) &lt; 0$，可得（负数除以负数为一个正数）</p>
+<p>$\displaystyle\frac{n+f}{2}-\frac{n^2+f^2}{n+f}&gt;0$</p>
+<p>即<strong>视锥体的中心点在变换后离摄像机更远了</strong>。</p>
+<h3 id="对称视锥体"><a href="#对称视锥体" class="headerlink" title="对称视锥体"></a>对称视锥体</h3><p>对称视锥体，即 $N$ 为 Near clip plane 的中心点，$F$ 为 Far clip plane 的中心点，因此我们可得：</p>
+<p>$\left{\begin{matrix} r&#x3D;-l\ t&#x3D;-b \end{matrix}\right.$</p>
+<p>那么正交投影矩阵就可以简化为：</p>
+<p>$\mathbf{P}_{ortho}&#x3D;\mathbf{S}\mathbf{M}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp; 0 &amp;0 &amp;0 \ 0&amp; \frac{2}{t-b} &amp;0 &amp;0 \ 0&amp; 0 &amp; \frac{2}{n-f} &amp;0 \ 0&amp;0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} 1 &amp;0 &amp;0 &amp; 0\ 0 &amp;1 &amp;0 &amp; 0\ 0 &amp;0 &amp;1 &amp; -\frac{n+f}{2}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}&#x3D; \begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; 0\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; 0\ 0 &amp;0 &amp;\frac{2}{n-f} &amp; -\frac{n+f}{n-f}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}$</p>
+<p>同样的透视投影矩阵也可以简化为：</p>
+<p>$\mathbf{P}<em>{persp}&#x3D;\mathbf{P}</em>{ortho}\mathbf{T}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; 0\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; 0\ 0 &amp;0 &amp;\frac{2}{n-f} &amp; -\frac{n+f}{n-f}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}\begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ 0 &amp; 0 &amp; n+f &amp; -nf \0&amp;0&amp;1&amp;0\end{bmatrix} &#x3D; \begin{bmatrix} \frac{2n}{r-l} &amp;0 &amp; 0 &amp; 0 \ 0 &amp;\frac{2n}{t-b} &amp; 0 &amp;0 \ 0 &amp;0 &amp;\frac{n+f}{n-f} &amp; \frac{-2nf}{n-f} \ 0 &amp;0 &amp;1 &amp;0 \end{bmatrix}$</p>
+<h3 id="使用-FOV-和-Aspect-ratio-表示透视投影矩阵"><a href="#使用-FOV-和-Aspect-ratio-表示透视投影矩阵" class="headerlink" title="使用 FOV 和 Aspect ratio 表示透视投影矩阵"></a>使用 FOV 和 Aspect ratio 表示透视投影矩阵</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227197.png" alt="Pasted image 20230104170901"><br>依旧看之前的图片，如下（重新贴一下，方便看）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227179.png"></p>
+<p>在图中 $\angle T_1OB_1$ 我们称之为 <strong>Field of View</strong> (for Y &#x2F; for Vertical)，也就是常说的 <strong>FOV</strong>。自然而然 $\angle L_1OR_1$ 是 x 轴或者是水平方向的 FOV，我们只需要知道其中一个即可，通常用 y 轴的。我们设 $\angle T_1OB_1&#x3D;\theta$ 。</p>
+<p>$L_1R_1$ 的长度（即为宽，设值为 $w$）与 $T_1B_1$ 的长度（即为高，设值为 $h$）比例我们称之为宽高比（<strong>Aspect ratio</strong>），我们假设为该值为 a，即 $\displaystyle a&#x3D;\frac{w}{h}$ 。</p>
+<p>同时可得：</p>
+<p>$\left{\begin{matrix} w&#x3D;r-l\ h&#x3D;t-b \end{matrix}\right.$</p>
+<p>因为这种表示方式需要我们的视锥体为前面介绍的对称视锥体，因此我们直接将上面的式子带入对称视锥体对应的透视投影矩阵 $\mathbf{P}_{persp}$ 中，得：</p>
+<p>$P_{persp}&#x3D;\begin{bmatrix} \frac{2n}{w} &amp;0 &amp; 0 &amp; 0 \ 0 &amp;\frac{2n}{h} &amp;0 &amp;0 \ 0 &amp;0 &amp;\frac{n+f}{n-f} &amp; \frac{-2nf}{n-f} \ 0 &amp;0 &amp;1 &amp;0 \end{bmatrix}$</p>
+<p>通过上面 yz 平面的侧面图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227180.png"></p>
+<p>我们可以发现： $\displaystyle\tan\frac{\theta}{2} &#x3D; \frac{h}{2n}$ ，即 $\displaystyle\frac{2n}{h} &#x3D; \frac{1}{\tan\frac{\theta}{2}}$ 。</p>
+<p>又因为 $w&#x3D;ah$，所以 $\displaystyle\frac{2n}{w}&#x3D;\frac{2n}{ah} &#x3D; \frac{1}{a \tan\frac{\theta}{2}}$ 。</p>
+<p>所以可得，$FOV$ 为 $θ$，宽高比为 $a$ 时，透视投影矩阵为：</p>
+<p>$\mathbf{P}_{persp}&#x3D;\begin{bmatrix} \frac{1}{a \tan\frac{\theta}{2}} &amp;0 &amp; 0 &amp; 0 \ 0 &amp;\frac{1}{\tan\frac{\theta}{2}} &amp;0 &amp;0 \ 0 &amp;0 &amp;\frac{n+f}{n-f} &amp; \frac{-2nf}{n-f} \ 0 &amp;0 &amp;1 &amp;0 \end{bmatrix}$</p>
+<p>同时知道了 $FOV$ 和宽高比，我们就可以计算出之前的 $r，l，t，b$ 这些值。</p>
+<h2 id="裁剪"><a href="#裁剪" class="headerlink" title="裁剪"></a>裁剪</h2><p>观察空间经过投影变换，紧接着 GPU 执行裁剪，剔除掉不在视椎体范围内的顶点，即可转换到<strong>齐次裁剪空间（Homogeneous Space Clipping）</strong>。</p>
+<blockquote>
+<p>[!NOTE] Title</p>
+<ul>
+<li>齐次裁剪空间 &#x3D; 裁剪空间 &#x3D; Clip Space</li>
+<li>齐次裁剪空间的 $z$ 值，用于深度缓冲。</li>
+<li>齐次裁剪空间的 $w$ 值也不会被丢弃，虽然已经完成了透视除法，但后续还将用于 [[透视矫正插值]]。</li>
+</ul>
+</blockquote>
+<p>假如在 MV 变换后，<strong>观察空间（View Space）</strong> 下的某个点对应的齐次坐标为 $(x,y,z,1)$，那么经过透视投影变换后，其齐次坐标应为： ^xu4mwq</p>
+<p> $\begin{bmatrix} \frac{2n}{r-l} &amp;0 &amp; 0 &amp; 0 \ 0 &amp;\frac{2n}{t-b} &amp; 0 &amp;0 \ 0 &amp;0 &amp;\frac{n+f}{n-f} &amp; \frac{-2nf}{n-f} \ 0 &amp;0 &amp;1 &amp;0 \end{bmatrix} \begin{bmatrix}x\y\z\1\end{bmatrix} &#x3D;\begin{bmatrix}x’\y’\z’\w’\end{bmatrix}&#x3D;\begin{bmatrix}(\frac{2n}{r-l})x\(\frac{2n}{t-b})y\ (\frac{n+f}{n-f})z-\frac{2nf}{n-f}\z\end{bmatrix}$ </p>
+<blockquote>
+<p>注意这里，裁剪空间的 $w$ 值&#x3D;观察空间深度值 $z$，而 $z’$ 才是裁剪空间的深度值。</p>
+</blockquote>
+<p>也就是说投影变换后我们会得到一个齐次坐标 $(x’,y’,z’,w’)$，其中 $w’$ 的值即为变换前观察空间下 $z$ 的值。而投影变换后的坐标 $(x’,y’,z’,w’)$ 所在的空间即为裁剪空间，也称为<strong>齐次裁剪空间</strong>。我们 Vertex Shader 中顶点的输出坐标就是在 Clip Space 上，例如常用的 <code>TransformObjectToHClip</code> 方法。</p>
+<p>接着 GPU 会**在裁剪空间下做裁剪 (硬件帮我们做)**，剔除掉不在视椎体范围内的顶点，怎么判断呢？</p>
+<p>在裁剪空间中任意顶点 $(x’,y’,z’,w’)$ 如果不满足 $(-w&lt;x&lt;w\quad&amp;&amp;\quad  -w&lt;y&lt;w \quad&amp;&amp;\quad -w&lt;z&lt;w)$ 的条件即说明不在视椎体内，需要被裁剪。</p>
+<h1 id="4-齐次除法，又称透视除法（齐次裁剪空间-NDC）"><a href="#4-齐次除法，又称透视除法（齐次裁剪空间-NDC）" class="headerlink" title="4 齐次除法，又称透视除法（齐次裁剪空间-&gt; NDC）"></a>4 齐次除法，又称透视除法（齐次裁剪空间-&gt; NDC）</h1><p>裁剪后执行齐次除法之后转换为 NDC（标准化设备坐标）</p>
+<p>透视投影的变换如图：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227198.png" alt="Pasted image 20230728155159"></p>
+<p>对于正交投影，他的裁剪空间已经是一个立方体了，而且由于经过正交投影矩阵变换后的顶点的 w 分量是 1，因此齐次除法并不会对顶点的 xyz 坐标产生影响：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227199.png" alt="Pasted image 20230728155817"></p>
+<h2 id="裁剪-齐次除法"><a href="#裁剪-齐次除法" class="headerlink" title="裁剪+齐次除法"></a>裁剪+齐次除法</h2><p>根据齐次坐标的定义我们知道 $(x’,y’,z’,w’)$ 与 $\displaystyle(\frac{x’}{w’},\frac{y’}{w’},\frac{z’}{w’},1)$ 是等价的，即把裁剪空间下的 $(x’,y’,z’,w’)$ 分别除以 $w’$，这一步我们称之为<strong>透视除法（Perspective Divide）或齐次除法</strong>。</p>
+<p><strong>裁剪后剩下的顶点，我们做一次透视除法，即可把它们从裁剪空间变换到 NDC，（这时的点被称为投影点）。</strong></p>
+<p><strong>齐次裁剪为什么要在透视除法前？</strong><br>[[02 空间变换#^xu4mwq]] 提到透视投影后，裁剪空间的 $w$ 值&#x3D;观察空间深度值 $z$。如果观察空间深度值为 $z&#x3D;0$，那么 $w&#x3D;0$，透视除法除以 $w$ 就会发生除零错误。所以在透视除法之前必然要把这样的点裁剪掉，也就是透视除法之前做裁剪。</p>
+<h2 id="标准化设备坐标（Normalized-Device-Coordinate，NDC）"><a href="#标准化设备坐标（Normalized-Device-Coordinate，NDC）" class="headerlink" title="标准化设备坐标（Normalized Device Coordinate，NDC）"></a>标准化设备坐标（Normalized Device Coordinate，NDC）</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227200.png" alt="Pasted image 20230708141405"><br><strong>当变换到 NDC  后， $n$ 映射到了 $+1$，f 映射到了 $-1$</strong></p>
+<p>NDC 也就是我们前面所提到的标准立方体，即该空间内的任意坐标 $(x,y,z)$ 满足 $(-1&lt;x&lt;1 \quad&amp;&amp;\quad -1&lt;y&lt;1 \quad&amp;&amp;\quad -1&lt;z&lt;1)$ 的条件，也就是<strong>裁剪空间中做完裁剪后再做透视除法得到的坐标。NDC 中的顶点最后都要输出到屏幕空间当中。</strong></p>
+<p>需要注意的是，<strong>在 DirectX 中 NDC 的 z 方向取值范围是 0&lt;z&lt;1</strong>，而不是 -1&lt;z&lt;1。<strong>OpenGL 的NDC xyz 分量都为$[-1,1]$，Unity 和 OpenGL 相同。</strong></p>
+<p>在 Unity Shader 代码中我们可以使用内置指令 <code>UNITY_NEAR_CLIP_VALUE</code> 来获取不同平台的 near clip plane 的值。</p>
+<h1 id="5-视口变换（NDC-屏幕空间）"><a href="#5-视口变换（NDC-屏幕空间）" class="headerlink" title="5 视口变换（NDC-&gt;屏幕空间）"></a>5 视口变换（NDC-&gt;屏幕空间）</h1><p>视口变换即<strong>NDC-&gt;屏幕空间</strong>的转换，也称<strong>屏幕映射&#x2F;Viewport Mapping</strong> 。</p>
+<p>屏幕空间的坐标可以用 （u,v） 来表示</p>
+<p>$witdth$：屏幕宽度<br>$height$：屏幕高度</p>
+<ul>
+<li>先将原本 $[-1,1]^2$ 的正方体变换为屏幕大小：$(x,y)$ 乘以 $(width&#x2F;2,height&#x2F;2)$ ^v33wj5</li>
+<li>再将原点从中间平移到左下角（这里认为左下角为屏幕 uv 原点）</li>
+</ul>
+<p>$$M_{v i e w p o r t}&#x3D;\left(\begin{matrix}{\frac{w i d t h}{2}}&amp;{0}&amp;{0}&amp;{\frac{w i d t h}{2}}\ {0}&amp;{\frac{h e i g h t}{2}}&amp;{0}&amp;{\frac{h e i g h t t}{2}}\ {0}&amp;{0}&amp;{1}&amp;{0}\ {0}&amp;{0}&amp;{0}&amp;{1}\ \end{matrix}\right)$$</p>
+<h1 id="6-总结流程"><a href="#6-总结流程" class="headerlink" title="6 总结流程"></a>6 总结流程</h1><p>(Vertex Shader 中进行 MVP 计算) &#x3D;&gt; 齐次裁剪空间 &#x3D;&gt; 齐次除法 &#x3D;&gt; NDC &#x3D;&gt; (视口变换) &#x3D;&gt; Screen Space &#x3D;&gt; (Fragment Shader)</p>
+<ul>
+<li>顶点着色器在齐次裁剪空间将计算的顶点信息输出</li>
+<li>片元着色器在屏幕空间接受输入</li>
+</ul>
+<h1 id="7-不同标准的矩阵推导"><a href="#7-不同标准的矩阵推导" class="headerlink" title="7 不同标准的矩阵推导"></a>7 不同标准的矩阵推导</h1><h3 id="OpenGL-的投影矩阵"><a href="#OpenGL-的投影矩阵" class="headerlink" title="OpenGL 的投影矩阵"></a>OpenGL 的投影矩阵</h3><h4 id="正交投影"><a href="#正交投影" class="headerlink" title="正交投影"></a>正交投影</h4><p>OpenGL 的经典函数，<code>glFrustum(left,right,bottom,top,nearVal,farVal)</code> ，前4个参数都是坐标值，而后两个是近平面和远平面<strong>距离值（正值）</strong>，即 <strong>f&gt;n&gt;0</strong>。因此对于前面推导出来的投影矩阵我们要对 $f$和 $n$ 的值进行取反，即将 $n&#x3D;-n,f&#x3D;-f$ 代入式子中。</p>
+<p>其次在 OpenGL 中，<strong>观察空间是右手坐标系，而裁剪空间与 NDC 是左手坐标系</strong>，因此我们还需要再额外的做一次<strong>坐标系变换</strong>，利用 $\begin{bmatrix} 1&amp;0 &amp;0 \ 0 &amp;1 &amp;0\ 0 &amp;0 &amp;-1 \end{bmatrix}$ 矩阵<strong>将 z 轴取反</strong>即可，例如原本左手坐标系的 near clip plane 上的点 (x,y,z) 变为右手坐标系后就是点(x,y,-z)。</p>
+<p>整个投影变换示意图如下图，变换后 <strong>near 的 z&#x3D;-1，far 的 z&#x3D;1，即 z 值越大代表物体越远</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227181.png"></p>
+<p><strong>OpenGL 的正交投影变换矩阵</strong>为：</p>
+<p>$\mathbf{P}_{ortho}&#x3D; \begin{bmatrix} 1&amp;0 &amp;0 &amp; 0\ 0 &amp;1 &amp;0 &amp; 0\ 0 &amp;0 &amp;-1 &amp; 0\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}\begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; -\frac{r+l}{r-l}\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; -\frac{t+b}{t-b}\ 0 &amp;0 &amp;\frac{2}{f-n} &amp; \frac{f+n}{f-n}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; -\frac{r+l}{r-l}\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; -\frac{t+b}{t-b}\ 0 &amp;0 &amp;\frac{-2}{f-n} &amp; -\frac{f+n}{f-n}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}$</p>
+<h4 id="透视投影"><a href="#透视投影" class="headerlink" title="透视投影"></a>透视投影</h4><p>透视投影变换就比较麻烦了，在前面我们在推导视椎体变换为长方体的矩阵时，提到了一句话：视锥体里的任意一点 $(x,y,z)$，我们只需要将其 $x$ 和 $y$ 的值乘以 $\frac{n}{z}$ 即可使该视锥体变为长方体。这里将 $n&#x3D;-n$ 代入得 $-\frac{n}{z}$ ，因此后面的变换矩阵就应该写为：</p>
+<p>$\begin{bmatrix} -\frac{n}{z} &amp; 0 &amp; 0\ 0 &amp; -\frac{n}{z} &amp; 0\ ? &amp; ? &amp; ? \end{bmatrix}\begin{bmatrix} x\ y\ z \end{bmatrix}&#x3D;\begin{bmatrix} -x\frac{n}{z}\ -y\frac{n}{z}\ ? \end{bmatrix}$</p>
+<p>对应用齐次坐标表示，同时乘 $-z$ 后：</p>
+<p>$\begin{bmatrix} -x\frac{n}{z}\ -y\frac{n}{z}\ ? \1 \end{bmatrix} &#x3D;\begin{bmatrix} xn\ yn\ ? \-z \end{bmatrix}$</p>
+<p>也就是说椎体变换为长方体的矩阵雏形应该是：</p>
+<p>$\begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ ? &amp; ? &amp; ? &amp; ? \0&amp;0&amp;-1&amp;0\end{bmatrix}\begin{bmatrix} x\ y\ z\1\end{bmatrix}&#x3D;\begin{bmatrix} xn\ yn\ ? \-z \end{bmatrix}$</p>
+<p>代入远近平面上的点，可得如下两个方程：</p>
+<p>$\left{\begin{matrix} \begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ ? &amp; ? &amp; ? &amp; ? \0&amp;0&amp;-1&amp;0\end{bmatrix}\begin{bmatrix} i\ j\ -n\1\end{bmatrix}&#x3D;\begin{bmatrix} in\ jn\ -n^2 \n \end{bmatrix}\ \ \ \begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ ? &amp; ? &amp; ? &amp; ? \0&amp;0&amp;-1&amp;0\end{bmatrix}\begin{bmatrix} k\ l\ -f\1\end{bmatrix}&#x3D;\begin{bmatrix} kf\ lf\ -f^2 \f \end{bmatrix} \end{matrix}\right.$</p>
+<p>最终解得视锥体压缩为长方体的矩阵为：</p>
+<p>$\mathbf{T}&#x3D;\begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ 0 &amp; 0 &amp; f+n &amp; fn \0&amp;0&amp;-1&amp;0\end{bmatrix}$</p>
+<p>然后我们再乘以 OpenGL 的正交投影矩阵即可，得到 <strong>OpenGL 的透视投影变换矩阵</strong>为：</p>
+<p>$\mathbf{P}_{persp}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; -\frac{r+l}{r-l}\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; -\frac{t+b}{t-b}\ 0 &amp;0 &amp;\frac{-2}{f-n} &amp; -\frac{f+n}{f-n}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}\begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ 0 &amp; 0 &amp; f+n &amp; fn \0&amp;0&amp;-1&amp;0\end{bmatrix}&#x3D; \begin{bmatrix} \frac{2n}{r-l} &amp;0 &amp; \frac{r+l}{r-l} &amp; 0 \ 0 &amp;\frac{2n}{t-b} &amp; \frac{t+b}{t-b} &amp;0 \ 0 &amp;0 &amp;\frac{-(f+n)}{f-n} &amp; \frac{-2fn}{f-n} \ 0 &amp;0 &amp;-1 &amp;0 \end{bmatrix}$</p>
+<p>使用 FOV 和 aspect 表示即为：</p>
+<p>$\mathbf{P}_{persp}&#x3D;\begin{bmatrix} \frac{1}{a \tan\frac{\theta}{2}} &amp;0 &amp; 0 &amp; 0 \ 0 &amp;\frac{1}{\tan\frac{\theta}{2}} &amp;0 &amp;0 \ 0 &amp;0 &amp;\frac{-(f+n)}{f-n} &amp; \frac{-2fn}{f-n} \ 0 &amp;0 &amp;-1 &amp;0 \end{bmatrix}$</p>
+<p>此时我们发现，假如观察空间下的某个点对应的齐次坐标为 $(x,y,z,1)$，那么经过透视投影变换到齐次裁剪空间后，其齐次坐标应为：</p>
+<p>$\begin{bmatrix} \frac{2n}{r-l} &amp;0 &amp; \frac{r+l}{r-l} &amp; 0 \ 0 &amp;\frac{2n}{t-b} &amp; \frac{t+b}{t-b} &amp;0 \ 0 &amp;0 &amp;\frac{-(f+n)}{f-n} &amp; \frac{-2fn}{f-n} \ 0 &amp;0 &amp;-1 &amp;0 \end{bmatrix}\begin{bmatrix}x\y\z\1\end{bmatrix} &#x3D;\begin{bmatrix}x’\y’\z’\w’\end{bmatrix}&#x3D;\begin{bmatrix}(\frac{2n}{r-l})x\(\frac{2n}{t-b})y\ -(\frac{f+n}{f-n})z-\frac{2fn}{f-n}\-z\end{bmatrix}$ ^bgahra</p>
+<p>即<strong>裁剪空间中的一个齐次坐标 $(x’,y’,z’,w’)$，其中 $w’$ 的值为变换前视图空间下 $z$ 的值取反</strong>。</p>
+<h3 id="DirectX-的投影矩阵"><a href="#DirectX-的投影矩阵" class="headerlink" title="DirectX 的投影矩阵"></a>DirectX 的投影矩阵</h3><p>由于 DirectX 使用的是左手坐标系（即 $f&gt;n&gt;0$），因此投影变换无需像 OpenGL 那样做对称变换。且 NDC 中 $z$ 的取值范围是 $0-1$，因此它的投影矩阵和之前的也会有所不同。</p>
+<h4 id="DirectX-正交投影"><a href="#DirectX-正交投影" class="headerlink" title="DirectX 正交投影"></a>DirectX 正交投影</h4><p>对于正交投影矩阵而言，步骤要分为如下两步：</p>
+<ol>
+<li>利用平移矩阵把视椎体移动 $-n$ 距离，使得 near clip plane 在 xy 平面上。</li>
+<li>利用缩放矩阵缩放为 $x$ 和 $y$ 长度为 2，$z$ 长度为 1 的长方体</li>
+</ol>
+<p>$\mathbf{P}_{ortho}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp; 0 &amp;0 &amp;0 \ 0&amp; \frac{2}{t-b} &amp;0 &amp;0 \ 0&amp; 0 &amp; \frac{1}{f-n} &amp;0 \ 0&amp;0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} 1 &amp;0 &amp;0 &amp; -\frac{r+l}{2}\ 0 &amp;1 &amp;0 &amp; -\frac{t+b}{2}\ 0 &amp;0 &amp;1 &amp; -n\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; -\frac{r+l}{r-l}\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; -\frac{t+b}{t-b}\ 0 &amp;0 &amp;\frac{1}{f-n} &amp; -\frac{n}{f-n}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}$</p>
+<p>然而由于在 DirectX 中，坐标常用行向量来表示。</p>
+<p>因此对于变换矩阵，我们要做一个转置的操作，例如原本平移变换为：</p>
+<p>$\begin{bmatrix} 1 &amp; 0 &amp;0 &amp;a \ 0&amp;1 &amp;0 &amp;b \ 0&amp; 0 &amp; 1&amp;c \ 0&amp;0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} x\y\z\1\end{bmatrix}&#x3D;\begin{bmatrix} x+a\y+b\z+c\1\end{bmatrix}$</p>
+<p>在 DirectX 中应该写为：</p>
+<p>$\begin{bmatrix} x&amp;y&amp;z&amp;1\end{bmatrix}\begin{bmatrix} 1 &amp; 0 &amp;0 &amp;0 \ 0&amp;1 &amp;0 &amp;0 \ 0&amp; 0 &amp; 1&amp;0 \ a&amp;b &amp; c &amp; 1 \end{bmatrix} &#x3D;\begin{bmatrix} x+a&amp;y+b&amp;z+c&amp;1\end{bmatrix}$</p>
+<p>所以 <strong>DirectX 的正交投影变换矩阵</strong>为：</p>
+<p>$\mathbf{P}_{ortho}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; 0\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; 0\ 0 &amp;0 &amp;\frac{1}{f-n} &amp; 0\ -\frac{r+l}{r-l} &amp;-\frac{t+b}{t-b} &amp;-\frac{n}{f-n} &amp;1 \end{bmatrix}$</p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/direct3d9/projection-transform">Projection Transform (Direct3D 9) - Win32 apps</a></p>
+<h4 id="DirectX-透视投影"><a href="#DirectX-透视投影" class="headerlink" title="DirectX 透视投影"></a>DirectX 透视投影</h4><p>而对于<strong>透视投影</strong>，把视椎体转为长方体的矩阵倒是和之前的一样，然后乘上正交投影矩阵得到：$\mathbf{P}_{ortho}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; -\frac{r+l}{r-l}\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; -\frac{t+b}{t-b}\ 0 &amp;0 &amp;\frac{1}{f-n} &amp; -\frac{n}{f-n}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}\begin{bmatrix} n &amp; 0 &amp; 0 &amp; 0\ 0 &amp; n &amp; 0 &amp; 0\ 0 &amp; 0 &amp; n+f &amp; -nf \0&amp;0&amp;1&amp;0\end{bmatrix}&#x3D;\begin{bmatrix} \frac{2n}{r-l} &amp;0 &amp; -\frac{r+l}{r-l} &amp; 0 \ 0 &amp;\frac{2n}{t-b} &amp; -\frac{t+b}{t-b} &amp;0 \ 0 &amp;0 &amp;\frac{f}{f-n} &amp; \frac{-fn}{f-n} \ 0 &amp;0 &amp;1 &amp;0 \end{bmatrix}$</p>
+<p>同样做一个转置，因此 <strong>DirectX 的透视投影变换矩阵</strong>为：</p>
+<p>$\mathbf{P}_{ortho}&#x3D;\begin{bmatrix} \frac{2n}{r-l} &amp;0 &amp; 0 &amp; 0 \ 0 &amp;\frac{2n}{t-b} &amp; 0 &amp;0 \ -\frac{r+l}{r-l} &amp;-\frac{t+b}{t-b} &amp;\frac{f}{f-n} &amp; 1\ 0 &amp;0 &amp;\frac{-fn}{f-n} &amp;0 \end{bmatrix}$</p>
+<p>使用 FOV 和 aspect 表示即为：</p>
+<p>$\mathbf{P}_{persp}&#x3D;\begin{bmatrix} \frac{1}{a \tan\frac{\theta}{2}} &amp;0 &amp; 0 &amp; 0 \ 0 &amp;\frac{1}{\tan\frac{\theta}{2}} &amp;0 &amp;0 \ 0 &amp;0 &amp;\frac{f}{f-n} &amp;1 \ 0 &amp;0 &amp;\frac{-fn}{f-n} &amp;0 \end{bmatrix}$</p>
+<h3 id="Unity-的相关矩阵"><a href="#Unity-的相关矩阵" class="headerlink" title="Unity 的相关矩阵"></a>Unity 的相关矩阵</h3><p><strong>我们知道 Unity 使用的是左手坐标系，但是其遵循的又是 OpenGL 的规范，即 NDC 中 z 的取值范围是 - 1 到 1。</strong></p>
+<p>那么对于正交投影矩阵而言，步骤分为如下两步：</p>
+<ol>
+<li>利用平移矩阵把视椎体中心点移动到原点。</li>
+<li>利用缩放矩阵缩放为 x，y，z 长度为 2 的正方体。</li>
+</ol>
+<p>得到的结果为：</p>
+<p>$\mathbf{P}_{ortho}&#x3D;\begin{bmatrix} \frac{2}{r-l} &amp; 0 &amp;0 &amp;0 \ 0&amp; \frac{2}{t-b} &amp;0 &amp;0 \ 0&amp; 0 &amp; \frac{2}{f-n} &amp;0 \ 0&amp;0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} 1 &amp;0 &amp;0 &amp; -\frac{r+l}{2}\ 0 &amp;1 &amp;0 &amp; -\frac{t+b}{2}\ 0 &amp;0 &amp;1 &amp; -\frac{n+f}{2}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}&#x3D; \begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; -\frac{r+l}{r-l}\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; -\frac{t+b}{t-b}\ 0 &amp;0 &amp;\frac{2}{f-n} &amp; -\frac{f+n}{f-n}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}$</p>
+<p>对吗？错！</p>
+<p>Unity 提供了 <strong>Matrix4x4.Ortho</strong> 的 API 供我们生成一个正交投影的矩阵，如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Matrix4x4.Ortho(<span class="type">float</span> left, <span class="type">float</span> right, <span class="type">float</span> bottom, <span class="type">float</span> top, <span class="type">float</span> zNear, <span class="type">float</span> zFar);</span><br></pre></td></tr></table></figure>
+
+<p>但是我们会发现 API 计算出来的矩阵和我们用上面公式计算的矩阵，得到的结果中<strong>第三行第三列的值是相反的</strong>，why？<br><strong>Unity 的世界空间下物体的 forward 方向 (transform.forward) 都是 z 轴的正方向，而到了观察空间下则匹配了 OpenGL 的传统，使 Camera 看向了 z 轴负方向。所以投影矩阵要做一次 $z$ 轴的反转来抵消。</strong></p>
+<p>举个例子，假如我们 Unity 中 Camera 的 Position 和 Rotate 都是 Vector.zero，那么理论上此时的 World Space 等于 Camera Space，View Matrix 是单位矩阵。然而打印 Camera.main.worldToCameraMatrix 的结果你会发现是：</p>
+<p>$M&#x3D;\begin{bmatrix} 1&amp;0&amp;0&amp;0\0&amp;1&amp;0&amp;0\0&amp;0&amp;-1&amp;0\0&amp;0&amp;0&amp;1 \end{bmatrix}$</p>
+<p>这就是因为<strong>在 Unity 里当 World Space 变到 Camera Space 时，需要做一个反转 z 轴的操作</strong>（因此 Unity 的观察变换矩阵，相比文章前面的推理还需再乘以一个 z 轴反转的矩阵）。然后我们做投影变换到 Clip Space 时，又要给它转回来（再做一次 z 反转），使得 near clip plane 在 - 1，far clip plane 在 1。</p>
+<p>所以 <strong>Unity 的正交投影矩阵</strong>为：</p>
+<p>$\mathbf{P}_{ortho}&#x3D; \begin{bmatrix} \frac{2}{r-l} &amp;0 &amp;0 &amp; -\frac{r+l}{r-l}\ 0 &amp;\frac{2}{t-b} &amp;0 &amp; -\frac{t+b}{t-b}\ 0 &amp;0 &amp;-\frac{2}{f-n} &amp; -\frac{f+n}{f-n}\ 0 &amp;0 &amp;0 &amp;1 \end{bmatrix}$</p>
+<p><strong>可以发现它和 OpenGL 的正交投影矩阵一样</strong>，这也是在观察变换做一次 z 轴反转的妙处所在。同样的 <strong>Unity 的透视投影矩阵也和 OpenGL 的一样</strong>为：</p>
+<p>$\mathbf{P}_{persp}&#x3D;\begin{bmatrix} \frac{2n}{r-l} &amp;0 &amp; \frac{r+l}{r-l} &amp; 0 \ 0 &amp;\frac{2n}{t-b} &amp; \frac{t+b}{t-b} &amp;0 \ 0 &amp;0 &amp;\frac{-(f+n)}{f-n} &amp; \frac{-2fn}{f-n} \ 0 &amp;0 &amp;-1 &amp;0 \end{bmatrix}$</p>
+<p>使用 FOV 和 aspect 表示即为：</p>
+<p>$\mathbf{P}_{persp}&#x3D;\begin{bmatrix} \frac{1}{a \tan\frac{\theta}{2}} &amp;0 &amp; 0 &amp; 0 \ 0 &amp;\frac{1}{\tan\frac{\theta}{2}} &amp;0 &amp;0 \ 0 &amp;0 &amp;\frac{-(f+n)}{f-n} &amp; \frac{-2fn}{f-n} \ 0 &amp;0 &amp;-1 &amp;0 \end{bmatrix}$</p>
+<p>同样的，Unity 提供了 <strong>Matrix4x4.Perspective</strong> 的 API 供我们生成一个透视投影的矩阵，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static Matrix4x4 Perspective(float fov, float aspect, float zNear, float zFar);</span><br></pre></td></tr></table></figure>
+
+<p>其值就可以通过上面的公式获得。</p>
+<p>此外对于透视摄像机，我们可以使用 <code>Camera.projectionMatrix</code> 来获取其透视投影矩阵，其结果同样是 OpenGL 的矩阵。</p>
+<p>虽然<strong>不管在什么平台下，Unity 的投影矩阵都是和 OpenGL 一样的</strong>，但是在 Shader 的计算中，投影矩阵会根据图形 api 的不同而有所差异。<strong>如果我们想通过 unity 的投影矩阵获得最终在 GPU&#x2F;Shader 中使用的矩阵，可以使用 <code>GL.GetGPUProjectionMatrix</code> 方法来获得，得到的结果和 Shader 中的 <code>UNITY_MATRIX_P</code> 矩阵相匹配</strong>，文档如下：</p>
+<p>举个例子：</p>
+<p>假如我们场景中的 Camera 设置如下，FOV&#x3D;60，near&#x3D;1，far&#x3D;100：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227182.png"></p>
+<p>game 视图的设置中，aspect&#x3D;16&#x2F;9：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227183.png"></p>
+<p>那么 camera.projectionMatrix 的结果如下图（该结果匹配 OpenGL 矩阵的计算公式）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227184.png"></p>
+<p>如果在 OpenGL ES3 平台下，使用 GL.GetGPUProjectionMatrix 获得结果不变，因为 GPU 用的也是 OpenGL 的矩阵。而要是在 DirectX 平台下，使用 GL.GetGPUProjectionMatrix 获得的结果则为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227185.png"></p>
+<p>可以看出只有第三行的第三、四列元素发生了变化，而且这个结果也套不上 DirectX 的投影矩阵，那么这个结果是怎么来的呢？前面说了 GL.GetGPUProjectionMatrix 是根据参数里给的矩阵换算成 GPU 矩阵，也就是说是在 OpenGL 的矩阵基础上做变化。而 OpenGL 之后得到的是 z 从 - 1 到 1 的 NDC 矩形，而 DirectX 是 0-1 的矩形，且矩形的中点也从原点变到了 (0,0,0.5) 的位置，因此我们要在 OpenGL 的基础上再做一个缩放 z 轴和平移的操作。除此之外，由于 Unity 对 DirectX 的深度做了反转操作，所以最终的步骤有如下三部：</p>
+<ol>
+<li>z 轴缩放 0.5 倍</li>
+<li>z 轴反转</li>
+<li>平移 (0,0,0.5) 距离</li>
+</ol>
+<p>举个例子：假设一个点在原本 OpenGL 透视变换后的 z 值变为了 0.8，那么其深度值即为 0.8*0.5+0.5&#x3D;0.9。但是变为 DirectX 的话，0.8 要先缩放变为 0.4，然后反转变为 - 0.4，最后加 0.5 变为 0.1，该 z 值 0.1 就是 Direct 下的深度值，也就是 1-0.9 的值。</p>
+<p>所以 <strong>z 轴反转后的 DirectX 投影矩阵的变换矩阵</strong>为：</p>
+<p>$\begin{bmatrix} 1&amp;0&amp;0&amp;0\0&amp;1&amp;0&amp;0\0&amp;0&amp;1&amp;\frac{1}{2}\0&amp;0&amp;0&amp;1\end{bmatrix}(\begin{bmatrix} 1&amp;0&amp;0&amp;0\0&amp;1&amp;0&amp;0\0&amp;0&amp;-1&amp;0\0&amp;0&amp;0&amp;1\end{bmatrix}\begin{bmatrix} 1&amp;0&amp;0&amp;0\0&amp;1&amp;0&amp;0\0&amp;0&amp;\frac{1}{2}&amp;0\0&amp;0&amp;0&amp;1\end{bmatrix})&#x3D;\begin{bmatrix} 1&amp;0&amp;0&amp;0\0&amp;1&amp;0&amp;0\0&amp;0&amp;-\frac{1}{2}&amp;\frac{1}{2}\0&amp;0&amp;0&amp;1\end{bmatrix}$</p>
+<p>得到的 <strong>z 轴反转后的 DirectX 投影矩阵</strong>为：</p>
+<p>$\mathbf{P}&#x3D;\begin{bmatrix} 1&amp;0&amp;0&amp;0\0&amp;1&amp;0&amp;0\0&amp;0&amp;-\frac{1}{2}&amp;\frac{1}{2}\0&amp;0&amp;0&amp;1\end{bmatrix}\begin{bmatrix} \frac{1}{a \tan\frac{\theta}{2}} &amp;0 &amp; 0 &amp; 0 \ 0 &amp;\frac{1}{\tan\frac{\theta}{2}} &amp;0 &amp;0 \ 0 &amp;0 &amp;\frac{-(f+n)}{f-n} &amp; \frac{-2fn}{f-n} \ 0 &amp;0 &amp;-1 &amp;0 \end{bmatrix}&#x3D;\begin{bmatrix} \frac{1}{a \tan\frac{\theta}{2}} &amp;0 &amp; 0 &amp; 0 \ 0 &amp;\frac{1}{\tan\frac{\theta}{2}} &amp;0 &amp;0 \ 0 &amp;0 &amp;\frac{n}{f-n} &amp; \frac{fn}{f-n} \ 0 &amp;0 &amp;-1 &amp;0 \end{bmatrix}$</p>
+<p>代入公式可以发现正好就是 GL.GetGPUProjectionMatrix 得到的结果。</p>
+<p>我们将视图空间下 near clip plane 和 far clip plane 的中心的坐标 (0,0,-n) 和(0,0,-f)代入公式看看 NDC 下 z 值的坐标（视图空间下 z 值为负，是因为前面说的 unity 做了 z 轴反转的操作）：</p>
+<p>$\left{\begin{matrix}near:\frac{\frac{n}{f-n}<em>(-n)+\frac{fn}{f-n} }{n}&#x3D;1\ far:\frac{\frac{n}{f-n}</em>(-f)+\frac{fn}{f-n} }{f}&#x3D;0 \end{matrix}\right.$</p>
+<p>因此 Unity 下 DirectX 的深度值越大代表越近。</p>
+<h1 id="8-Unity-空间坐标关系"><a href="#8-Unity-空间坐标关系" class="headerlink" title="8 Unity 空间坐标关系"></a>8 Unity 空间坐标关系</h1><blockquote>
+<p>[!NOTE] Unity 的 <code>i.positionCS</code><br>Unity 从裁剪空间到屏幕空间的转换是由引擎完成的，我们在顶点着色器中只需要把顶点转换到裁剪空间。（然后当片元着色器使用裁剪空间位置 <code>i.positionCS</code> 时，xy 值等于屏幕空间坐标 xy，除以屏幕分辨率及可以得到归一化的屏幕坐标 (即屏幕 UV)）</p>
+</blockquote>
+<p><strong>重要结论：</strong></p>
+<blockquote>
+<ul>
+<li>裁剪空间的 $w$ 值 $&#x3D;$ 观察空间深度值 $z$（由于在 Unity 中观察空间是右手坐标系，$z$ 反了，这里要使等号成立，$z$ 需要加个负号）<ul>
+<li>i.positionCS. w &#x3D;&#x3D; i.positionVS. z （LinearEyeDepth）</li>
+</ul>
+</li>
+<li>裁剪空间的 $z$ 值 $&#x3D;$ 裁剪空间的深度值。</li>
+<li>裁剪空间之后，zw 值都不变。<ul>
+<li>i.positionCS. zw &#x3D;&#x3D; i.ScreenPos. zw &#x3D;&#x3D; i.positionNDC. zw</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>[!question] 为什么裁剪空间之后 zw 值不变？</p>
+<ul>
+<li>齐次裁剪空间的 $z$ 值，用于深度缓冲。</li>
+<li>齐次裁剪空间的 $w$ 值也不会被丢弃，虽然已经完成了透视除法，但后续还将用于<strong>透视矫正插值</strong>。</li>
+</ul>
+</blockquote>
+</blockquote>
+<ul>
+<li><p><strong>裁剪空间</strong></p>
+<ul>
+<li><code>x[-w , w]</code>：裁剪空间下 x 轴坐标。</li>
+<li><code>y[-w , w]</code>：裁剪空间下 x 轴坐标。</li>
+<li><code>z[-w, w]</code>：裁剪空间下 z 轴坐标，离相机越远 z 值越大。</li>
+<li><code>w[Near, Far]</code>：用来判断坐标是否在视锥体外部，-w&lt;&#x3D; x&#x2F;y&#x2F;z &lt;&#x3D; w 的话则点在视锥体内部。</li>
+</ul>
+</li>
+<li><p><strong>NDC 空间</strong></p>
+<ul>
+<li><code>x[-1 , 1]</code>：NDC 空间 x 坐标。</li>
+<li><code>y[-1 , 1]</code>：NDC 空间 y 坐标。</li>
+<li><code>z[-w, w]</code>：<strong>posNDC. z &#x3D;&#x3D; posCS. z。</strong></li>
+<li><code>w[Near, Far]</code>：<strong>posNDC. w &#x3D;&#x3D; posCS. w</strong>。</li>
+</ul>
+</li>
+<li><p><strong>屏幕空间</strong></p>
+<ul>
+<li><code>x[0, ScreenPixelWidth]</code>：屏幕 x 轴坐标。</li>
+<li><code>y[0, ScreenPixelWidth</code>]：屏幕 y 轴坐标。</li>
+<li><code>z、w</code>：<strong>Screenpos. zw &#x3D;&#x3D; posCS. zw</strong>，具体查看 ComputeScreenPos ()方法</li>
+<li>通常 z 分量会被用于深度缓冲。</li>
+</ul>
+<p> </p>
+</li>
+<li><p><strong>摄像机视口空间</strong>：<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227201.png" alt="Pasted image 20230801151519|500"></p>
+</li>
+<li><p><code>x[0, 1]</code>：归一化后的屏幕 X 坐标，左下角为 0，右上角为1。</p>
+</li>
+<li><p><code>y[0, 1]</code>：归一化后的屏幕 Y 坐标，左下角为 0，右上角为 1。</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/9181.html">http://liuke101.github.io/post/9181.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/3D%E6%95%B0%E5%AD%A6/">3D数学</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292230524.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/34215.html" title="【公式推导01】三维旋转"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227539.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【公式推导01】三维旋转</div></div></a></div><div class="next-post pull-right"><a href="/post/22003.html" title="【公式推导04】纹理映射"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【公式推导04】纹理映射</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/50070.html" title="3D数学"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292248855.gif" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">3D数学</div></div></a></div><div><a href="/post/34215.html" title="【公式推导01】三维旋转"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292227539.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【公式推导01】三维旋转</div></div></a></div><div><a href="/post/32783.html" title="【公式推导03】光照向量"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292237904.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【公式推导03】光照向量</div></div></a></div><div><a href="/post/22003.html" title="【公式推导04】纹理映射"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-29</div><div class="title">【公式推导04】纹理映射</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">文章主要迁移自个人的obsidian仓库，存在部分md语法冲突，导致显示异常，暂未修复...</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E6%A8%A1%E5%9E%8B%E5%8F%98%E6%8D%A2%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%A9%BA%E9%97%B4-%E4%B8%96%E7%95%8C%E7%A9%BA%E9%97%B4%EF%BC%89"><span class="toc-text">1 模型变换（模型空间-&gt;世界空间）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E8%A7%82%E5%AF%9F%E5%8F%98%E6%8D%A2%EF%BC%88%E4%B8%96%E7%95%8C%E7%A9%BA%E9%97%B4-%E8%A7%82%E5%AF%9F%E7%A9%BA%E9%97%B4-%E6%91%84%E5%83%8F%E6%9C%BA%E7%A9%BA%E9%97%B4-%EF%BC%89"><span class="toc-text">2 观察变换（世界空间-&gt;观察空间(摄像机空间)）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E7%9B%B8%E6%9C%BA"><span class="toc-text">定义相机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%8A%E4%BB%BB%E6%84%8F%E7%82%B9%E7%9B%B8%E6%9C%BA%E7%A7%BB%E5%88%B0%E5%8E%9F%E7%82%B9"><span class="toc-text">把任意点相机移到原点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5%E6%8E%A8%E5%AF%BC"><span class="toc-text">观察变换矩阵推导</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E5%B9%B3%E7%A7%BB%EF%BC%88%E4%BB%8E-vec-p-%E5%88%B0%E5%8E%9F%E7%82%B9%EF%BC%89"><span class="toc-text">先平移（从 $\vec{p}$ 到原点）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%8D%E6%97%8B%E8%BD%AC%EF%BC%88-vec-l-%E6%97%8B%E8%BD%AC%E5%88%B0-z-%E6%96%B9%E5%90%91%EF%BC%8C-vec-u-%E6%97%8B%E8%BD%AC%E5%88%B0-y-%E6%96%B9%E5%90%91%EF%BC%89"><span class="toc-text">再旋转（ $\vec{l}$ 旋转到 $-z$ 方向， $\vec{u}$ 旋转到 $+y$ 方向）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5"><span class="toc-text">观察变换矩阵</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LookAt-%E7%9F%A9%E9%98%B5%E6%8E%A8%E5%AF%BC"><span class="toc-text">LookAt 矩阵推导</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E7%9B%B8%E6%9C%BA-1"><span class="toc-text">定义相机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%91%84%E5%83%8F%E6%9C%BA%E4%B8%96%E7%95%8C%E7%A9%BA%E9%97%B4%E4%BD%8D%E7%BD%AE-p"><span class="toc-text">摄像机世界空间位置 p</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E5%90%91%E9%87%8F-l"><span class="toc-text">观察向量 l</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%B3%E5%90%91%E9%87%8F-r"><span class="toc-text">右向量 r</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8A%E5%90%91%E9%87%8F-u"><span class="toc-text">上向量 u</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Look-At"><span class="toc-text">Look At</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E6%8A%95%E5%BD%B1%E5%8F%98%E6%8D%A2-%E8%A3%81%E5%89%AA%EF%BC%88%E8%A7%82%E5%AF%9F%E7%A9%BA%E9%97%B4-%E8%A3%81%E5%89%AA%E7%A9%BA%E9%97%B4%EF%BC%89"><span class="toc-text">3 投影变换+裁剪（观察空间-&gt;裁剪空间）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E4%BA%A4%E6%8A%95%E5%BD%B1%EF%BC%88Orthographic-projection%EF%BC%89"><span class="toc-text">正交投影（Orthographic projection）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E5%8F%98%E6%8D%A2%E7%A1%AE%E5%AE%9A%E8%8C%83%E5%9B%B4"><span class="toc-text">观察变换确定范围</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E6%96%B9%E5%BC%8F"><span class="toc-text">标准方式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B9%B3%E7%A7%BB%E5%8F%98%E6%8D%A2"><span class="toc-text">平移变换</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BC%A9%E6%94%BE%E5%8F%98%E6%8D%A2"><span class="toc-text">缩放变换</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A3%E4%BA%A4%E6%8A%95%E5%BD%B1%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5"><span class="toc-text">正交投影变换矩阵</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%8F%E8%A7%86%E6%8A%95%E5%BD%B1%EF%BC%88Perspective-projection%EF%BC%89"><span class="toc-text">透视投影（Perspective projection）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%80%9C%E5%8E%8B%E6%89%81%E2%80%9D%E6%93%8D%E4%BD%9C"><span class="toc-text">“压扁”操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#z-%E5%80%BC%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%EF%BC%9F"><span class="toc-text">z 值如何处理？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%8F%E8%A7%86%E6%8A%95%E5%BD%B1%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5"><span class="toc-text">透视投影变换矩阵</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%9D%E8%80%83%EF%BC%9A%E6%8C%A4%E5%8E%8B%E5%90%8E-z-%E5%80%BC%E4%B8%BA-n-f-2%E7%9A%84%E7%82%B9%E4%BC%9A%E6%8C%A4%E5%90%91-n-%E8%BF%98%E6%98%AF-f"><span class="toc-text">思考：挤压后 z 值为(n+f)&#x2F;2的点会挤向 n 还是 f</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E7%A7%B0%E8%A7%86%E9%94%A5%E4%BD%93"><span class="toc-text">对称视锥体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-FOV-%E5%92%8C-Aspect-ratio-%E8%A1%A8%E7%A4%BA%E9%80%8F%E8%A7%86%E6%8A%95%E5%BD%B1%E7%9F%A9%E9%98%B5"><span class="toc-text">使用 FOV 和 Aspect ratio 表示透视投影矩阵</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%81%E5%89%AA"><span class="toc-text">裁剪</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E9%BD%90%E6%AC%A1%E9%99%A4%E6%B3%95%EF%BC%8C%E5%8F%88%E7%A7%B0%E9%80%8F%E8%A7%86%E9%99%A4%E6%B3%95%EF%BC%88%E9%BD%90%E6%AC%A1%E8%A3%81%E5%89%AA%E7%A9%BA%E9%97%B4-NDC%EF%BC%89"><span class="toc-text">4 齐次除法，又称透视除法（齐次裁剪空间-&gt; NDC）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%81%E5%89%AA-%E9%BD%90%E6%AC%A1%E9%99%A4%E6%B3%95"><span class="toc-text">裁剪+齐次除法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%8C%96%E8%AE%BE%E5%A4%87%E5%9D%90%E6%A0%87%EF%BC%88Normalized-Device-Coordinate%EF%BC%8CNDC%EF%BC%89"><span class="toc-text">标准化设备坐标（Normalized Device Coordinate，NDC）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E8%A7%86%E5%8F%A3%E5%8F%98%E6%8D%A2%EF%BC%88NDC-%E5%B1%8F%E5%B9%95%E7%A9%BA%E9%97%B4%EF%BC%89"><span class="toc-text">5 视口变换（NDC-&gt;屏幕空间）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-%E6%80%BB%E7%BB%93%E6%B5%81%E7%A8%8B"><span class="toc-text">6 总结流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-%E4%B8%8D%E5%90%8C%E6%A0%87%E5%87%86%E7%9A%84%E7%9F%A9%E9%98%B5%E6%8E%A8%E5%AF%BC"><span class="toc-text">7 不同标准的矩阵推导</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenGL-%E7%9A%84%E6%8A%95%E5%BD%B1%E7%9F%A9%E9%98%B5"><span class="toc-text">OpenGL 的投影矩阵</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A3%E4%BA%A4%E6%8A%95%E5%BD%B1"><span class="toc-text">正交投影</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%8F%E8%A7%86%E6%8A%95%E5%BD%B1"><span class="toc-text">透视投影</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DirectX-%E7%9A%84%E6%8A%95%E5%BD%B1%E7%9F%A9%E9%98%B5"><span class="toc-text">DirectX 的投影矩阵</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#DirectX-%E6%AD%A3%E4%BA%A4%E6%8A%95%E5%BD%B1"><span class="toc-text">DirectX 正交投影</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DirectX-%E9%80%8F%E8%A7%86%E6%8A%95%E5%BD%B1"><span class="toc-text">DirectX 透视投影</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Unity-%E7%9A%84%E7%9B%B8%E5%85%B3%E7%9F%A9%E9%98%B5"><span class="toc-text">Unity 的相关矩阵</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-Unity-%E7%A9%BA%E9%97%B4%E5%9D%90%E6%A0%87%E5%85%B3%E7%B3%BB"><span class="toc-text">8 Unity 空间坐标关系</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/64863.html" title="全局光照GI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300005318.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="全局光照GI"/></a><div class="content"><a class="title" href="/post/64863.html" title="全局光照GI">全局光照GI</a><time datetime="2024-04-29T23:06:00.000Z" title="发表于 2024-04-30 00:06:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/55802.html" title="环境光照IBL"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300003151.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="环境光照IBL"/></a><div class="content"><a class="title" href="/post/55802.html" title="环境光照IBL">环境光照IBL</a><time datetime="2024-04-29T23:03:00.000Z" title="发表于 2024-04-30 00:03:00">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/49886.html" title="光线追踪理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292358872.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="光线追踪理论"/></a><div class="content"><a class="title" href="/post/49886.html" title="光线追踪理论">光线追踪理论</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/38389.html" title="路径追踪"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404300000048.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="路径追踪"/></a><div class="content"><a class="title" href="/post/38389.html" title="路径追踪">路径追踪</a><time datetime="2024-04-29T22:59:00.000Z" title="发表于 2024-04-29 23:59:00">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/19081.html" title="PBR理论"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292357277.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PBR理论"/></a><div class="content"><a class="title" href="/post/19081.html" title="PBR理论">PBR理论</a><time datetime="2024-04-29T22:57:00.000Z" title="发表于 2024-04-29 23:57:00">2024-04-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292230524.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>
