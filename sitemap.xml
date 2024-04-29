@@ -2,6 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://liuke101.github.io/post/49036.html</loc>
+    
+    <lastmod>2024-04-29</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://liuke101.github.io/post/1106.html</loc>
+    
+    <lastmod>2024-04-29</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://liuke101.github.io/post/60549.html</loc>
     
     <lastmod>2024-04-29</lastmod>
@@ -109,6 +127,13 @@
   
   <url>
     <loc>http://liuke101.github.io/tags/Latex/</loc>
+    <lastmod>2024-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://liuke101.github.io/tags/%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2024-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
