@@ -1,0 +1,542 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>CG ShaderLab | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="CG 语法基础在 Unity Shader 中，ShaderLab 语言只是起到组织代码结构的作用，而真正实现渲染效果的部分是用 CG 语言编写的。CG 程序片段通过指令嵌入在 Pass 中，夹在 Pass 中的指令 CGPROGRAM 和 ENDCG 之间 在 CG 程序片段之前，通常需要先使用 #pragma 声明编译指令 编译指令编译目标等级   编译指令 作用    #pragma ver">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CG ShaderLab">
+<meta property="og:url" content="http://liuke101.github.io/post/42466.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="CG 语法基础在 Unity Shader 中，ShaderLab 语言只是起到组织代码结构的作用，而真正实现渲染效果的部分是用 CG 语言编写的。CG 程序片段通过指令嵌入在 Pass 中，夹在 Pass 中的指令 CGPROGRAM 和 ENDCG 之间 在 CG 程序片段之前，通常需要先使用 #pragma 声明编译指令 编译指令编译目标等级   编译指令 作用    #pragma ver">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png">
+<meta property="article:published_time" content="2024-05-18T16:48:56.000Z">
+<meta property="article:modified_time" content="2024-05-18T16:49:43.697Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="Shader">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/42466.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'CG ShaderLab',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-05-19 00:49:43'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">CG ShaderLab</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-05-18T16:48:56.000Z" title="发表于 2024-05-19 00:48:56">2024-05-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-05-18T16:49:43.697Z" title="更新于 2024-05-19 00:49:43">2024-05-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Unity/">Unity</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="CG ShaderLab"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/42466.html#post-comment"><span class="waline-comment-count" data-path="/post/42466.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="CG-语法基础"><a href="#CG-语法基础" class="headerlink" title="CG 语法基础"></a>CG 语法基础</h1><p>在 Unity Shader 中，ShaderLab 语言只是起到组织代码结构的作用，而真正实现渲染效果的部分是用 CG 语言编写的。<br>CG 程序片段通过指令嵌入在 Pass 中，夹在 Pass 中的指令 CGPROGRAM 和 ENDCG 之间</p>
+<p>在 CG 程序片段之前，通常需要先使用 <code>#pragma</code> 声明编译指令</p>
+<h2 id="编译指令"><a href="#编译指令" class="headerlink" title="编译指令"></a>编译指令</h2><h3 id="编译目标等级"><a href="#编译目标等级" class="headerlink" title="编译目标等级"></a>编译目标等级</h3><table>
+<thead>
+<tr>
+<th align="left">编译指令</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>#pragma vertex name</code></td>
+<td align="left">定义顶点着色器的名称, 通常会使用 vert</td>
+</tr>
+<tr>
+<td align="left"><code>#pragma fragment name</code></td>
+<td align="left">定义片段着色器的名称, 通常会使用 frag</td>
+</tr>
+<tr>
+<td align="left"><code>#pragma target name</code></td>
+<td align="left">定义 Shader 要编译的目标级别﹐默认 2.5</td>
+</tr>
+</tbody></table>
+<p>当编写完 Shader 程序之后，其中的 CG 代码可以被编译到不同的 Shader Models（简称 SM）中，为了能够使用更高级的 GPU 功能，需要对应使用更高等级的编译目标。同时，高等级的编译目标可能会导致 Shader 无法在旧的 GPU 上运行。</p>
+<p>声明编译目标的级别可以使用 <code>#pragma target name</code> 指令，或者也可以使用 <code>#pragma require feature</code> 指令直接声明某个特定的功能，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> target 3.5  <span class="comment">//目标等级3.5</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> require geometry tessellation <span class="comment">//需要儿何体细分功能</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="渲染平台"><a href="#渲染平台" class="headerlink" title="渲染平台"></a>渲染平台</h3><p>默认情况下，Unity 会为所有支持的平台编译一份 Shader 程序，不过可以通过编译指令 <code>#pragma only_renderers PlatformName</code> 或者 <code> #pragma exclude_renderers PlatformName</code> 指定编译某些平台或不编译某些平台</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047598.png" alt="Pasted image 20230614194552"></p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>顶点函数和片段函数中支持的数据类型<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047599.png" alt="Pasted image 20230614194727"></p>
+<blockquote>
+<p>[!NOTE] uniform 关键字<br>uniform 关键词和图形 API 的 unitform 作用不一样，只是一个修饰词。在 UntiyShader 中，uniform 关键词是可以省略的。</p>
+</blockquote>
+<h3 id="整数数据类型"><a href="#整数数据类型" class="headerlink" title="整数数据类型"></a>整数数据类型</h3><p>整数（<code>int</code> 数据类型）通常用作循环计数器或数组索引。为此，它们通常可以在各种平台上正常工作。</p>
+<p>根据平台的不同，GPU 可能不支持整数类型。例如，Direct3D 9 和 OpenGL ES 2.0 GPU 仅对浮点数据进行运算，并且可以使用相当复杂的浮点数学指令来模拟简单的整数表达式（涉及位运算或逻辑运算）。</p>
+<p>Direct3D 11、OpenGL ES 3、Metal 和其他现代平台都对整数数据类型有适当的支持，因此使用位移位和位屏蔽可以按预期工作。</p>
+<h3 id="复合矢量-矩阵类型"><a href="#复合矢量-矩阵类型" class="headerlink" title="复合矢量&#x2F;矩阵类型"></a>复合矢量&#x2F;矩阵类型</h3><p>HLSL 具有从基本类型创建的内置矢量和矩阵类型。例如，<code>float3</code> 是一个 3D 矢量，具有分量 .x、. y 和 .z，而 <code>half4</code> 是一个中等精度 4D 矢量，具有分量 .x、. y、. z 和 .w。或者，可使用 .r、. g、. b 和 .a 分量来对矢量编制索引，这在处理颜色时很有用。</p>
+<p>矩阵类型以类似的方式构建；例如 <code>float4x4</code> 是一个 4x4 变换矩阵。请注意，某些平台仅支持方形矩阵，最主要的是 OpenGL ES 2.0。</p>
+<h3 id="纹理-采样器类型"><a href="#纹理-采样器类型" class="headerlink" title="纹理&#x2F;采样器类型"></a>纹理&#x2F;采样器类型</h3><p>通常按照如下方式在 HLSL 代码中声明纹理：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sampler2D _MainTex;</span><br><span class="line">samplerCUBE _Cubemap;</span><br></pre></td></tr></table></figure>
+
+<p>对于移动平台，这些将转换为“低精度采样器”，即预期纹理应具有低精度数据。如果您知道纹理包含 HDR 颜色，则可能需要使用半精度采样器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sampler2D_half _MainTex;</span><br><span class="line">samplerCUBE_half _Cubemap;</span><br></pre></td></tr></table></figure>
+
+<p>或者，如果纹理包含完整浮点精度数据（例如<a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2021.1/Manual/SL-DepthTextures.html">深度纹理</a>），请使用完整精度采样器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sampler2D_float _MainTex;</span><br><span class="line">samplerCUBE_float _Cubemap;</span><br></pre></td></tr></table></figure>
+
+<h2 id="语义"><a href="#语义" class="headerlink" title="语义"></a>语义</h2><p>参数后被冒号隔开并且全部大写的关键词就是语义。</p>
+<p>当使用 CG 语言编写着色器函数的时候，函数的输入参数和输出参数都需要填充一个语义（Semantic）来表示它们要传递的数据信息。语义可以执行大量烦琐的操作，使用户能够避免直接与 GPU 底层进行交流。</p>
+<h3 id="顶点着色器输入语义"><a href="#顶点着色器输入语义" class="headerlink" title="顶点着色器输入语义"></a>顶点着色器输入语义</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047600.png" alt="Pasted image 20230614195139"><br>当顶点信息包含的元素少于顶点着色器输入所需要的元素时，<strong>缺少的部分会被 0 填充，而 w 分量会被 1 填充</strong>。例如：顶点的 UV 坐标通常是二维向量，只包含 x 和 y 元素。如果输入的语义 TEXCOORD0 被声明为 float4 类型，那么顶点着色器最终获取到的数据将变成（x，y，0，1）。</p>
+<blockquote>
+<p>[!NOTE] 数据来源：MeshRender<br>填充到这些语义中的数据由使用该材质的 MeshRender 组件提供，每帧调用 DrawCall 的时候，MeshRender 组件会把它负责渲染的模型数据发送给 UnityShader。</p>
+</blockquote>
+<h3 id="顶点着色器输出和片段着色器输入语义"><a href="#顶点着色器输出和片段着色器输入语义" class="headerlink" title="顶点着色器输出和片段着色器输入语义"></a>顶点着色器输出和片段着色器输入语义</h3><p>在整个渲染流水线中，顶点着色器最重要的一项任务就是需要输出顶点在裁切空间中的坐标，这样 GPU 就可以知道顶点在屏幕上的栅格化位置以及深度值。在顶点函数中，这个输出参数需要使用 float4 类型的 <code>SV_POSITION</code> 语义进行填充。</p>
+<p>顶点着色器产生的输出值将会在三角形遍历阶段经过插值计算，最终作为像素值输入到片段着色器。换句话说，顶点着色器的输入即为片段着色器的输入。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047601.png" alt="Pasted image 20230614195313"></p>
+<p>片段着色器会自动获取顶点着色器输出的裁切空间顶点坐标，<strong>所以片段函数输入的 SV_POSITION 可以省略</strong>。这也解释了为什么有些 Shader 的片段函数中只有输出参数，但是没有输入参数。<br><strong>需要特别注意的是，与顶点函数的输入语义不同，<code>TEXCOORDn</code> 不再特指模型的 UV 坐标，<code>COLORn</code> 也不再特指顶点颜色。它们的使用范围更广，可以用于声明任何符合要求的数据，所以在使用过程中不要被语义的名称欺骗了。</strong></p>
+<h3 id="片段着色器输出语义"><a href="#片段着色器输出语义" class="headerlink" title="片段着色器输出语义"></a>片段着色器输出语义</h3><p>片段着色器通常只会输出一个 fixed4 类型的颜色信息，输出的值会存储到渲染目标（Render Target）中，输出参数使用 <code>SV_TARGET</code> 语义进行填充。</p>
+<h2 id="CG-标准库函数"><a href="#CG-标准库函数" class="headerlink" title="CG 标准库函数"></a>CG 标准库函数</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047602.png" alt="Pasted image 20230615103657"></p>
+<h3 id="lerp-插值"><a href="#lerp-插值" class="headerlink" title="lerp 插值"></a>lerp 插值</h3><p>lerp 函数是针对<strong>CG&#x2F;HLSL</strong>（一种 Shader 语法）中的 lerp 函数<br>我们先看一下它的函数签名和定义</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047589.png" alt="image-20220706155641339"></p>
+<p>从定义来看还是挺简单的，我们主要是理解它有什么作用。另外我们规定，weight 是一个在区间[0,1]的实数，倒不是因为取更大的值之后，这个函数就无定义了，而是因为取更大的值，这个函数就失去了我们构造它的理由，另外，CG 会限制 weight 的值在 0-1 的范围内，超过这个范围会被留在边界 0 或者边界 1</p>
+<p>这里的 y1 被称为起点，而 y2 被称为终点，lerp 函数就是取值 y1 到 y2 中间的一个值。取多少呢？就由 weight 来控制，当 weight 为 0.5 时，它正好落在起点和终点的中间。为了更加方便理解，我们可以把这个公式换成这种格式</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047590.png" alt="image-20220706155700754"></p>
+<p>简单来说，lerp 函数就是在 y1 和 y2 之间过渡，唯一不同的地方就是，y1 和 y2 可以是一个值，也可以是一个函数。比如，我们可以在正弦函数和线性函数之前做过渡，我们先看一下正弦函数</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047592.jpg" alt="img"></p>
+<p>再看一下最简单的线性函数（恒等映射函数 y&#x3D;x）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047593.jpg" alt="img"></p>
+<p>在它俩之间做过渡，我们只需要写出 lerp (sin (x), x, 0.5)即可。当然，可以调整 weight 参数观察不同的结果。</p>
+<p><strong>weight 为 0.5 时：</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047594.jpg" alt="img"></p>
+<p><strong>weight 为 0.8 时：</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047595.jpg" alt="img"></p>
+<p><strong>weight 为 0.2 时：</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047596.jpg" alt="img"></p>
+<p>是不是非常的直观，所以这就扯到了 Lerp 函数的两种不同的作用。</p>
+<ul>
+<li>构造新的函数</li>
+<li>在两个值之间进行过度</li>
+</ul>
+<h3 id="frac-向下取整"><a href="#frac-向下取整" class="headerlink" title="frac 向下取整"></a>frac 向下取整</h3><p>frac 函数通过如下代码实现：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">float</span> <span class="title">frac</span><span class="params">(<span class="type">float</span> v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// floor函数返回值会向下取整</span></span><br><span class="line">  <span class="keyword">return</span> v - <span class="built_in">floor</span>(v);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该函数只有一个参数 v，v 参数的类型不仅可以是 float 类型，也可以是其它 float 向量。通过该函数的实现可知，它<strong>返回标量或每个矢量中各分量的小数部分。</strong></p>
+<h3 id="clamp-夹具函数"><a href="#clamp-夹具函数" class="headerlink" title="clamp 夹具函数"></a>clamp 夹具函数</h3><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">float</span> <span class="selector-tag">clamp</span>（<span class="selector-tag">float</span> <span class="selector-tag">x</span>, <span class="selector-tag">float</span> <span class="selector-tag">a</span>, <span class="selector-tag">float</span> <span class="selector-tag">b</span>）;</span><br></pre></td></tr></table></figure>
+
+<p>将 x 固定在[a, b]范围内，</p>
+<p>如下所示:</p>
+<ol>
+<li><p>如果 x 小于 a，返回 a;</p>
+</li>
+<li><p>如果 x 大于 b，返回 b;</p>
+</li>
+<li><p>否则返回 x。</p>
+</li>
+</ol>
+<h3 id="clip-剔除"><a href="#clip-剔除" class="headerlink" title="clip 剔除"></a>clip 剔除</h3><p>如果给定向量的任何分量或给定标量为负，则终止当前像素输出</p>
+<p>对像素剔除：当采样结果小于 0，该像素就会被剔除不会显示到屏幕上</p>
+<h3 id="smoothstep-平滑阶梯"><a href="#smoothstep-平滑阶梯" class="headerlink" title="smoothstep 平滑阶梯"></a>smoothstep 平滑阶梯</h3><p>smoothstep 可以用来生成 0 到 1 的平滑过渡值，它也叫平滑阶梯函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">float</span> <span class="title">smoothstep</span><span class="params">(<span class="type">float</span> t1, <span class="type">float</span> t2, <span class="type">float</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  x = <span class="built_in">clamp</span>((x - t1) / (t2 - t1), <span class="number">0.0</span>, <span class="number">1.0</span>); </span><br><span class="line">  <span class="keyword">return</span> x * x * (<span class="number">3</span> - <span class="number">2</span> * x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>当 x 等于 t1 时，结果值为 0；</strong></p>
+<p><strong>当 x 等于 t2 时，结果值为 1；</strong></p>
+<p><strong>(ps: 值限制在 0~1 之间的原因是因为 clamp 函数的限制)</strong></p>
+<h3 id="step-函数"><a href="#step-函数" class="headerlink" title="step 函数"></a>step 函数</h3><p>step (a, b) </p>
+<p>b &gt;&#x3D; a 时输出 1</p>
+<p>b &lt; a 时输出 0</p>
+<h1 id="封装-cgnic-库"><a href="#封装-cgnic-库" class="headerlink" title="封装 cgnic 库"></a>封装 cgnic 库</h1><p>新建文件: XXX. cgnic<br>unity 内无法直接创建，可以使用 IDE 创建</p>
+<p>在 shader 中使用： # include “路径”<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047603.png" alt="Pasted image 20221018211856"></p>
+<h1 id="多光源-阴影"><a href="#多光源-阴影" class="headerlink" title="多光源&#x2F;阴影"></a>多光源&#x2F;阴影</h1><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190047597.png" alt="image-20220707190035317"></p>
+<h2 id="multi-compile"><a href="#multi-compile" class="headerlink" title="multi_compile"></a>multi_compile</h2><p><strong>在默认状态下，前向渲染只支持一个投射阴影的平行光，如果想要修改默认状态，就需要添加多重编译指令。</strong><br>Unity 提供了一系列多重编译指令以编译出不同的 Shader 变体，这些编译指令主要用于处理不同类型的灯光、阴影和灯光贴图，可以使用的编译指令如下：<br>（1）<code>multi_compile_fwdbase</code>：编译 Forward BasePass 中的所有变体，用于处理不同类型的光照贴图，并为主要平行光开启或者关闭阴影。<br>（2）<code>multi_compile_fwdadd</code>：编译 Forward Additional Pass 中的所有变体，用于处理平行光、聚光灯和点光源，以及它们的 cookie 纹理。<br>（3）<code>multi_compile_fwdadd_fullshadows</code>：与 multi_compile_fwdadd 类似，但是增加了灯光投射实时阴影的效果。</p>
+<h1 id="变体"><a href="#变体" class="headerlink" title="变体"></a>变体</h1><h3 id="快捷方式"><a href="#快捷方式" class="headerlink" title="快捷方式"></a>快捷方式</h3><p>在<strong>内置管线</strong>中，有几个 “快捷方式” 可以用于常用变体组合。这些组合常用于处理不同的灯光、阴影和光照贴图类型。</p>
+<ul>
+<li><code>multi_compile_fwdbase</code> 编译 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2021.1/ScriptReference/Rendering.PassType.ForwardBase.html">PassType.ForwardBase</a> 所需的所有变体。这些变体处理不同的光照贴图类型以及启用或禁用的方向光主要阴影，它相当于这些变体的组合：<ul>
+<li>DIRECTIONAL</li>
+<li>LIGHTMAP_ON</li>
+<li>DIRLIGHTMAP_COMBINED</li>
+<li>DYNAMICLIGHTMAP_ON</li>
+<li>SHADOWS_SCREEN</li>
+<li>SHADOWS_SHADOWMASK</li>
+<li>LIGHTMAP_SHADOW_MIXING</li>
+<li>LIGHTPROBE_SH</li>
+<li>VERTEXLIGHT_ON</li>
+</ul>
+</li>
+<li><code>multi_compile_fwdadd</code> 编译 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2021.1/ScriptReference/Rendering.PassType.ForwardAdd.html">PassType.ForwardAdd</a> 的变体。这将编译变体来处理方向光、聚光灯或点光源类型，以及它们带有剪影纹理的变体，它相当于这些变体的组合：<ul>
+<li>POINT</li>
+<li>DIRECTIONAL</li>
+<li>SPOT</li>
+<li>POINT_COOKIE</li>
+<li>DIRECTIONAL_COOKIE</li>
+</ul>
+</li>
+<li><code>multi_compile_fwdadd_fullshadows</code> - 与 <code>multi_compile_fwdadd</code> 相同，但还能够让光源具有实时阴影，它相当于 <code>multi_compile_fwdadd</code>  变体的组合加上：<ul>
+<li>SHADOWS_DEPTH</li>
+<li>SHADOWS_SCREEN</li>
+<li>SHADOWS_CUBE</li>
+<li>SHADOWS_SOFT</li>
+<li>SHADOWS_SHADOWMASK</li>
+<li>LIGHTMAP_SHADOW_MIXING</li>
+</ul>
+</li>
+<li><code>multi_compile_fog</code> 扩展为多个变体以处理不同的雾效类型 (off&#x2F;linear&#x2F;exp&#x2F;exp2)。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/42466.html">http://liuke101.github.io/post/42466.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Shader/">Shader</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/21838.html" title="冯乐乐入门精要笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">冯乐乐入门精要笔记</div></div></a></div><div class="next-post pull-right"><a href="/post/42467.html" title="HLSL ShaderLab"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">HLSL ShaderLab</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/32635.html" title="UV操作"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">UV操作</div></div></a></div><div><a href="/post/46138.html" title="雾"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">雾</div></div></a></div><div><a href="/post/39936.html" title="顶点动画"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-18</div><div class="title">顶点动画</div></div></a></div><div><a href="/post/11097.html" title="描边"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">描边</div></div></a></div><div><a href="/post/56280.html" title="Shader Trick"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-18</div><div class="title">Shader Trick</div></div></a></div><div><a href="/post/57613.html" title="溶解特效"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">溶解特效</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">1. 文章主要迁移自个人的obsidian笔记，存在部分md语法冲突，导致显示异常，暂未修复。 2. 文章部分内容参考/引用网络资源，用于个人学习，如有侵权，请联系我删除。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CG-%E8%AF%AD%E6%B3%95%E5%9F%BA%E7%A1%80"><span class="toc-text">CG 语法基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%8C%87%E4%BB%A4"><span class="toc-text">编译指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E7%9B%AE%E6%A0%87%E7%AD%89%E7%BA%A7"><span class="toc-text">编译目标等级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E5%B9%B3%E5%8F%B0"><span class="toc-text">渲染平台</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E6%95%B0%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">整数数据类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E5%90%88%E7%9F%A2%E9%87%8F-%E7%9F%A9%E9%98%B5%E7%B1%BB%E5%9E%8B"><span class="toc-text">复合矢量&#x2F;矩阵类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%B9%E7%90%86-%E9%87%87%E6%A0%B7%E5%99%A8%E7%B1%BB%E5%9E%8B"><span class="toc-text">纹理&#x2F;采样器类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%AD%E4%B9%89"><span class="toc-text">语义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B6%E7%82%B9%E7%9D%80%E8%89%B2%E5%99%A8%E8%BE%93%E5%85%A5%E8%AF%AD%E4%B9%89"><span class="toc-text">顶点着色器输入语义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B6%E7%82%B9%E7%9D%80%E8%89%B2%E5%99%A8%E8%BE%93%E5%87%BA%E5%92%8C%E7%89%87%E6%AE%B5%E7%9D%80%E8%89%B2%E5%99%A8%E8%BE%93%E5%85%A5%E8%AF%AD%E4%B9%89"><span class="toc-text">顶点着色器输出和片段着色器输入语义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%87%E6%AE%B5%E7%9D%80%E8%89%B2%E5%99%A8%E8%BE%93%E5%87%BA%E8%AF%AD%E4%B9%89"><span class="toc-text">片段着色器输出语义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CG-%E6%A0%87%E5%87%86%E5%BA%93%E5%87%BD%E6%95%B0"><span class="toc-text">CG 标准库函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#lerp-%E6%8F%92%E5%80%BC"><span class="toc-text">lerp 插值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#frac-%E5%90%91%E4%B8%8B%E5%8F%96%E6%95%B4"><span class="toc-text">frac 向下取整</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#clamp-%E5%A4%B9%E5%85%B7%E5%87%BD%E6%95%B0"><span class="toc-text">clamp 夹具函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#clip-%E5%89%94%E9%99%A4"><span class="toc-text">clip 剔除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#smoothstep-%E5%B9%B3%E6%BB%91%E9%98%B6%E6%A2%AF"><span class="toc-text">smoothstep 平滑阶梯</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#step-%E5%87%BD%E6%95%B0"><span class="toc-text">step 函数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%81%E8%A3%85-cgnic-%E5%BA%93"><span class="toc-text">封装 cgnic 库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%9A%E5%85%89%E6%BA%90-%E9%98%B4%E5%BD%B1"><span class="toc-text">多光源&#x2F;阴影</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#multi-compile"><span class="toc-text">multi_compile</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%98%E4%BD%93"><span class="toc-text">变体</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F"><span class="toc-text">快捷方式</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42467.html" title="HLSL ShaderLab">HLSL ShaderLab</a><time datetime="2024-05-18T16:49:50.000Z" title="发表于 2024-05-19 00:49:50">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42466.html" title="CG ShaderLab">CG ShaderLab</a><time datetime="2024-05-18T16:48:56.000Z" title="发表于 2024-05-19 00:48:56">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/21838.html" title="冯乐乐入门精要笔记">冯乐乐入门精要笔记</a><time datetime="2024-05-18T16:45:45.000Z" title="发表于 2024-05-19 00:45:45">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/1106.html" title="Unity Primer"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190029709.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity Primer"/></a><div class="content"><a class="title" href="/post/1106.html" title="Unity Primer">Unity Primer</a><time datetime="2024-05-18T16:36:03.000Z" title="发表于 2024-05-19 00:36:03">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/64623.html" title="Unity GUI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190021833.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity GUI"/></a><div class="content"><a class="title" href="/post/64623.html" title="Unity GUI">Unity GUI</a><time datetime="2024-05-18T16:32:22.000Z" title="发表于 2024-05-19 00:32:22">2024-05-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>
