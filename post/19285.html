@@ -1,0 +1,489 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>材质脚本控制 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="脚本中开启 HDR Color123456[GradientUsage(true)] &#x2F;&#x2F;添加HDR类型的颜色条public Gradient Gradient;[ColorUsageAttribute(true, true)] &#x2F;&#x2F;添加HDR类型的颜色public Color Color; 材质属性材质属性在 C# 代码中通过 MaterialProperty 类进行表示。 要访问 HLSL 代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="材质脚本控制">
+<meta property="og:url" content="http://liuke101.github.io/post/19285.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="脚本中开启 HDR Color123456[GradientUsage(true)] &#x2F;&#x2F;添加HDR类型的颜色条public Gradient Gradient;[ColorUsageAttribute(true, true)] &#x2F;&#x2F;添加HDR类型的颜色public Color Color; 材质属性材质属性在 C# 代码中通过 MaterialProperty 类进行表示。 要访问 HLSL 代">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png">
+<meta property="article:published_time" content="2023-12-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-31T16:10:12.778Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="Shader">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/19285.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '材质脚本控制',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-01 00:10:12'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">材质脚本控制</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-12-01T16:00:00.000Z" title="发表于 2023-12-02 00:00:00">2023-12-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-31T16:10:12.778Z" title="更新于 2024-08-01 00:10:12">2024-08-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Unity/">Unity</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="材质脚本控制"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/19285.html#post-comment"><span class="waline-comment-count" data-path="/post/19285.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="脚本中开启-HDR-Color"><a href="#脚本中开启-HDR-Color" class="headerlink" title="脚本中开启 HDR Color"></a>脚本中开启 HDR Color</h1><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">GradientUsage(true)</span>] <span class="comment">//添加HDR类型的颜色条</span></span><br><span class="line"><span class="keyword">public</span> Gradient Gradient;</span><br><span class="line"></span><br><span class="line">[<span class="meta">ColorUsageAttribute(true, true)</span>] <span class="comment">//添加HDR类型的颜色</span></span><br><span class="line"><span class="keyword">public</span> Color Color;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="材质属性"><a href="#材质属性" class="headerlink" title="材质属性"></a>材质属性</h1><p>材质属性在 C# 代码中通过 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/MaterialProperty.html">MaterialProperty</a> 类进行表示。</p>
+<p>要访问 HLSL 代码中定义的变量，可以调用 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/Material.GetFloat.html">Material.GetFloat</a>、<a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/Material.SetFloat.html">Material.SetFloat</a>。还有其他类似的方法；请参阅<a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/Material.html">材质 API 文档</a>以获取完整列表。使用这些 API 访问 HLSL 变量时，变量是否为材质属性并不重要。</p>
+<p>在 Unity 编辑器中，可以控制材质属性在 Inspector 窗口中的显示方式。为此，最简单的方法是使用 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/MaterialPropertyDrawer.html">MaterialPropertyDrawer</a>。对于更复杂的需求，可以使用 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/MaterialEditor.html">MaterialEditor</a>、<a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/MaterialProperty.html">MaterialProperty</a> 和 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/ShaderGUI.html">ShaderGUI</a> 类。有关为着色器创建自定义 GUI 的更多信息，请参阅 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/Manual/SL-CustomEditor.html">ShaderLab：分配自定义编辑器</a>。</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SetColor</td>
+<td>更改材质的颜色</td>
+</tr>
+<tr>
+<td>SetFloat</td>
+<td>设置浮点值</td>
+</tr>
+<tr>
+<td>SetInteger</td>
+<td>在材质中设置整数值</td>
+</tr>
+<tr>
+<td>SetTexture</td>
+<td>为材质分配新纹理</td>
+</tr>
+</tbody></table>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置贴图</span></span><br><span class="line">Texture mTexture = Resources.Load(<span class="string">&quot;myTexture&quot;</span>, <span class="keyword">typeof</span>(Texture )) <span class="keyword">as</span> Texture;</span><br><span class="line">material.SetTexture(<span class="string">&quot;_MainTex&quot;</span>, mTexture );</span><br><span class="line"><span class="comment">// 设置整数</span></span><br><span class="line">material.SetInt(<span class="string">&quot;_Int&quot;</span>, <span class="number">1</span>);</span><br><span class="line"><span class="comment">// 设置浮点</span></span><br><span class="line">material.SetFloat(<span class="string">&quot;_Float&quot;</span>, <span class="number">0.1f</span>);</span><br><span class="line"><span class="comment">// 设置颜色 rgba</span></span><br><span class="line">material.SetColor(<span class="string">&quot;_Color&quot;</span>, Color.white);</span><br><span class="line"><span class="comment">// 设置向量 xyzw</span></span><br><span class="line">material.SetVector(<span class="string">&quot;_Vector&quot;</span>, <span class="keyword">new</span> Vector4());</span><br><span class="line"><span class="comment">// shader的正常接口是没有bool类型的。但通过#pragma multi_compile __ UNITY_name可以实现</span></span><br><span class="line"><span class="comment">// 设置shader的UNITY_name为true</span></span><br><span class="line">material.EnableKeyword(<span class="string">&quot;UNITY_name&quot;</span>);</span><br><span class="line"><span class="comment">// 设置shader的UNITY_name为true</span></span><br><span class="line">material.DisableKeyword(<span class="string">&quot;UNITY_name&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="material-和-shader"><a href="#material-和-shader" class="headerlink" title="material 和 shader"></a>material 和 shader</h1><h2 id="1-直接设置-Material-文件"><a href="#1-直接设置-Material-文件" class="headerlink" title="1 直接设置 Material 文件"></a>1 直接设置 Material 文件</h2><p>使用 unity 编辑器直接定位包含目标 shader 的 Material，并在脚本中访问。所有引入该 Material 的物体都会发生改变.<br>1，在脚本中建立公共 Material 参数<br>2，将脚本绑定到某物体上<br>3，在 unity edtor 中找到包含 Shader 的 Material 文件并拖拽到刚才的脚本对应参数上</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">shaderController</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Material material;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Update</span>()</span> &#123;</span><br><span class="line">        material.SetFloat(<span class="string">&quot;_Float&quot;</span>, Mathf.Sin(Time.frameCount * <span class="number">0.01f</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-设置资源中的-Material-文件"><a href="#2-设置资源中的-Material-文件" class="headerlink" title="2 设置资源中的 Material 文件"></a>2 设置资源中的 Material 文件</h2><p>直接设置 Material 文件中的 Shader，所有引入该 Material 的物体都会发生改变<br>目标 Material 必须在 Asset&#x2F;Resources 文件夹下。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">shaderController</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Material material;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// typeof(Material)是为了防止不同类型文件重名</span></span><br><span class="line">        material = Resources.Load(<span class="string">&quot;rshader&quot;</span>, <span class="keyword">typeof</span>(Material)) <span class="keyword">as</span> Material;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Update</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//设置浮点数值</span></span><br><span class="line">        material.SetFloat(<span class="string">&quot;_Float&quot;</span>, Mathf.Sin(Time.frameCount * <span class="number">0.01f</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-通过指定-shader-设置"><a href="#3-通过指定-shader-设置" class="headerlink" title="3 通过指定 shader 设置"></a>3 通过指定 shader 设置</h2><p>该设置只会影响带有当前新建的 Material 的物体，不会影响其他带有该 shader 的物体。<br>1，读取 shader 资源<br>2，在内存中创建 Material 并设置相关参数<br>3，将新建的 Material 赋给目标物体</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">shaderController</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Material material;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span> &#123;</span><br><span class="line">        <span class="comment">// 获取物体的MeshRenderer组件</span></span><br><span class="line">        MeshRenderer mr =  GameObject.Find(<span class="string">&quot;Cube222&quot;</span>).GetComponent&lt;MeshRenderer&gt; ();  </span><br><span class="line">        <span class="comment">// 根据渲染器路径找到渲染器。跟资源目录无关</span></span><br><span class="line">        Shader shader = Shader.Find(<span class="string">&quot;Custom/3d&quot;</span>);</span><br><span class="line">        <span class="comment">// 新建Material</span></span><br><span class="line">        material = <span class="keyword">new</span> Material(shader);</span><br><span class="line">        <span class="comment">// 将新材质赋给物体</span></span><br><span class="line">        mr.material = material;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Update</span>()</span> &#123;</span><br><span class="line">        material.SetFloat(<span class="string">&quot;_Float&quot;</span>, Mathf.Sin(Time.frameCount * <span class="number">0.1f</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-通过目标物体直接设置，影响所有的物体"><a href="#4-通过目标物体直接设置，影响所有的物体" class="headerlink" title="4 通过目标物体直接设置，影响所有的物体"></a>4 通过目标物体直接设置，影响所有的物体</h2><p>该设置会影响所有引用与该物体相同 Material 的物体<br>1，获取目标物体<br>2，获取物体 sharedMaterial 属性<br>3，设置</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">shaderController</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> MeshRenderer mr;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span> &#123;</span><br><span class="line">        <span class="comment">// 获取包含Material的MeshRenderer组件</span></span><br><span class="line">        mr =  GameObject.Find(<span class="string">&quot;Cube222&quot;</span>).GetComponent&lt;MeshRenderer&gt; ();  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Update</span>()</span> &#123;</span><br><span class="line">        <span class="comment">//sharedMaterial代表设置原始的Material，所有引用该材质的对象都会被影响。</span></span><br><span class="line">        <span class="comment">//material代表当前的Material，实际上它等于在内存中新建了一个Mertairl。如果不手动释放它会造成内存泄漏。该修改只会影响当前对象</span></span><br><span class="line">        mr.sharedMaterial.SetFloat(<span class="string">&quot;_Float&quot;</span>, Mathf.Sin(Time.frameCount * <span class="number">0.1f</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-通过目标物体直接设置，只影响当前的物体"><a href="#5-通过目标物体直接设置，只影响当前的物体" class="headerlink" title="5 通过目标物体直接设置，只影响当前的物体"></a>5 通过目标物体直接设置，只影响当前的物体</h2><p>该设置只会影响当前设置 Material 的物体<br>1，获取目标物体<br>2，获取物体 Material 属性<br>3，设置</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">shaderController</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> MeshRenderer mr;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span> &#123;</span><br><span class="line">        <span class="comment">// 获取包含Material的MeshRenderer组件</span></span><br><span class="line">        mr =  GameObject.Find(<span class="string">&quot;Cube222&quot;</span>).GetComponent&lt;MeshRenderer&gt; ();  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Update</span>()</span> &#123;</span><br><span class="line">        <span class="comment">//sharedMaterial代表设置原始的Material，所有引用该材质的对象都会被影响。</span></span><br><span class="line">        <span class="comment">//material代表当前的Material，实际上它等于在内存中新建了一个Mertairl。如果不手动释放它会造成内存泄漏。该修改只会影响当前对象</span></span><br><span class="line">        <span class="comment">//material赋值的过程:</span></span><br><span class="line">        <span class="comment">//1.Material m = mr.materia;</span></span><br><span class="line">        <span class="comment">//2.设置m.set....;</span></span><br><span class="line">        <span class="comment">//3.mr.material = m;</span></span><br><span class="line">        mr.material.SetFloat(<span class="string">&quot;_Float&quot;</span>, Mathf.Sin(Time.frameCount * <span class="number">0.1f</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>如果设置无效要注意以下问题</p>
+<ol>
+<li>目标 shader 的渲染器路径是否有重名。</li>
+<li>如果是通过资源文件读取，需要确保它在 Asset&#x2F;Resources 文件夹下</li>
+<li>区分 material 和 share material 的区别。实际上直接设置 material 等于实例化了一个新的 materaial 并赋给对象，如果不手动销毁，这个新的 material 会一直在内存中驻留。而 sharematerial 则是修改已有的 material，但这个修改会改变所有引用了该 material 的对象。这点务必搞清楚。</li>
+</ol>
+<h1 id="脚本控制"><a href="#脚本控制" class="headerlink" title="脚本控制"></a>脚本控制</h1><h2 id="子着色器标签"><a href="#子着色器标签" class="headerlink" title="子着色器标签"></a>子着色器标签</h2><p>  <code>Material.GetTag</code> ：读取子着色器标签</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将此附加到具有渲染器组件的游戏对象</span></span><br><span class="line"><span class="built_in">string</span> tagName = <span class="string">&quot;RenderType&quot;</span>;  <span class="comment">//标签的键名</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    Renderer myRenderer = GetComponent&lt;Renderer&gt;();</span><br><span class="line">    <span class="built_in">string</span> tagValue = myRenderer.material.GetTag(ExampleTagName, <span class="literal">true</span>, <span class="string">&quot;Tag not found&quot;</span>); <span class="comment">//返回标签的值</span></span><br><span class="line">    Debug.Log(tagValue);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改 Queue 标签</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Shader shader;</span><br><span class="line"><span class="keyword">public</span> Material material;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//设置材质球的renderQueue</span></span><br><span class="line">    material.renderQueue = (<span class="built_in">int</span>)RenderQueue.Geometry; </span><br><span class="line">    </span><br><span class="line">    Debug.Log(material.renderQueue); <span class="comment">//读取材质球的renderQueue</span></span><br><span class="line">    <span class="comment">//Debug.Log(shader.renderQueue); //读取shader文件中的renderQueue，可读不可写</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Pass"><a href="#Pass" class="headerlink" title="Pass"></a>Pass</h2><p><code>Material.FindPass</code>：返回通道 passName 的索引，如果不存在，则为 -1</p>
+<p><code>Material.GetPassName</code> 返回索引 <code>pass</code> 处的着色器通道的名称。如果通道不存在，则它返回空字符串。<br>ShaderData. Pass. Name：此通道的名称<br> <strong>注意：</strong><a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/Material.GetShaderPassEnabled.html">Material.GetShaderPassEnabled</a> 和 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/Material.SetShaderPassEnabled.html">Material.SetShaderPassEnabled</a> 不按名称引用通道；而是使用 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/Manual/SL-PassTags.html">LightMode 标签</a>的值引用通道。</p>
+<p><strong>Pass 专用 Tags：</strong><br> <code>Shader.FindPassTagValue</code> ：获取 Tag 值，适用于 Unity 的预定义 Pass 标签，以及您创建的自定义通道标签。<br><strong>注意：</strong>有几个 API 可以直接与 LightMode 通道标签一起使用。有关更多信息，请参阅[[ <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/Manual/SL-PassTags.html#">https://docs.unity3d.com/cn/2022.3/Manual/SL-PassTags.html#</a> 脚本使用 LightMode 标签]( <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/Manual/SL-PassTags.html#lightmode-tag-scripts">https://docs.unity3d.com/cn/2022.3/Manual/SL-PassTags.html#lightmode-tag-scripts</a> ]]。</p>
+<p><strong>LightMode 标签：</strong><br><a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/Material.SetShaderPassEnabled.html">Material.SetShaderPassEnabled</a> and <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/Rendering.ShaderTagId.html">ShaderTagId</a> use the value of the <code>LightMode</code> tag to determine how Unity handles a given Pass.<br>在可编程渲染管线中，您可以为 <code>LightMode</code> 标签创建自定义值。然后，通过配置一个 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/Rendering.DrawingSettings.html">DrawingSettings</a> 结构，您可以使用这些自定义值来确定在给定 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/ScriptReference/Rendering.ScriptableRenderContext.DrawRenderers.html">ScriptableRenderContext.DrawRenderers</a> 调用期间要绘制哪些通道。有关更多信息和代码示例，请参阅<a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2022.3/Manual/srp-creating-simple-render-loop.html">在自定义可编程渲染管线中创建一个简单的渲染循环</a>。</p>
+<h2 id="材质属性-1"><a href="#材质属性-1" class="headerlink" title="材质属性"></a>材质属性</h2><h1 id="API"><a href="#API" class="headerlink" title="API"></a>API</h1><h2 id="Shader-Find"><a href="#Shader-Find" class="headerlink" title="Shader.Find"></a>Shader.Find</h2><p>通过 <code>Shader.Find (name)</code>可以获得指定名字的 shader，需要注意的是 name 为 Shader 脚本中第一行定义 Shader 的全名，如 Unlit&#x2F;Texture，Legacy Shaders&#x2F;Diffuse 等。</p>
+<p><strong>如果 shader 没有被引用包含进发布工程，那么 Shader. Find 将不会获得目标 shader。</strong><br>可以通过以下几种方式把需要的 shader 引用到工程中：</p>
+<ol>
+<li>通过场景中的材质球引用，这样就会把引用的 shader 也一道打包了</li>
+<li>在 Project Settings–&gt;Graphics 下，把 shader 添加进 Always Included Shaders 中，手动太慢，可以使用代码： <figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">MenuItem(<span class="string">&quot;Test/测试设置included shader&quot;</span>, false, 11)</span>]</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">TestIncludedShader</span>()</span></span><br><span class="line"> &#123;</span><br><span class="line">     <span class="built_in">string</span>[] myShaders = <span class="keyword">new</span> <span class="built_in">string</span>[<span class="number">1</span>]&#123;</span><br><span class="line">         <span class="string">&quot;Legacy Shaders/Diffuse&quot;</span></span><br><span class="line">     &#125;;</span><br><span class="line"> </span><br><span class="line">     SerializedObject graphicsSettings = <span class="keyword">new</span> SerializedObject (AssetDatabase.LoadAllAssetsAtPath (<span class="string">&quot;ProjectSettings/GraphicsSettings.asset&quot;</span>) [<span class="number">0</span>]);</span><br><span class="line">     SerializedProperty it = graphicsSettings.GetIterator ();</span><br><span class="line">     SerializedProperty dataPoint;</span><br><span class="line">     <span class="keyword">while</span> (it.NextVisible(<span class="literal">true</span>)) &#123;</span><br><span class="line">         <span class="keyword">if</span> (it.name == <span class="string">&quot;m_AlwaysIncludedShaders&quot;</span>) &#123;</span><br><span class="line">             it.ClearArray();</span><br><span class="line"> </span><br><span class="line">             <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; myShaders.Length; i++) &#123; </span><br><span class="line">                 it.InsertArrayElementAtIndex(i);</span><br><span class="line">                 dataPoint = it.GetArrayElementAtIndex (i);</span><br><span class="line">                 dataPoint.objectReferenceValue = Shader.Find(myShaders[i]);</span><br><span class="line">             &#125;</span><br><span class="line"> </span><br><span class="line">             graphicsSettings.ApplyModifiedProperties ();</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></li>
+<li>把 shader 放到 Resources 目录下</li>
+</ol>
+<h3 id="注意-1"><a href="#注意-1" class="headerlink" title="注意"></a>注意</h3><p>在热更项目中，通常会把 shader 通过引用的方式打成包，然后通过 <code>AssetBundle.LoadAllAssets()</code> 的方式引入到工程中。这种方式引用的 Shader 无法使用 Shader.Find 获取到的。</p>
+<h2 id="MaterialPropertyBlock"><a href="#MaterialPropertyBlock" class="headerlink" title="MaterialPropertyBlock"></a>MaterialPropertyBlock</h2><figure class="highlight cs"><figcaption><span>title:用法 title:单个物体使用</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Test</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">int</span> baseColorId = Shader.PropertyToID(<span class="string">&quot;_BaseColor&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    Color baseColor = Color.white;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> MaterialPropertyBlock block;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (block == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            block = <span class="keyword">new</span> MaterialPropertyBlock();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        block.SetColor(baseColorId, baseColor);</span><br><span class="line">        </span><br><span class="line">        GetComponent&lt;MeshRenderer&gt;().SetPropertyBlock(block);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cs"><figcaption><span>title:批量使用，结合GPUInstacing</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MeshBall</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">int</span> baseColorId = Shader.PropertyToID(<span class="string">&quot;_BaseColor&quot;</span>);</span><br><span class="line"></span><br><span class="line">    [<span class="meta">SerializeField</span>] <span class="keyword">private</span> Mesh mesh = <span class="literal">default</span>;</span><br><span class="line">    [<span class="meta">SerializeField</span>] <span class="keyword">private</span> Material material = <span class="literal">default</span>;</span><br><span class="line">    </span><br><span class="line">    Matrix4x4[] matrices = <span class="keyword">new</span> Matrix4x4[<span class="number">1023</span>];</span><br><span class="line">    Vector4[] baseColors = <span class="keyword">new</span> Vector4[<span class="number">1023</span>];</span><br><span class="line">    </span><br><span class="line">    MaterialPropertyBlock block;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Awake</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; matrices.Length; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            matrices[i] = Matrix4x4.TRS(</span><br><span class="line">                Random.insideUnitSphere * <span class="number">10f</span>,</span><br><span class="line">                Quaternion.Euler(Random.<span class="keyword">value</span> * <span class="number">360f</span>, Random.<span class="keyword">value</span> * <span class="number">360f</span>, Random.<span class="keyword">value</span> * <span class="number">360f</span>),</span><br><span class="line">                Vector3.one * UnityEngine.Random.Range(<span class="number">0.5f</span>, <span class="number">1.5f</span>)</span><br><span class="line">                );</span><br><span class="line">            baseColors[i] = <span class="keyword">new</span> Vector4(Random.<span class="keyword">value</span>, Random.<span class="keyword">value</span>, Random.<span class="keyword">value</span>, Random.Range(<span class="number">0.5f</span>,<span class="number">1.0f</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Update</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (block == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            block = <span class="keyword">new</span> MaterialPropertyBlock();</span><br><span class="line">            block.SetVectorArray(baseColorId, baseColors);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Graphics.DrawMeshInstanced(mesh, <span class="number">0</span>, material, matrices, <span class="number">1023</span>, block);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于实例化出来的模型，我们改变它身上的颜色值或者贴图之类，Unity 是会把它当前使用的 ShareMaterial 复制一份实例出来，以做到不同对象身上的材质互不影响的改变参数。但这样做会导致如果使用的对象很多，就会产生很多材质的实例的问题，这样会对内存有一定的消耗。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010003228.png" alt="1686884244393"></p>
+<p>在场景里面生成了多个 cube，然后用代码改变他们的颜色：  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010003229.png" alt="1686884244630"></p>
+<p>给每一个 cube 随机一种颜色，然后用传统的 material. color 来设置颜色。  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010003230.png" alt="1686884244693"></p>
+<p>结果会是这样，各个 cube 的颜色变化了。  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010003231.png" alt="1686884244736"></p>
+<p>从 Profiler 里面看看内存，会发现场景内存里面，有很多的 InstanceMat（Instance）。这就是生成出来的材质实例。</p>
+<p>接下来改一下代码，使用 MaterialPropertyBlock 来作为设置颜色的手段：  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010003232.png" alt="1686884244772"></p>
+<p>可以看到我们会先 new 一个 MaterialPropertyBlock，然后给它赋值，最后用 Renderer. SetPropertyBlock 方式给 MeshRender 设置属性。</p>
+<p>运行时，可以看到运行的结果和之前的写法是一样的。  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010003233.png" alt="1686884244812"></p>
+<p>再从 Profiler 里面看看内存。  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010003234.png" alt="1686884244846"></p>
+<p>这次可以看到，并没有生成任何的 Material 的实例出来。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/19285.html">http://liuke101.github.io/post/19285.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Shader/">Shader</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/17861.html" title="Renderer Feature"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Renderer Feature</div></div></a></div><div class="next-post pull-right"><a href="/post/60549.html" title="C++精粹"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292141644.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">C++精粹</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/42467.html" title="HLSL ShaderLab"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">HLSL ShaderLab</div></div></a></div><div><a href="/post/17861.html" title="Renderer Feature"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-19</div><div class="title">Renderer Feature</div></div></a></div><div><a href="/post/42466.html" title="CG ShaderLab"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">CG ShaderLab</div></div></a></div><div><a href="/post/56280.html" title="Shader Trick"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-18</div><div class="title">Shader Trick</div></div></a></div><div><a href="/post/32635.html" title="UV操作"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">UV操作</div></div></a></div><div><a href="/post/11097.html" title="描边"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">描边</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">1. 文章主要迁移自个人的obsidian笔记，存在部分md语法冲突，导致显示异常，暂未修复。 2. 文章部分内容参考/引用网络资源，用于个人学习，如有侵权，请联系我删除。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%E4%B8%AD%E5%BC%80%E5%90%AF-HDR-Color"><span class="toc-text">脚本中开启 HDR Color</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%90%E8%B4%A8%E5%B1%9E%E6%80%A7"><span class="toc-text">材质属性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#material-%E5%92%8C-shader"><span class="toc-text">material 和 shader</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%9B%B4%E6%8E%A5%E8%AE%BE%E7%BD%AE-Material-%E6%96%87%E4%BB%B6"><span class="toc-text">1 直接设置 Material 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%AE%BE%E7%BD%AE%E8%B5%84%E6%BA%90%E4%B8%AD%E7%9A%84-Material-%E6%96%87%E4%BB%B6"><span class="toc-text">2 设置资源中的 Material 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%80%9A%E8%BF%87%E6%8C%87%E5%AE%9A-shader-%E8%AE%BE%E7%BD%AE"><span class="toc-text">3 通过指定 shader 设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E9%80%9A%E8%BF%87%E7%9B%AE%E6%A0%87%E7%89%A9%E4%BD%93%E7%9B%B4%E6%8E%A5%E8%AE%BE%E7%BD%AE%EF%BC%8C%E5%BD%B1%E5%93%8D%E6%89%80%E6%9C%89%E7%9A%84%E7%89%A9%E4%BD%93"><span class="toc-text">4 通过目标物体直接设置，影响所有的物体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E9%80%9A%E8%BF%87%E7%9B%AE%E6%A0%87%E7%89%A9%E4%BD%93%E7%9B%B4%E6%8E%A5%E8%AE%BE%E7%BD%AE%EF%BC%8C%E5%8F%AA%E5%BD%B1%E5%93%8D%E5%BD%93%E5%89%8D%E7%9A%84%E7%89%A9%E4%BD%93"><span class="toc-text">5 通过目标物体直接设置，只影响当前的物体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-text">注意</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%E6%8E%A7%E5%88%B6"><span class="toc-text">脚本控制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%90%E7%9D%80%E8%89%B2%E5%99%A8%E6%A0%87%E7%AD%BE"><span class="toc-text">子着色器标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass"><span class="toc-text">Pass</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%90%E8%B4%A8%E5%B1%9E%E6%80%A7-1"><span class="toc-text">材质属性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#API"><span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Shader-Find"><span class="toc-text">Shader.Find</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F-1"><span class="toc-text">注意</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MaterialPropertyBlock"><span class="toc-text">MaterialPropertyBlock</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42467.html" title="HLSL ShaderLab">HLSL ShaderLab</a><time datetime="2024-05-18T16:49:50.000Z" title="发表于 2024-05-19 00:49:50">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42466.html" title="CG ShaderLab">CG ShaderLab</a><time datetime="2024-05-18T16:48:56.000Z" title="发表于 2024-05-19 00:48:56">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/21838.html" title="冯乐乐入门精要笔记">冯乐乐入门精要笔记</a><time datetime="2024-05-18T16:45:45.000Z" title="发表于 2024-05-19 00:45:45">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/21879.html" title="Unity Primer"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190029709.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity Primer"/></a><div class="content"><a class="title" href="/post/21879.html" title="Unity Primer">Unity Primer</a><time datetime="2024-05-18T16:36:03.000Z" title="发表于 2024-05-19 00:36:03">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/64623.html" title="Unity GUI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190021833.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity GUI"/></a><div class="content"><a class="title" href="/post/64623.html" title="Unity GUI">Unity GUI</a><time datetime="2024-05-18T16:32:22.000Z" title="发表于 2024-05-19 00:32:22">2024-05-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>

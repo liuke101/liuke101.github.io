@@ -1,0 +1,627 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Renderer Feature | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="[!NOTE] 简称下文 Renderer Feature 简称为 RFRenderTexture 简称RT   介绍 URP Renderer Feature | Universal RP | 14.0.8 (unity3d.com) 使用 Example: How to create a custom rendering effect using the Render Objects Ren">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Renderer Feature">
+<meta property="og:url" content="http://liuke101.github.io/post/17861.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="[!NOTE] 简称下文 Renderer Feature 简称为 RFRenderTexture 简称RT   介绍 URP Renderer Feature | Universal RP | 14.0.8 (unity3d.com) 使用 Example: How to create a custom rendering effect using the Render Objects Ren">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png">
+<meta property="article:published_time" content="2023-10-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-31T16:10:12.776Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="Shader">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/17861.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Renderer Feature',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-01 00:10:12'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Renderer Feature</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-18T16:00:00.000Z" title="发表于 2023-10-19 00:00:00">2023-10-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-31T16:10:12.776Z" title="更新于 2024-08-01 00:10:12">2024-08-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Unity/">Unity</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Renderer Feature"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/17861.html#post-comment"><span class="waline-comment-count" data-path="/post/17861.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>[!NOTE] 简称<br>下文 Renderer Feature 简称为 RF<br>RenderTexture 简称RT</p>
+</blockquote>
+<ol>
+<li>介绍 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/urp-renderer-feature.html">URP Renderer Feature | Universal RP | 14.0.8 (unity3d.com)</a></li>
+<li>使用 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/containers/how-to-custom-effect-render-objects.html">Example: How to create a custom rendering effect using the Render Objects Renderer Feature | Universal RP | 14.0.8 (unity3d.com)</a></li>
+</ol>
+<p>Render Feature 是一种 Asset，用于向 URP 渲染器添加额外的 Render Pass 并配置其行为。</p>
+<p>以下 Render Feature在 URP 中可用：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/renderer-features/renderer-feature-render-objects.html">Render Objects 渲染对象</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/post-processing-ssao.html">Screen Space Ambient Occlusion  屏幕空间环境光遮蔽</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/renderer-feature-decal.html">Decal 贴花</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/renderer-feature-screen-space-shadows.html">Screen Space Shadows 屏幕空间阴影</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/renderer-features/renderer-feature-full-screen-pass.html">Full Screen Pass 全屏Pass</a></li>
+</ul>
+<h1 id="Render-Objects-RF"><a href="#Render-Objects-RF" class="headerlink" title="Render Objects RF"></a>Render Objects RF</h1><p><a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/renderer-features/renderer-feature-render-objects.html">Render Objects Renderer Feature | Universal RP | 14.0.8 — 渲染对象渲染器功能</a><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356295.png" alt="Pasted image 20230702103753|500"><br>URP 在 DrawOpaqueObjects 和 DrawTransparentObjects Pass 中绘制对象。您可能需要在帧渲染的不同点绘制对象，或者以其他方式解释和写入渲染数据（如 depth 和 stencil）。<br>Render Objects RF 允许通过特定的覆盖（overides）在指定的图层、指定的时间来自定义 Draw Objects。</p>
+<h2 id="透视效果-X-Ray"><a href="#透视效果-X-Ray" class="headerlink" title="透视效果 X-Ray"></a>透视效果 X-Ray</h2><p><strong>实战</strong>：当角色在GameObjects后面时，用不同的材质绘制角色轮廓。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356296.gif" alt="character-goes-behind-object"></p>
+<p>使用两个 Render Objects RF（命名为 RF1 和 RF2）：一个用于绘制不被遮挡的颜色，另一个用于绘制被遮挡颜色</p>
+<ol>
+<li>创建一个 Layer，命名为 Character</li>
+<li>将要渲染的 object 分配给该层，然后将 RF1 的 LayerMask 也设置为该层</li>
+<li>创建 Red 材质和 Blue 材质。Object 给与 Red 材质，然后Overides-&gt;Blue 材质</li>
+<li>我们要实现当角色位于其他游戏对象之后时，渲染器功能才会使用 Blue 材质渲染角色。可以通过深度测试来实现，Depth-&gt;DepthTest 设置为 Greater，这样在该 Layer 下深度大的物体绘制在前面。</li>
+</ol>
+<p><strong>当模型复杂时，这样设置可能会发生自透视：</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356297.gif" alt="character-depth-test-greater|449"></p>
+<h3 id="创建额外的-RF-避免自透视"><a href="#创建额外的-RF-避免自透视" class="headerlink" title="创建额外的 RF 避免自透视"></a>创建额外的 RF 避免自透视</h3><p>RF1 的 Event 属性默认为 AfterRenderingOpaques ，Event 属性定义 Unity 从 Render Object RF 注入渲染过程的注入点。在该 RF1 进行渲染之前已经进行了不透明物体的渲染，并将深度值写入了深度缓冲区。执行 RF1 时，Unity 使用“深度测试”属性中指定的条件执行深度测试。</p>
+<ol>
+<li>Universal Renderer 的 Filtering &gt; Opaque Layer Mask，清除 Character 层旁边的复选标记。<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356298.png" alt="Pasted image 20230702110513|500"></li>
+<li>现在 Unity 不会渲染角色，除非它在游戏对象后面。（因为 RF1 相当于加了一次渲染，虽然渲染器设置的不对该层物体渲染，但是当 RF1 的 Event 触发后，就增加了一次对该层物体的渲染。由于深度测试是 Greater，Zbuffer 默认是无限大，所以在遮挡物体意外是无法通过深度测试的，所以不显示。只有在遮挡物体后面才能通过，显示为 Blue） <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356299.png" alt="Pasted image 20230702110612|160"></li>
+<li>添加 RF2（虽然都是默认的 Event 条件，但 RF2 执行顺序在 RF1 之后），LayerMask 选择 Character 层，可以发现，都被渲染为 red（RF1 选择了 Equal 作为深度测试条件，所以此时深度缓冲区都是较大值。新建的 RF2 默认是 Less Equal，渲染时与上次 RF1 渲染的重合部分深度相等，上次未显示部位深度小于无限大，所以物体通过深度测试，以本身的 Red 颜色显示出来）<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356300.png" alt="Pasted image 20230702113031"></li>
+<li>关闭 RF1 的深度写入，那么当 RF2 渲染时，遮挡物后面由于角色深度小于遮挡物，不通过测试，所以不会覆盖 RF1 绘制的 Blue。遮挡物外面通过测试，显示为 Red。这样就完成了！<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356301.gif" alt="character-goes-behind-object 1"></li>
+</ol>
+<h1 id="Full-Screen-RF"><a href="#Full-Screen-RF" class="headerlink" title="Full Screen RF"></a>Full Screen RF</h1><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356302.png" alt="Pasted image 20230702134053|450"><br><strong>Full Screen PF 允许在预定义的注入点（injection point）注入全屏渲染 Pass，以创建全屏效果。</strong> </p>
+<ul>
+<li><p><strong>Pass Material</strong>：影响全屏 pass 的材质，必须为 Fullscreen Shader Graph 创建的材质。<br>[[4 后处理#自定义后处理]]</p>
+</li>
+<li><p><strong>Injection Point 注入点：</strong></p>
+<ol>
+<li><strong>Before Rendering Transparents</strong>：渲染透明体之前，在 skybox pass 之后和 transparents pass 之前添加效果。</li>
+<li><strong>Before Rendering Post Processing</strong>: 渲染后处理前：在 Transparent Pass 之后和 post-processing pass 之前添加效果。</li>
+<li><strong>After Rendering Post Processing</strong>：渲染后处理后：在 post-processing pass 之后和 AfterRendering pass 之前添加效果。</li>
+</ol>
+</li>
+<li><p><strong>Requirements 要求：</strong> 选择以下一个或多个 Pass 以供 RF 使用：  </p>
+<ul>
+<li><strong>Depth</strong>：添加 depth prepass（深度预处理） 以启用深度值的使用。 </li>
+<li><strong>Normal</strong>: 启用法线矢量数据的使用。</li>
+<li><strong>Color</strong>: 将屏幕的颜色数据复制到着色器内部的 <code>_BlitTexture</code> 纹理。</li>
+<li><strong>Motion</strong>: 启用运动矢量的使用</li>
+</ul>
+</li>
+</ul>
+<h2 id="手写-Full-Screen-shader-材质"><a href="#手写-Full-Screen-shader-材质" class="headerlink" title="手写 Full Screen shader 材质"></a>手写 Full Screen shader 材质</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">Shader <span class="string">&quot;CustomPostProcessing/ColorBlit&quot;</span></span><br><span class="line">&#123;</span><br><span class="line">    Properties &#123;&#125;</span><br><span class="line"></span><br><span class="line">    SubShader</span><br><span class="line">    &#123;</span><br><span class="line">        Tags</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;RenderPipeline&quot;</span> = <span class="string">&quot;UniversalPipeline&quot;</span></span><br><span class="line">            <span class="string">&quot;RenderType&quot;</span>=<span class="string">&quot;Opaque&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        LOD <span class="number">100</span></span><br><span class="line">        ZWrite Off Cull Off</span><br><span class="line">        </span><br><span class="line">        HLSLINCLUDE</span><br><span class="line">        <span class="meta">#include &quot;Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl&quot;</span></span><br><span class="line"></span><br><span class="line">        CBUFFER_START(UnityPerMaterial)</span><br><span class="line">        </span><br><span class="line">        <span class="function">CBUFFER_END</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">        <span class="title">TEXTURE2D_X</span>(<span class="params">_BlitTexture</span>)</span>;</span><br><span class="line">        SAMPLER(sampler_BlitTexture);</span><br><span class="line">        <span class="built_in">float</span> _Intensity;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">struct</span> Attributes</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">uint</span> vertexID : SV_VertexID;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">struct</span> Varyings</span><br><span class="line">        &#123;</span><br><span class="line">            float4 positionCS : SV_POSITION;</span><br><span class="line">            float2 uv : TEXCOORD0;</span><br><span class="line">        &#125;;</span><br><span class="line">        ENDHLSL</span><br><span class="line"></span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            Name <span class="string">&quot;ColorBlit&quot;</span></span><br><span class="line">            Tags</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">&quot;LightMode&quot;</span> = <span class="string">&quot;UniversalForward&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            HLSLPROGRAM</span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> vertex vert</span></span><br><span class="line">            <span class="meta">#<span class="keyword">pragma</span> fragment frag</span></span><br><span class="line"></span><br><span class="line">            <span class="function">Varyings <span class="title">vert</span>(<span class="params">Attributes i</span>)</span></span><br><span class="line">            &#123;</span><br><span class="line">                Varyings o = (Varyings)<span class="number">0</span>;</span><br><span class="line">                o.positionCS = GetFullScreenTriangleVertexPosition(i.vertexID);</span><br><span class="line">                o.uv = GetFullScreenTriangleTexCoord(i.vertexID);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">return</span> o;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="function">float4 <span class="title">frag</span>(<span class="params">Varyings i</span>) : SV_Target</span></span><br><span class="line">            &#123;</span><br><span class="line">                float4 color = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_BlitTexture, i.uv);</span><br><span class="line">                <span class="keyword">return</span> color * float4(<span class="number">0</span>, _Intensity, <span class="number">0</span>, <span class="number">1.0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            ENDHLSL</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Decal-RF"><a href="#Decal-RF" class="headerlink" title="Decal RF"></a>Decal RF</h1><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356304.png" alt="Pasted image 20230702102255"></p>
+<p><strong>创建步骤：</strong></p>
+<ol>
+<li>URP Renderer 添加 Decal RF</li>
+<li>创建一个材质，并为其指定 <code>Shader Graphs/Decal</code> 着色器。添加贴图 <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356305.png" alt="Pasted image 20230702100652|350"></li>
+<li>右键创建贴画投影仪对象 Rendering-&gt;Decal Projector</li>
+<li>另一种 Decal 的方式：直接创建一个 Quad 当做贴花</li>
+</ol>
+<p><strong>RF设置：</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356306.png" alt="Pasted image 20230702101203"></p>
+<ul>
+<li><strong>Technique：</strong><ul>
+<li><strong>自动（Automatic）</strong>：Unity 根据构建平台自动选择渲染技术。</li>
+<li><strong>贴花缓冲区（DBuffer）</strong>：Unity 将贴花渲染到<strong>贴花缓冲区（DBuffer）</strong> 中。在不透明渲染期间，Unity 将 DBuffer 的内容覆盖在不透明对象的顶部。<ul>
+<li><strong>Surface Data：</strong><ul>
+<li>Albedo：贴花会影响 BaseColor 和自发光颜色</li>
+<li>Albedo Normal：贴花会影响基础颜色、自发光颜色和法线。</li>
+<li>Albedo Normal MAOS：贴花会影响基础颜色、自发光颜色、法线、金属度值、光滑度值和环境光遮蔽值。</li>
+</ul>
+</li>
+<li><strong>限制：</strong><ul>
+<li>该技术需要DepthNormal预处理，这使得该技术在实现基于瓦片的渲染的GPU上效率较低。</li>
+<li>此技术不适用于粒子和地形细节</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>屏幕空间（Screen Space）</strong>：使用 Unity 从深度纹理重建的法线<strong>在不透明对象之后渲染贴花</strong>。Unity 将贴花渲染为不透明网格顶部的网格。此技术仅支持法线混合。<ul>
+<li>Normal Blend：<ul>
+<li>Low：Unity在重建法线时获取一个深度样本。</li>
+<li>Medium：获取三个深度样本</li>
+<li>High：获取五个深度样本</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>注意：</strong></p>
+<ol>
+<li>贴花投影在透明曲面上不起作用。</li>
+<li>不支持 SRP Batcher，因为它们使用了 Material property blocks。为了减少绘制调用的数量，可以使用 GPU Instancing 将贴花批处理在一起。如果场景中的贴花使用相同的“材质”，并且“材质”已启用“启用 GPU 实例化”属性，则 Unity 会实例化材质并减少绘制调用的次数。</li>
+<li>若要减少贴花所需的材质数量，请将多个贴花纹理放入一个纹理（图集）中。使用贴花投影仪上的 UV 偏移特性来确定要显示图集的哪个部分。</li>
+</ol>
+<h1 id="自定义-URP"><a href="#自定义-URP" class="headerlink" title="自定义 URP"></a>自定义 URP</h1><h2 id="beginCameraRendering-事件"><a href="#beginCameraRendering-事件" class="headerlink" title="beginCameraRendering 事件"></a>beginCameraRendering 事件</h2><p>Unity 在每帧中渲染每个激活的 Camera 之前引发一个 <code>beginCameraRendering</code> 事件。</p>
+<blockquote>
+<p>如果相机处于失活状态（去掉勾），Unity 不会为此相机引发 <code>beginCameraRendering</code> 事件。</p>
+</blockquote>
+<p>订阅此事件的方法时，可以在 Unity 渲染 Camera 之前执行自定义逻辑（比如将额外的 Camera 渲染为 RT，以及将这些纹理用于平面反射或监视摄影机视图等效果。）<br><a target="_blank" rel="noopener" href="https://docs.unity3d.com/ScriptReference/Rendering.RenderPipelineManager.html">RenderPipelineManager</a> 类中的其他事件提供了更多自定义 URP 的方法。</p>
+<p><strong>如何为 <code>beginCameraRendering</code> 事件订阅方法？</strong><br>将下面的脚本拖放到一个 gameobject 即可使用：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">URPCallbackExample</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//依附的GameObject对象每次激活时调用（打勾）</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnEnable</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//订阅方法</span></span><br><span class="line">        <span class="comment">//添加 WriteLogMessage 作为 RenderPipelineManager.beginCameraRendering 事件的委托</span></span><br><span class="line">        RenderPipelineManager.beginCameraRendering += WriteLogMessage;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//依附的GameObject对象每次失活时调用（去掉勾）</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnDisable</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//移除 WriteLogMessage 作为 RenderPipelineManager.beginCameraRendering 事件的委托</span></span><br><span class="line">        RenderPipelineManager.beginCameraRendering -= WriteLogMessage;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 当此方法是 RenderPipeline.beginCameraRendering 事件的委托时，Unity 每次引发 beginCameraRendering 事件时都会调用此方法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">WriteLogMessage</span>(<span class="params">ScriptableRenderContext context, Camera camera</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.Log(<span class="string">$&quot;Beginning rendering the camera: <span class="subst">&#123;camera.name&#125;</span>&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="自定义-Render-Feature（渲染器功能）"><a href="#自定义-Render-Feature（渲染器功能）" class="headerlink" title="自定义 Render Feature（渲染器功能）"></a>自定义 Render Feature（渲染器功能）</h2><p>Render Feature（渲染器功能）是一种 Asset，可让您将内置效果或自定义效果添加到 URP 渲染器并配置其行为。</p>
+<p>视频：<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=9fa4uFm1eCE">Unlocking The Power Of Unity’s Scriptable Render Pipeline - YouTube</a><br>教程：<a target="_blank" rel="noopener" href="https://www.cyanilux.com/tutorials/custom-renderer-features/">Custom Renderer Features | Cyanilux</a></p>
+<blockquote>
+<p>[!NOTE] Blit<br>block transfer (块传输)， <strong>blit 操作是将源纹理复制到目标纹理的过程。</strong></p>
+</blockquote>
+<blockquote>
+<p>[!bug]<br>避免在 URP 项目中使用 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/2022.1/Documentation/ScriptReference/Rendering.CommandBuffer.Blit.html"> Rendering.CommandBuffer.Blit</a> API。<br>**应该使用使用 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.core@14.0/api/UnityEngine.Rendering.Blitter.html">Blitter</a> API **</p>
+</blockquote>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Blitter.BlitCameraTexture(cmd, src,dest,material,passindex); </span><br><span class="line"><span class="comment">//1 使用BlitTexture方法将src传入_BlitTexture纹理，源码：</span></span><br><span class="line"><span class="comment">//s_PropertyBlock.SetVector(BlitShaderIDs._BlitScaleBias, scaleBias);  </span></span><br><span class="line"><span class="comment">//s_PropertyBlock.SetTexture(BlitShaderIDs._BlitTexture, source);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//2 材质渲染结果输出到dest，并将dest设为渲染目标</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>渲染时，我们需要确保不会对同一纹理&#x2F;目标进行读取和写入，因为这可能会导致“意外行为”（引用 <code>CommandBuffer.Blit</code> 文档）。因此，如果源&#x2F;目的地需要相同，我们实际上需要使用两个 blit，中间有一个额外的目标。</strong></p>
+<ul>
+<li>@ <strong><code>CustomRenderFeature</code> 自定义 RF</strong></li>
+</ul>
+<ol>
+<li><strong><code>Create</code> ：Unity 对以下事件调用此方法：</strong><ul>
+<li>首次加载 RF 时</li>
+<li>在 RF 的 Inspector 中更改属性时</li>
+<li>启用或禁用 RF 时</li>
+</ul>
+</li>
+<li><strong><code>AddRenderPasses</code> ：Unity 每台相机每帧调用一次此方法</strong>。使用此方法可以将 <code>ScriptableRenderPass</code> 实例注入到可编程的渲染器中。</li>
+</ol>
+<ul>
+<li>@ <strong><code>CustomRenderPass</code> 自定义 Render Pass</strong><ol>
+<li><strong><code>OnCameraSetup</code>：在渲染相机之前调用之前被调用。</strong> 它可用于配置 Render Target 和它们的 Clear State，还可以创建临时渲染目标纹理。当为空时，该 Render Pass 将渲染到活动相机的 Render Target。（不要调用 CommandBuffer.SetRenderTarget. 而应该是 <code>ConfigureTarget</code> 和 <code>ConfigureClear</code>）</li>
+<li><strong><code>Configure</code></strong>:在执行RenderPass之前调用，功能同OnCameraSetup</li>
+<li><strong><code>Execute</code>：每帧执行，在这里实现渲染逻辑。</strong> 使用 <code> ScriptableRenderContext</code> 发出绘制命令或执行命令缓冲区。不必调用 submit 指令，渲染管线将在管线中的特定点调用它。<ol>
+<li><code>ProfilingSampler</code>：CPU 和 GPU 分析采样器的包装器。将此与 <code>ProfileScope</code> 一起使用可以评测一段代码。标记 Profiling 后，可在 FrameDebugger 中直接查看标记 Profiling 的对象</li>
+<li><code>DrawRenderer</code>：批量绘制对象</li>
+</ol>
+</li>
+<li><strong><code>OnCameraCleanup</code></strong> ：相机堆栈中的所有相机都会调用，释放创建的资源</li>
+<li><code>OnFinishCameraStackRendering</code>：渲染完相机堆栈中的最后一个相机后调用一次，释放创建的资源</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight cs"><figcaption><span>title:RF模板</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CustomRenderFeature</span> : <span class="title">ScriptableRendererFeature</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">CustomRenderPass</span> : <span class="title">ScriptableRenderPass</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 在执行 render pass 之前被调用。</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnCameraSetup</span>(<span class="params">CommandBuffer cmd, <span class="keyword">ref</span> RenderingData renderingData</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 每帧执行，这里可以实现渲染逻辑</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params">ScriptableRenderContext context, <span class="keyword">ref</span> RenderingData renderingData</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//CPU和GPU分析采样器的包装器。将此与ProfileScope一起使用可以评测一段代码。</span></span><br><span class="line">            <span class="comment">//标记Profiling后，可在FrameDebugger中直接查看标记Profiling的对象</span></span><br><span class="line">            ProfilingSampler mProfilingSampler = <span class="keyword">new</span> ProfilingSampler(<span class="string">&quot;Test1&quot;</span>);</span><br><span class="line">            <span class="comment">//获取新的命令缓冲区并为其指定一个名称</span></span><br><span class="line">            </span><br><span class="line">            CommandBuffer cmd = CommandBufferPool.Get(<span class="string">&quot;Test1 Cmd&quot;</span>);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//ProfilingScope</span></span><br><span class="line">            <span class="keyword">using</span> (<span class="keyword">new</span> ProfilingScope(cmd, mProfilingSampler))</span><br><span class="line">            &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">//执行命令缓冲区中的命令</span></span><br><span class="line">                context.ExecuteCommandBuffer(cmd);</span><br><span class="line">                </span><br><span class="line">                <span class="comment">//释放命令缓冲区</span></span><br><span class="line">                CommandBufferPool.Release(cmd);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 清理在此render pass执行期间创建的所有已分配资源。</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnCameraCleanup</span>(<span class="params">CommandBuffer cmd</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    CustomRenderPass m_ScriptablePass;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;inheritdoc/&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Create</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//创建CustomRenderPass实例</span></span><br><span class="line">        m_ScriptablePass = <span class="keyword">new</span> CustomRenderPass();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置render pass插入的位置</span></span><br><span class="line">        m_ScriptablePass.renderPassEvent = RenderPassEvent.AfterRenderingOpaques;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里你可以在渲染器中插入一个或多个render pass</span></span><br><span class="line">    <span class="comment">// 在每个摄像机设置一次渲染器时调用此方法。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">AddRenderPasses</span>(<span class="params">ScriptableRenderer renderer, <span class="keyword">ref</span> RenderingData renderingData</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//入队渲染队列</span></span><br><span class="line">        renderer.EnqueuePass(m_ScriptablePass);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><p>本例中 RF 将镜头光斑绘制为一个 Quad 上的纹理，这里我将两个类分开了。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"><span class="keyword">using</span> UnityEngine.Rendering;</span><br><span class="line"><span class="keyword">using</span> UnityEngine.Rendering.Universal;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CustomRenderFeature</span> : <span class="title">ScriptableRendererFeature</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> CustomRenderPass _customRenderPass;</span><br><span class="line">    <span class="keyword">public</span> Material material;</span><br><span class="line">    <span class="keyword">public</span> Mesh mesh;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Create</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        _customRenderPass = <span class="keyword">new</span> CustomRenderPass(material, mesh);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//更改渲染顺序，在渲染天空盒之后渲染自定义渲染pass，这样天空盒就不会覆盖渲染的光斑了</span></span><br><span class="line">        _customRenderPass.renderPassEvent = RenderPassEvent.AfterRenderingSkybox;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">AddRenderPasses</span>(<span class="params">ScriptableRenderer renderer, <span class="keyword">ref</span> RenderingData renderingData</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(material!=<span class="literal">null</span> &amp;&amp; mesh!=<span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            renderer.EnqueuePass(_customRenderPass);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"><span class="keyword">using</span> UnityEngine.Rendering;</span><br><span class="line"><span class="keyword">using</span> UnityEngine.Rendering.Universal;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CustomRenderPass</span> : <span class="title">ScriptableRenderPass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Material _material;</span><br><span class="line">    <span class="keyword">private</span> Mesh _mesh;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CustomRenderPass</span>(<span class="params">Material material, Mesh mesh</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _material = material;</span><br><span class="line">        _mesh = mesh;</span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params">ScriptableRenderContext context, <span class="keyword">ref</span> RenderingData renderingData</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//获取新的命令缓冲区并为其指定一个名称</span></span><br><span class="line">        CommandBuffer cmd = CommandBufferPool.Get(name: <span class="string">&quot;CustomRenderPass&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//获取相机</span></span><br><span class="line">        Camera camera = renderingData.cameraData.camera;</span><br><span class="line">        <span class="comment">//设置投影矩阵，以便 Unity 在屏幕空间中绘制四边形</span></span><br><span class="line">        cmd.SetViewProjectionMatrices(Matrix4x4.identity, Matrix4x4.identity);</span><br><span class="line">        <span class="comment">//比例变量，使用摄像机纵横比作为 y 坐标</span></span><br><span class="line">        Vector3 scale = <span class="keyword">new</span> Vector3(<span class="number">1</span>, camera.aspect, <span class="number">1</span>);</span><br><span class="line">        <span class="comment">//在Light的屏幕空间位置为每个Light绘制一个四边形。</span></span><br><span class="line">        <span class="keyword">foreach</span> (VisibleLight visibleLight <span class="keyword">in</span> renderingData.lightData.visibleLights)</span><br><span class="line">        &#123;</span><br><span class="line">            Light light = visibleLight.light;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//将每个光源的位置从世界转换为viewport空间</span></span><br><span class="line">            Vector3 position = camera.WorldToViewportPoint(light.transform.position) * <span class="number">2</span> - Vector3.one;</span><br><span class="line">            <span class="comment">//将quad的 z 坐标设置为 0，以便 Uniy 将它们绘制在同一平面上。</span></span><br><span class="line">            position.z = <span class="number">0</span>; </span><br><span class="line">            </span><br><span class="line">            <span class="comment">//绘制quad</span></span><br><span class="line">            cmd.DrawMesh(_mesh, Matrix4x4.TRS(position,Quaternion.identity, scale), _material, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//执行命令缓冲区中的命令</span></span><br><span class="line">        context.ExecuteCommandBuffer(cmd);</span><br><span class="line">            </span><br><span class="line">        <span class="comment">//释放命令缓冲区</span></span><br><span class="line">        CommandBufferPool.Release(cmd);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="RTHandle-系统"><a href="#RTHandle-系统" class="headerlink" title="RTHandle 系统"></a>RTHandle 系统</h1><blockquote>
+<p>[!NOTE] Title<br>本质上是一种特殊类型的 RT，它会随着摄像机大小自动缩放，从而在使用不同相机进行那个渲染时获得更好的性能和更少的内存消耗</p>
+</blockquote>
+<p>Render Target 管理是任何渲染管道的重要组成部分。在复杂的渲染管道中，有许多相互依赖的 Rendr Pass 使用许多不同的 RT，因此重要的是要有一个可维护和可扩展的系统，以便轻松管理内存。<br>最大的问题之一是当渲染管道使用许多不同的摄影机，每个摄影机都有自己的分辨率时。例如，离屏摄像头或实时反射探针。在这种情况下，如果系统为每个摄影机独立分配 RT，则内存总量将增加到无法管理的级别。<br>这对于使用许多中间 RT 的复杂渲染管道来说尤其糟糕。Unity 可以使用临时临时渲染纹理 temporary render textures，但不幸的是，它们不适合这种情况，因为只有当新渲染纹理使用完全相同的属性和分辨率时，临时渲染纹理才能重用内存。这意味着，当使用两种不同的分辨率进行渲染时，Unity 使用的内存总量是所有分辨率的总和。<br>为了解决渲染纹理内存分配的这些问题，Unity 的 SRP 包含了 RTHandle 系统。</p>
+<h2 id="RTHandle-基本原理"><a href="#RTHandle-基本原理" class="headerlink" title="RTHandle 基本原理"></a>RTHandle 基本原理</h2><p>RTHandle 系统是 Unity 的 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/ScriptReference/RenderTexture.html">RenderTexture</a> API 之上的一个抽象层，可以自动 RT 管理。可以可以在使用各种分辨率的摄影机之间重用 RT。</p>
+<p> RTHandle 系统基础：</p>
+<ol>
+<li>您不再为自己分配具有固定分辨率的 RT。相反，您可以使用与给定全屏分辨率下的<strong>比例（scale）</strong> 来声明渲染纹理。RTHandle 系统仅为整个渲染管道分配一次纹理，以便可以将其重新用于不同的摄影机。</li>
+<li>现在有了 <strong>reference size</strong> （参考尺寸）的概念。这是应用程序用于渲染的分辨率。<strong>您有责任在渲染管道以特定分辨率渲染每个摄影机之前声明它</strong>。有关如何执行此操作的信息，请参阅 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.core@14.0/manual/rthandle-system-fundamentals.html#updating-the-rthandle-system">Updating the RTHandle system</a>。</li>
+<li>在内部，RTHandle 系统跟踪您声明的最大 reference size。它将其用作渲染纹理的实际大小。最大 reference size 是最大大小。</li>
+<li>每次声明新的 reference size 用于渲染，RTHandle 系统都会检查它是否大于当前记录的最大 reference size。如果是，RTHandle 系统会在内部重新分配所有 RT 以适应新的大小，并用新的大小替换最大的 reference size。</li>
+<li><strong>RTHandleSystem 还允许您分配具有固定大小的纹理。在这种情况下，RTHandle 系统不再重新分配纹理。这允许您对 RTHandle 系统管理的自动调整大小的纹理和常规固定大小的纹理一致地使用 RTHandle-API。</strong></li>
+</ol>
+<p>这个过程的一个例子如下：分配 main color buffer 时，它使用 1 的比例，因为它是全屏纹理。您希望以屏幕的分辨率进行渲染。四分之一分辨率 transparency pass 的 downscaled buffer 将对 x 轴和 y 轴使用 0.5 的比例。<strong>在内部，RTHandle 系统使用最大 reference size 乘以为 RT 声明的比例来分配渲染纹理</strong>。之后，在每次“摄影机”渲染之前，您会告诉系统当前的 reference size。基于此和所有纹理的缩放因子（scaling factor），RTHandle 系统会确定是否需要重新分配渲染纹理。如上所述，如果新 reference size 大于当前最大 reference size，则 RTHandle 系统会重新分配所有渲染纹理。通过这样做，RTHandle 系统最终会为所有 RT 提供稳定的最大分辨率，这很可能是主摄影机的分辨率。<br><strong>关键是渲染纹理的实际分辨率不一定与当前视口相同：它可以更大</strong>。当您使用 RTHandles 编写渲染器时，这会产生影响， <a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.core@14.0/manual/rthandle-system-using.html">Using the RTHandle system</a> 对此进行了解释。</p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>新接口：</p>
+<ol>
+<li><code>ScriptableRenderer.cameraColorTargetHandle</code></li>
+<li>通过以下辅助函数，可以使用 <code>RTHandle</code> 系统创建和使用临时RT ( 舍弃 GetTemporaryRT 方法 )RT<ul>
+<li><code>RenderingUtils.ReAllocateIfNeeded</code></li>
+<li><code>ShadowUtils.ShadowRTReAllocateIfNeeded</code></li>
+</ul>
+</li>
+<li><code>cameraDepthTarget</code> 属性必须与 <code>cameraColorTarget</code> 属性分开。</li>
+<li>如果渲染目标在应用程序的生存期内没有更改，使用 <code>RTHandles.Alloc</code> 方法分配 <code>RTHandle</code> 目标。</li>
+<li>如果渲染目标是全屏纹理，这意味着其分辨率与屏幕分辨率匹配或只是屏幕分辨率的一小部分，请使用诸如 <code>Vector2D.one</code> 之类的缩放因子来支持动态缩放。</li>
+</ol>
+<figure class="highlight cs"><figcaption><span>title:示例</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CustomPass</span> : <span class="title">ScriptableRenderPass</span></span><br><span class="line">&#123;</span><br><span class="line">    RTHandle m_Handle;</span><br><span class="line">    <span class="comment">// 然后使用RTHandles，Color和Depth属性必须分开</span></span><br><span class="line">    RTHandle m_DestinationColor;</span><br><span class="line">    RTHandle m_DestinationDepth;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Dispose</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        m_Handle?.Release();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnCameraSetup</span>(<span class="params">CommandBuffer cmd, <span class="keyword">ref</span> RenderingData renderingData</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> desc = renderingData.cameraData.cameraTargetDescriptor;</span><br><span class="line">        desc.depthBufferBits = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//分配RTHandle</span></span><br><span class="line">        RenderingUtils.ReAllocateIfNeeded(</span><br><span class="line">            <span class="keyword">ref</span> m_Handle,</span><br><span class="line">            desc,</span><br><span class="line">            FilterMode.Point,</span><br><span class="line">            TextureWrapMode.Clamp,</span><br><span class="line">            name: <span class="string">&quot;_CustomPassHandle&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnCameraCleanup</span>(<span class="params">CommandBuffer cmd</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        m_DestinationColor = <span class="literal">null</span>;</span><br><span class="line">        m_DestinationDepth = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Setup</span>(<span class="params">RTHandle destinationColor, RTHandle destinationDepth</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        m_DestinationColor = destinationColor;</span><br><span class="line">        m_DestinationDepth = destinationDepth;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params">ScriptableRenderContext context, <span class="keyword">ref</span> RenderingData renderingData</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        CommandBuffer cmd = CommandBufferPool.Get();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//设置渲染目标</span></span><br><span class="line">        CoreUtils.SetRenderTarget(</span><br><span class="line">            cmd, </span><br><span class="line">            m_DestinationColor, </span><br><span class="line">            m_DestinationDepth,</span><br><span class="line">            clearFlag, </span><br><span class="line">            clearColor);</span><br><span class="line">        </span><br><span class="line">        context.ExecuteCommandBuffer(cmd);</span><br><span class="line">        CommandBufferPool.Release(cmd);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="自定义后处理"><a href="#自定义后处理" class="headerlink" title="自定义后处理"></a>自定义后处理</h1><p>URP 包括后处理效果的集成实现。如果使用 URP，则无需安装用于后期处理效果的额外软件包。URP 与 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.postprocessing@latest/index.html">Post Processing Stack v2</a> 包不兼容。<br>URP 使用 <a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/Volumes.html">Volume</a> 框架进行后期处理效果。</p>
+<p><a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/EffectList.html">Effect List | Universal RP | 14.0.8 — 效果列表|通用RP | 14.0.8 (unity3d.com)</a></p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><ol>
+<li>Main Camera-&gt;Rendering-&gt;勾选 Post processing</li>
+<li>右键 &gt; 创建 Volume-&gt;创建 Profile </li>
+<li>通过 Add Override 添加后处理效果<br> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356307.png" alt="Pasted image 20230702141356|450"></li>
+</ol>
+<ul>
+<li><strong>Mode</strong><ul>
+<li>Global：影响所有 camera</li>
+<li>Local：影响碰撞器边界内的 camera  <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356308.png" alt="Pasted image 20230702143135|450"></li>
+</ul>
+</li>
+<li><strong>Weight：</strong> 对场景的影响程度。URP 将此乘数应用于它使用“摄影机位置”和“混合距离”计算的值。</li>
+<li>Priority：URP 使用此值来确定在多个 Volumes 对 Scene 具有同等影响时使用的 Volumes。URP 首先使用优先级较高的卷。</li>
+<li>Profile：配置文件，通过 Add Overide 添加的后处理配置都保存在这</li>
+</ul>
+<p>在运行时，URP 会遍历场景中连接到活动游戏对象的所有已启用的 Volumes 组件，并确定每个 Volumes 对最终场景设置的贡献。URP 使用“摄影机位置”和 Volumes 组件属性来计算贡献。URP 对所有 Volumes 中具有非零贡献的值进行<strong>插值</strong>，以计算最终特性值。  </p>
+<hr>
+<p><strong>移动设备注意：</strong><br>后期处理效果可能会占用大量 frame time。如果你在移动设备上使用 URP，默认情况下，这些效果是最“mobile-frendly”的：</p>
+<ul>
+<li>Bloom（禁用<strong>High Quality Filtering</strong>）</li>
+<li>Chromatic Aberration 色差（翻译：多彩的像差）</li>
+<li>Color Grading 颜色分级</li>
+<li>Lens Distortion 透镜畸变</li>
+<li>Vignette 暗角</li>
+<li>depth-of field 景深，对低端设备使用高斯 Gaussian 景深。对于控制台和桌面平台，使用 Bokeh 景深。</li>
+<li>anti-aliasing 抗锯齿，对于移动平台 Unity 使用 FXAA。</li>
+</ul>
+<hr>
+<p><strong>HDR 输出（我的显示器不支持）：</strong><br>   <a target="_blank" rel="noopener" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/post-processing/hdr-output.html">High Dynamic Range (HDR) Output | Universal RP | 14.0.8 — 高动态范围（HDR）输出</a><br>高动态范围内容比标准清晰度内容具有更宽的色域和更大的亮度范围。URP 可以为支持该功能的显示器输出 HDR 内容。</p>
+<p>激活 HDR 步骤：</p>
+<ol>
+<li>URP Asset-&gt;Quality-&gt;HDR</li>
+<li> Edit &gt; Project Settings &gt; Player &gt;Other Settings -&gt;Allow HDR Display Output (默认关闭)</li>
+</ol>
+<h2 id="Fullscreen-Shader-Graph"><a href="#Fullscreen-Shader-Graph" class="headerlink" title="Fullscreen Shader Graph"></a>Fullscreen Shader Graph</h2><p>URP 允许使用 FullScreenPass RF 创建自定义后处理效果<br>必须创建 Fullscreen Shader Graph 才能创建自定义后处理效果。</p>
+<ol>
+<li>Create -&gt; Shader Graph -&gt; URP -&gt; Fullscreen Shader Graph</li>
+<li>添加 <strong>URP Sample Buffer</strong> 节点</li>
+<li><strong>Source Buffer</strong> 选择 <strong>BlitSource</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356309.png" alt="Pasted image 20230702145615|329"></li>
+<li>自定义一些后处理算法后，保存并创建 <strong>Material</strong> </li>
+<li>然后将创建的材质添加到 FullPassScreen RF 中的 <strong>Pass Material</strong> 即可</li>
+</ol>
+<h2 id="Volume-扩展"><a href="#Volume-扩展" class="headerlink" title="Volume 扩展"></a>Volume 扩展</h2><p>Ubershader 负责处理 Volume 设置</p>
+<p>试试 Alloc 来创建 RT ，再创建临时RT <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356310.png" alt="Pasted image 20230731143810"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356311.png" alt="Pasted image 20230731144249"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356312.png" alt="Pasted image 20230731144321"></p>
+<p>Volume 传入Execute<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356313.png" alt="Pasted image 20230731144009"><br>访问变量 <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356314.png" alt="Pasted image 20230731144150"></p>
+<p>乒乓blit<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356315.png" alt="Pasted image 20230731144433"></p>
+<p>RT 存入 shader<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356316.png" alt="Pasted image 20230731144506"><br>将 Volume 同步变量传入 shader<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202407312356317.png" alt="Pasted image 20230731144802"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/17861.html">http://liuke101.github.io/post/17861.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Shader/">Shader</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/post/19285.html" title="材质脚本控制"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">材质脚本控制</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/42467.html" title="HLSL ShaderLab"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">HLSL ShaderLab</div></div></a></div><div><a href="/post/19285.html" title="材质脚本控制"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-02</div><div class="title">材质脚本控制</div></div></a></div><div><a href="/post/42466.html" title="CG ShaderLab"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">CG ShaderLab</div></div></a></div><div><a href="/post/56280.html" title="Shader Trick"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-18</div><div class="title">Shader Trick</div></div></a></div><div><a href="/post/32635.html" title="UV操作"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">UV操作</div></div></a></div><div><a href="/post/11097.html" title="描边"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-19</div><div class="title">描边</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">1. 文章主要迁移自个人的obsidian笔记，存在部分md语法冲突，导致显示异常，暂未修复。 2. 文章部分内容参考/引用网络资源，用于个人学习，如有侵权，请联系我删除。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Render-Objects-RF"><span class="toc-text">Render Objects RF</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%8F%E8%A7%86%E6%95%88%E6%9E%9C-X-Ray"><span class="toc-text">透视效果 X-Ray</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A2%9D%E5%A4%96%E7%9A%84-RF-%E9%81%BF%E5%85%8D%E8%87%AA%E9%80%8F%E8%A7%86"><span class="toc-text">创建额外的 RF 避免自透视</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Full-Screen-RF"><span class="toc-text">Full Screen RF</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%8B%E5%86%99-Full-Screen-shader-%E6%9D%90%E8%B4%A8"><span class="toc-text">手写 Full Screen shader 材质</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Decal-RF"><span class="toc-text">Decal RF</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89-URP"><span class="toc-text">自定义 URP</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#beginCameraRendering-%E4%BA%8B%E4%BB%B6"><span class="toc-text">beginCameraRendering 事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89-Render-Feature%EF%BC%88%E6%B8%B2%E6%9F%93%E5%99%A8%E5%8A%9F%E8%83%BD%EF%BC%89"><span class="toc-text">自定义 Render Feature（渲染器功能）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B"><span class="toc-text">案例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RTHandle-%E7%B3%BB%E7%BB%9F"><span class="toc-text">RTHandle 系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RTHandle-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-text">RTHandle 基本原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-text">使用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%90%8E%E5%A4%84%E7%90%86"><span class="toc-text">自定义后处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-text">配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fullscreen-Shader-Graph"><span class="toc-text">Fullscreen Shader Graph</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Volume-%E6%89%A9%E5%B1%95"><span class="toc-text">Volume 扩展</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42467.html" title="HLSL ShaderLab">HLSL ShaderLab</a><time datetime="2024-05-18T16:49:50.000Z" title="发表于 2024-05-19 00:49:50">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42466.html" title="CG ShaderLab">CG ShaderLab</a><time datetime="2024-05-18T16:48:56.000Z" title="发表于 2024-05-19 00:48:56">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/21838.html" title="冯乐乐入门精要笔记">冯乐乐入门精要笔记</a><time datetime="2024-05-18T16:45:45.000Z" title="发表于 2024-05-19 00:45:45">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/21879.html" title="Unity Primer"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190029709.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity Primer"/></a><div class="content"><a class="title" href="/post/21879.html" title="Unity Primer">Unity Primer</a><time datetime="2024-05-18T16:36:03.000Z" title="发表于 2024-05-19 00:36:03">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/64623.html" title="Unity GUI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190021833.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity GUI"/></a><div class="content"><a class="title" href="/post/64623.html" title="Unity GUI">Unity GUI</a><time datetime="2024-05-18T16:32:22.000Z" title="发表于 2024-05-19 00:32:22">2024-05-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>
