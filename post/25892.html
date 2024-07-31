@@ -1,0 +1,576 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Nerf:将场景表示为用于视角合成的神经辐射场 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="[!abstract] 摘要我们提出了一种方法，通过使用一组稀疏的输入视图集优化隐式连续体积场景函数（an under-lying continuous volumetric scene function），实现了合成复杂场景新视角（novel views）的最好（state-of-the-art）结果。我们的算法使用全连接 (非卷积) 深度网络表示场景，其输入是单个连续的 5D 坐标 (空间位">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nerf:将场景表示为用于视角合成的神经辐射场">
+<meta property="og:url" content="http://liuke101.github.io/post/25892.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="[!abstract] 摘要我们提出了一种方法，通过使用一组稀疏的输入视图集优化隐式连续体积场景函数（an under-lying continuous volumetric scene function），实现了合成复杂场景新视角（novel views）的最好（state-of-the-art）结果。我们的算法使用全连接 (非卷积) 深度网络表示场景，其输入是单个连续的 5D 坐标 (空间位">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png">
+<meta property="article:published_time" content="2023-10-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-31T16:50:08.671Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="三维重建">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/25892.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Nerf:将场景表示为用于视角合成的神经辐射场',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-01 00:50:08'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Nerf:将场景表示为用于视角合成的神经辐射场</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-18T16:00:00.000Z" title="发表于 2023-10-19 00:00:00">2023-10-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-31T16:50:08.671Z" title="更新于 2024-08-01 00:50:08">2024-08-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87/">论文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">12.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>43分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Nerf:将场景表示为用于视角合成的神经辐射场"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/25892.html#post-comment"><span class="waline-comment-count" data-path="/post/25892.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>[!abstract] 摘要<br>我们提出了一种方法，通过使用一组稀疏的输入视图集优化隐式连续体积场景函数（an under-lying continuous volumetric scene function），实现了合成复杂场景新视角（novel views）的最好（state-of-the-art）结果。我们的算法使用全连接 (非卷积) 深度网络表示场景，其输入是单个连续的 5D 坐标 (空间位置 (x, y, z) 和观看方向 （θ，∅）)，其输出是体积密度以及在该空间位置依赖于视图的发射辐射率。（view-dependent emitted radiance）。我们通过沿相机光线查询 5D 坐标来合成视图（synthesize views），并使用经典的体渲染（volume rendering）技术将输出的颜色和密度投影到图像中。因为体渲染是自然可微的（naturally differentiable），所以优化我们的表示方法所需的唯一输入是一组具有已知摄像机位姿的图像。我们描述了如何有效地优化神经辐射场（neural radiance fields），以渲染具有复杂几何形状和外观的场景的照片级真实感新视角（photorealistic novel views），并展示了优于先前神经渲染和视角合成（view synthesis）工作的结果。查看合成结果最好以视频形式观看，因此我们敦促读者观看我们的补充视频以获得令人信服的比较。</p>
+<p><strong>Keywords:</strong> scene representation, view synthesis, image-based rendering, volume rendering, 3D deep learning<br><strong>关键词：</strong>场景表示、视角合成、基于图像的渲染、体渲染、3D 深度学习</p>
+</blockquote>
+<blockquote>
+<p>注：view 翻译为”视图”或”视角”都可以</p>
+</blockquote>
+<h1 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h1><p>在这项工作中，我们<strong>通过直接优化连续 5D 场景表示（continuous 5D scene representation）的参数以最小化渲染一组捕获图像的误差</strong>，以一种新的方式解决了视角合成中长期存在的问题。</p>
+<p>我们将静态场景表示为一个连续的 5D 函数，该函数输出空间中每一点（x，y，z）在每个方向（θ，∅）的辐射率（radiance），以及每一点的密度，其作用类似于一个微分不透明度（differential opacity）控制通过（x，y，z）的光线积累多少辐射率。</p>
+<p><strong>我们的方法通过从单个 5D 坐标（x，y，z，θ，∅）回归到单个体积密度和视角相关 RGB 颜色（a single volume density and view-dependent RGB color），优化了一个没有任何卷积层的深度全连接神经网络（通常称为多层感知机或 MLP）。</strong> </p>
+<p><strong>为了从一个特定的视角渲染这个神经辐射场（NeRF），我们：</strong></p>
+<ol>
+<li>相机光线步进穿过场景，生成一组采样的三维点。</li>
+<li>将这些点和它们相应的 2D 观察方向作为神经网络的输入，产生一组颜色和密度的输出。</li>
+<li>使用经典的体渲染技术，将这些颜色和密度累积到一个 2D 图像中。</li>
+</ol>
+<blockquote>
+<p>[!example] </p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015341.png" alt="f2310459741bfc15287288399fc1a55b_MD5|750"> </p>
+<blockquote>
+</blockquote>
+<p>图 1：我们提出了一种方法，优化了一组输入图像中的场景的连续 5D 神经辐射场表示（任何连续位置的体积密度和视图相关（view-dependent）的颜色）。我们使用体渲染（volume rendering）技术，沿着光线积累这个场景表示的采样样本，以从任何视角渲染场景。在这里，我们可视化了在周围半球上随机捕获的合成鼓场景的 100 个输入视图集，并展示了从优化的 NeRF 表示中渲染的两个新视角。</p>
+<p>因为这个过程是自然可微的，我们可以<strong>使用梯度下降来优化这个模型</strong>，通过最小化每个观察图像和从我们的表示中呈现的相应视图之间的误差（和真值进行对比）。<br>通过将高体积密度和准确的颜色分配给包含真实底层场景内容的位置，最大限度地减少多个视图之间的误差，鼓励网络预测一个连贯的场景模型。<br>图 2 可视化了整个管线：</p>
+<blockquote>
+<p>[!example] Pipeline<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015342.png" alt="ca177eecd11fb6fd36c5538ca5534611_MD5|700"><br>图 2：我们的神经辐射场场景表示（neural radiance field scene representation）和可微分渲染（differentiable rendering）过程概述。<br>我们通过沿相机光线（a）采样 5D 坐标（位置和观察方向），将这些位置输入 MLP 以生成颜色和体积密度（b），并使用体渲染技术将这些值合成为图像（c）。该渲染函数是可微的，因此我们可以通过最小化合成图像和真实（ground truth）观察图像（d）之间的残差来优化场景表示。</p>
+<ol>
+<li>输入一组稀疏图像，沿着相机光线的方向采样 5D 坐标 </li>
+<li>将坐标信息输入到 MLP 中，生成 RGB 颜色和体积密度</li>
+<li>使用体渲染的方法根据颜色和体积密度生成图像 </li>
+<li>最小化合成图像和 Ground Truth 之间的残差来优化场景表示 ^iuvbi2</li>
+</ol>
+</blockquote>
+<p>我们发现，优化复杂场景的神经辐射场表示法的基本实现并没有收敛（converge）到足够高分辨率的表示（sufficiently high-resolution representation），并且在每个相机光线所需的采样数量方面效率低下。<br><strong>我们通过将输入 5D 坐标转换为位置编码（positional encoding）来解决这些问题，位置编码使 MLP 能够表示更高频率的函数，并且我们提出了一种分层采样程序，以减少对这种高频场景表示进行充分采样所需的查询数。</strong></p>
+<p><strong>我们的方法继承了体积表示（volumetric representations）的优点：</strong> 两者都可以表示复杂的真实世界几何形状和外观，并且非常适合使用投影图像进行基于梯度的优化。重要的是，我们的方法<strong>克服了在高分辨率建模复杂场景时离散化体素网格（discretized voxel grids）的高昂存储成本</strong>。</p>
+<p><strong>总之，我们的技术贡献是：</strong></p>
+<ul>
+<li>一种将具有复杂几何形状和材质的连续场景表示为 5D 神经辐射场的方法，参数化为基本 MLP 网络。</li>
+<li>一种基于经典体渲染（volume rendering）技术的可微分渲染过程，我们使用它从标准 RGB 图像中优化这些表示。这包括分层采样策略，用于将 MLP 的容量分配给具有可见场景内容的空间</li>
+<li>将每个输入 5D 坐标映射到更高维空间的位置编码，使我们能够成功优化神经辐射场以表示高频场景内容（high-frequency scene content）。</li>
+</ul>
+<p>我们证明了我们得到的神经辐射场方法在数量和质量上优于最先进的视角合成方法，包括将神经 3D 表示拟合到场景的工作，以及训练深度卷积网络以预测采样体积表示（sampled volumetric representations）的工作。<br>据我们所知，本文提出了第一个连续的神经场景表示，它能够从自然环境中捕获的 RGB 图像中渲染真实对象和场景的高分辨率照片真实感的新视角。</p>
+<h1 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2 相关工作"></a>2 相关工作</h1><p><strong>计算机视觉最近的一个很有前途的方向是以 MLP 的权重对对象和场景进行编码，该权重直接从 3D 空间位置映射到形状的隐式表示</strong>，例如该位置的有向距离（the signed distance）[6]。然而，这些方法到目前为止还无法再现具有复杂几何形状的真实场景，其照片级真实感度与使用离散表示（如三角形网格或体素网格）表示场景的技术相同（好像这几年已经解决了 hxz）。在本节中，我们将回顾这两条工作线，并将其与我们的方法进行对比，我们的方法增强了神经场景表示的能力，以产生用于渲染复杂照片级真实感场景的最优结果。</p>
+<p>使用 MLP 从低维坐标映射到颜色的类似方法也用于表示其他图形功能，如图像 [44]、纹理材质（textured materials）[12,31,36,37] 和间接照明值[38]。</p>
+<p><strong>Neural 3D shape representations（神经 3D 形状表示）</strong> 最近的工作通过优化将 xyz 坐标映射到<strong>有向距离场（SDF: signed distance functions）</strong>[15,32] 或占用域（occupancy fields）[11,27] 的深度网络，研究了连续 3D 形状作为水平集（level sets）的隐式表示。然而，这些模型受限于其对真实（ground truth）3D 几何结构的获取要求，通常从合成 3D 形状数据集（如 ShapeNet[3]）获得。随后的工作通过制定可差分渲染函数来放宽 ground truth 3D 形状的这一要求，该函数允许仅使用 2D 图像来优化神经隐式形状表示 (neural implicit shape representations)。Niemeyer 等人 [29] 将表面表示为 3D 占用场（3D occupancy fields），并使用数值方法找到每条射线的表面交点，然后使用隐式微分计算精确导数。每个光线相交位置（ray intersection location）都作为神经 3D 纹理场（a neural 3D texture field）的输入提供，该纹理场预测该点的漫反射颜色。Sitzmann 等人 [42] 使用了一种不太直接的神经 3D 表示法，简单地在每个连续的 3D 坐标处输出一个特征向量和 RGB 颜色，并提出了一种可微分的渲染函数，该函数由沿每条光线步进的循环神经网络（RNN）组成，以确定表面的位置。</p>
+<blockquote>
+<p>有向距离场SDF：每个像素（体素）记录自己与距离自己最近物体之间的距离，如果在物体内，则距离为负，正好在物体边界上则为0。</p>
+</blockquote>
+<p>尽管这些技术可能潜在地表示复杂和高分辨率的几何体，但迄今为止，它们仅限于几何复杂度较低的简单形状，导致渲染过度平滑。<strong>我们展示了优化网络以编码 5D 辐射场（optimizing networks to encode 5D radiance fields）（具有 2D 视角相关的外观的 3D 体积）的替代策略可以代表更高分辨率的几何形状和外观，以渲染复杂场景的照片级真实感新视角。</strong></p>
+<p><strong>View synthesis and image-based rendering（视角合成和基于图像的渲染）</strong>：给定稠密的视图采样，可以通过简单的光场采样插值（light field sample interpolation）技术重建照片级真实感的新视角 [21,5,7]。对于具有稀疏视图采样 (sparser view sampling) 的新视角合成，计算机视觉和图形社区通过从观察到的图像中预测传统的几何和外观表示而取得了重大进展。</p>
+<p>一类流行的方法使用基于网格（mesh-based）的场景表示，具有漫反射 [48] 或视图相关（view-dependent） [2,8,49] 外观。可微光栅化器（Differentiable rasterizers）[4,10,23,25]或路径跟踪器（pathtracers）[22,30]可以直接优化网格表示，以使用梯度下降再现一组输入图像。然而，基于图像重投影（image reprojection）的梯度网格优化（gradient-based mesh optimization）通常很困难，可能是因为局部极小值或损失情况（loss landscape）的条件较差。此外，该策略要求在优化之前提供具有固定拓扑的模板网格（a template mesh）作为初始化 [22]，这通常不适用于无约束的真实场景（unconstrained real-world scenes）。</p>
+<p><strong>另一类方法使用体积表示（volumetric representations）来解决从一组输入 RGB 图像进行照片级真实感视角合成（photorealistic view synthesis）的任务。体积方法能够真实地表示复杂的形状和材质，非常适合基于梯度的优化，并且与基于网格的方法相比，倾向于产生较少的视觉干扰伪影（visually distracting artifacts）</strong>。早期的体积方法使用观察到的图像直接为体素网格着色 [19,40,45]。最近，有几种方法[9,13,17,28,33,43,46,52] 使用多个场景的大型数据集来训练深层网络，这些深层网络根据一组输入图像预测采样的体积表示，然后使用 alpha-compositing [34] 或沿射线学习合成，在测试时渲染新视角。其他工作针对每个特定场景优化了卷积网络（CNN）和采样体素网格的组合，使得 CNN 可以补偿低分辨率体素网格中的离散化伪影（discretization artifacts） [41]，或者允许预测的体素网格根据输入时间或动画控制而变化 [24]。<strong>尽管这些体积技术在新的视角合成方面取得了令人印象深刻的成果，但由于离散采样（discrete sampling），它们缩放到更高分辨率图像的能力基本上受到了时间和空间复杂性的限制 - 渲染更高分辨率的图像需要对 3D 空间进行更精细的采样。<br>我们通过在深度全连接神经网络的参数内编码连续体积来绕过这个问题，这不仅比以前的体积方法产生了更高质量的渲染，而且只需要这些采样体积表示的存储成本的一小部分。</strong></p>
+<h1 id="3-⭐NeRF-场景表示"><a href="#3-⭐NeRF-场景表示" class="headerlink" title="3 ⭐NeRF 场景表示"></a>3 ⭐NeRF 场景表示</h1><p>我们将连续场景表示为 5D 向量值函数，其输入为 3D 位置 $x&#x3D;(x,y,z)$ 和 2D 观看方向 $(θ，∅)$，其输出为发出的颜色 $c&#x3D;(r,g,b)$ 和<strong>体积密度</strong> $σ$。在实践中，我们把方向 $(θ，∅)$ 表示为三维笛卡尔坐标的单位向量 $d$。我们用 MLP 网络 $F_Θ:(x, d)→(c, σ)$ 近似这个连续的 5D 场景表示并优化其权重 $Θ$，以从每个输入 5D 坐标映射到其相应的体积密度和定向发射颜色。</p>
+<p><strong>我们通过限制网络将体积密度 $σ$ 预测为位置 $x$ 的函数，同时将 RGB 颜色 $c$ 预测为位置和观看方向的函数，从而鼓励表示具有多视图一致性（multiview consistent）</strong>。为了实现这一点，MLP  $F_Θ$ 首先用 8 个全连接层处理输入 3D 坐标 $x$（使用 ReLU 激活和每层 256 个通道），并输出 $σ$ 和 256 维特征向量。然后，该特征向量与相机光线的观察方向连接，并传递到额外的全连接层（使用 ReLU 激活和 128 通道），该层输出与视图相关的 RGB 颜色。</p>
+<p>图 7 详细说明了我们简单的全连接架构。</p>
+<blockquote>
+<p>[!example] 图 7 全连接的网络架构<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015343.png" alt="Pasted image 20230507232312"> 图 7：我们全连接的网络架构的可视化。输入向量以绿色显示，中间隐藏层以蓝色显示，输出向量以红色显示，每个块内的数字表示向量的维度。所有层都是标准的全连接层，黑色箭头表示有 ReLU 激活的层，橙色箭头表示没有激活的层、黑色虚线箭头表示具有 sigmoid 激活的层， “+” 表示向量连接。<br>输入位置 $γ(x)$ 的位置编码通过 8 个完全连接的 ReLU 层，每个层有 256 个通道。我们遵循 DeepSDF[32] 架构，并包含一个跳跃连接 （Skip connection），将此输入连接到第五层的激活 (activation)(作用是提高准确度)。附加层输出体积密度 $σ$（使用 ReLU 进行校正，以确保输出体积密度为非负）和 256 维特征向量。这个特征向量与输入观察方向的位置编码 $γ(d)$ 相连接，并由一个具有 128 个通道的附加全连接 ReLU 层处理。最后一层（有一个 sigmoid 激活）<strong>输出位置 $x$ 的 RGB 辐射率，作为通过方向为 $d$ 的光线所看到的颜色。</strong>   ^lpcbbf</p>
+</blockquote>
+<p>关于我们的方法如何使用输入观察方向来表示非朗伯体效应（non-Lambertian effects）的示例，请参见图 3。如图 4 所示，在不依赖视图的情况下训练的模型（只有 <em>x</em> 作为输入）很难表示镜面反射。</p>
+<blockquote>
+<p>[!example] 图 3&#x2F;图 4</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015344.png" alt="56558518c2018c3efa7d509a29e384bb_MD5"></p>
+<p>图 3：视角相关的发射辐射率（view-dependent emitted radiance）的可视化。我们的神经辐射场表示法输出 RGB 颜色作为空间位置 x 和观察方向 d 的 5D 函数。在这里，我们在船舶场景的神经表示中可视化了两个空间位置的示例方向颜色分布。在（a）和（b）中，我们展示了来自两个不同相机位置的两个固定 3D 点的外观：一个在船侧（橙色插图），另一个在水面（蓝色插图）。我们的方法预测了这两个三维点不断变化的镜面外观（the changing specular appearance），在（c）中，我们展示了这种行为如何在整个半球的观察方向上不断泛化。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015345.png" alt="1e0924592d300e52121e69605d643570_MD5"></p>
+<blockquote>
+</blockquote>
+<p>图 4：在这里，我们可视化我们的完整模型如何从表示视图相关的发射辐射以及通过高频位置编码传递输入坐标中受益。<strong>移除视图相关性（view dependence）可阻止模型在推土机踏板上重新创建镜面反射（不能够表示镜面反射了）。删除位置编码会大大降低模型表示高频几何体和纹理的能力，从而导致外观过于平滑。</strong></p>
+<blockquote>
+<p>[!question] 非朗伯体效应 non-Lambertian effects<br>non-Lambertian objects 指的是那些不遵循 Lambertian 反射模型的物体，它们的表面反射不是均匀的。这些物体的表面反射可能会因为物体表面纹理、光线入射角度等因素而变化。例如，眼睛、嘴巴、胡须等都属于 non-Lambertian objects。</p>
+</blockquote>
+<p>而 Lambertian effect 指的是遵循 Lambertian 反射模型的物体表面反射的效果。Lambertian 反射模型假设物体表面是完全均匀的，在任何视角下都会反射相同的光线。这种反射模型通常用于模拟纹理较简单的物体的表面反射。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015346.png" alt="Pasted image 20230506233504"></p>
+<blockquote>
+<p>朗伯辐亮度示意图(a) 与自然地物表面的非朗伯辐亮度示意图(b-d)<br>自然界中的地物表面，应当都是非朗伯的 Non-Lambertian。</p>
+</blockquote>
+<h1 id="4-体积渲染"><a href="#4-体积渲染" class="headerlink" title="4 体积渲染"></a>4 体积渲染</h1><p>我们的 <strong>5D 神经辐射场将场景表示为空间任意点的体积密度和定向发射辐射率</strong>（directional emitted radiance）（即表示为体积密度和颜色）。我们使用经典体渲染（classical volume rendering）的原理渲染穿过场景的任何光线的颜色 [16]。<strong>体积密度 $σ(x)$ 可以解释为光线在 $x$ 处终止于无穷小粒子（infinitesimal particle）的微分概率 (differential probability)。</strong></p>
+<p>相机光线 $r(t)&#x3D;o+td$ 的预期颜色 $C(r)$（具有近边界和远边界 $t_n$ 和 $t_f$）为：<br>$$<br>C(\mathbf{r})&#x3D;\int_{t_n}^{t_f}T(t)\sigma(\mathbf{r}(t))\mathbf{c}(\mathbf{r}(t),\mathbf{d})dt,\text{where}; T(t)&#x3D;\exp\left(-\int_{t_n}^{t}\sigma(\mathbf{r}(s))ds\right).\tag{1}<br>$$</p>
+<blockquote>
+<p>公式中的 where 意思就是“其中”</p>
+</blockquote>
+<p><strong>函数 $T(t)$ 表示光线从 $t_n$ 到 $t$ 的累积透射率（transmittance），即光线从 $t_n$ 到 $t$ 传播而不撞击任何其他粒子的概率。</strong><br>从我们的连续神经辐射场中渲染一个视图需要估计这个积分 $C(r)$，用于追踪通过所需摄像机的每个像素的摄像机光线。 </p>
+<p>我们用求积法（quadrature）数值估计（numerically estimate）这个连续积分。确定性求积通常用于渲染离散化体素网格（discretized voxel grids），它将有效地限制我们表示的分辨率，因为 MLP 只能在固定的离散位置集上被查询。</p>
+<p>我们<strong>使用分层采样（stratified sampling）方法</strong>，将 $[t_n,t_f]$ 划分为 $N$ 个均匀间隔的 box ，然后从每个 box 内均匀随机抽取一个样本：<br>$$<br>t_i\sim\mathcal{U}\left[t_n+\frac{i-1}{N}(t_f-t_n),t_n+\frac{i}{N}(t_f-t_n)\right].\tag{2}<br>$$</p>
+<p>尽管我们使用一组离散的样本集来估计积分，但<strong>分层采样使我们能够表示连续的场景表示</strong>，因为它导致在优化过程中在连续的位置对 MLP 进行评估。我们使用这些样本通过 Max[26] 在体渲染评论中讨论的求积规则来估计 $C(r)$：<br>$$<br>\hat{C}(\mathbf{r})&#x3D;\sum\limits_{i&#x3D;1}^N T_i(1-\exp(-\sigma_i\delta_i))\mathbf{c}<em>i,\text{where};T_i&#x3D;\exp\left(-\sum\limits</em>{j&#x3D;1}^{i-1}\sigma_j\delta_j\right),\tag{3}<br>$$</p>
+<p>其中 $δ_i &#x3D; t_{i+1} − t_i$ 是相邻采样点之间的距离。<br>从一组 $(c_i,\sigma_{i})$ 值计算 $\hat{C}(\mathbf{r})$ 的函数是平凡可微的 (trivially differentiable)，并<strong>简化为具有 $alpha$ 值 $α_i &#x3D; 1 − exp(−σ_iδ_i)$的传统 $alpha$ 合成。</strong></p>
+<h1 id="5-优化NeRF"><a href="#5-优化NeRF" class="headerlink" title="5 优化NeRF"></a>5 优化NeRF</h1><p>在上一节中，我们描述了将场景建模为神经辐射场 (a neural radiance field) 和从该表示中渲染新视角所需的核心组件。然而，我们注意到，这些组件不足以达到第 6.4 节所示的最优 (state-of-the-art) 质量。</p>
+<p><strong>我们引入了两个改进，以实现高分辨率复杂场景的表示。</strong></p>
+<ol>
+<li>输入坐标的位置编码，有助于 MLP 表示高频函数，</li>
+<li>分层采样程序，允许我们有效地对该高频表示进行采样。</li>
+</ol>
+<h2 id="5-1-位置编码-Positional-encoding"><a href="#5-1-位置编码-Positional-encoding" class="headerlink" title="5.1 位置编码 Positional encoding"></a>5.1 位置编码 Positional encoding</h2><p>尽管神经网络是通用的函数逼近器（function approximators） [14]，但我们发现让网络 $F_Θ$ 直接对 $xyz\theta\phi$ 输入坐标进行操作会导致渲染结果在表现颜色和几何形状的高频变化方面表现不佳。这与 Rahaman 等人 [35] 最近的研究一致，该研究表明<strong>深度网络倾向于学习低频函数</strong> (lower frequency functions)。他们还表明，<strong>在将输入传递到网络之前，使用高频函数将输入映射到更高维空间，能够更好地拟合包含高频变化的数据。</strong></p>
+<p>我们在神经场景表示的背景下利用这些发现，并表明将  $F_Θ$ 重新表述为两个函数 $F_\Theta&#x3D;F_\Theta’$ 的组成，一个是学习，一个是不学习，明显提高了性能（见图 4 和表 2）。<br>这里 $γ$ 是从 $\mathbb{R}$ 到更高维空间 $\mathbb{R}^{2L}$ 的映射，而 $F_\Theta’$ 仍然是简单的正则 MLP。形式上，我们使用的<strong>编码函数</strong>是：<br>$$<br>\gamma(p)&#x3D;\left(\sin\left(2^0\pi p\right),\cos\left(2^0\pi p\right),\cdots,\sin\left(2^{L-1}\pi p\right),\cos\left(2^{L-1}\pi p\right)\right).\tag{4}<br>$$</p>
+<blockquote>
+<p>可以理解为，这种表示方法，即便两个点在原空间中的距离很近，很难分辨，但通过上面的编码函数，可以很轻松地分辨两个点。</p>
+</blockquote>
+<p>这个函数 $\gamma(\cdot)$ 分别应用于 $x$ 中的三个坐标值（被归一化为位于 $[-1, 1]$）和笛卡尔观察方向 (Cartesian viewing direction) 单位向量 $d$ 的三个分量（根据结构，它们位于 $[-1, 1]$）。在我们的实验中，我们为 $γ(x)$ 设置 $L&#x3D;10$，为 $γ(d)$ 设置 $L&#x3D;4$。 </p>
+<p>流行的 Transformer 架构 [47] 中使用了类似的映射，它被称为位置编码。然而，Transformers 将其用于<strong>不同的目的</strong>，即提供序列中令牌的离散位置（the discrete positions of tokens），作为不包含任何顺序概念（any notion of order）的架构的输入。<br><strong>相反，我们使用这些函数将连续的输入坐标映射到更高维的空间，以使 MLP 更容易地逼近更高频率的函数。</strong> 根据投影对3D 蛋白质结构建模[51]的相关问题的并行工作也利用了类似的输入坐标映射。</p>
+<h2 id="5-2-分层体积采样-Hierarchical-volume-sampling"><a href="#5-2-分层体积采样-Hierarchical-volume-sampling" class="headerlink" title="5.2 分层体积采样 Hierarchical volume sampling"></a>5.2 分层体积采样 Hierarchical volume sampling</h2><p>我们的渲染策略是在沿每个相机光线的 N 个查询点处密集评估神经辐射场网络，这种<strong>策略效率低下</strong>：对渲染图像没有贡献的自由空间和遮挡区域（free space and occluded regions）仍会重复采样。我们从早期的体渲染工作中汲取灵感 [20]，并<strong>提出了一种分层表示法，通过把样本按比例分配给期望的最终渲染效果，以提高渲染效率。</strong></p>
+<p><strong>我们不只是使用单个网络来表示场景，而是同时优化两个网络：一个 “coarse（粗略）” 网络和一个 “fine（精细）” 网络（粗网络和细网络）。</strong> 我们首先使用分层采样（stratified sampling）采样一组 $N_c$ 位置，并按照等式 2，3 中的描述评估在这些位置 “coarse” 网络，如公式 2 和 3 所述。给定这个 “coarse” 网络的输出，然后我们沿着每条光线对点进更细致的采样（more informed sampling），其中样本偏向于体积的相关部分。<br>为了做到这一点，我们首先将公式 3 中 coarse 网络的 alpha 合成颜色 $\hat{C}_{c}\left({r}\right)$ 重写为沿射线的所有采样颜色 $c_i$ 的加权和。（就是更为细致的 alpha 合成）<br>$$\hat{C}<em>c(\mathbf{r})&#x3D;\sum</em>{i&#x3D;1}^{N_c}w_ic_i,\quad w_i&#x3D;T_i(1-\exp(-\sigma_i\delta_i)).\tag{5}$$</p>
+<p>将这些权重归一化为 $\displaystyle\hat{w}<em>i &#x3D; \frac{w_i}{\sum</em>{j&#x3D;1}^{N_c}{w_j}}$，可产生沿光线的分段常数 (piecewise-constant) <strong>PDF</strong> 。</p>
+<ul>
+<li>? PDF? 逆变换采样？<br>我们使用<strong>逆变换采样</strong>（inverse transform sampling）从这个分布中采样第二组 $N_f$ 位置，在第一组和第二组样本的联合处评估我们的 “fine” 网络，并使用公式 3 但使用所有 $N_c+N_f$ 样本计算光线的最终渲染颜色 $\hat{C}_{c}\left({r}\right)$ 。<br>此过程将更多样本分配给我们期望包含可见内容的区域。这解决了与重要性采样 (importance sampling) 类似的目标，但我们使用采样值作为整个积分域（integration domain）的非均匀离散化（nonuniform discretization），而不是将每个采样作为整个积分的独立概率估计 (an independent probabilistic estimate of the entire integral)。</li>
+</ul>
+<h2 id="5-3-Implementation-details"><a href="#5-3-Implementation-details" class="headerlink" title="5.3 Implementation details"></a>5.3 Implementation details</h2><p>我们为每个场景优化了一个单独的神经连续体积表示网络。这只需要<strong>一个捕捉的场景的 RGB 图像的数据集，相应的相机位姿和内参（intrinsic），以及场景的边界（scene bounds）(我们对合成数据使用 ground truth 相机位姿、内参和边界。并使用 COLMAP 运动结构包 [39] 来估计真实数据的这些参数）</strong>。<br>在每次优化迭代中，我们从数据集中所有像素的集合中随机采样一批（batch）相机光线，然后按照第 5.2 节中描述的分层采样，从粗网络中查询 $N_c$ 样本，从细网络中查询 $N_c+N_f$ 个样本。然后，我们使用第 4 节中描述的体渲染过程来渲染两组 样本中每条光线的颜色。我们的损失（loss）只是 coarse 渲染和 fine 渲染的渲染像素颜色和真实像素颜色之间的总平方误差：<br>$$<br>\mathcal L&#x3D;\sum_{\mathbf{r}\in\mathcal{R}}\left[\left\lVert\hat{C}<em>{c}(\mathbf{r})-C(\mathbf{r})\right\rVert</em>{2}^{2}+\left\lVert\hat{C}<em>{f}(\mathbf{r})-C(\mathbf{r})\right\rVert</em>{2}^{2}\right]\tag{6}<br>$$</p>
+<p>其中 $R$ 是每个 batch 中的光线集，$C(\mathbf{r}), \hat{C}_c(\mathbf{r})$ 和 $\hat{C}_f(\mathbf{r})$ 分别是光线 $r$ 的真实值、coarse 体积预测和 fine 体积预测 RGB 颜色。请注意，即使最终渲染来自 $\hat{C}_f(\mathbf{r})$ ，我们也将 $\hat{C}_c(\mathbf{r})$ 的损失最小化，以便 coarse 网络的权重分布可以用于在 fine 网络中分配样本。   </p>
+<p>在我们的实验中，我们使用了 4096 条光线的批量大小，每个射线在 coarse 体积中的 $N_c&#x3D;64$ 个坐标和 fine 体积中 $N_f&#x3D;128$ 个附加坐标（additional coordinates）处采样。我们使用 Adam 优化器（Adam optimizer） [18]，学习速率从 $5\times10^{-4}$ 开始，并在优化过程中呈指数衰减到 $5\times10^{-5}$ （其他 Adam 超参数（hyperparameters）保留为默认值： $\beta1&#x3D;0.9;\beta2&#x3D;0.999$ 和 $ϵ&#x3D;10^{-7}$)。<br>在单个 NVIDIA V100 GPU 上，单个场景的优化通常需要大约 100—300k 次迭代才能收敛（大约 1-2 天）。</p>
+<h1 id="6-结果"><a href="#6-结果" class="headerlink" title="6 结果"></a>6 结果</h1><p>我们定量地 (quantitatively)（表 1）和定性地（qualitatively）（图 8 和 6）表明，我们的方法优于先前的工作，并提供了广泛的<strong>消融实验（ablation studies）</strong> 来验证我们的设计选择（表 2）。我们敦促读者观看我们的补充视频，以更好地理解我们的方法在渲染新视角的平滑路径时相对于对照方法（baseline methods）的显著改进。 </p>
+<h2 id="6-1-数据集"><a href="#6-1-数据集" class="headerlink" title="6.1 数据集"></a>6.1 数据集</h2><p><strong>Synthetic renderings of objects（物体的合成渲染）</strong><br>我们首先展示了物体合成渲染的两个数据集的实验结果（表 1，“漫反射合成（Diffuse Synthetic）360°”和 “真实合成（Realistic Synthetic）360°”)。</p>
+<p>DeepVoxels[41] 数据集包含四个具有简单几何形状的朗伯对象（Lambertian objects）。从上半球采样的视角（479 作为输入，1000 用于测试）以 512 × 512 像素渲染每个对象。。</p>
+<p>此外，我们还生成了自己的数据集，其中包含八个对象的路径跟踪图像（pathtraced images），这些对象具有复杂的几何形状和照片级真实感的非朗伯材质（non-Lambertian materials）。六个从上半球上采样的视角渲染，两个从整个球体上采样的视角渲染。我们渲染每个场景的 100 个视图作为输入，200 个视图用于测试，所有视图均为 800×800 像素。</p>
+<blockquote>
+<p>[!example] </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015347.png" alt="Pasted image 20230507220351"></p>
+<p>表 1：我们的方法在合成图像和真实图像的数据集上的定量表现优于先前的工作。我们报告 PSNR&#x2F;SSIM（越高越好）和 LPIPS[50]（越低越好）。DeepVoxels[41] 数据集由 4 个具有简单几何结构的漫反射对象（diffuse objects）组成。我们的真实合成数据集由 8 个具有复杂非朗伯材质的几何复杂对象的路径跟踪渲染组成。真实数据集由 8 个真实世界场景的手持式前向捕捉（handheld forward-facing captures）组成（NV 无法基于此数据进行评估，因为它仅重建有界体积内的对象）。虽然 LLFF 的 LPIPS 稍好一些，但我们敦促读者观看我们的补充视频，我们的方法实现了更好的多视图一致性，并且产生的伪影比所有对照组 (baselines，又称基准线)都少。</p>
+</blockquote>
+<blockquote>
+<p>[!NOTE] PSNR&#x2F;SSIM&#x2F;LPIPS</p>
+<ul>
+<li>PSNR：峰值信噪比。通常用来评价一幅图像压缩后和原图像相比质量的好坏，当然，压缩后图像一定会比原图像质量差的，所以就用这样一个评价指标来规定标准了。PSNR 越高，压缩后失真越小。</li>
+<li>SSIM：结构相似性。是一种全参考的图像质量评价指标，它分别从亮度、对比度、结构三方面度量图像相似性。</li>
+<li>LPIPS：学习感知图像块相似度 (Learned Perceptual Image Patch Similarity, LPIPS) 也称为 “感知损失”(perceptual loss)，用于度量两张图像之间的差别。来源于 CVPR2018《The Unreasonable Effectiveness of Deep Features as a Perceptual Metric》</li>
+<li><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015348.png" alt="Pasted image 20240402142137"></li>
+</ul>
+</blockquote>
+<p><strong>Real images of complex scenes（复杂场景的真实图像）</strong><br>我们展示了用大致前向图像（roughly forward-facing images）捕获的复杂真实世界场景的结果（表 1，“Real Forward-Facing”）。这个数据集由 8 个用手持手机捕获的场景组成，（5 个取自 LLFF 论文，3 个是我们捕获的），捕获了 20 到 62 张图像，并保留其中的 1&#x2F;8 用于测试集。所有图像都是 1008×756 像素。</p>
+<blockquote>
+<p>[!example]<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015349.png" alt="Pasted image 20230507223920"><br>图 5：使用基于物理的渲染器（a physically-based renderer）生成的新合成数据集场景的测试集视图比较。我们的方法能够恢复几何和外观上的细微细节，例如船舶的索具、乐高的齿轮和踏板、麦克风闪亮的支架和网状格栅，以及材质的非朗伯反射。LLFF 展示了麦克风支架和材质的对象边缘上的带状伪影（banding artifacts），以及船舶桅杆和乐高对象内部的重影伪影（ghosting artifacts）。SRN 在任何情况下都会产生模糊和扭曲的渲染。Neural Volumes 无法捕捉麦克风格栅或乐高齿轮上的细节，并且完全无法恢复船舶索具的几何形状。</p>
+</blockquote>
+<blockquote>
+<p>[!example]<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015350.png" alt="Pasted image 20230507224408"></p>
+</blockquote>
+<p> 图 6：真实世界场景的测试集视图比较。LLFF 是专门为这个用例设计的（真实场景的前向捕捉）。与 LLFF 相比，我们的方法能够在渲染视图中更一致地表示精细几何体，如 Fern 的叶子和 T-rex 中的骨架肋骨和栏杆所示。我们的方法还正确地重建了 LLFF 难以清晰渲染的部分遮挡区域，例如底部蕨类（Fern）作物叶子后面的黄色架子和底部兰花（Orchid）作物背景中的绿色叶子。多次渲染之间的混合也会导致 LLFF 的重复边缘，如在顶部的兰花（Orchid）作物中看到的那样。SRN 捕捉到每个场景中的低频几何形状和色彩变化，但无法再现任何精细的细节。</p>
+<blockquote>
+<p>[!example] 图 8</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015351.png" alt="Pasted image 20230508141324"> 图 8：对来自 DeepVoxels[41] 合成数据集的场景进行测试集视图（test-set views）的比较。该数据集中的对象具有简单的几何形状和完美的漫反射率（diffuse reflectance）。由于大量的输入图像（479 个视图）和渲染对象的简单性，我们的方法和 LLFF[28] 在这一数据上几乎表现完美。LLFF 在其 3D 体积之间插值时仍偶尔会出现伪影（artifacts），如每个对象的顶部插图所示。SRN[42] 和 NV[24] 不具有呈现精细细节的表现能力。</p>
+<h2 id="6-2-对比"><a href="#6-2-对比" class="headerlink" title="6.2 对比"></a>6.2 对比</h2><p>为了评估我们的模型，我们将其与当前表现最好（top-performing）的视角合成技术进行比较，详情如下。<br>所有方法都使用相同的一组输入视图来为每个场景训练单独的网络，局部光场融合（Local Light Field Fusion）[28] 除外，该方法在大型数据集上训练单个 3D 卷积网络，然后使用相同的训练网络在测试时处理新场景的输入图像。</p>
+<p><strong>Neural Volumes (NV) [24]（神经体积）</strong> 合成对象的新视角，这些对象完全位于不同背景之前的有界体积内（必须在没有感兴趣对象（the object of interest）的情况下单独捕捉）。它优化了一个深度 3D 卷积网络，以预测具有 $128^3$ 个样本的离散化 $RGBα$ 体素网格（voxel grid）以及具有 $32^3$ 个样本的三维翘曲网格（3D warp grid）。该算法通过使摄像机光线穿过扭曲的（warped）体素网格来渲染新的视图。  </p>
+<p><strong>Scene Representation Networks (SRN) [42]（场景表示网络）</strong> 将一个连续的场景表示为一个不透明的表面，由一个 MLP 隐式定义，将每个（x，y，z）坐标映射为一个特征向量。他们训练一个循环神经网络沿着光线步进，通过使用任何 3D 坐标的特征向量来预测沿射线的下一步步长，最后一步的特征向量被解码为表面上该点的单一颜色。请注意，SRN 是同一作者的 DeepVoxels[41] 的后续产品（followup），性能更好，这就是为什么我们不包括与 DeepVoxels 的比较。 </p>
+<p><strong>Local Light Field Fusion(LLFF) [28]（局部光场融合）</strong> LLFF 被设计用于为采样良好的前向场景生成照片级真实感的新视角（photorealistic novel views）。它使用一个训练有素的 3D 卷积网络来直接预测每个输入视图的离散截头体采样（a discretized frustum-sampled）$RGBα$ 网格（多平面图像或 MPI[52]），然后通过 alpha 合成和混合（alpha compositing and blending）附近的 MPI 到新的视角来渲染新的视图。 </p>
+<h2 id="6-3-讨论"><a href="#6-3-讨论" class="headerlink" title="6.3 讨论"></a>6.3 讨论</h2><p>我们在所有场景中都完全优于（outperform）了对每个场景单独网络进行优化的两个对照（NV 和 SRN）。此外，与 LLFF 相比（除一项指标外），我们在只使用他们的输入图像作为我们的整个训练集的同时，产生的渲染在质量和数量上都更胜一筹。<br> <br>SRN 方法产生了高度平滑的几何形状和纹理，而且由于每条相机光线仅选择单一的深度和颜色，它对视角合成的表现力受到限制。<br>NV 对照能够捕捉相当详细的体积几何和外观，但它使用底层显式（underlying explicit） $128^3$ 个体素网格，这使它无法在高分辨率下表示精细的细节。<br>LLFF 特别提供了一个 “ 采样准则（sampling guideline）”，即输入视图之间的差距不超过 64 像素，因此它经常无法在包含多达 400-500 像素的视图之间的差异的合成数据集中估计出正确的几何形状。此外，LLFF 在不同的场景表示之间混合渲染不同的视图，导致在我们的补充视频中显而易见的感知上的不一致</p>
+<p>这些方法之间最大的实际权衡（tradeoffs）是时间与空间。所有比较过的单场景方法每个场景都需要至少 12 个小时来训练。相比之下，LLFF 可以在 10 分钟内处理一个小的输入数据集。然而，LLFF 为每个输入图像生成一个大的 3D 体素网格，这导致了巨大的存储需求（一个 “Realistic Synthetic” 场景超过 15GB）。我们的方法只需要 5MB 的网络权重（与 LLFF 相比，相对压缩了 3000 倍），这甚至比我们任何一个数据集中单个场景的单独输入图像的内存还要少。</p>
+<h2 id="6-4-消融实验-Ablation-studies"><a href="#6-4-消融实验-Ablation-studies" class="headerlink" title="6.4 消融实验 Ablation studies"></a>6.4 消融实验 Ablation studies</h2><blockquote>
+<p>[!example] 表 2</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015352.png" alt="d136e3543d1e9ed7541d6782beb7bfff_MD5"></p>
+<p>表 2：我们模型的消融研究。指标是我们现实合成数据集中 8 个场景的平均值。</p>
+</blockquote>
+<p>我们通过表 2 中广泛的消融研究验证了我们算法的设计选择和参数。我们在我们的 “真实合成（Realistic Synthetic）360°” 场景中展示了结果。<br>第 9 行显示了我们的完整模型作为参考点。<br>第 1 行显示了我们的模型的最简版本，没有位置编码（PE），视图依赖（VD），或分层采样（H）。<br>在第 2-4 行中，我们从完整的模型中逐一去除这三个成分，观察到位置编码（第 2 行）和视图依赖性（第 3 行）提供了最大的定量效益（the largest quantitative benefit），其次是分层采样（第 4 行）。<br>第 5-6 行显示了随着输入图像数量的减少，我们的性能如何下降。<br>请注意，当提供 100 幅图像时，我们的方法仅使用 25 幅输入图像的性能在所有指标上仍然超过 NV、SRN 和 LLFF（参见补充资料）<br>在第 7-8 行中，我们验证了我们对 $x$ 的位置编码中所使用的最大频率 $L$ 的选择（对 $d$ 使用的最大频率是按比例缩放的）。只使用 5 个频率会降低性能，但将频率的数量从 10 个增加到 15 个并不能提高性能。我们认为，一旦 $2^L$ 超过了采样输入图像中存在的最大频率（在我们的数据中大约是 1024），增加 $L$ 的好处就会受到限制。</p>
+<h1 id="7-总结"><a href="#7-总结" class="headerlink" title="7 总结"></a>7 总结</h1><p>我们的工作直接解决了之前使用 MLPs 将物体和场景表示为连续函数（continuous functions）的工作的不足之处。我们证明了将场景表现为 5D 神经辐射场（输出体积密度和与视角相关的发射辐射作为 3D 位置和 2D 观察方向的函数的 MLP）比之前训练深度卷积网络输出离散体素表示（discretized voxel representations）的主流方法产生更好的渲染。</p>
+<p>尽管我们已经提出了一种分层采样策略以使渲染更高效（用于训练和测试），但在研究有效优化和渲染神经辐射场的技术方面仍需要很大进展。未来工作的另一个方向是可解释性（interpretability:）：体素网格（voxel grids）和网格（meshes）等采样表征承认对渲染视图的预期质量和故障模式（the expected quality of rendered views and failure modes）的推理，但目前还不清楚当我们在深度神经网络的权重中对场景进行编码时如何分析这些问题。我们相信，这项工作在实现基于真实世界图像的图形管线方面取得了进展，复杂的场景可以由实际物体和场景的图像优化的神经辐射场组成。</p>
+<h1 id="8-附加的-Additional"><a href="#8-附加的-Additional" class="headerlink" title="8 附加的 Additional"></a>8 附加的 Additional</h1><h2 id="Additional实现细节"><a href="#Additional实现细节" class="headerlink" title="Additional实现细节"></a>Additional实现细节</h2><p><strong>Volume Bounds</strong> 我们的方法通过查询沿着相机光线的连续 5D 坐标处的神经辐射场表示来渲染视图。在合成图像的实验中，我们对场景进行缩放，使其位于以原点为中心的边长为 2 的立方体中，并且仅查询这个边界体积内的表示。我们的真实图像数据集包含的内容可以存在于最近点和无穷大之间的任何位置，所以我们使用归一化的设备坐标（NDC）将这些点的深度范围映射到 [-1, 1]。这将所有的光线原点转移到场景的近平面 (the near plane of the scene)，将摄像机的透视光线映射到转换后的体积中的平行光线，并使用视差（逆深度）（disparity (inverse depth)）而不是度量深度，所以现在所有的坐标都是有界的。</p>
+<ul>
+<li>? 视差（逆深度）（disparity (inverse depth)）?<br><strong>Training Details</strong> 对于真实的场景数据，我们通过在优化过程中向输出的 $σ$ 值（在通过 ReLU 之前）添加具有零均值和单位方差的随机高斯噪声（random Gaussian noise with zero mean and unit variance）来规范我们的网络，发现这略微提高了渲染新视角的视觉性能。</li>
+</ul>
+<p><strong>Rendering Details</strong> 为了在测试时渲染新的视图，我们通过 coarse 网络对每条射线采样 64 个点，通过 fine 网络对每条射线采样 64+128&#x3D;192 个点，每条射线总共有 256 次网络查询。我们的真实合成数据集每幅图像需要 640k 射线，而我们的真实场景每幅图像需要 762k 射线，因此每幅渲染的图像需要 1.5 亿到 2 亿的网络查询。在 NVIDIA V100 上，每帧大约需要 30 秒。</p>
+<h2 id="Additional基准方法细节"><a href="#Additional基准方法细节" class="headerlink" title="Additional基准方法细节"></a>Additional基准方法细节</h2><p><strong>Neural Volumes</strong> (NV) [24] 我们使用了作者在 <a target="_blank" rel="noopener" href="https://github.com/facebookresearch/neuralvolumes">https://github.com/facebookresearch/neuralvolumes</a> 上公开的 NV 代码，并按照他们的程序在没有时间依赖性（time dependence）的单一场景上进行训练。</p>
+<p><strong>Scene Representation Networks</strong> (SRN) [42] 我们使用作者开源的 SRN 代码 <a target="_blank" rel="noopener" href="https://github.com/vsitzmann/scene-representation-networks">https://github.com/vsitzmann/scene-representation-networks</a> 并按照他们的程序在单个场景上进行训练。</p>
+<p><strong>Local Light Field Fusion</strong> (LLFF) [28] 我们使用作者开源的预训练的 LLFF 模型，网址是 <a target="_blank" rel="noopener" href="https://github.com/Fyusion/LLFF%E3%80%82">https://github.com/Fyusion/LLFF。</a></p>
+<p><strong>Quantitative Comparisons</strong> 作者发表的 SRN 实现需要大量的 GPU 内存，即使在 4 个 NVIDIA V100 GPU 上并行化，也仅限于 512×512 像素的图像分辨率。我们在 512×512 像素的合成数据集和 504×376 像素的真实数据集上计算 SRN 的量化度量（quantitative metrics），而对于可以在更高分辨率下运行的其他方法，分别为 800×800 和 1008×752。</p>
+<h2 id="NDC-光线空间推导"><a href="#NDC-光线空间推导" class="headerlink" title="NDC 光线空间推导"></a>NDC 光线空间推导</h2><p>我们通常在归一化设备坐标 (NDC) 空间中使用“前向”捕获重建真实场景<br>这个空间很方便，因为它保留了平行线，同时将 z 轴（相机轴）转换为线性的差距。</p>
+<p>在这里，我们推导出应用于光线的变换，将它们从观察空间映射到 NDC 空间。齐次坐标的标准三维透视投影矩阵是：<br>$$<br>M&#x3D;\begin{pmatrix}\frac{n}{r}0&amp;0&amp;0\ 0&amp;\frac{n}{t}&amp;0&amp;0\ 0&amp;0&amp;\frac{-(f+n)}{f-n}&amp;\frac{-2fn}{f-n}\ 0&amp;0&amp;-1&amp;0\end{pmatrix} \tag{7}<br>$$</p>
+<p>其中，n、f 是近剪平面（clipping planes）和远剪平面，r 和 t 是近剪平面处场景的右边界和上边界。(请注意，这是基于摄像机朝 - z 方向看的惯例。) </p>
+<p>左乘投影矩阵，变换到裁剪空间，进行透视除法，变换到 NDC 空间，得到投影点：<br>$$<br>\begin{pmatrix}\frac{n}{r}&amp;0&amp;0&amp;0\ 0&amp;\frac{n}{t}&amp;0&amp;0\ 0&amp;0&amp;\frac{-(f+n)}{f-n}&amp;\frac{-2fn}{f-n}\0&amp;0&amp;-1&amp;0 \end{pmatrix}\begin{pmatrix}x\ y\ z\ 1\end{pmatrix}&#x3D;\begin{pmatrix}\frac{n}{r}x\ \frac{n}{t}y\ \frac{-(f+n)}{f-n}z-\frac{-2fn}{f-n}\ -z\end{pmatrix}\tag{8}<br>$$</p>
+<p>$$<br>\text{project}\to\begin{pmatrix}\frac{n}{r}\frac{x}{-z}\ \frac{n}{t}\frac{y}{-z}\ \frac{(f+n)}{f-n}-\frac{2fn}{f-n}\frac{1}{-z}\end{pmatrix}\tag{9}<br>$$<br>投影点（ projected point）现在是在归一化设备坐标（NDC）空间中，原来的视锥体（the original viewing frustum）已经被映射到立方体 $[-1,1]^3$</p>
+<p>我们的目标是取一条射线 $o+td$，并计算出 NDC 空间中的射线原点 $o’$ 和方向 $d’$，这样对于每一个 $t$，都存在一个新的 $t’$，对于这个 $t’$，$π(o+td)&#x3D;o’+t’d’$（其中$π$是使用上述矩阵的投影）。换句话说，原始光线的投影和 NDC 空间光线追踪出相同的点（但速度不一定相同）。<br>让我们把公式 9 中的投影点改写为 $(a_xx&#x2F;z,a_yy&#x2F;z,a_z+b_z&#x2F;z)^\top$。<br>新原点 $o’$ 和方向 $d’$ 的分量必须满足：<br>$$<br>\begin{pmatrix}a_x\frac{o_x+td_x}{o_z+td_z}\ a_y\frac{o_y+td_y}{o_z+td_z}\ a_z+\frac{b_z}{o_z+td_z}\end{pmatrix}&#x3D;\begin{pmatrix}o_x’+t’d_x’\ o_y’+t’d_y’\ o_z’+t’d_z’\end{pmatrix}\tag{10}<br>$$</p>
+<p>为了消除自由度 (a degree of freedom)，我们决定 $t’&#x3D;0$ 和  $t&#x3D;0$ 应该映射到同一点。将 $t’&#x3D;0$ 和  $t&#x3D;0$ 代入公式 10，直接得到我们的 NDC <strong>空间原点</strong> $o’$ 。<br>$$<br>\textbf{o}’&#x3D;\begin{pmatrix}o’_x\o’_y\o’_z\end{pmatrix}&#x3D;\begin{pmatrix}a_x\frac{o_x}{o_z}\a_y\frac{o_y}{o_z}\a_z+\frac{b_z}{o_z}\end{pmatrix}&#x3D;\pi(\textbf{o})\tag{11}<br>$$</p>
+<p>这正是原光线原点的投影 $π(o)$。通过将其代入（substituting<br>）公式 10 ，对于任意 $t$，我们可以确定  $t’$ 和 $d_{}’$ 的值。<br>$$<br>\begin{pmatrix}t’d_x’\ t’d_y’\ t’d_z’\end{pmatrix}&#x3D;\begin{pmatrix}a_x\frac{a_x+td_x}{\partial_z+td_z}-a_x\frac{o_x}{o_z}\ a_y\frac{o_y+td_y}{o_z+d_z}-a_y\frac{o_y}{o_z}\ a_z+\frac{b_z}{o_z+td_z}-a_z-\frac{b_z}{o_z}\end{pmatrix}\tag{12}<br>$$<br>$$<br>&#x3D;\left(\begin{matrix}{a_{x}\frac{o_{z}(o_{x}+t d_{x})-o_{x}(o_{z}+t d_{z})}{(o_{z}+t d_{z})o_{z}}}\ {a_{y}\frac{o_{z}(o_{y}+t d_{y})-o_{y}(o_{z}+t d_{z})}{(o_{z}+t d_{z})o_{z}}}\ {b_{z}\frac{o_{z}-(o_{z}+t d_{z})}{(o_{z}+t d_{z})o_{z}}}\end{matrix}\right)\tag{13}<br>$$<br>$$<br>&#x3D;\begin{pmatrix}a_x\frac{td_z}{o_z+td_z}\left(\frac{d_x}{d_z}-\frac{o_x}{o_z}\right)\ a_y\frac{td_z}{o_z+td_z}\left(\frac{d_y}{d_z}-\frac{o_y}{o_z}\right)\ -b_z\frac{td_z}{o_z+td_z}\frac{1}{o_z}\end{pmatrix}\tag{14}<br>$$</p>
+<p> 分解出一个仅依赖于 $t$ 的通用表达式（$t$ 是步长），我们可以得到：<br>$$<br>t’&#x3D;\frac{td_z}{o_z+td_z}&#x3D;1-\frac{o_z}{o_z+td_z}\tag{15}<br>$$<br>$$<br>\mathbf{d}’&#x3D;\begin{pmatrix}a_x\left(\frac{d_x}{d_z}-\frac{o_x}{o_z}\right)\ a_y\left(\frac{d_y}{d_z}-\frac{o_y}{o_z}\right)\ -b_z\frac{1}{o_z}\end{pmatrix} \tag{16}<br>$$</p>
+<p>注意，根据需要，当 $t&#x3D;0$ 时，$t’&#x3D;0$。此外，我们看到，当 $t→∞$ 时，$t’→1$。回到最初的投影矩阵，我们的常数是:<br>$$<br>\begin{aligned}a_x&amp;&#x3D;-\frac{n}{r}&amp;\quad&amp;(17)\ a_y&amp;&#x3D;-\frac{n}{t}&amp;\quad&amp;(18)\ a_z&amp;&#x3D;\frac{f+n}{f-n}&amp;\quad&amp;(19)\ b_z&amp;&#x3D;\frac{2fn}{f-n}&amp;\quad&amp;(20)\end{aligned}<br>$$<br>使用标准针孔相机模型，我们可以重新参数化为：<br>$$<br>\begin{aligned}a_x&amp;&#x3D;-\frac{f_{cam}}{W&#x2F;2}&amp;\quad\text{(21)}\ a_y&amp;&#x3D;-\frac{f_{cam}}{H&#x2F;2}&amp;\quad\text{(22)}\end{aligned}<br>$$<br>其中 W 和 H 是以像素为单位的图像的宽度和高度，$f_{cam}$ 是相机的焦距。</p>
+<p>在我们真正的前向捕捉中，我们假设远处的场景边界 ( far scene bound) 是无穷大（即 f 很大）（这对我们来说成本很小，因为 NDC 使用 <em>z</em> 维度来表示逆深度 (inverse depth)，即视差 (disparity)）。在此限制下，<em>z</em> 常数简化为：<br>$$<br>\begin{aligned}a_z&amp;&#x3D;1&amp;\quad(23)\ b_z&amp;&#x3D;2n.&amp;\quad(24)\end{aligned}<br>$$<br>将所有内容结合在一起：<br>$$<br>\mathbf{o}’&#x3D;\begin{pmatrix}-\frac{f_{cam}}{W&#x2F;2}\frac{o_x}{o_z}\ -\frac{f_{can}}{H&#x2F;2}\frac{o_y}{o_z}\ 1+\frac{2n}{o_z}\end{pmatrix}\tag{25}<br>$$<br>$$<br>\mathbf{d}’&#x3D;\begin{pmatrix}-\frac{f_{cam}}{W&#x2F;2}\left(\frac{d_x}{d_z}-\frac{o_x}{o_z}\right)\ -\frac{f_{cam}}{H&#x2F;2}\left(\frac{dy}{d_z}-\frac{o_y}{o_z}\right)\ -2n\frac{1}{o_z}\end{pmatrix}\tag{26}<br>$$</p>
+<p>在我们的实现中最后的一个细节：我们将 $\textbf{o}$ 移到射线与近平面的交点 $z&#x3D;-n$ 处（在这个 NDC 转换之前），通过对 $t_n&#x3D;-(n+o_z)&#x2F;d_z$ 取 $\textbf{o}_n&#x3D;\textbf{o}+t_n\textbf{d}$ 。一旦我们转换为 NDC 光线，这就允许我们简单地从 0 到 1 线性采样 $t’$，以便在原始空间中得到从 $n$ 到 $∞$ 的线性视差（disparity）采样。</p>
+<h2 id="Additional结果"><a href="#Additional结果" class="headerlink" title="Additional结果"></a>Additional结果</h2><p><strong>Per-scene breakdown</strong>(按场景分类) 表 3、表 4、表 5 和表 6 包括了主文中提出的定量结果在每个场景中的细分指标。每个场景的细分与本文提出的总体定量指标一致，我们的方法在定量上优于所有对照 (baseline)。尽管 LLFF 取得了略好的 LPIPS 指标，但我们敦促读者观看我们的补充视频，我们的方法取得了更好的多视图一致性，并且比所有对照产生更少的伪影。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015353.png" alt="Pasted image 20230508141821"> 表 3：DeepVoxels[41]数据集的每场景定量结果。此数据集中的 “场景（scenes）” 都是具有简单几何结构的漫反射对象，由 3D 扫描仪捕获的纹理映射网格（texture-mapped meshes）渲染。DeepVoxels 方法的指标直接取自他们的论文，其中没有报告 LPIPS，只报告了 SSIM 的两个有效数字。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015354.png" alt="Pasted image 20230508141805"><br> 表 4：我们真实合成数据集的每场景定量结果。此数据集中的 “场景（scenes）” 都是具有更复杂的几何和非朗伯材质的对象，使用 Blender 的 Cycles 路径跟踪器（pathtracer）进行渲染。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015355.png" alt="Pasted image 20230508141754"><br> 表 5：来自真实图像数据集的每场景定量结果。这个数据集中的场景都是用面向前方的手持（forward-facing handheld）手机捕获的。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010015356.png" alt="Pasted image 20230508141742"><br> 表 6：我们消融研究的每场景定量结果。这里使用的场景与表 4 中的场景相同。</p>
+<p>      </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/25892.html">http://liuke101.github.io/post/25892.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">三维重建</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/17861.html" title="Renderer Feature"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Renderer Feature</div></div></a></div><div class="next-post pull-right"><a href="/post/62010.html" title="Sugar:用于高效 3D Mesh 重建和高质量 Mesh 渲染的曲面对齐的高斯泼贱"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Sugar:用于高效 3D Mesh 重建和高质量 Mesh 渲染的曲面对齐的高斯泼贱</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/46692.html" title="2DGS"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-12</div><div class="title">2DGS</div></div></a></div><div><a href="/post/46693.html" title="DreamGaussian:用于高效3D内容创建的生成式高斯泼溅"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-09</div><div class="title">DreamGaussian:用于高效3D内容创建的生成式高斯泼溅</div></div></a></div><div><a href="/post/17862.html" title="3DGS总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-05</div><div class="title">3DGS总结</div></div></a></div><div><a href="/post/30572.html" title="3DGS:《用于实时辐射场渲染的 3D 高斯泼溅》"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-03</div><div class="title">3DGS:《用于实时辐射场渲染的 3D 高斯泼溅》</div></div></a></div><div><a href="/post/24255.html" title="Gaussian Frosting:高斯糖霜,可编辑的实时渲染辐射场"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-04</div><div class="title">Gaussian Frosting:高斯糖霜,可编辑的实时渲染辐射场</div></div></a></div><div><a href="/post/8166.html" title="GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-10</div><div class="title">GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">1. 文章主要迁移自个人的obsidian笔记，存在部分md语法冲突，导致显示异常，暂未修复。 2. 文章部分内容参考/引用网络资源，用于个人学习，如有侵权，请联系我删除。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-text">1 引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-text">2 相关工作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E2%AD%90NeRF-%E5%9C%BA%E6%99%AF%E8%A1%A8%E7%A4%BA"><span class="toc-text">3 ⭐NeRF 场景表示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E4%BD%93%E7%A7%AF%E6%B8%B2%E6%9F%93"><span class="toc-text">4 体积渲染</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E4%BC%98%E5%8C%96NeRF"><span class="toc-text">5 优化NeRF</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81-Positional-encoding"><span class="toc-text">5.1 位置编码 Positional encoding</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-%E5%88%86%E5%B1%82%E4%BD%93%E7%A7%AF%E9%87%87%E6%A0%B7-Hierarchical-volume-sampling"><span class="toc-text">5.2 分层体积采样 Hierarchical volume sampling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-Implementation-details"><span class="toc-text">5.3 Implementation details</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-%E7%BB%93%E6%9E%9C"><span class="toc-text">6 结果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">6.1 数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-%E5%AF%B9%E6%AF%94"><span class="toc-text">6.2 对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-%E8%AE%A8%E8%AE%BA"><span class="toc-text">6.3 讨论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-4-%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C-Ablation-studies"><span class="toc-text">6.4 消融实验 Ablation studies</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-%E6%80%BB%E7%BB%93"><span class="toc-text">7 总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-%E9%99%84%E5%8A%A0%E7%9A%84-Additional"><span class="toc-text">8 附加的 Additional</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Additional%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="toc-text">Additional实现细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Additional%E5%9F%BA%E5%87%86%E6%96%B9%E6%B3%95%E7%BB%86%E8%8A%82"><span class="toc-text">Additional基准方法细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NDC-%E5%85%89%E7%BA%BF%E7%A9%BA%E9%97%B4%E6%8E%A8%E5%AF%BC"><span class="toc-text">NDC 光线空间推导</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Additional%E7%BB%93%E6%9E%9C"><span class="toc-text">Additional结果</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42467.html" title="HLSL ShaderLab">HLSL ShaderLab</a><time datetime="2024-05-18T16:49:50.000Z" title="发表于 2024-05-19 00:49:50">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42466.html" title="CG ShaderLab">CG ShaderLab</a><time datetime="2024-05-18T16:48:56.000Z" title="发表于 2024-05-19 00:48:56">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/21838.html" title="冯乐乐入门精要笔记">冯乐乐入门精要笔记</a><time datetime="2024-05-18T16:45:45.000Z" title="发表于 2024-05-19 00:45:45">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/21879.html" title="Unity Primer"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190029709.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity Primer"/></a><div class="content"><a class="title" href="/post/21879.html" title="Unity Primer">Unity Primer</a><time datetime="2024-05-18T16:36:03.000Z" title="发表于 2024-05-19 00:36:03">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/64623.html" title="Unity GUI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190021833.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity GUI"/></a><div class="content"><a class="title" href="/post/64623.html" title="Unity GUI">Unity GUI</a><time datetime="2024-05-18T16:32:22.000Z" title="发表于 2024-05-19 00:32:22">2024-05-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>

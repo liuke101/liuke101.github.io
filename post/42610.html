@@ -1,0 +1,546 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>GaussianEditor:使用高斯泼溅进行快速可控的 3D 编辑 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="[!abstract]3D 编辑在游戏和虚拟现实等许多领域中起着至关重要的作用。传统的 3D 编辑方法，依赖于像网格和点云这样的表示方式，往往无法真实地描绘复杂的场景。另一方面，基于隐式 3D 表示的方法，如神经辐射场（NeRF），能够有效地渲染复杂的场景，但处理速度较慢，并且对特定场景区域的控制有限。针对这些挑战，我们的论文提出了 GaussianEditor，一种基于高斯泼溅（GS）的创新高">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GaussianEditor:使用高斯泼溅进行快速可控的 3D 编辑">
+<meta property="og:url" content="http://liuke101.github.io/post/42610.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="[!abstract]3D 编辑在游戏和虚拟现实等许多领域中起着至关重要的作用。传统的 3D 编辑方法，依赖于像网格和点云这样的表示方式，往往无法真实地描绘复杂的场景。另一方面，基于隐式 3D 表示的方法，如神经辐射场（NeRF），能够有效地渲染复杂的场景，但处理速度较慢，并且对特定场景区域的控制有限。针对这些挑战，我们的论文提出了 GaussianEditor，一种基于高斯泼溅（GS）的创新高">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png">
+<meta property="article:published_time" content="2024-04-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-31T16:39:08.739Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="三维重建">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/42610.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'GaussianEditor:使用高斯泼溅进行快速可控的 3D 编辑',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-01 00:39:08'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">GaussianEditor:使用高斯泼溅进行快速可控的 3D 编辑</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-08T16:00:00.000Z" title="发表于 2024-04-09 00:00:00">2024-04-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-31T16:39:08.739Z" title="更新于 2024-08-01 00:39:08">2024-08-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87/">论文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">9.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>28分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="GaussianEditor:使用高斯泼溅进行快速可控的 3D 编辑"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/42610.html#post-comment"><span class="waline-comment-count" data-path="/post/42610.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>[!abstract]<br>3D 编辑在游戏和虚拟现实等许多领域中起着至关重要的作用。传统的 3D 编辑方法，依赖于像网格和点云这样的表示方式，往往无法真实地描绘复杂的场景。另一方面，基于隐式 3D 表示的方法，如神经辐射场（NeRF），能够有效地渲染复杂的场景，但处理速度较慢，并且对特定场景区域的控制有限。<br>针对这些挑战，我们的论文提出了 GaussianEditor，一种基于高斯泼溅（GS）的创新高效的 3D 编辑算法，这是一种新颖的 3D 表示方法。GaussianEditor 通过我们提出的<strong>高斯语义追踪</strong>（Gaussian semantic tracing）来增强编辑的精度和控制能力，在训练过程中追踪编辑目标。此外，我们提出了<strong>分层高斯泼溅</strong>（HGS）来在二维扩散模型（2D diffusion models）的随机生成指导下实现稳定和精细的结果。我们还开发了高效的物体移除和整合（removal and integration）的编辑策略，这是现有方法面临的一个具有挑战性的任务。<br>我们的综合实验证明了 GaussianEditor 在控制能力、效果和快速性方面的优势，标志着 3D 编辑领域的重大进展。</p>
+</blockquote>
+<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h2><p>在不断发展的计算机视觉领域中，开发用户友好的 3D 表示和编辑算法是一个关键目标。这些技术在各种应用中至关重要，从数字游戏到不断发展的元宇宙。传统的 3D 表示方法，如网格和点云，由于其交互式编辑能力而备受青睐。然而，这些方法在准确渲染复杂的 3D 场景方面面临挑战。<br>最近隐式3D 表示的兴起，以神经辐射场（NeRF）[28]为例，代表了3D 场景渲染的范式转变。NeRF 具有高保真度渲染的能力，结合其隐式性质提供的显著扩展性，相比传统方法[2, 55, 32]有了实质性的改进。这种双重优势使得 NeRF 框架在3D 编辑[45, 46, 12, 57, 31]中受到了重点关注，并确立了它作为一个重要方法的基础。<strong>然而，NeRF 对于场景数据编码依赖于高维多层感知（MLP）网络，存在一定的限制。它限制了对特定场景部分的直接修改，并且使内部绘制（inpainting） 和场景合成等任务变得复杂。这种复杂性延伸到训练和渲染过程中，阻碍了实际应用。</strong></p>
+<p><strong>鉴于这些挑战，我们的研究重点是开发一种先进的 3D 编辑算法。</strong> 该算法旨在实现对 3D 场景的灵活和快速编辑，集成了隐式编辑（如基于文本的编辑）和显式控制（例如使用 bounding box 对特定区域进行修改）。为了实现这些目标，我们选择了高斯泼溅（GS）[15]，因为它具有实时渲染和显式<strong>类点云（point cloud-like）</strong> 表示的特点。<br>然而，编辑高斯泼溅（GS）[15]面临着独特的挑战。<strong>一个主要问题是缺乏准确识别目标高斯的有效方法，这对于精确可控的编辑至关重要</strong>。此外，已经观察到<strong>使用高度随机的生成指导（generative guidance，如分数蒸馏采样[36]）优化高斯泼溅（GS）存在重大挑战</strong>[7, 44, 52]。一个可能的解释是，与神经网络缓冲的隐式表示不同，GS 直接受到 loss 的随机性的影响。这种直接暴露导致更新不稳定，因为在训练过程中直接改变了高斯的属性。此外，GS 的每个训练步骤可能涉及对大量高斯点的更新。在没有神经网络风格的缓冲机制的调节影响下，这个过程会导致 3D GS 场景过于流动，使其在使用生成指导进行训练时无法收敛到像隐式表示那样精细的结果。</p>
+<hr>
+<p>为了应对这些问题，在这项工作中，我们提出了一种新颖、快速、高度可控的高斯泼溅三维编辑算法 GaussianEditor。GaussianEditor 可以在几分钟内满足各种高质量编辑需求。<strong>我们方法的一个关键特点是引入了高斯语义追踪（Gaussian semantic tracing），这使得对高斯泼溅（GS）的精确控制成为可能</strong>。高斯语义追踪在训练过程中始终准确识别需要编辑的高斯。<br>这与传统的三维编辑方法形成对比，传统方法通常依赖于静态的二维或三维遮罩（masks）。随着三维模型的几何形状和外观在训练过程中的变化，这些遮罩的效果会逐渐减弱。<strong>高斯语义追踪通过将 2D 分割遮罩映射到 3D 高斯并为每个高斯分配一个语义标签（semantic tag）来实现。</strong> 随着高斯在训练过程中的演化，这些语义标签使得可以追踪特定的高斯用于编辑。我们的高斯追踪算法确保只有目标区域被修改，实现精确可控的编辑。</p>
+<hr>
+<p><strong>此外，为了解决高斯泼溅（GS）在高度随机生成引导下难以适应精细结果（fine results）的重要挑战，我们提出了一种新的 GS 表示方法：分层高斯泼溅（HGS）。</strong> 在 HGS 中，高斯根据它们在多次密集化过程中的顺序被组织成不同的世代（generations）:</p>
+<ul>
+<li>在较早的密集化阶段形成的高斯被视为 <strong>older  generations</strong>，并受到更严格的约束，旨在保持它们的原始状态，从而减少它们的移动性。</li>
+<li>相反，在后期形成的高斯被视为 <strong>younger generations</strong>，并受到较少或没有约束，从而具有更高的适应性。</li>
+</ul>
+<p>HGS 的设计通过对 older  generations 的限制，同时保留 younger generations 的灵活性，有效地调节了 GS 的流动性。这种方法能够持续优化以获得更好的结果，从而<strong>模拟通过神经网络实现的隐式表示中所实现的缓冲功能</strong>。我们的实验还表明，<strong>HGS 更擅长适应高度随机的生成指导。</strong> </p>
+<hr>
+<p><strong>最后，我们专门为高斯泼溅（GS）设计了一种 3D 修复算法</strong>。如图 1 所示，我们成功地从场景中移除了特定的对象，并将新对象无缝地集成到指定的区域。</p>
+<ul>
+<li>对于对象的移除，我们开发了一种专门的局部修复算法，能够高效地消除对象和场景相交处的伪影。</li>
+<li>对于添加对象，我们首先要求用户提供一个提示（prompt）和一个针对 GS 特定视角的二维内绘（inpainting）遮罩。随后，我们采用二维内绘方法生成待添加对象的单视角图像。</li>
+<li>然后，将该图像使用图像到 3D 转换技术转换为粗糙（coarse） 3D 网格。随后，将 3D 网格转换为 HGS 表示并进行细化（refined）。最后，将这个细化的表示连接到原始的 GS 中。<br>上述整个修复过程在 5 分钟内完成。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010034814.png" alt="Pasted image 20240409095848"><blockquote>
+<p>图 1：GaussianEditor 的结果。GaussianEditor 提供快速、可控和多功能的 3D 编辑。单个编辑会话（editing session）只需要 5-10 分钟。请注意我们精确的编辑控制，只修改所需的部分。以图中第一行的“让草着火”为例，场景中的其他对象，如长椅和树木，保持不受影响。</p>
+</blockquote>
+</li>
+</ul>
+<p>GaussianEditor 提供快速、可控和多功能的 3D 编辑。单个编辑会话（editing session）只需要 5-10 分钟，比以前的编辑过程快得多。<strong>我们的贡献可以总结为四个方面：</strong></p>
+<ol>
+<li>我们引入了高斯语义追踪（Gaussian semantic tracing,），实现了更详细和有效的编辑控制。</li>
+<li>我们提出了分层高斯泼溅（HGS），这是一种新颖的 GS 表示，能够在高度随机生成的指导下更稳定地收敛到细化的结果。</li>
+<li>我们专门为高斯泼溅设计了一种 3D 修复算法，可以快速删除和添加对象。</li>
+<li>大量实验证明，我们的方法在效果、速度和可控性方面超过了以前的 3D 编辑方法。</li>
+</ol>
+<h2 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2 相关工作"></a>2 相关工作</h2><h3 id="2-1-3D-表示"><a href="#2-1-3D-表示" class="headerlink" title="2.1 3D 表示"></a>2.1 3D 表示</h3><p>各种 3D 表示方法已经被提出来解决不同的 3D 任务。开创性的工作，神经辐射场（NeRF）[28]采用体积渲染，因其仅需 2D 监督即可实现 3D 优化而受到欢迎。然而，尽管在 3D 重建[21, 6, 3, 13]和生成[35, 22]任务中被广泛使用，但优化 NeRF 可能耗时较长。尽管已经努力加速 NeRF 训练[29, 40]，但这些方法主要集中在重建设置上，对生成设置的优化较少。常见的空间剪枝技术（spatial pruning）并不能有效加速生成设置。</p>
+<p>最近，3D 高斯泼溅[15]已经成为 NeRF 的另一种替代 3D 表示方法，在 3D 和 4D 重建任务[15, 26, 50, 47, 51]中展示出令人印象深刻的质量和速度。它还在生成领域[7, 44, 52]引起了相当大的研究兴趣。其高效的可微分渲染实现和模型设计有助于快速训练，无需进行空间剪枝。</p>
+<p>在这项工作中，我们首次将 3DGS 技术应用于 3D 编辑任务，旨在实现快速和可控的 3D 编辑，首次在这个背景下利用了这种表示的优势。</p>
+<h3 id="2-2-3D-编辑"><a href="#2-2-3D-编辑" class="headerlink" title="2.2 3D 编辑"></a>2.2 3D 编辑</h3><p>由于形状和外观之间错综复杂的相互作用，编辑神经场本质上是具有挑战性的。EditNeRF [24]是该领域的开创性工作，他们通过对潜在代码进行调节来同时编辑神经场的形状和颜色。此外，一些工作[45, 46, 10, 1]利用 CLIP 模型通过文本提示或参考图像来促进编辑。</p>
+<p>另一方面的研究关注于预定义的模板模型或骨架 （models or skeletons），以支持特定类别内的重新姿势或重新渲染等操作[33, 30]。基于几何的方法[54, 49, 48, 20]将神经场转化为网格，并将网格变形与隐式场同步。此外，3D 编辑技术涉及将 2D 图像处理（如修复）与神经场训练[23, 19]相结合。</p>
+<p>并行工作[31, 57]利用静态的 2D 和 3D 遮罩来限制 NeRF 的编辑区域。然而，这些方法有其局限性，因为 3D 模型的训练是一个动态的过程，静态掩模无法有效地限制它。相比之下，我们的研究采用高斯语义追踪来跟踪整个训练过程中的目标高斯。</p>
+<h1 id="3-前期"><a href="#3-前期" class="headerlink" title="3  前期"></a>3  前期</h1><h2 id="3-1-3D-高斯泼溅介绍"><a href="#3-1-3D-高斯泼溅介绍" class="headerlink" title="3.1 3D 高斯泼溅介绍"></a>3.1 3D 高斯泼溅介绍</h2><p>略</p>
+<h2 id="3-2-基于扩散的编辑指导"><a href="#3-2-基于扩散的编辑指导" class="headerlink" title="3.2 基于扩散的编辑指导"></a>3.2 基于扩散的编辑指导</h2><p>Diffusion-based Editing Guidance</p>
+<p>最近的进展已经看到许多作品将 2D 扩散过程提升到 3D，并广泛应用于 3D 编辑领域。广义上，这些作品可以分为两类。第一类[36, 31, 57, 42, 27, 8]，以 Dreamfusion 的[36]引入的 SDS 损失为例，将当前 3D 模型的噪声渲染以及其他条件输入到 2D 扩散模型[39]中。扩散模型生成的分数然后指导模型更新的方向。第二类[12, 43, 37, 5]侧重于根据给定的多视角渲染的提示进行 2D 编辑。这种方法创建一个多视角 2D 图像数据集，然后将其用作训练目标，为 3D 模型提供指导。</p>
+<p><strong>我们的工作集中在利用 GS 的显式表示的优点来增强 3D 编辑。因此，我们不设计特定的编辑指导机制，而是直接使用上述的指导方法。</strong></p>
+<p>我们的方法可以应用这两种类型的指导（guidance）。为简单起见，我们将 guidance 普遍表示为 $D$ 。给定 3D 模型的参数 $\Theta$ ，以及渲染的相机姿态 $p$ 和提示（prompt） $e$ ，<strong>从 2D 扩散先验的 editing loss 可以表示如下：</strong><br>$$<br>\mathcal{L}_{\mathrm{Edit}}&#x3D;D(\Theta;p,e)\tag{5}<br>$$</p>
+<h1 id="4-方法"><a href="#4-方法" class="headerlink" title="4 方法"></a>4 方法</h1><p>我们将基于高斯泼溅（GS）的 3D 编辑任务定义如下：</p>
+<ul>
+<li>给定一个提示（prompt） $y$ 和由 3D 高斯表示的 3D 场景，记为 $\Theta$ ，其中每个 $\Theta_i&#x3D;{x_i,s_i,q_i,\alpha_i,c_i}$ 表示第 $i$ 个高斯的参数</li>
+<li>目标是实现一个编辑后的 3D 高斯，称为 $\Theta_y$ ，使其符合提示 $y$ 的规格。</li>
+</ul>
+<p>然后，我们介绍了在 GS 上执行编辑任务的新框架。</p>
+<ul>
+<li>第 4.1 节：介绍了高斯语义追踪</li>
+<li>第 4.2 节：介绍一种称为分层高斯泼溅（HGS）的新表示方法。GS 语义追踪能够在 GS 内进行精确的分割和追踪，从而促进可控的编辑操作。相对于标准的 GS，HGS 表示在生成引导的随机性方面表现出更强的鲁棒性，并且更擅长适应各种编辑场景。</li>
+<li>第 4.3 节：专门为 GS 设计了 3D 修复，包括物体的移除和添加。</li>
+</ul>
+<h2 id="4-1-高斯语义追踪"><a href="#4-1-高斯语义追踪" class="headerlink" title="4.1 高斯语义追踪"></a>4.1 高斯语义追踪</h2><p>Gaussian Semantic Tracing</p>
+<p>以往的研究[31, 57]在 3D 编辑中通常使用静态的 2D 或 3D 遮罩（mask），仅在遮罩像素内应用 loss ，从而将编辑过程限制在所需区域内。然而，这种方法存在局限性。随着 3D 表示在训练过程中动态变化，静态分割遮罩将变得不准确甚至无效。<br>此外，在 NeRF 编辑中使用静态遮罩来控制梯度存在显著的限制，因为它严格限制了编辑范围仅在遮罩区域内。此限制防止编辑内容自然地超出遮罩范围，从而将内容“锁定”在指定的空间边界内。<br>即使实施了语义 NeRF [56]，梯度控制仍然只在训练的最开始阶段有效，因为对 NeRF 的持续更新导致语义领域的准确性丧失。</p>
+<p><strong>为解决上述问题，我们选择了高斯泼溅（GS）作为我们的 3D 表示，因为它具有显式特性。这使得我们能够直接为每个高斯点分配语义标签（semantic labels），从而便于在 3D 场景中进行语义追踪。</strong><br><strong>具体来说，我们通过添加一个新属性 $m$ 来增强 3D 高斯 $\Theta$ ，其中 $m_{ij}$ 表示第 $i$ 个高斯点和第 $j$ 个语义标签的高斯语义遮罩。有了这个属性，我们可以通过选择性地仅更新目标 3D 高斯来精确控制编辑过程。在密集化过程中，密集化产生的新点继承其父点的语义标签。这确保了在训练过程中的每一时刻都有准确的 3D 语义遮罩。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010034816.png" alt="Pasted image 20240409110507"> </p>
+<blockquote>
+<p>图 2：高斯语义追踪的示意图。提示：把他变成一个老太太。图像中的红色遮罩表示将要更新和密集化的高斯投影。通过高斯的更新驱动，遮罩区域在训练过程中动态变化，确保在整个训练过程中保持一致的有效性。尽管由于 2D 分割错误而导致的潜在不准确的分割遮罩，高斯语义追踪仍然保证了高质量的编辑结果。</p>
+</blockquote>
+<p>如图 2 所示，高斯语义跟踪能够在训练过程中持续追踪每个高斯的类别，根据其不断变化的属性和数量进行调整。<br>这个功能非常重要，因为它允许选择性地应用梯度，对与指定类别相关的高斯进行密集化和剪枝。此外，它通过仅渲染目标对象来加速复杂场景中的训练过程。</p>
+<p>高斯语义遮罩 $m$ 作为一个动态的 3D 分割遮罩，随着训练的进行而演化，允许内容在空间中自由扩展。而 NeRF 中的内容被限制在一个固定的空间区域内。</p>
+<h3 id="高斯泼溅反投影"><a href="#高斯泼溅反投影" class="headerlink" title="高斯泼溅反投影"></a>高斯泼溅反投影</h3><p>接下来，我们讨论<strong>高斯泼溅反投影（GS unprojection）</strong>，这是我们提出的一种<strong>获取高斯语义遮罩 $m$ 的方法</strong>。</p>
+<p>对于一组 3D 高斯 $\Theta$，我们从多个视点渲染它们，生成一系列渲染图像 $\mathcal{I}$。然后，使用 2D 分割技术[18]处理这些渲染图像，得到 2D 分割遮罩 $\mathcal{M}$，其中每个遮罩 $\mathcal{M}_j$ 表示第 $j$ 个语义标签。 </p>
+<p>为了获取每个高斯的语义标签，我们使用逆渲染将 2D 语义标签反投影回高斯。具体来说，我们为每个高斯维护一个权重和一个计数器。对于语义映射（semantic maps）上的像素 $\mathcal{p}$ ，我们通过下面的公式将语义标签反投影回影响它的高斯中：<br>$$<br>w_i^j&#x3D;\sum o_i(\boldsymbol{p})*T_i^j(\boldsymbol{p})*\mathcal M^j(\boldsymbol{p})\tag{6}<br>$$<br>其中，</p>
+<ul>
+<li>$w_i^j$ ：第 $i$ 个高斯对第 $j$ 个语义标签的权重</li>
+<li>$o_i(\boldsymbol{p})$：第 $i$ 个高斯的不透明度</li>
+<li>$T_i^j(\boldsymbol{p})$：像素 $p$ 的透射率（对应第 $i$ 个高斯）</li>
+<li>$M^j(\boldsymbol{p})$：像素 $p$ 的语义遮罩（对应第 $i$ 个高斯）</li>
+</ul>
+<p>在更新所有高斯函数的权重和计数器后，我们根据其平均权重是否超过手动设置的阈值来确定一个高斯函数是否属于第 $j$ 个语义类别。</p>
+<p>整个标注过程非常快速，通常不到一秒钟。一旦完成了这种语义标签分配，我们就可以对整个高斯场景进行解析，从而实现各种操作。这些操作包括手动更改颜色，移动特定类别的属性以及删除特定类别。值得注意的是，在复杂场景中，2D 扩散引导通常难以有效地编辑小物体。由于高斯语义跟踪的帮助，我们现在可以独立地渲染这些小物体并将它们输入到 2D 扩散模型中，从而实现更精确的监督。</p>
+<h2 id="4-2-层次高斯泼溅"><a href="#4-2-层次高斯泼溅" class="headerlink" title="4.2 层次高斯泼溅"></a>4.2 层次高斯泼溅</h2><p>Hierarchical Gaussian Splatting (HGS)</p>
+<p>原版 GS [17] 在重建任务中的有效性在于由 SFM [41]导出的点云提供的高质量初始化，以及来自 GT 数据集的稳定监督。然而，在生成领域中情况发生了变化。在先前的文本到 3D 和图像到 3D 的工作中 [44, 7, 52]，GS 在面对生成引导的随机性时显示出限制，这是由于其作为 point cloud-like 表示的本质所致。<br>GS 的不稳定性主要是由于它们直接暴露于损失函数的随机性，而不像基于神经网络的隐式表示。GS 模型在每个训练步骤中更新大量的高斯点，缺乏神经网络的记忆和调节能力。这导致不稳定的更新，并阻止 GS 实现神经网络基于隐式表示所见的详细结果，因为 GS 过于流动性阻碍了其在生成训练中的收敛。<br><strong>为了解决这些挑战，我们引入了分层高斯泼溅（HGS），这是一种更适合生成和编辑场景的结构化表示。</strong></p>
+<p>HGS 根据产生特定高斯点的密度化轮次将 GS 分类为不同的世代（generations）。初始高斯 $\Theta$ 都被分配为 0 世代。在编辑的训练过程中，第 $k$ 轮密集化生成的点被标记为 $k$ 世代。随后，我们对不同世代的高斯分布施加不同的约束，以控制它们的灵活性程度。世代越老，施加的约束越强。我们使用锚点损失（Anchor loss）来强制执行这些约束。<br>在训练开始时，HGS 将所有高斯分布的属性记录为锚点。然后，在每个密集化过程中，这些锚点会被更新以反映高斯分布的当前状态。在训练过程中，<strong>使用锚定状态（anchor state）和当前状态之间的均方误差损失（MSE loss）作为锚定损失（anchor loss）</strong>，来确保高斯不会偏离其相应的锚定状态：<br>$$<br>\mathcal{L}<em>{anchor}^P&#x3D;\sum</em>{i&#x3D;0}^n\lambda_i(P_i-\hat{P}_i)^2\tag{7}<br>$$<br>其中</p>
+<ul>
+<li>$n$ 表示高斯分布的总数</li>
+<li>$P$ 表示当前高斯的某个属性，包括来自集合 $x,s,q,\alpha,c$ 的元素。</li>
+<li>$\hat{P}$ 表示在锚定状态中记录的相同属性。</li>
+<li>$\lambda_i$ 表示应用于第 $i$ 个高斯的锚定损失的强度，其根据其生成方式而变化。</li>
+</ul>
+<p><strong>总体训练损失（training loss）定义如下：</strong><br>$$<br>\mathcal{L}&#x3D;\mathcal{L}<em>{Edit}+\sum</em>{P\in{x,s,q,\alpha,c}}\lambda_P\mathcal{L}_{anchor}^P\tag{8}<br>$$<br>其中</p>
+<ul>
+<li>$\lambda_p$ 表示应用于属性 $p$ 的锚定损失的强度</li>
+<li>$\mathcal{L}_{Edit}$ 是在第 3.2 节中定义的<strong>编辑损失 （editing loss）</strong>。</li>
+</ul>
+<p><strong>优势：</strong></p>
+<ul>
+<li><strong>HGS 中的这种世代设计可以避免 GS 在面对随机损失时过度灵活的问题</strong>。随着每次密度增加，所有先前的高斯的锚损失权重 $\lambda_i$ 都会增加。因此，现有世代的流动性逐渐减少，直到几乎凝固。</li>
+<li><strong>这种方法确保在随机损失下稳定的几何形成，依靠新的密度增加中几乎无约束的高斯来雕刻细节。</strong></li>
+<li><strong>这种应用锚损失的方法可以有效满足各种编辑需求。</strong> 例如，为了限制对原始 GS 的更改，可以增加 0 世代的锚定损失权重。同样，如果在编辑过程中没有改变颜色或几何形状的需求，可以对这些特定属性应用更强的锚定损失。</li>
+</ul>
+<p><strong>对原版 GS 手动确定密集化阈值的改进：</strong><br>为了解决手动确定密集化阈值的挑战，我们根据百分比准则调节密度化过程。在这种方法中，在每个密集化步骤中，我们只有在其 3D 位置梯度在前 $k%$ 的高斯函数中选择性地密集化。这种策略比直接在分层高斯泼溅（HGS）框架中设置阈值更易于管理和直观。</p>
+<h2 id="4-3-3D-内部绘制（Inpainting）"><a href="#4-3-3D-内部绘制（Inpainting）" class="headerlink" title="4.3 3D 内部绘制（Inpainting）"></a>4.3 3D 内部绘制（Inpainting）</h2><p><strong>物体去除（Object Removal）</strong>：仅仅通过去除由遮罩标识的高斯可能会导致伪影，特别是在物体与其他高斯相交的界面处。为了解决这个问题，我们采用 2D inpainting 技术来提供填充这些区域的指导（guidance）。</p>
+<p>然而，有效的 2D inpainting 需要精确的遮罩来提供更好的指导。为了生成这些遮罩，在删除某位置后，我们使用 <strong>KNN 算法</strong>来识别最接近被删除位置的高斯，这些高斯函数很可能在 interface (怎么理解？) 上。然后将它们投影到各个视图上。随后，我们扩张遮罩并修复任何空洞，以准确表示 interface 区域，从而为边界区域创建一个细化的遮罩。整个对象移除过程通常只需要两分钟。</p>
+<p><strong>对象合并（Incorporation）</strong>：我们将此任务定义如下：在 3D 高斯 $\theta$ 内，给给定一个摄像机姿态 $p$ 和从该视点出发的相应渲染 $I$，用户在 $I$ 上提供一个二维遮罩 $M$，指明他们希望 inpainting 的区域。此外，我们还会提供一个提示 $y$ 来指定 inpainting 的内容。然后，我们更新 $\theta$ 以满足 inpainting 请求。 </p>
+<p>给定 $I$ ， $M$ 和 $y$ ，该过程从生成一个 2D Inpainting 图像 $I^My$ 开始，利用 2D Inpainting 扩散模型，如[34]所述。随后，从[34]创建的 $I^My$  中分割出前景对象，并将其输入到[25]中引用的 image-to-3D 方法中，以生成 coarse  3D Mesh。然后，将这个粗糙的网格转换为 3D 高斯 $\theta_y$ ，并使用第 4.2 节中详细介绍的 HGS 进行细化。</p>
+<p>为了将 $\theta_y$ 的坐标系与 $\theta$ 对齐，首先使用 [38] 中的技术估算 $I^My$  的深度。然后使用最小二乘法将深度与 $\theta$ 在摄像机位姿 $p$ 下渲染的深度图对齐。有了这种对齐方式，我们就可以在 $\theta$ 的坐标系中准确地确定前景物体的坐标和比例。将  $\theta_y$ 转换到  $\theta$  的坐标系后，我们只需将它们连接（concatenate） 起来，就能得到最终的内部绘制 3D 高斯。</p>
+<p>请注意，由于我们高效的设计，整个对象合并过程可以在大约5分钟内完成。</p>
+<h1 id="5-实验"><a href="#5-实验" class="headerlink" title="5 实验"></a>5 实验</h1><h2 id="5-1-实验细节"><a href="#5-1-实验细节" class="headerlink" title="5.1 实验细节"></a>5.1 实验细节</h2><p>我们利用原版 3DGS 中高度优化的渲染器实现进行高斯渲染，并基于 Threestudio [11]进行实现。本工作中使用的所有原始 3D 高斯模型均使用原版 3DGS中描述的方法进行训练。我们的实验在一块 RTX A6000 GPU 上进行。如第 4.1 节所述，一旦我们从[18]中概述的 2D 分割方法中获得分割遮罩，对 3D 高斯模型进行分割仅需约 1 秒钟。</p>
+<p>对于编辑大场景，编辑过程中使用的相机位姿是从最初用于重建的多视图图像数据集的子集中选择的。在编辑目标对象的情况下，通过第 4.1 节中详细介绍的 GS 分割，我们生成一组紧密环绕分割对象的相机位姿。采用这种方法可以增加渲染中对象的分辨率，从而提高编辑过程的效果。此外，当目标对象与场景的关联度较低时，我们选择仅渲染目标对象以减少计算负载。</p>
+<p>根据场景的复杂程度，我们在实验中使用的相机位姿数量从 24 到 96 不等。编辑过程受指定提示和场景复杂性的影响，通常需要优化 500-1000 步，总共约需要 5-10 分钟。关于用于对象合并的 3D 修复，如第 4.3 节所述，使用[25]中的方法生成 3D 网格大约需要 3 分钟，并额外花费 2 分钟将该网格转换为 3D 高斯并进行细化，而两个高斯的组合过程少于 1 秒。</p>
+<h2 id="5-2-定性比较"><a href="#5-2-定性比较" class="headerlink" title="5.2 定性比较"></a>5.2 定性比较</h2><p>Qualitative comparisons</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010034817.png" alt="Pasted image 20240409154332"></p>
+<blockquote>
+<p>图 5. 定性比较。值得注意的是，我们对编辑区域（人的整个身体）的控制程度很高。背景和其他非目标区域基本上不受影响，而 Instruct-Nerf2Nerf [12] 则不同，整个场景都会发生变化。GaussianEditor-DDS 和 GaussianEditor-iN2N 分别表示我们利用 delta 去噪分数 [14] 和 Instruct-Nerf2Nerf [12] 作为编辑的指导。</p>
+</blockquote>
+<p>如图 5 所示，GaussianEditor-iN2N 在编辑质量和可控性方面超过其他方法。Instruct-Nerf2Nerf 虽然能够生成缺乏细节的编辑，但无法控制编辑区域。由于与 Instruct-pix2pix [4] 相比，GaussianEditor-DDS 在对 DDS 损失 [14] 提供的引导控制更具挑战性，往往会导致过饱和的颜色和不太精确的编辑结果。<br>此外，我们的方法在编辑区域上展现出了卓越的控制能力。这是通过高斯语义追踪实现的，该方法在每个训练步骤中识别需要编辑的高斯分布，例如图 5 中的整个人体。值得注意的是，在 InstructNerf2Nerf [12] 中，使用静态的 2D 或 3D 遮罩限制了编辑的空间自由度，因为这些遮罩限制了编辑对象的可允许区域。此外，静态遮罩的有效性会随着 3D 模型的几何形状和外观在训练过程中的演变而减弱。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010034818.png" alt="Pasted image 20240409154611"></p>
+<blockquote>
+<p>图 6. GaussianEditor 的大量结果。我们的方法能够胜任各种编辑任务，包括人脸和场景编辑。在人脸和熊的编辑中，我们使用高斯语义跟踪将编辑区域限制在人脸上，确保不需要的区域保持不变。最左边一列展示的是原始视图，右边三列展示的是编辑后的图像。</p>
+</blockquote>
+<p>在图 6 中，我们展示了 GaussianEditor 可以适应各种场景，比如在大规模场景和面部交换中进行编辑。在大场景的情况下，我们没有应用高斯语义追踪。然而，对于面部交换，我们追踪了与面部区域相对应的高斯函数，实现了可控和逼真的编辑。我们将在补充材料中包含额外的定性结果，以展示我们方法的优势。</p>
+<h2 id="5-3-定量比较"><a href="#5-3-定量比较" class="headerlink" title="5.3 定量比较"></a>5.3 定量比较</h2><p>Quantitative Comparisons</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010034819.png" alt="Pasted image 20240409154754"></p>
+<blockquote>
+<p>表 1：定量比较。GaussianEditor-iN2N 在用户研究评估和 CLIP 方向相似性[9]指标上表现优于其他方法。</p>
+</blockquote>
+<p>如表 1 所示，我们在用户研究和 CLIP 方向相似性（如 InstructPix2Pix [4] 和 StyleGAN-Nada [9] 中所示）上进行了定量比较。GaussianEditor-iN2N 不仅在用户研究中展现出卓越的结果，而且在 CLIP 方向相似性方面也表现出色。此外，Instruct-Nerf2Nerf [12] 通常需要超过 30 分钟才能完成场景的编辑，而我们的方法只需要 5 到 10 分钟。</p>
+<h2 id="5-4-消融实验"><a href="#5-4-消融实验" class="headerlink" title="5.4 消融实验"></a>5.4 消融实验</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010034820.png" alt="Pasted image 20240409154840"></p>
+<blockquote>
+<p>图 7. 分层高斯喷溅（HGS）消融研究。提示：让草着火。即使用提示指定了编辑区域，像 InstructPix2Pix [4] 这样的生成方法也倾向于编辑整个 2D 图像。在没有 HGS 的情况下，高斯倾向于通过在整个场景中扩散和致密化来适应这种全图像编辑，从而导致图像不可控制的致密化和模糊。然而，有了 HGS，这种扩散就会得到有效抑制。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010034821.png" alt="Pasted image 20240409154908"></p>
+<blockquote>
+<p>图 8. 语义跟踪消融研究。追踪提示：人如图 7 所示，生成式引导技术（如 Instruct-Pix2Pix[4]）倾向于修改整个二维图像。在语义追踪技术的帮助下，我们可以将编辑区域限制在所需区域内。</p>
+</blockquote>
+<p>如图 7 和图 8 所示，我们对分层高斯泼溅（HGS）和语义追踪进行了消融实验。<br>没有 HGS，高斯函数会在场景中扩散和密集化，导致无法控制的密集化和图像模糊。这通常是由于像 Instruct-Pix2Pix 这样的方法在使用提示来定义编辑区域时，会编辑整个 2D 图像的倾向所致。<br>然而，HGS 通过限制旧一代高斯函数的移动性，有效地解决了这个问题，确保整体场景不会出现过度的移动性。另一方面，语义追踪帮助 GaussianEditor 将编辑限制在指定区域，而不限制编辑区域的扩展性。</p>
+<h1 id="6-结论"><a href="#6-结论" class="headerlink" title="6 结论"></a>6 结论</h1><p>在我们的研究中，我们介绍了 GaussianEditor，这是一种基于高斯泼溅的创新的三维编辑算法，旨在提高控制和效率。我们的方法采用高斯语义追踪来精确识别和定位编辑区域，然后使用分层高斯泼溅（HGS）在随机引导下平衡流动性和稳定性，以实现详细结果。<br>此外，我们为高斯泼溅开发了一种专门的 3D 修复算法，简化了物体的移除和整合，并大大减少了编辑时间。</p>
+<p><strong>限制</strong>：与基于二维扩散模型的先前三维编辑工作类似，GaussianEditor 依赖于这些模型提供有效的监督。然而，当前的二维扩散模型在某些复杂提示的有效指导方面存在困难，从而限制了三维编辑的能力。</p>
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><h2 id="更多定性结果"><a href="#更多定性结果" class="headerlink" title="更多定性结果"></a>更多定性结果</h2><p>在图 11 中，我们展示了 GaussianEditor 的更多结果。我们的方法提供了可控的、多样化的、高分辨率的 3D 编辑，只需要 2-7 分钟。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010034822.png" alt="Pasted image 20240409155128"></p>
+<blockquote>
+<p>图 11. GaussianEditor 的更多结果。GaussianEditor 可以实现快速、多功能、高分辨率的 3D 编辑，在单个 A6000 GPU 上仅需 2-7 分钟和 10-20GB 的 GPU 内存。请注意，人脸编辑场景的背景保持不变。</p>
+</blockquote>
+<h2 id="WebUI"><a href="#WebUI" class="headerlink" title="WebUI"></a>WebUI</h2><p>尽管神经辐射场（NeRF）[28]领域的作品也包含 WebUI，但 NeRF 的渲染速度较慢，这意味着用户在使用 WebUI 时只能使用低分辨率和非常低的帧率，导致用户体验不佳。幸运的是，由于我们在 GaussianEditor 中采用了高斯泼溅[15]这种具有快速渲染能力的方法，我们的 WebUI 可以轻松支持 2K 分辨率和 60fps 的使用。<br>此外，<strong>我们利用 WebUI 的互动性来增强语义追踪和对象合并应用程序</strong>，这将在接下来的两个小节中讨论。</p>
+<h3 id="基于点的提示的语义追踪"><a href="#基于点的提示的语义追踪" class="headerlink" title="基于点的提示的语义追踪"></a>基于点的提示的语义追踪</h3><p>Semantic Tracing with Point-base Prompts</p>
+<p>具有用户界面的交互式 WebUI 应用程序非常重要。在实际场景中，用户通常只想编辑完整场景中的特定区域，这是仅通过文本提示来指定的任务可能具有挑战性。例如，在场景中存在多个相同类型的对象时，通过文本很难确定用户想要编辑的是哪个对象，而用户只希望更改其中一个。<br>为了解决这个问题，我们提出了基于点的语义追踪。基于点的语义追踪要求用户在屏幕上点击，从特定视图添加 2D 点。<br>具体来说，当用户在屏幕上点击一个点时，我们根据当前视点相机的内、外参将该点反投影为一个空间点（即屏幕空间-&gt;世界空间）：<br>$$<br>[x,y,z]^T&#x3D;[\mathbf{R}|\mathbf{t}]z(p)\mathbf{K}^{-1}[p_x,p_y,1]^T \tag{9}<br>$$<br>其中 $[𝐑|𝐭]$ 和 $𝐊$ 表示当前相机的外参和内参， $𝒑$ ， $z⁢(𝒑)$ 和 $[x,y,z]^T$ 分别指用户点击的像素、其对应的深度和空间点。</p>
+<p>随后，在其他视图中，我们将这些空间点重新投影到相机的成像平面上，识别与这些 3D 点对应的像素。我们使用参考视图中这些 3D 点的投影点作为使用 SAM [18]进行语义分割的点提示。然后，我们将这些语义分割图像反投影回高斯图像，如主文中所示。<br>如图9所示，仅通过用户指示的大约五个点，基于点的语义追踪可以更精细地控制要追踪的区域。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010034823.png" alt="Pasted image 20240409155513"></p>
+<blockquote>
+<p>图9：基于点提示的语义追踪。在（a）中，用户通过鼠标点击屏幕来提供视图上的关键点。在（b）中，我们根据这些点对目标对象进行分割。在去除分割对象后，（c）和（d）展示了结果。从上面可以看出，我们的基于点的跟踪方法具有高精度和交互性。</p>
+</blockquote>
+<h3 id="使用-WebUI-进行对象合并"><a href="#使用-WebUI-进行对象合并" class="headerlink" title="使用 WebUI 进行对象合并"></a>使用 WebUI 进行对象合并</h3><p>如论文中所详述的，我们提出的带有对象合并的 3D 修复方法允许在指定区域中添加由文本指定的对象。WebUI 使用户能够轻松绘制 2D 遮罩来定义这些区域。此外，在这种用于对象合并的 3D 修复方法中，深度信息对于将新对象无缝集成到原始高斯场景中至关重要。<br>然而，目前的单目深度估计方法并不能始终提供完全准确的深度图，导致对齐不精确。因此，如图 10 所示，我们利用 WebUI 来修改估计深度的比例，使用户能够实现更准确的物体对齐。<br>更具体地说，用户通过滑动滑块来控制高斯尺度。在获得新的深度尺度后，我们根据新的深度尺度更新添加对象的位置和大小。由于整个过程只涉及对少数高斯参数的位置和尺度进行微调，因此可以实现实时缩放。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010034824.png" alt="Pasted image 20240409155537"></p>
+<blockquote>
+<p>图 10：通过 WebUI 进行对象合并。通过我们的交互式 WebUI，深度尺度解决了单目深度估计的局限性，无法保证精确的深度图预测。如（a）所示，不准确的结果可能导致在高斯场景中对齐生成的对象时出现失败。我们利用我们的 WebUI 的交互性质，实时动态调整估计的深度，从而解决了这个问题，在其他图像中得到了证明。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/42610.html">http://liuke101.github.io/post/42610.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">三维重建</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/24255.html" title="Gaussian Frosting:高斯糖霜,可编辑的实时渲染辐射场"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Gaussian Frosting:高斯糖霜,可编辑的实时渲染辐射场</div></div></a></div><div class="next-post pull-right"><a href="/post/46693.html" title="DreamGaussian:用于高效3D内容创建的生成式高斯泼溅"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">DreamGaussian:用于高效3D内容创建的生成式高斯泼溅</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/46692.html" title="2DGS"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-12</div><div class="title">2DGS</div></div></a></div><div><a href="/post/46693.html" title="DreamGaussian:用于高效3D内容创建的生成式高斯泼溅"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-09</div><div class="title">DreamGaussian:用于高效3D内容创建的生成式高斯泼溅</div></div></a></div><div><a href="/post/17862.html" title="3DGS总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-05</div><div class="title">3DGS总结</div></div></a></div><div><a href="/post/30572.html" title="3DGS:《用于实时辐射场渲染的 3D 高斯泼溅》"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-03</div><div class="title">3DGS:《用于实时辐射场渲染的 3D 高斯泼溅》</div></div></a></div><div><a href="/post/24255.html" title="Gaussian Frosting:高斯糖霜,可编辑的实时渲染辐射场"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-04</div><div class="title">Gaussian Frosting:高斯糖霜,可编辑的实时渲染辐射场</div></div></a></div><div><a href="/post/8166.html" title="GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-10</div><div class="title">GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">1. 文章主要迁移自个人的obsidian笔记，存在部分md语法冲突，导致显示异常，暂未修复。 2. 文章部分内容参考/引用网络资源，用于个人学习，如有侵权，请联系我删除。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%8B%E7%BB%8D"><span class="toc-text">1 介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-text">2 相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-3D-%E8%A1%A8%E7%A4%BA"><span class="toc-text">2.1 3D 表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-3D-%E7%BC%96%E8%BE%91"><span class="toc-text">2.2 3D 编辑</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E5%89%8D%E6%9C%9F"><span class="toc-text">3  前期</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-3D-%E9%AB%98%E6%96%AF%E6%B3%BC%E6%BA%85%E4%BB%8B%E7%BB%8D"><span class="toc-text">3.1 3D 高斯泼溅介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E5%9F%BA%E4%BA%8E%E6%89%A9%E6%95%A3%E7%9A%84%E7%BC%96%E8%BE%91%E6%8C%87%E5%AF%BC"><span class="toc-text">3.2 基于扩散的编辑指导</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E6%96%B9%E6%B3%95"><span class="toc-text">4 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E9%AB%98%E6%96%AF%E8%AF%AD%E4%B9%89%E8%BF%BD%E8%B8%AA"><span class="toc-text">4.1 高斯语义追踪</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E6%96%AF%E6%B3%BC%E6%BA%85%E5%8F%8D%E6%8A%95%E5%BD%B1"><span class="toc-text">高斯泼溅反投影</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E5%B1%82%E6%AC%A1%E9%AB%98%E6%96%AF%E6%B3%BC%E6%BA%85"><span class="toc-text">4.2 层次高斯泼溅</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-3D-%E5%86%85%E9%83%A8%E7%BB%98%E5%88%B6%EF%BC%88Inpainting%EF%BC%89"><span class="toc-text">4.3 3D 内部绘制（Inpainting）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E5%AE%9E%E9%AA%8C"><span class="toc-text">5 实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-%E5%AE%9E%E9%AA%8C%E7%BB%86%E8%8A%82"><span class="toc-text">5.1 实验细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-%E5%AE%9A%E6%80%A7%E6%AF%94%E8%BE%83"><span class="toc-text">5.2 定性比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-%E5%AE%9A%E9%87%8F%E6%AF%94%E8%BE%83"><span class="toc-text">5.3 定量比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="toc-text">5.4 消融实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-%E7%BB%93%E8%AE%BA"><span class="toc-text">6 结论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-text">附录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E5%A4%9A%E5%AE%9A%E6%80%A7%E7%BB%93%E6%9E%9C"><span class="toc-text">更多定性结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebUI"><span class="toc-text">WebUI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E7%82%B9%E7%9A%84%E6%8F%90%E7%A4%BA%E7%9A%84%E8%AF%AD%E4%B9%89%E8%BF%BD%E8%B8%AA"><span class="toc-text">基于点的提示的语义追踪</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-WebUI-%E8%BF%9B%E8%A1%8C%E5%AF%B9%E8%B1%A1%E5%90%88%E5%B9%B6"><span class="toc-text">使用 WebUI 进行对象合并</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42467.html" title="HLSL ShaderLab">HLSL ShaderLab</a><time datetime="2024-05-18T16:49:50.000Z" title="发表于 2024-05-19 00:49:50">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42466.html" title="CG ShaderLab">CG ShaderLab</a><time datetime="2024-05-18T16:48:56.000Z" title="发表于 2024-05-19 00:48:56">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/21838.html" title="冯乐乐入门精要笔记">冯乐乐入门精要笔记</a><time datetime="2024-05-18T16:45:45.000Z" title="发表于 2024-05-19 00:45:45">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/21879.html" title="Unity Primer"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190029709.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity Primer"/></a><div class="content"><a class="title" href="/post/21879.html" title="Unity Primer">Unity Primer</a><time datetime="2024-05-18T16:36:03.000Z" title="发表于 2024-05-19 00:36:03">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/64623.html" title="Unity GUI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190021833.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity GUI"/></a><div class="content"><a class="title" href="/post/64623.html" title="Unity GUI">Unity GUI</a><time datetime="2024-05-18T16:32:22.000Z" title="发表于 2024-05-19 00:32:22">2024-05-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>

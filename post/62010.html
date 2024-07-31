@@ -1,0 +1,514 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Sugar:用于高效 3D Mesh 重建和高质量 Mesh 渲染的曲面对齐的高斯泼贱 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="作者主页：Antoine Guédon (anttwo.github.io) SuGaR: Surface-Aligned Gaussian Splatting for Efficient 3D Mesh Reconstruction and High-Quality Mesh rendering SuGaR： 用于高效 3D Mesh 重建和高质量 Mesh 渲染的曲面对齐的 GS 本问将 su">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sugar:用于高效 3D Mesh 重建和高质量 Mesh 渲染的曲面对齐的高斯泼贱">
+<meta property="og:url" content="http://liuke101.github.io/post/62010.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="作者主页：Antoine Guédon (anttwo.github.io) SuGaR: Surface-Aligned Gaussian Splatting for Efficient 3D Mesh Reconstruction and High-Quality Mesh rendering SuGaR： 用于高效 3D Mesh 重建和高质量 Mesh 渲染的曲面对齐的 GS 本问将 su">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png">
+<meta property="article:published_time" content="2023-10-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-31T16:41:16.131Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="三维重建">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/62010.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Sugar:用于高效 3D Mesh 重建和高质量 Mesh 渲染的曲面对齐的高斯泼贱',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-01 00:41:16'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Sugar:用于高效 3D Mesh 重建和高质量 Mesh 渲染的曲面对齐的高斯泼贱</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-18T16:00:00.000Z" title="发表于 2023-10-19 00:00:00">2023-10-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-31T16:41:16.131Z" title="更新于 2024-08-01 00:41:16">2024-08-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87/">论文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>28分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Sugar:用于高效 3D Mesh 重建和高质量 Mesh 渲染的曲面对齐的高斯泼贱"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/62010.html#post-comment"><span class="waline-comment-count" data-path="/post/62010.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>作者主页：<a target="_blank" rel="noopener" href="https://anttwo.github.io/">Antoine Guédon (anttwo.github.io)</a></p>
+<p><strong>SuGaR: Surface-Aligned Gaussian Splatting</strong> for Efficient 3D Mesh Reconstruction and High-Quality Mesh rendering</p>
+<p>SuGaR： 用于高效 3D Mesh 重建和高质量 Mesh 渲染的<strong>曲面对齐的 GS</strong></p>
+<p>本问将 surface 译为曲面，将 Mesh 翻译为网格</p>
+<blockquote>
+<p>[!abstract]<br>我们提出了一种方法，可以从3DGS中精确、快速地提取 Mesh。 GS 最近非常流行，因为它能产生逼真的渲染效果，同时训练速度明显快于 NeRFs。然而，从数百万个微小的三维高斯中提取 Mesh 是一项挑战，因为这些高斯在优化后往往是无序的，而且迄今为止还没有提出任何方法。</p>
+</blockquote>
+<p><strong>我们的第一个关键贡献是一个正则化项</strong>（regularization term），它能促使高斯与场景曲面保持一致。与通常用于从神经 SDF 中提取 Mesh 的 Marching Cubes 算法相比，这种方法快速、可扩展并能保留细节。<strong>最后，我们引入了一种可选的改进策略，将高斯绑定到 Mesh 曲面，并通过 GS 渲染对这些高斯和 Mesh 进行联合优化。</strong></p>
+<blockquote>
+</blockquote>
+<p>这样就可以通过操作 Mesh 而不是高斯模型本身，轻松对高斯模型进行编辑、雕刻、动画制作和重新照明。使用我们的方法，只需几分钟就能检索出这样一个可编辑的 Mesh 进行逼真渲染，而使用 SDF 的先进方法则需要数小时，同时还能提供更好的渲染质量。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010026445.png" alt="Pasted image 20240404161458"></p>
+<blockquote>
+<p>图 1：我们介绍了一种方法，可在几分钟内通过单个 GPU 从3DGS表示法中提取精确且可编辑的 Mesh 。这些 Mesh 可以编辑、动画、合成等。它具有非常逼真的高斯溅射渲染效果，为计算机图形学提供了新的可能性。例如，在左下方的捕捉场景和右边的合成场景之间，我们改变了机器人的姿势。补充材料提供了更多示例，包括一段展示我们成果的视频。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010026447.png" alt="Pasted image 20240404161903"> </p>
+<blockquote>
+<p>图 2：我们的算法可以在单个 GPU 上几分钟内从任何3DGS场景中提取高度精细的 Mesh （上图：无纹理 Mesh 的渲染图，下图：有边界高斯（bound Gaussians）的 Mesh 渲染图）。</p>
+</blockquote>
+<h1 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h1><p>继 NeRFs 之后，3DGS技术最近在捕捉三维场景并从新视角对其进行渲染方面变得非常流行。<br>3DGS技术以一组场景训练图像为基础，优化许多微小三维高斯的位置、方向、外观（以球谐函数表示）和 alpha 混合，以捕捉场景的几何形状和外观。由于渲染高斯比渲染神经场要快得多，因此 3DGS比 NeRF 快得多，可以在几分钟内捕捉到一个场景。<br>虽然高斯模型可以非常逼真地渲染场景，但要从中提取场景的曲面仍然具有挑战性：如图 3 所示，<strong>经过3DGS优化后，高斯一般不具有有序结构，与实际场景曲面的对应关系并不理想。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010026448.png" alt="Pasted image 20240404162327"> </p>
+<blockquote>
+<p>图 3：从高斯模型中提取 Mesh 。在没有正则化的情况下，优化后的高斯没有特殊的排列方式，这使得提取 Mesh 非常困难。如果没有我们的正则化项，Marching Cubes 无法提取可接受的 Mesh 。有了我们的正则化项，即使是非常精细的三维 Mesh ，Marching Cubes 也能恢复出噪声极高的 Mesh 。我们的可扩展提取方法即使在没有正则化项的情况下也能获得 Mesh 。但是， Mesh 噪声仍然很大。相比之下，我们的完整方法能非常高效地重建精确 Mesh 。</p>
+</blockquote>
+<p>除了曲面本身外，通常还需要将场景表示为 Mesh ，这在许多管线中仍是首选的表示方法：基于 Mesh 的表现形式可以提供强大的编辑、雕刻、动画和场景重光工具。<strong>由于 GS 后的高斯是非结构化的，因此从中提取 Mesh 非常具有挑战性。需要注意的是，这对 NeRFs 也同样具有挑战性，只是原因不同而已。</strong> </p>
+<p>在本文中，<strong>我们首先提出了一个<mark style="background: #FF5582A6;">正则化项</mark>，鼓励高斯在场景曲面良好分布，这样高斯就能更好地捕捉场景的几何形状</strong>，如图 3 所示。<strong>我们的方法是在假设高斯平坦且在场景曲面分布良好的前提下，从高斯中推导出体积密度。</strong></p>
+<p><strong>在优化过程中，通过<mark style="background: #FF5582A6;">最小化该密度与根据高斯计算的实际密度之间的差异</mark>，我们鼓励三维高斯很好地表现曲面几何形状。</strong></p>
+<p>有了这个正则化项，从高斯模型中提取 Mesh 就变得容易多了。**事实上，由于我们引入了一个密度函数来评估正则化项，因此一个自然的方法就是提取这个<mark style="background: #FF5582A6;">密度函数的水平集（level sets）</mark>**。然而， GS 技术会进行密集化处理，以便高保真地捕捉场景细节，从而导致高斯数量急剧增加。真实场景中通常会有一个或数百万个不同比例和旋转的三维高斯，为了再现场景中的纹理和细节，大部分高斯都非常小。这导致密度函数几乎处处接近于零，而 Marching Cubes 算法即使使用精细的体素 Mesh 也无法提取这种稀疏密度函数的适当水平集，如图 3 所示。</p>
+<p>相反，<strong>我们引入了一种方法，可以非常高效地对密度函数水平集可见部分的点进行采样，从而在这些点上运行<mark style="background: #FF5582A6;">泊松重建算法</mark>，获得三角形 Mesh 。</strong> 与 “Marching Cubes”算法等相比，这种方法具有可扩展性，在单个 GPU 上几分钟内就能重建曲面 Mesh ，而其他依靠神经 SDF 从辐射场提取 Mesh 的先进方法，在单个 GPU 上至少需要 24 小时，并且需要多个 GPU 来加快进程。</p>
+<p>如图 2 和图 4 所示，我们的方法可以生成高质量的 Mesh 。<strong>我们面临的挑战是如何有效地识别水平集上的点。为此，我们依靠从训练视点看到的高斯深度图。</strong> 这些深度图可以通过扩展 GS 光栅化器来获得，我们将展示如何从这些深度图出发，对水平集上的点进行精确采样。 </p>
+<p><strong>最后，在提取该 Mesh 后，我们提出了一种可选的改进策略，即仅通过 GS 渲染来联合优化 Mesh 和一组三维高斯。</strong> 通过这种优化，可以使用高斯泼溅渲染技术而不是传统的纹理 Mesh 渲染技术，实现高质量的 Mesh 渲染。</p>
+<p>因此，与其他依赖底层 Mesh 进行推理的辐射场模型相比， GS 模型具有更高的渲染质量性能[39, 6, 26]。如图 1 所示，这使得使用传统的 Mesh 编辑工具编辑场景的 GS 表示成为可能，为计算机图形学提供了无限可能。</p>
+<p>总之，我们的贡献：</p>
+<ul>
+<li>一个正则化项，使高斯模型能准确捕捉场景的几何形状；</li>
+<li>一种高效的算法，能在几分钟内从高斯模型中提取出精确的 Mesh ；</li>
+<li>这种方法可将高斯绑定到 Mesh 上，从而获得更精确的 Mesh ，与目前使用 Mesh 进行新视角合成的方法相比，渲染质量更高，并允许以多种不同方式编辑场景。</li>
+</ul>
+<h1 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2 相关工作"></a>2 相关工作</h1><p>基于图像的渲染（IBR）方法依赖于一组场景的二维图像来生成场景表示并渲染新视角。最早的新视角合成方法基于光场，并提出了新视角的体积渲染概念。他们的工作强调了高效遍历体积数据以生成逼真图像的重要性。此后，人们提出了各种场景表示法，如三角形 Mesh 、点云、体素 Mesh 、多平面图像或神经隐函数。</p>
+<h2 id="2-1-基于-Mesh-的传统-IBR-方法"><a href="#2-1-基于-Mesh-的传统-IBR-方法" class="headerlink" title="2.1 基于 Mesh 的传统 IBR 方法"></a>2.1 基于 Mesh 的传统 IBR 方法</h2><p>运动恢复结构（SfM）和随后的多视角立体（MVS）允许对曲面进行三维重建，从而开发出几种依赖三角形 Mesh 作为场景主要三维表示的视角合成算法。这些算法考虑了纹理三角形，或将捕捉到的图像在 Mesh 曲面进行扭曲和混合，以生成新的视图[37, 4, 12]。[29, 30]考虑了基于深度学习的 Mesh 表示法，以实现更好的视角合成，弥补了传统图形学与现代机器学习技术之间的差距。虽然这些基于 Mesh 的方法利用了现有的图形硬件和软件来实现高效渲染，但在复杂区域捕捉精确的几何图形和外观方面仍有困难。</p>
+<h2 id="2-2-体积式-IBR-方法"><a href="#2-2-体积式-IBR-方法" class="headerlink" title="2.2 体积式 IBR 方法"></a>2.2 体积式 IBR 方法</h2><p>体积法使用体素网格、多平面图像或神经网络，将场景表示为密度和颜色的连续体积函数。最近，神经辐射场（NeRF）引入了一种基于连续体积函数的新型场景表示法，该函数由多层感知器（MLP）参数化。NeRF 通过体积光线追踪技术生成具有精细细节和视图效果的逼真渲染效果。然而，最初的 NeRF 计算成本很高，而且占用大量内存。为了应对这些挑战，一些研究工作提高了 NeRF 的性能和可扩展性。这些方法利用体素网格 （voxel grids）和哈希表等离散或稀疏的体积表示法来存储可学习的特征，作为三维点的位置编码、分层采样策略或低秩近似。<br>然而，它们仍然依赖于体积光线步进，这与为渲染多边形曲面而设计的标准图形硬件和软件不兼容。最近的研究提出了修改 NeRF 对几何体和发射辐射的表示，以便更好地重建镜面材料，或通过将材料和照明属性明确分解来重新照明场景。</p>
+<h2 id="2-3-混合-IBR-方法"><a href="#2-3-混合-IBR-方法" class="headerlink" title="2.3 混合 IBR 方法"></a>2.3 混合 IBR 方法</h2><p>有些方法建立在可微分渲染的基础上，结合了基于 Mesh 和体积方法的优势，可以进行曲面重建，并具有更好的可编辑性。这些方法采用体积-曲面混合表示法，可生成适合下游图形应用的高质量 Mesh ，同时有效地模拟视图相关外观。</p>
+<p>特别是，一些研究通过训练神经辐射场来优化神经有向距离场（SDF），其中密度是作为 SDF 的可微分变换导出的。最后，通过应用 Marching Cubes 算法[21]，可以根据 SDF 重建三角形 Mesh 。然而，这些方法大多不以实时渲染为目标。</p>
+<p>另外，还有一些方法将优化的 NeRF 或神经 SDF 的渲染能力 “烘焙 “成一种高效的结构，这种结构依赖于底层三角形 Mesh ，可以从传统的三角形光栅化管道中受益。特别是最近的 BakedSDF，它通过优化完整的神经 SDF 模型，将其烘焙到高分辨率的三角形 Mesh 中，结合 Mesh 渲染来插值特征，并通过深度学习将这些特征转化为图像，最后优化与视图相关的外观模型，从而重建高质量的 Mesh 。然而，尽管它能实现实时渲染并生成令人印象深刻的场景曲面 Mesh ，但该模型需要训练一个完整的神经 SDF，其架构与 Mip-NeRF360 完全相同，这就需要 48 小时的训练。</p>
+<p>同样，最近的 NeRFMeshing [26] 方法也提出将任何 NeRF 模型烘焙成 Mesh 结构，从而实现实时渲染。然而，这种方法中执行的 Mesh 划分降低了渲染质量，导致 PSNR 远远低于我们的方法。此外，这种方法仍然需要事先训练一个完整的 NeRF 模型，并且需要在 8 个 V100 NVIDIA GPU 上进行大约一个小时的训练，以便进行 Mesh 训练和提取。</p>
+<p>我们的方法从3DGS中获取三维 Mesh 的速度要快得多，这本身就比 NeRFs 快得多。正如我们的实验所显示的，我们通过将高斯限定在 Mesh 上进行的渲染比以前基于 Mesh 的解决方案质量更高。</p>
+<h2 id="2-4-基于点的-IBR-方法"><a href="#2-4-基于点的-IBR-方法" class="headerlink" title="2.4 基于点的 IBR 方法"></a>2.4 基于点的 IBR 方法</h2><p>另外，基于点的辐射场表示法擅长对薄几何体建模，并利用快速的点光栅化管道，使用 $\alpha$ 混合而非光线步进来渲染图像。特别是最近推出的 3DGS模型，可以优化和渲染场景，其速度和质量都是前所未有的。</p>
+<h1 id="3-3DGS简介"><a href="#3-3DGS简介" class="headerlink" title="3 3DGS简介"></a>3 3DGS简介</h1><p>为完整起见，我们在此简要介绍一下原始的 3DGS方法。场景表示为一组（大）高斯，其中每个高斯 $g$ 由其平均值 $\mu_g$ 表示，其协方差 $\Sigma_g$ 由缩放向量 $s_g∈ℝ3$ 和编码高斯旋转的四元数 $q_g∈ℝ4$ 参数表示。此外，每个高斯都与其不透明度 $\alpha_g∈[0,1]$ 和一组球谐坐标相关联，这组球谐坐标描述了高斯在所有方向上发出的颜色。</p>
+<p>通过光栅化器，一组高斯图像可以从给定视角进行渲染。该光栅器可将三维高斯图泼溅成与图像平面平行的二维高斯图进行渲染，从而实现极快的渲染过程。这是 3DGS比 NeRFs 快得多的关键因素，因为它比 NeRFs 优化所需的光线行进合成快得多。</p>
+<p>在给定一组图像的情况下，根据 SfM 生成的点云初始化高斯集。高斯参数（均值、四元数、缩放矢量以及不透明度和球谐参数）经过优化，使高斯的渲染效果与输入图像相匹配。在优化过程中，会添加更多的高斯，以更好地适应场景的几何形状。因此， GS 通常会产生具有数百万个高斯的场景，这些高斯可能非常小。</p>
+<h1 id="4-方法"><a href="#4-方法" class="headerlink" title="4 方法"></a>4 方法</h1><p>本节将介绍我们的 SuGaR：</p>
+<ul>
+<li>首先，我们详细介绍了在 GS 优化过程中强制三维高斯与场景曲面对齐的损失项（loss term）。</li>
+<li> 然后，我们详细介绍了我们的方法，该方法利用这种对齐方式，在单个 GPU 上几分钟内就能从高斯中提取出高度精细的 Mesh 。</li>
+<li>最后，我们介绍了我们的可选细化策略（refinement strategy），该策略利用 GS 渲染技术对 Mesh 和 Mesh 曲面的三维高斯进行联合优化。该策略可生成一组绑定到可编辑 Mesh 上的新高斯。</li>
+</ul>
+<h3 id="4-1-将高斯线与曲面对齐"><a href="#4-1-将高斯线与曲面对齐" class="headerlink" title="4.1 将高斯线与曲面对齐"></a>4.1 将高斯线与曲面对齐</h3><p>如导言所述，为了便于根据高斯创建 Mesh ，我们在 GS 优化中引入了一个正则化项，促使高斯与场景曲面对齐，并在该曲面上均匀分布。</p>
+<p>我们的方法是在假设高斯具有所需属性的前提下，从高斯中推导出一个 SDF。通过最小化该 SDF 与为高斯计算的实际 SDF 之间的差值，我们鼓励高斯具有这些特性。</p>
+<p><strong>对于给定的 GS 场景，我们首先要考虑的是相应的密度函数 $d:ℝ^3→ℝ_+$，计算方法是在任意空间位置 $p$ 上，高斯值与 $\alpha$ 混合系数的加权和：</strong><br>$$<br>d(p)&#x3D;\sum_g\alpha_g\exp\left(-\frac{1}{2}(p-\mu_g)^T\Sigma_g^{-1}(p-\mu_g)\right)\tag{1}<br>$$<br>其中 $\mu_g$ 、 $\Sigma_g$ 和 $\alpha_g$ 分别是高斯的中心、协方差和 $\alpha$ 混合系数。让我们考虑一下，如果高斯良好并与曲面对齐，密度函数会变成什么样子。</p>
+<p>首先，在这种情况下，高斯与其邻域的重叠有限。如图 3（左上角）所示，一般情况下并非如此。那么，<em><em>对于任何靠近场景曲面的点 $p∈ℝ^3$ 来说，最靠近点 $p$ 的高斯 $g^</em>$ 对密度值 $d(p)$ 的贡献可能远远大于其他高斯</em><em>。因此，*<em>我们可以通过以下方法来近似计算 $p$ 处的高斯密度：</em></em><br>$$<br>\alpha_{g^{<em>}}\exp\left(-\frac12(p-\mu_{g^{</em>}})^T\Sigma_{g^{<em>}}^{-1}(p-\mu_{g^{</em>}})\right)\tag{2}<br>$$</p>
+<p>其中，”最近高斯” $g^*$ 被认为是在点 $p$ 上贡献最大的高斯：<br>$$<br>g^*&#x3D;\arg\min_{g}\left{(p-\mu_{g})^T\Sigma_{g}^{-1}(p-\mu_{g})\right}\tag{3}<br>$$<br><em><em>因此，公式 (2) 认为最接近的高斯 $g^</em>$ 对 $p$ 处密度的贡献远大于其他高斯的贡献。这将有助于我们鼓励高斯充分扩散。</em>*</p>
+<p>我们还希望三维高斯是平面的，因为这样它们就能更紧密地与 Mesh 曲面对齐。因此，<strong>每个高斯 $g$ 的三个缩放因子中都有一个接近 0：</strong><br>$$<br>(p-\mu_{g})^T\Sigma_{g}^{-1}(p-\mu_{g})\approx\frac{1}{s_{g}^{2}}\langle p-\mu_{g},n_{g}\rangle^2\tag{4}<br>$$<br>其中 $s_g$ 为高斯的最小缩放因子， $n_g$ 为相应轴线的方向。<strong>此外，由于我们希望高斯能够描述场景的真实曲面，因此需要避免半透明高斯。</strong> 因此，我们希望高斯要么是不透明的，要么是完全透明的，在这种情况下，我们可以在呈现时放弃它们。因此，我们希望任何高斯 $g$ 都有 $\alpha_g&#x3D;1$ 。</p>
+<p><strong>在这种情况下，高斯的密度最终可以用密度 $\bar d(p)$ 来近似：</strong><br>$$<br>\bar d(p)&#x3D;\exp\left(-\frac{1}{2s_{g^*}^2}\langle p-\mu_{g^*},n_{g^*}\rangle^2\right)\tag{5}<br>$$<br><strong>实施正则化的第一个策略是在优化损失中添加 $| d(p)-\bar d(p)|$ 项。</strong> 虽然这种方法可以很好地<strong>将高斯与曲面对齐</strong>，但<strong>我们注意到，依靠 SDF 而不是密度来计算略有不同的损失，可以进一步提高高斯与场景曲面的对齐度</strong>。对于给定的平面高斯（即 $s_g&#x3D;0$ ），考虑水平集是没有意义的，因为所有水平集都会向通过高斯中心 $\mu_g$ 的平面退化，法线为 $n_g$ 。点 $p$ 与场景真实曲面之间的距离约为 $|\langle p-\mu_{g^{\prime}},n_{g^{\prime}}\rangle|$ ，即 $p$ 到该平面的距离。因此，<strong>有向距离函数 SDF 的零交叉点</strong><br>$$<br>\bar{f}(p)&#x3D;\pm s_{g*}\sqrt{-2\log\left(\bar{d}(p)\right)}\tag{6}<br>$$<br>与场景曲面相对应。一般来说，我们定义<br>$$<br>{f}(p)&#x3D;\pm s_{g*}\sqrt{-2\log\left({d}(p)\right)}\tag{7}<br>$$<br>作为与密度函数 $d$ 相关联的 <strong>“理想 “SDF</strong>。该 SDF 对应于理想情况下场景的真实曲面，即 $d&#x3D;\bar{d}$ 。因此，<strong>我们将<mark style="background: #FF5582A6;">正则化项</mark> $\mathcal{R}$ 取为</strong><br>$$<br>\mathcal{R}&#x3D;\frac{1}{|\mathcal{P}|}\sum_{p\in\mathcal{P}}|\hat{f}(p)-f(p)|\tag{8}<br>$$<br>方法是对三维点 $p$ 进行采样，并求和这些点上理想 SDF $f(p)$ 与当前高斯创建的曲面 SDF 估计值 $\hat{f}(p)$ 之间的差值。 𝒫 指的是采样点集合。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010026449.png" alt="Pasted image 20240404205117"></p>
+<blockquote>
+<p>图 5：有效估计由高斯生成的曲面的 SDF  $\hat{f}(p)$  。我们渲染高斯的深度图，根据高斯的分布在视点中对 $p$ 点进行采样。  $\hat{f}(p)$  值为 $p$ 点与沿 $p$ 视线和深度图交点之间的三维距离。</p>
+</blockquote>
+<p><strong>高效计算  $\hat{f}(p)$  是一项先验挑战（<em>priori</em> challenging）。为此，我们建议使用训练视点的高斯深度图–这些深度图可以通过扩展泼溅光栅化器来高效呈现</strong>。然后，如图 5 所示，对于从训练视角可见的点 $p$ ，  $\hat{f}(p)$ 是 $p$ 的深度与 $p$ 投影处相应深度图的深度之差。<strong>此外，我们按照高斯分布对 $p$ 点进行采样：</strong><br>$$<br>p\sim\prod_g\mathcal{N}(.;\mu_g,\Sigma_g)\tag{9}<br>$$<br>其中 $\mathcal{N}(.;\mu_g,\Sigma_g)$ 是均值 $\mu_g$ 和协方差 $\Sigma_g$ 的高斯分布，因为这些点很可能与 $\mathcal{R}$ 的高梯度相对应。</p>
+<p><strong>我们还添加了一个<mark style="background: #FF5582A6;">正则化项</mark>，以促使 SDF $f$ 的法线和 SDF $\bar{f}$ 的法线也相似：</strong><br>$$<br>\mathcal{R}<em>{\mathrm{Norm}}&#x3D;\frac{1}{|\mathcal{P}|}\sum</em>{p\in\mathcal{P}}\left|\frac{\nabla f(p)}{|\nabla f(p)|<em>2}-n</em>{g^*}\right|_2^2\tag{10}<br>$$</p>
+<h2 id="4-2-高效-Mesh-提取"><a href="#4-2-高效-Mesh-提取" class="headerlink" title="4.2 高效 Mesh 提取"></a>4.2 高效 Mesh 提取</h2><p>为了使用公式 (8) 和公式 (10) 中的正则化项对优化后得到的高斯进行 Mesh 创建，<strong>我们在根据高斯计算出的密度水平集上对三维点进行采样</strong>。水平集取决于水平参数 $\lambda$ 。<strong>然后，我们只需在这些点上运行泊松重建，就能得到 Mesh <strong>。需要注意的是，</strong>我们还可以根据 SDF 的法线轻松地分配点，从而提高 Mesh 质量。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010026450.png" alt="Pasted image 20240404211346"></p>
+<blockquote>
+<p>图 6：泊松重建在水平集上取样。<br>左图： 我们对高斯深度图上的点进行采样，并细化点的位置，以移动水平集上的点。<br>右图：没有（左）和有（右）细化步骤的提取 Mesh 对比。<strong>由于泼溅深度图并不精确，直接使用深度点进行重建通常会产生大量噪音和细节缺失。</strong></p>
+</blockquote>
+<p><strong>我们面临的挑战是如何有效地识别水平集上的点。为此，如图 6 所示，我们再次依靠从训练视点看到的高斯深度图。</strong></p>
+<ol>
+<li>我们首先从每个深度图中随机抽样像素。对于每个像素 $m$ ，我们对其视线进行采样，以在水平集上找到一个 3D 点。形式上，我们对 $n$ 点 $p+t_{i}v$ 进行采样，其中 $p$ 是深度图中像素 $m$ 重投影（reprojects）的三维点（从深度重建坐标?）， $v$ 是视线的方向， $t_{i}\in[-3\sigma_{g}(v),3\sigma_{g}(v)]$ 其中 $\sigma_{g}(v)$ 是三维高斯 $g$ 在摄像机方向上的标准偏差。区间 $[-3\sigma_g(v),3\sigma_g(v)]$ 是沿光线方向 $t$ 的一维高斯函数 99.7 置信度的置信区间。</li>
+<li>然后，我们根据公式 (1) 计算这些采样点的密度值 $d_{i}&#x3D;d(p+t_{i}v)$ 。如果存在 $i,j$ ，使得 $d_{i}&lt;\lambda&lt;d_{j}$ ，那么在此范围内存在一个水平集点 （level set point）。如果存在，我们将使用线性插值计算系数 $t^*$ ，从而使 $p+t^<em>v$ 成为最靠近摄像机的水平集点，并验证 $d(p+t^{</em>}v)&#x3D;\lambda$ 。我们还会计算 $\hat{p}$ 点处的曲面法线，我们自然会将其定义为密度 $\frac{\nabla d(\hat{p})}{|\nabla d(\hat{p})|_{2}}$ 的归一化分析梯度。 </li>
+<li>最后，我们应用泊松重建法，从水平集点及其法线重建曲面 Mesh 。</li>
+</ol>
+<p>在实际操作中，我们会使用两种泊松重建来提取 Mesh ：一种用于前景点（foreground points），另一种用于背景点（background points）。我们将前景点定义为位于所有训练摄像机位姿的 bounding box 内的点，而将背景点定义为位于 bounding box 外的点。我们选择这样简单地区分前景和背景，是为了设计一种尽可能通用的方法。<strong>不过，根据场景内容和要重建的主要对象，为前景点定义自定义边界框可以提高提取 Mesh 的质量和精度。</strong></p>
+<h2 id="4-3-将新的三维高斯绑定到-Mesh-上"><a href="#4-3-将新的三维高斯绑定到-Mesh-上" class="headerlink" title="4.3 将新的三维高斯绑定到 Mesh 上"></a>4.3 将新的三维高斯绑定到 Mesh 上</h2><p>提取出第一个 Mesh 后，我们可以通过将新的高斯绑定到 Mesh 三角形来完善 Mesh ，并使用 GS 光栅器共同细化高斯和 Mesh 。这样就可以使用流行的 Mesh 编辑工具编辑 GS 场景，同时利用高斯模型保持高质量的渲染效果。</p>
+<p>给定初始 Mesh 后，我们在 Mesh 上实例化新的三维高斯。更确切地说，我们将一组 $n$ 薄（thin）的三维高斯关联到 Mesh 的每个三角形，并在三角形曲面进行采样，如图 7 所示。<strong>为此，我们稍微修改了原始3DGS模型的结构。</strong><br>在细化过程中，我们在相应的三角形中使用<strong>预定义的重心坐标</strong>明确计算 Mesh 顶点的高斯均值。<br><strong>此外，高斯模型只有 2 个可学习的缩放因子（scaling factors），而不是 3 个；只有 1 个可学习的二维旋转（2D rotation），用<mark style="background: #FF5582A6;">复数</mark>而不是四元数编码，以保持高斯模型平整并与 Mesh 三角形对齐</strong>。<br><strong>与原始模型一样，我们也优化了每个高斯的不透明度值（opacity）和一组球谐，以编码在所有方向上发射的颜色。</strong></p>
+<p><strong>在联合细化过程中，我们还会计算 Mesh 面上的法线一致性项，以进一步规范化曲面</strong>。这个项不会影响 PSNR、SSIM 或 LPIPS 的性能。不过，它能使曲面更加平滑，从而在一定程度上提高视觉质量。</p>
+<blockquote>
+<p>[!NOTE] 复数细节<br>实际上，对于每个高斯，我们优化的是一个可学习的复数 $x+iy$ ，而不是一个四元数，用来编码三角形平面内的二维旋转。<strong>在优化过程中，我们仍然需要计算一个明确的三维四元数，编码高斯在世界空间中的三维旋转，以便应用光栅化器</strong>。要恢复完整的三维四元数，我们的步骤如下：对于任何三维高斯 $g$ ，我们首先计算编码其相应三角形旋转的矩阵 $R&#x3D;[R^{(0)},R^{(1)},R^{(2)}]\in\mathbb{R}^{3\times3}$ ：我们选择矩阵的第一列 $R^{(0)}$ 作为三角形的法线，第二列 $R^{(1)}$  作为三角形的固定边。我们用叉积计算第三列 $R^{(2)}$  。然后，我们将学习到的二维复数应用于三角形的旋转，计算出编码高斯全三维旋转的矩阵 $R_g$ ，如下所示：<br>$$<br>R_{g}^{(0)}&#x3D;R^{(0)},R_{g}^{(1)}&#x3D;x^{\prime}R^{(1)}+y^{\prime}R^{(2)}<br>$$<br>$$<br>R_{g}^{(2)}&#x3D;-y^{\prime}R^{(1)}+x^{\prime}R^{(2)}<br>$$<br>其中 $x’&#x3D;\frac{x}{|x^2+y^2|},y’&#x3D;\frac{y}{|x^2+y^2|}$</p>
+<p>由于我们学习到的复数表示的是相应三角形空间中的旋转，因此我们的表示法对 Mesh 编辑或动画具有很强的鲁棒性：<strong>在推理过程中编辑底层 Mesh 时，无需更新所学的二维旋转，因为在旋转或移动三角形时，它们保持不变。</strong><br><strong>相反，在缩放或变形 Mesh 时，三角形的大小可能会发生变化，这就需要调整约束曲面高斯的学习缩放因子</strong>。例如，如果 Mesh 尺寸增加一倍，所有高斯缩放因子也应同样乘以 2。在我们的实现过程中，当编辑 Mesh 时，我们会实时修改约束曲面高斯的学习缩放因子，将其乘以 (a) 修改后三角形边的平均长度和 (b) 原始三角形边的平均长度之间的比值。</p>
+</blockquote>
+<p>图 7 显示了细化前后的 Mesh 示例。图 1 和补充材料举例说明了通过编辑 Mesh 可以做些什么。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010026451.png" alt="Pasted image 20240404213357"></p>
+<blockquote>
+<p>图 7： Mesh 和高斯的联合细化 （refinement）。<br>左图：我们将高斯绑定到 Mesh 的三角形上。根据场景中三角形的数量，我们为每个三角形绑定不同数量的高斯，并预设重心坐标。<br>右图：联合细化前后的 Mesh 。</p>
+</blockquote>
+<h1 id="5-实验"><a href="#5-实验" class="headerlink" title="5 实验"></a>5 实验</h1><p>我们的所有模型均在单 GPU Nvidia Tesla V100 SXM2 32 Go 上进行了优化。</p>
+<h2 id="5-1-实验细节"><a href="#5-1-实验细节" class="headerlink" title="5.1 实验细节"></a>5.1 实验细节</h2><p><strong>规范化（Regularization）</strong><br>对于所有场景，我们首先对 GS 进行 7000 次无正则化优化迭代，以便让 3D 高斯在没有任何额外约束的情况下进行自我定位。然后，我们对高斯的不透明度 $\alpha_g$ 进行了 2,000 次迭代，并增加了熵损失，以强制它们成为二元图像。<br>最后，我们剔除不透明度值低于 0.5 的高斯，并利用 4.1 小节中引入的正则化项进行 6000 次迭代，总共进行了 15000 次迭代。为了计算来自高斯 $g$ 的点的密度值，我们只对来自 $g$ 的 16 个最近高斯的高斯函数求和，并每迭代 500 次更新最近邻近列表。根据场景的不同，优化通常需要 15 到 45 分钟。</p>
+<p><strong>Mesh 提取（Mesh extraction）</strong><br>对于除表 2 所示消融实验之外的所有实验，我们都提取了 $\lambda&#x3D;0.3$ 密度函数的 $\lambda$ 级水平集（$\lambda$ -level set）。我们执行深度为 10 的泊松重建，并使用<strong>二次误差度量</strong>进行 Mesh 简化，以降低 Mesh 的分辨率。根据场景的不同， Mesh 提取一般需要 5 到 10 分钟。</p>
+<p><strong>联合细化（Joint refinement）</strong><br>我们对 Mesh 和边界三维高斯进行联合细化，迭代次数为 2,000、7,000 或 15,000 次。根据迭代次数的不同，细化时间从几分钟到一小时不等。</p>
+<h2 id="5-2-实时渲染真实场景"><a href="#5-2-实时渲染真实场景" class="headerlink" title="5.2 实时渲染真实场景"></a>5.2 实时渲染真实场景</h2><p>为了评估我们的模型，我们沿用了最初的 3DGS论文中的方法，并比较了我们的方法 SuGaR 在 3 个不同数据集的真实 3D 场景中细化后的几种变体的性能：Mip-NeRF360 、DeepBlending 和 Tanks&amp;Temples 。我们称 R-SuGaR-NK 为细化过程中经过 N 次迭代优化的细化 SuGaR 模型。</p>
+<p>按照文献[15]，我们选择了相同的两组场景，即来自 Tanks&amp;Temples 的 2 个场景（卡车和火车）和来自 DeepBlending 的 2 个场景（游戏室和约翰逊博士）。然而，由于授权问题以及 Flowers 和 Treehill 场景的不可用性，我们仅在 Mip-NeRF360 的 7 个场景上对所有方法进行了评估，而不是全套的 9 个场景。 </p>
+<p>我们计算了标准指标 PSNR、SSIM 和 LPIPS，以评估 SuGaR 使用我们提取的 Mesh 及其绑定的曲面高斯进行渲染的质量。请注意，[6, 39, 26] 也没有使用纯纹理 Mesh 渲染。我们与几种基线进行了比较，其中一些基线只关注新视角合成，其他基线则依赖于重建 Mesh ，就像我们的方法 SuGaR 一样。表 1 列出了 Mip-NeRF360 数据集的结果。在 Tanks&amp;Temple 和 DeepBlending 数据集上的结果类似，请参见补充材料。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010026452.png" alt="Pasted image 20240404221257"></p>
+<blockquote>
+<p>表 1：在 Mip-NeRF360 数据集[2]上对渲染质量进行的定量评估。在恢复 Mesh 的方法中，SuGaR 的效果最好，与 NeRF 方法和原版3DGS法相比，SuGaR 仍然表现出色。</p>
+</blockquote>
+<p>尽管在优化的第一阶段，SuGaR 专注于对齐三维高斯以重建高质量的 Mesh ，但它的性能明显优于目前使用 Mesh 进行新视角合成的方法，而且比一些只专注于渲染的著名模型（如 Instant-NGP 和 Plenoxels）性能更好。由于 SuGaR 提取 Mesh 的速度明显快于其他方法，因此其性能非常突出。</p>
+<p>此外，在一些用于评估的场景上，SuGaR 甚至在渲染质量方面达到了与最先进模型相近的性能。取得这样的成绩主要有两个原因。首先，第一阶段优化后提取的 Mesh 是开始细化阶段高斯定位的绝佳初始化。然后，在细化过程中，高斯受限保留在曲面上，这大大提高了渲染质量，因为它们起到了高效纹理工具的作用，有助于重建提取 Mesh 中缺失的非常精细的细节。</p>
+<h2 id="5-3-Mesh-提取"><a href="#5-3-Mesh-提取" class="headerlink" title="5.3  Mesh 提取"></a>5.3  Mesh 提取</h2><p>为了证明我们的 Mesh 提取方法能够重构出适合视角合成的高质量 Mesh ，我们对不同的 Mesh 提取算法进行了比较。特别是，除了 Mesh 提取过程外，我们按照与标准模型完全相同的流程对 SuGaR 的几种变体进行了优化：我们可以使用非常精细的 marching cubes 算法[21]提取 Mesh ，也可以使用泊松重建[14]，将三维高斯中心作为曲面点云，还可以将我们的 Mesh 提取方法应用于不同的水平集。表 2 提供了定量结果，显示了我们的方法在三维高斯 Mesh 划分方面的明显优势。图 3 还说明了 marching cubes算法在这种情况下的失败。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010026453.png" alt="Pasted image 20240404221437|500"></p>
+<blockquote>
+<p>表 2：在 Mip-NeRF360 数据集[2]上应用正则化项后，不同 Mesh 提取方法的消融情况。对于 “泊松（中心）”，我们使用泊松重建[14]，将三维高斯的中心作为面点。为了进行公平比较，我们对这些方法进行了校准，以强制所有提取的 Mesh 具有约 1,000,000 个顶点。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010026454.png" alt="Pasted image 20240404221448|500"></p>
+<blockquote>
+<p>表 3：在 Mip-NeRF360 数据集[2]上，曲面对齐三维高斯与优化传统 UV 纹理的比较。为了进行公平比较，我们在使用 SuGaR 渲染图像时只使用了漫反射球面谐波分量。使用与 Mesh 绑定的三维高斯大大提高了渲染质量，尽管它比 UV 纹理包含的参数更少。</p>
+</blockquote>
+<h3 id="5-4-Mesh-渲染消融"><a href="#5-4-Mesh-渲染消融" class="headerlink" title="5.4  Mesh 渲染消融"></a>5.4  Mesh 渲染消融</h3><p>表 3 提供了更多结果，量化了各种参数对渲染性能的影响。特别是，我们评估了 Mesh 提取的分辨率（即三角形数量）如何改变渲染质量。为了进行公平比较，我们在减少三角形数量时增加了每个三角形的曲面对齐高斯数量。结果表明，增加顶点数量可以提高曲面高斯的渲染质量，但三角形数量较少的 Mesh 也能达到最先进的效果。<br>然后，我们说明了使用在曲面上对齐的高斯作为渲染 Mesh 的纹理工具的好处。为此，我们还使用可微分 Mesh 渲染和传统的三角形光栅化技术优化了 Mesh 上的传统 UV 纹理。尽管使用曲面对齐高斯进行渲染的性能更好，但使用传统 UV 纹理对 Mesh 进行渲染的结果仍然令人满意，这进一步说明了我们提取的 Mesh 的质量。补充材料中提供了定性比较。</p>
+<h1 id="6-结论"><a href="#6-结论" class="headerlink" title="6 结论"></a>6 结论</h1><p>我们提出了一种非常快速的算法，通过 GS 法获得场景的精确三维三角形 Mesh 。此外，通过将 Mesh 划分与 GS 相结合，我们可以对捕捉到的场景进行直观操作和逼真渲染，为创作者提供了新的可能性。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/62010.html">http://liuke101.github.io/post/62010.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">三维重建</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/25892.html" title="Nerf:将场景表示为用于视角合成的神经辐射场"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Nerf:将场景表示为用于视角合成的神经辐射场</div></div></a></div><div class="next-post pull-right"><a href="/post/54732.html" title="Pytorch精粹"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010047802.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Pytorch精粹</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/46692.html" title="2DGS"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-12</div><div class="title">2DGS</div></div></a></div><div><a href="/post/46693.html" title="DreamGaussian:用于高效3D内容创建的生成式高斯泼溅"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-09</div><div class="title">DreamGaussian:用于高效3D内容创建的生成式高斯泼溅</div></div></a></div><div><a href="/post/17862.html" title="3DGS总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-05</div><div class="title">3DGS总结</div></div></a></div><div><a href="/post/30572.html" title="3DGS:《用于实时辐射场渲染的 3D 高斯泼溅》"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-03</div><div class="title">3DGS:《用于实时辐射场渲染的 3D 高斯泼溅》</div></div></a></div><div><a href="/post/24255.html" title="Gaussian Frosting:高斯糖霜,可编辑的实时渲染辐射场"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-04</div><div class="title">Gaussian Frosting:高斯糖霜,可编辑的实时渲染辐射场</div></div></a></div><div><a href="/post/8166.html" title="GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-10</div><div class="title">GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">1. 文章主要迁移自个人的obsidian笔记，存在部分md语法冲突，导致显示异常，暂未修复。 2. 文章部分内容参考/引用网络资源，用于个人学习，如有侵权，请联系我删除。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-text">1 引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-text">2 相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%9F%BA%E4%BA%8E-Mesh-%E7%9A%84%E4%BC%A0%E7%BB%9F-IBR-%E6%96%B9%E6%B3%95"><span class="toc-text">2.1 基于 Mesh 的传统 IBR 方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E4%BD%93%E7%A7%AF%E5%BC%8F-IBR-%E6%96%B9%E6%B3%95"><span class="toc-text">2.2 体积式 IBR 方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E6%B7%B7%E5%90%88-IBR-%E6%96%B9%E6%B3%95"><span class="toc-text">2.3 混合 IBR 方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E5%9F%BA%E4%BA%8E%E7%82%B9%E7%9A%84-IBR-%E6%96%B9%E6%B3%95"><span class="toc-text">2.4 基于点的 IBR 方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-3DGS%E7%AE%80%E4%BB%8B"><span class="toc-text">3 3DGS简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E6%96%B9%E6%B3%95"><span class="toc-text">4 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%B0%86%E9%AB%98%E6%96%AF%E7%BA%BF%E4%B8%8E%E6%9B%B2%E9%9D%A2%E5%AF%B9%E9%BD%90"><span class="toc-text">4.1 将高斯线与曲面对齐</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E9%AB%98%E6%95%88-Mesh-%E6%8F%90%E5%8F%96"><span class="toc-text">4.2 高效 Mesh 提取</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-%E5%B0%86%E6%96%B0%E7%9A%84%E4%B8%89%E7%BB%B4%E9%AB%98%E6%96%AF%E7%BB%91%E5%AE%9A%E5%88%B0-Mesh-%E4%B8%8A"><span class="toc-text">4.3 将新的三维高斯绑定到 Mesh 上</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E5%AE%9E%E9%AA%8C"><span class="toc-text">5 实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-%E5%AE%9E%E9%AA%8C%E7%BB%86%E8%8A%82"><span class="toc-text">5.1 实验细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93%E7%9C%9F%E5%AE%9E%E5%9C%BA%E6%99%AF"><span class="toc-text">5.2 实时渲染真实场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-Mesh-%E6%8F%90%E5%8F%96"><span class="toc-text">5.3  Mesh 提取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-Mesh-%E6%B8%B2%E6%9F%93%E6%B6%88%E8%9E%8D"><span class="toc-text">5.4  Mesh 渲染消融</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-%E7%BB%93%E8%AE%BA"><span class="toc-text">6 结论</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42467.html" title="HLSL ShaderLab">HLSL ShaderLab</a><time datetime="2024-05-18T16:49:50.000Z" title="发表于 2024-05-19 00:49:50">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42466.html" title="CG ShaderLab">CG ShaderLab</a><time datetime="2024-05-18T16:48:56.000Z" title="发表于 2024-05-19 00:48:56">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/21838.html" title="冯乐乐入门精要笔记">冯乐乐入门精要笔记</a><time datetime="2024-05-18T16:45:45.000Z" title="发表于 2024-05-19 00:45:45">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/21879.html" title="Unity Primer"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190029709.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity Primer"/></a><div class="content"><a class="title" href="/post/21879.html" title="Unity Primer">Unity Primer</a><time datetime="2024-05-18T16:36:03.000Z" title="发表于 2024-05-19 00:36:03">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/64623.html" title="Unity GUI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190021833.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity GUI"/></a><div class="content"><a class="title" href="/post/64623.html" title="Unity GUI">Unity GUI</a><time datetime="2024-05-18T16:32:22.000Z" title="发表于 2024-05-19 00:32:22">2024-05-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>

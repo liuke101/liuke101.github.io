@@ -1,0 +1,487 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>DreamGaussian:用于高效3D内容创建的生成式高斯泼溅 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="[!abstract]最近在 3D 内容创建方面的进展主要利用基于优化（optimization-based）的 3D 生成方法，通过得分蒸馏采样（SDS）进行。尽管展示了有希望的结果，但这些方法通常在每个样本的优化过程中速度较慢，限制了它们的实际应用。  在本文中，我们提出了 DreamGaussian，一种新颖的 3D 内容生成框架，同时实现了效率和质量。我们的关键见解是设计了一个生成式的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DreamGaussian:用于高效3D内容创建的生成式高斯泼溅">
+<meta property="og:url" content="http://liuke101.github.io/post/46693.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="[!abstract]最近在 3D 内容创建方面的进展主要利用基于优化（optimization-based）的 3D 生成方法，通过得分蒸馏采样（SDS）进行。尽管展示了有希望的结果，但这些方法通常在每个样本的优化过程中速度较慢，限制了它们的实际应用。  在本文中，我们提出了 DreamGaussian，一种新颖的 3D 内容生成框架，同时实现了效率和质量。我们的关键见解是设计了一个生成式的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png">
+<meta property="article:published_time" content="2024-04-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-31T16:39:04.417Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="三维重建">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/46693.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'DreamGaussian:用于高效3D内容创建的生成式高斯泼溅',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-01 00:39:04'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">DreamGaussian:用于高效3D内容创建的生成式高斯泼溅</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-08T16:00:00.000Z" title="发表于 2024-04-09 00:00:00">2024-04-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-31T16:39:04.417Z" title="更新于 2024-08-01 00:39:04">2024-08-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87/">论文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>18分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="DreamGaussian:用于高效3D内容创建的生成式高斯泼溅"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/46693.html#post-comment"><span class="waline-comment-count" data-path="/post/46693.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>[!abstract]<br>最近在 3D 内容创建方面的进展主要利用基于优化（optimization-based）的 3D 生成方法，通过得分蒸馏采样（SDS）进行。尽管展示了有希望的结果，但这些方法通常在每个样本的优化过程中速度较慢，限制了它们的实际应用。</p>
+</blockquote>
+<p>在本文中，我们提出了 DreamGaussian，一种新颖的 3D 内容生成框架，同时实现了效率和质量。<strong>我们的关键见解是设计了一个生成式的 3DGS 模型，配合了在 UV 空间中进行网格提取和纹理细化</strong>。与神经辐射场中使用的占用剪枝（occupancy pruning）相比，我们证明了 3D 高斯的渐进密集化在 3D 生成任务中收敛速度显著更快。<strong>为了进一步提高纹理质量并促进下游应用，我们引入了一种将 3D 高斯转换为带纹理 Mesh 的高效算法，并应用了一个微调阶段（fine-tuning stage）来细化细节</strong>。</p>
+<blockquote>
+</blockquote>
+<p>大量实验证明了我们提出的方法具有卓越的效率和竞争力的生成质量。值得注意的是，DreamGaussian 仅通过单视图图像在 2 分钟内生成高质量的纹理网格，相比现有方法实现了约 10 倍的加速。 </p>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>自动化的 3D 数字内容创建（digital content creation, DCC）在各个领域中都有应用，包括数字游戏、广告、电影和元宇宙。 image-to-3D 和 text-to-3D 技术通过显著减少专业艺术家的手工劳动需求，使非专业用户能够参与 3D 资产的创建，提供了重要的优势。<br>受到 2D 内容生成的最新突破的启发（Rombach 等，2022），3D 内容创建领域经历了快速发展。最近的 3D 创建研究可以分为两个主要类别：仅推理的 3D 本地方法（inference-only 3D native methods）和基于优化的 2D 提升方法（optimization-based 2D lifting methods）。<br>从理论上讲，3D 本地方法（Jun＆Nichol，2023；Nichol 等，2022；Gupta 等，2023）具有在几秒钟内生成一致的 3D 资产的潜力，但需要在大规模 3D 数据集上进行广泛的训练。这些数据集的创建需要大量的人力投入，即使有这些努力，它们仍然面临着与有限多样性和真实性相关的问题（Deitke 等，2023b；a；Wu 等，2023）。</p>
+<p>另一方面，Dreamfusion（Poole等，2022）提出了得分蒸馏采样（SDS）来解决3D数据限制的问题，通过从强大的2D扩散模型（Saharia等，2022）中提取3D几何和外观，这激发了最近2D提升方法（Lin等，2023；Wang等，2023b；Chen等，2023b）的发展。为了应对SDS监督引起的不一致性和模糊性，通常采用神经辐射场（NeRF）（Mildenhall等，2020）来建模丰富的3D信息。尽管生成质量不断提高，但由于昂贵的NeRF渲染，这些方法以数小时的优化时间而闻名，限制了它们在实际应用中的规模部署。<strong>我们认为，在由模糊的SDS损失监督的生成设置中，用于加速NeRF的占用修剪技术（Müller等，2022；Sara Fridovich-Keil和Alex Yu等，2022）是无效的，与重建设置相反。</strong></p>
+<p>在这项工作中，我们介绍了 DreamGaussian 框架，通过在基于优化的流程中优化设计选择，极大地提高了3D内容生成的效率。使用我们的方法，可以在仅2分钟内从单视图图像生成具有明确网格和纹理映射的逼真的3D资产。<strong>我们的核心设计是将3DGS（Kerbl等人，2023年）与伴随的网格提取和纹理细化相结合，适应生成设置。</strong> 与以前使用NeRF表示的方法相比，这些方法在有效剪枝空白空间方面存在困难，我们的生成GS显著简化了优化景观。具体而言，我们展示了高斯分裂的渐进密度增加，这与生成设置的优化进程高度一致，极大地提高了生成效率。如图1所示，我们的图像到3D流程在几秒钟内迅速生成粗糙的形状，并在单个GPU上在约 500 步内高效收敛。 </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010031943.png" alt="Pasted image 20240412141811"></p>
+<blockquote>
+<p>图 1：DreamGaussian 旨在<strong>加速 image-to-3D、text-to-3D 任务的优化过程</strong>。我们能够在几分钟内生成高质量的纹理网格。</p>
+</blockquote>
+<p>由于 SDS 监督和空间密集化存在ambiguity（模糊性？），从 3D 高斯生成的结果往往模糊不清。为了解决这个问题，我们确定需要明确地对纹理进行精细处理，这需要从生成的 3D 高斯中提取精细的纹理多边形网格。虽然这个任务以前没有被探索过，但<strong>我们设计了一种通过局部密度查询从 3D 高斯中提取网格的高效算法。</strong> 然后，我们<strong>提出了一种生成式 UV 空间细化阶段来增强纹理细节</strong>。鉴于直接应用潜在空间 SDS 损失（如第一阶段）会导致 UV 贴图上过饱和的块状伪影，我们从基于扩散的（diffusion-based）图像编辑方法（Meng 等，2021）中获得灵感，并进行图像空间监督。与以前的纹理细化方法相比，我们的细化阶段在保持高效率的同时实现了更好的保真度。</p>
+<p>总结起来，我们的贡献有：</p>
+<ol>
+<li>我们提出了一种新颖的框架，通过将GS技术应用于生成设置中，显著减少了基于优化的 2D 提升方法的生成时间。</li>
+<li>我们设计了一种高效的从 3D 高斯中提取网格的算法，并通过 UV 空间纹理细化阶段进一步提高生成质量。</li>
+<li>在image-to-3D 和text-to-3D 任务上进行了大量实验，证明我们的方法有效地平衡了优化时间和生成保真度，为 3D 内容生成的实际部署开启了新的可能性。</li>
+</ol>
+<h1 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2 相关工作"></a>2 相关工作</h1><h2 id="2-1-3D-表示"><a href="#2-1-3D-表示" class="headerlink" title="2.1 3D 表示"></a>2.1 3D 表示</h2><p>已经提出了各种用于不同3D任务的3D表示方法。神经辐射场（NeRF）（Mildenhall等，2020）采用了体积渲染，并且已经在只有2D监督的情况下实现了3D优化，因此变得非常流行。尽管NeRF已经广泛应用于3D重建（Barron等，2022；Li等，2023c；Chen等，2022；Hedman等，2021）和生成（Poole等，2022；Lin等，2023；Chan等，2022），但优化NeRF可能耗时较长。已经尝试了各种加速NeRF训练的方法（Müller等，2022；Sara Fridovich-Keil和Alex Yu等，2022），但这些方法只关注重建设置。常见的空间修剪技术无法加速生成设置。</p>
+<p>最近，3DGS（Kerbl等，2023）被提出作为NeRF的替代3D表示方法，在3D重建方面展示了令人印象深刻的质量和速度（Luiten等，2023）。高效的可微渲染实现和模型设计使得能够快速训练，而无需依赖空间修剪。在这项工作中，我们首次将3DGS技术应用于生成任务中，以释放基于优化方法的潜力。</p>
+<h2 id="2-2-Text-to-3D-生成"><a href="#2-2-Text-to-3D-生成" class="headerlink" title="2.2 Text-to-3D 生成"></a>2.2 Text-to-3D 生成</h2><p>Text-to-3D 生成旨在从文本提示中生成3D资产。最近，基于数据驱动的2D扩散模型在文本到图像生成方面取得了显著的成功（Ho等，2020年; Rombach等，2022年; Saharia等，2022年）。然而，由于策划大规模3D数据集的挑战，将其转化为3D生成是非常困难的。现有的3D本地扩散模型通常只适用于单个物体类别，并且缺乏多样性（Jun＆Nichol，2023年; Nichol等，2022年; Gupta等，2023年; Lorraine等，2023年; Zhang等，2023年; Zheng等，2023年; Ntavelis等，2023年; Chen等，2023a年; Cheng等，2023年; Gao等，2022年）。<br>为了实现开放词汇的3D生成，一些方法提出将2D图像模型提升为3D生成（Jain等，2022年; Poole等，2022年; Wang等，2023a年; Mohammad Khalid等，2022年; Michel等，2022年）。这种2D提升方法通过优化3D表示，在从不同视角渲染时能够在预训练的2D扩散模型中获得较高的可能性，从而可以确保3D的一致性和真实性。以下工作继续增强各个方面，如生成保真度和训练稳定性（Lin 等，2023 年; Tsalicoglou 等，2023 年; Zhu 和 Zhuang，2023 年; Yu 等，2023 年; Li 等，2023 年 b; Chen 等，2023 年 c; Wang 等，2023 年 b; Huang 等，2023 年; Metzer 等，2022 年; Chen 等，2023 年 b），并进一步探索应用（Zhuang 等，2023 年; Singer 等，2023 年; Raj 等，2023 年）。<br>然而，这些基于优化的 2D 提升方法通常需要长时间进行每个案例的优化。特别地，将 NeRF 用作 3D 表示会导致前向和后向计算的昂贵。在这项工作中，我们选择 3D 高斯作为可微分的 3D 表示，并凭经验证明它具有更简单的优化路径。</p>
+<h2 id="2-3-image-to-3D-生成"><a href="#2-3-image-to-3D-生成" class="headerlink" title="2.3 image-to-3D 生成"></a>2.3 image-to-3D 生成</h2><p>image-to-3D 生成旨在从参考图像生成 3D 资产。该问题也可以被表述为单视图 3D 重建（Yu 等，2021; Trevithick 和 Yang，2021; Duggal 和 Pathak，2022），但这种重建设置通常会产生模糊的结果，因为缺乏不确定性建模。<br>text-to-3D 方法也可以用于image-to-3D 生成（Xu 等，2023a; Tang 等，2023b; Melas-Kyriazi 等，2023），使用图像字幕模型（Li 等，2022; 2023a）。最近，Zero-1-to-3（Liu 等，2023b）明确地将相机变换建模为 2D 扩散模型，并实现了零样本图像条件下的新视角合成。当与 SDS 结合使用时，它可以实现高质量的 3D 生成，但仍然受到长时间优化的困扰（Tang，2022; Qian 等，2023）。One-2-3-45（Liu 等，2023a）训练了一个多视图重建模型，以加速生成速度，但代价是降低了生成质量。通过一个效率优化的框架，<strong>我们的工作将 image-to-3D 的优化时间缩短到 2 分钟，并在质量上几乎没有牺牲。</strong></p>
+<h1 id="3-我们的方法"><a href="#3-我们的方法" class="headerlink" title="3 我们的方法"></a>3 我们的方法</h1><p>在本节中，我们介绍了我们的两阶段框架，用于高效生成 3D 内容，适用于image-to-3D 和Text-to-3D 任务，如图 2 所示。</p>
+<ul>
+<li>首先，我们将 3D GS调整为生成式任务，通过 SDS 进行高效初始化（第 3.1 节）。</li>
+<li>接下来，我们提出了一种有效的算法，从 3D 高斯中提取纹理网格（第 3.2 节）。</li>
+<li>然后，通过可微渲染（Laine 等人，2020）进行纹理微调，通过 UV 空间细化阶段（第 3.3 节）进行最终导出。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010031944.png" alt="Pasted image 20240412144325"><blockquote>
+<p>图 2：DreamGaussian 框架。3D 高斯使用 single-step SDS loss对几何和外观进行高效初始化。然后，我们提取纹理网格，并使用 multi-step MSE loss 来完善纹理图像。</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="3-1-生成式GS"><a href="#3-1-生成式GS" class="headerlink" title="3.1 生成式GS"></a>3.1 生成式GS</h2><p>GS用一组3D高斯表示3D信息。它已被证明在重建环境中非常有效（Kerbl 等人，2023 年；Luiten 等人，2023 年），在与 NeRF 相似的建模时间下，具有较高的推理速度和重建质量。然而，我们还没有探索过以生成式使用它。<strong>我们发现3D高斯可以有效地完成3D生成任务。</strong></p>
+<p>具体来说，每个高斯的位置可以用一个中心 $\mathbf{x}\in\mathbb{R}^{3}$ 、一个缩放因子 ${\mathrm{s}}\in\mathbb{R}^{3}$ 和一个旋转四元数 $\mathbf{q}\in\mathbb{R}^4$ 来描述。我们还存储了不透明度值 $\alpha\in\mathbb{R}$ 和颜色特征 $\mathbf{c}\in\mathbb{R}^3$，用于体积渲染。<strong>球谐函数被禁用，因为我们只想模拟简单的漫反射颜色。</strong> 上述所有可优化参数由 $\Theta$ 表示，其中 $\Theta_i&#x3D;{\mathbf{x}_i,\mathbf{s}_i,\mathbf{q}_i,\alpha_i,\mathbf{c}_i}$ 是第 $i$ 个高斯的参数。</p>
+<ul>
+<li>? 有办法重建高光纹理吗？</li>
+</ul>
+<p>要渲染一组 3D 高斯，我们需要将它们作为 2D 高斯投射到图像平面上。然后按前后深度顺序对每个像素进行体积渲染，以评估最终的颜色和 $\alpha$ 值。在这项工作中，我们使用 Kerbl 等人（2023 年）的高度优化渲染器实现来优化  $\Theta$ 。</p>
+<p><strong>我们用球体内部的随机位置采样来初始化3D高斯，使用单位缩放且不旋转。在优化过程中，这些3D高斯会定期密集化。</strong> 与重建管线不同的是，我们从较少的高斯开始，但为了与生成进度保持一致，我们会更频繁地对其进行密集化。我们沿用了之前研究中推荐的做法（Poole 等人，2022 年；Huang 等人，2023 年；Lin 等人，2023 年），<strong>使用 SDS 来优化3D高斯</strong>。</p>
+<p>每一步，我们都会采样一个围绕物体中心的随机相机姿态 $p$ ，并渲染当前视图的 RGB 图像 $I_{\mathrm{RGB}}^p$ 和透明度 $I_{\mathrm{A}}^p$ 。与 Dreamtime（Huang 等人，2023 年）类似，我们线性减少timestep $t$ ，用于加权添加到渲染 RGB 图像中的随机噪声 $\epsilon$  。然后，不同的2D扩散先验 $\phi$ 用于指导 SDS 去噪步骤，并反向传播到3D高斯。</p>
+<h3 id="Image-to-3D"><a href="#Image-to-3D" class="headerlink" title="Image-to-3D"></a>Image-to-3D</h3><p><strong>Image-to-3D</strong>：Image-to-3D任务的输入是图像 $\tilde{I}<em>{\mathrm{RGB}}^r$ 和前景遮罩 $\tilde{I}</em>{\mathrm{A}}^{r}$ 。采用 Zero-1-to-3 XL（Liu 等人，2023b；Deitke 等人，2023b）作为2D扩散先验。<br>SDS loss 可表述为<br>$$\nabla_\Theta\mathcal{L}<em>{\mathrm{SDS}}&#x3D;\mathbb{E}</em>{t, p,\epsilon}\left[w (t)(\epsilon_\phi (I_{\mathrm{RGB}}^p; t,\tilde{I}<em>{\mathrm{RGB}}^r,\Delta p)-\epsilon)\frac{\partial I</em>{\mathrm{RGB}}^p}{\partial\Theta}\right]\tag{1}$$<br>其中</p>
+<ul>
+<li>$w (t)$ 是加权函数</li>
+<li>$\epsilon_{\phi}(\cdot)$ 是 2D扩散先验 $\phi$ 预测的噪声</li>
+<li>$\Delta p$ 是参考摄像机（reference camera） $r$ 的相对摄像机位姿变化。</li>
+</ul>
+<p>此外，我们还优化了参考视图图像 $I_{\mathrm{RGB}}^{r}$ 和透明度 $I_{\mathrm{A}}^r$，使其与输入一致：<br>$$<br>\mathcal{L}<em>{\mathrm{Ref}}&#x3D;\lambda</em>{\mathrm{RGB}}||I_{\mathrm{RGB}}^r-\tilde{I}<em>{\mathrm{RGB}}^r||<em>2^2+\lambda</em>{\mathrm{A}}||I</em>{\mathrm{A}}^r-\tilde{I}_{\mathrm{A}}^r||_2^2 \tag{2}<br>$$<br>中 $\lambda _{RGB}$ 和 $\lambda _{A}$ 是在训练过程中线性增加的权重。最终损失是上述三项损失的加权和。</p>
+<h3 id="Text-to-3D"><a href="#Text-to-3D" class="headerlink" title="Text-to-3D"></a>Text-to-3D</h3><p>Text-to-3D的输入是单个文本提示。根据之前的研究，Text-to-3D任务采用Stable-Diffusion（Rombach 等人，2022 年）。SDS 损失可表述为<br>$$<br>\nabla_\Theta\mathcal{L}<em>{\mathrm{SDS}}&#x3D;\mathbb{E}</em>{t,p,\epsilon}\left[w(t)(\epsilon_\phi(I_{\mathrm{RGB}}^p;t,e)-\epsilon)\frac{\partial I_{\mathrm{RGB}}^p}{\partial\Theta}\right]\tag{3}<br>$$<br>其中 $e$ 是输入文本描述的 CLIP 嵌入。</p>
+<h2 id="3-2-网格提取和纹理细化"><a href="#3-2-网格提取和纹理细化" class="headerlink" title="3.2 网格提取和纹理细化"></a>3.2 网格提取和纹理细化</h2><p>我们观察到，即使 SDS 训练迭代时间较长，生成的高斯模型也常常看起来模糊不清，缺乏细节。这可能与 SDS 损失的ambiguity（模糊性）有关。<strong>由于每个优化步骤都可能提供不一致的3D指导，因此算法很难像重构那样正确地对重构不足的区域进行密集化处理，或对重构过度的区域进行修剪。根据这一观察结果，我们提出了以下网格提取和纹理细化设计方案。</strong></p>
+<h3 id="3-2-1-高效网格提取"><a href="#3-2-1-高效网格提取" class="headerlink" title="3.2.1 高效网格提取"></a>3.2.1 高效网格提取</h3><p>多边形网格是一种广泛使用的3D表示方法，尤其是在工业应用中。之前的许多研究（Poole 等人，2022；Lin 等人，2023；Tsalicoglou 等人，2023；Tang 等人，2023a）都将 NeRF 表示导出为基于网格的表示，以进行高分辨率微调。我们还试图将生成的3D高斯转换为网格，并进一步细化纹理。</p>
+<p>据我们所知，从3D高斯中提取多边形网格仍是一个尚未探索的问题。由于空间密度是由大量3D高斯来描述的，因此对密集的3D密度网格进行粗暴查询可能会既慢又低效。此外，由于颜色混合仅由投影2D高斯定义，因此如何提取3D外观也不清楚（Kerbl 等人，2023 年）。<strong>在此，我们提出了一种高效算法，基于分块局部密度查询（block-wise local density query）和反投影颜色（ back-projected color）来提取纹理网格。</strong></p>
+<h4 id="局部密度查询"><a href="#局部密度查询" class="headerlink" title="局部密度查询"></a>局部密度查询</h4><p>为了提取网格几何图形，需要一个密集的密度 grid 来应用 Marching Cubes 算法（Lorensen &amp; Cline，1998 年）。GS算法的一个重要特点是，过大的高斯将在优化过程中被分割或剪除。这是高效光栅化基于瓦片的剔除技术的基础（Kerbl 等人，2023 年）。<strong>我们还利用这一特点来执行分块密度查询。</strong></p>
+<ol>
+<li>我们首先将 $(−1,1)^3$ 的3D空间划分为 $16^3$ 块，然后剔除中心位于每个局部块之外的高斯。这样就有效减少了每个区块中需要查询的高斯总数。然后，我们查询每个区块内的 $8^3$ 密集网格，最终得到 $128^3$ 密集网格。对于网格位置 𝐱 的每次查询，我们都会对每个剩余3D高斯的加权不透明度进行求和：</li>
+</ol>
+<p>$$<br>d(\mathbf{x})&#x3D;\sum_i\alpha_i\exp(-\frac{1}{2}(\mathbf{x}-\mathbf{x_i})^T\Sigma_i^{-1}(\mathbf{x}-\mathbf{x_i}))\tag{4}<br>$$<br>其中 $\Sigma_i$ 是由缩放 $s_i$ 和旋转 $q_i$ 建立的协方差矩阵。</p>
+<ol start="2">
+<li>然后使用经验阈值(empirical threshold)通过 Marching Cubes 算法提取Mesh 曲面。在对提取的网格进行后处理时，会应用去细化（Decimation）和重网格化（Remeshing）（Cignoni 等人，2008 年）技术，使其变得平滑。</li>
+</ol>
+<h4 id="颜色反投影"><a href="#颜色反投影" class="headerlink" title="颜色反投影"></a>颜色反投影</h4><p><strong>由于我们已经获取了网格几何图形，因此可以将渲染后的 RGB 图像反投影到网格表面，并将其烘焙为纹理。</strong></p>
+<ol>
+<li>我们首先解包（unwrap）网格的 UV 坐标（Young，2021），并初始化一个空纹理图像。</li>
+<li>然后，我们统一选择 8 个方位角（azimuths）和 3 个仰角（elevations），再加上顶视图和底视图，来渲染相应的 RGB 图像。这些 RGB 图像中的每个像素都可以根据 UV 坐标反投影到纹理图像中。根据 Richardson 等人的研究（2023 年），我们排除了摄像机空间 $z$ 方向法线较小的像素，以避免网格边界处的投影不稳定。这种反投影纹理图像可作为下一个网格纹理微调阶段的初始化图像。</li>
+</ol>
+<h3 id="3-2-2-UV-空间纹理细化"><a href="#3-2-2-UV-空间纹理细化" class="headerlink" title="3.2.2 UV 空间纹理细化"></a>3.2.2 UV 空间纹理细化</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408010031945.png" alt="Pasted image 20240412155310"></p>
+<blockquote>
+<p>图 3：不同的纹理微调目标。我们发现，SDS 损失在 UV 空间纹理优化中会产生假象，而建议的 MSE 损失可以避免这种情况。</p>
+</blockquote>
+<p>由于 SDS 优化的模糊性，从3D高斯中提取的网格通常纹理模糊，如图 3 所示。因此，我们建议采用第二阶段来细化纹理图像。然而，直接使用 SDS 损失对 UV 空间进行微调往往会导致伪影，这在之前的研究中也有观察到（廖等人，2023 年）。这是由于可微分光栅化中使用的 mipmap 纹理采样技术造成的（Laine 等人，2020 年）。在像 SDS 这样模棱两可的指导下，传播到每个 mipmap 层的梯度会导致色块过度饱和。因此，我们需要更明确的引导来微调模糊纹理。</p>
+<p>我们从 SDEdit 的 image-to-image 合成（Meng 等人，2021 年）和重建设置中汲取灵感。由于我们已经有了初始化纹理，因此可以从任意相机视角渲染模糊图像 $I_{\mathrm{coarse}}^p$ 。然后，我们用随机噪声对图像进行扰动，并在获得精细图像之前，使用2D扩散对图像进行多步去噪处理 $f_{\phi}(\cdot)$ ：<br>$$<br>I_{\mathrm{fine}}^{p}&#x3D;f_{\phi}(I_{\mathrm{coarse}}^{p}+\epsilon(t_{\mathrm{start}});t_{\mathrm{start}},c)\tag{5}<br>$$</p>
+<p>其中</p>
+<ul>
+<li>$\epsilon(t_{\mathrm{start}})$ 是 timestep $t_{start}$ 的随机噪声， </li>
+<li>$c$ 分别是Image-to-3D的 $\Delta p$ 和Text-to-3D的 $e$ 。</li>
+<li>起始 timestep $t_{start}$ 经过精心选择，以限制噪声强度，从而使精修后的图像在不破坏原始内容的情况下增强细节。</li>
+</ul>
+<p>然后，通过pixel-wise MSE loss，使用这种细化图像来优化纹理：<br>$$<br>\mathcal{L}<em>{\mathrm{MSE}}&#x3D;|I</em>{\mathrm{fine}}^p-I_{\mathrm{coarse}}^p|_2^2 \tag{6}<br>$$<br>对于Image-to-3D的任务，我们仍然采用公式 2 中的参考视图 RGBA loss。</p>
+<p>我们发现，在大多数情况下，只需 50 步左右就能获得良好的细节，而更多的迭代可以进一步增强纹理的细节。</p>
+<h1 id="4-实验"><a href="#4-实验" class="headerlink" title="4 实验"></a>4 实验</h1><p>略</p>
+<h1 id="5-限制与结论"><a href="#5-限制与结论" class="headerlink" title="5 限制与结论"></a>5 限制与结论</h1><p>在这项工作中，我们提出了一个 3D 内容生成框架 DreamGausssion，它能显著提高 3D 内容创建的效率。我们工作的主要特点是</p>
+<ol>
+<li>我们设计了生成式GS管道，可高效生成3D内容。</li>
+<li>我们提出了一种网格提取算法，可有效地从3D高斯中提取纹理网格。</li>
+<li>通过纹理微调阶段，我们的工作可在几分钟内从单张图片或文本描述中生成具有高质量多边形网格的即用型3D资产。</li>
+</ol>
+<p>限制：我们与以往的Text-to-3D 作品存在共同的问题，多面杰纳斯问题(Multi-face Janus problem)和烘焙照明(baked lighting)。幸运的是，最近在多视角 2D Diffusion Model（Shi 等人，2023；Liu 等人，2023c；Zhao 等人，2023）和潜在 BRDF 自动编码器（Xu 等人，2023b）方面取得的进展可以解决这些问题。此外，在我们的图像-3D结果中生成的后视纹理可能看起来比较模糊。这可以通过延长第 2 阶段的训练来缓解。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/46693.html">http://liuke101.github.io/post/46693.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">三维重建</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/42610.html" title="GaussianEditor:使用高斯泼溅进行快速可控的 3D 编辑"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">GaussianEditor:使用高斯泼溅进行快速可控的 3D 编辑</div></div></a></div><div class="next-post pull-right"><a href="/post/8166.html" title="GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/46692.html" title="2DGS"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-12</div><div class="title">2DGS</div></div></a></div><div><a href="/post/17862.html" title="3DGS总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-05</div><div class="title">3DGS总结</div></div></a></div><div><a href="/post/30572.html" title="3DGS:《用于实时辐射场渲染的 3D 高斯泼溅》"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-03</div><div class="title">3DGS:《用于实时辐射场渲染的 3D 高斯泼溅》</div></div></a></div><div><a href="/post/24255.html" title="Gaussian Frosting:高斯糖霜,可编辑的实时渲染辐射场"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-04</div><div class="title">Gaussian Frosting:高斯糖霜,可编辑的实时渲染辐射场</div></div></a></div><div><a href="/post/8166.html" title="GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-10</div><div class="title">GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成</div></div></a></div><div><a href="/post/42610.html" title="GaussianEditor:使用高斯泼溅进行快速可控的 3D 编辑"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-09</div><div class="title">GaussianEditor:使用高斯泼溅进行快速可控的 3D 编辑</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">1. 文章主要迁移自个人的obsidian笔记，存在部分md语法冲突，导致显示异常，暂未修复。 2. 文章部分内容参考/引用网络资源，用于个人学习，如有侵权，请联系我删除。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-text">1 引言</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-text">2 相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-3D-%E8%A1%A8%E7%A4%BA"><span class="toc-text">2.1 3D 表示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Text-to-3D-%E7%94%9F%E6%88%90"><span class="toc-text">2.2 Text-to-3D 生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-image-to-3D-%E7%94%9F%E6%88%90"><span class="toc-text">2.3 image-to-3D 生成</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E6%88%91%E4%BB%AC%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-text">3 我们的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E7%94%9F%E6%88%90%E5%BC%8FGS"><span class="toc-text">3.1 生成式GS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Image-to-3D"><span class="toc-text">Image-to-3D</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Text-to-3D"><span class="toc-text">Text-to-3D</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E7%BD%91%E6%A0%BC%E6%8F%90%E5%8F%96%E5%92%8C%E7%BA%B9%E7%90%86%E7%BB%86%E5%8C%96"><span class="toc-text">3.2 网格提取和纹理细化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-1-%E9%AB%98%E6%95%88%E7%BD%91%E6%A0%BC%E6%8F%90%E5%8F%96"><span class="toc-text">3.2.1 高效网格提取</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%80%E9%83%A8%E5%AF%86%E5%BA%A6%E6%9F%A5%E8%AF%A2"><span class="toc-text">局部密度查询</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A2%9C%E8%89%B2%E5%8F%8D%E6%8A%95%E5%BD%B1"><span class="toc-text">颜色反投影</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-2-UV-%E7%A9%BA%E9%97%B4%E7%BA%B9%E7%90%86%E7%BB%86%E5%8C%96"><span class="toc-text">3.2.2 UV 空间纹理细化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%AE%9E%E9%AA%8C"><span class="toc-text">4 实验</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E9%99%90%E5%88%B6%E4%B8%8E%E7%BB%93%E8%AE%BA"><span class="toc-text">5 限制与结论</span></a></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42467.html" title="HLSL ShaderLab">HLSL ShaderLab</a><time datetime="2024-05-18T16:49:50.000Z" title="发表于 2024-05-19 00:49:50">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42466.html" title="CG ShaderLab">CG ShaderLab</a><time datetime="2024-05-18T16:48:56.000Z" title="发表于 2024-05-19 00:48:56">2024-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/21838.html" title="冯乐乐入门精要笔记">冯乐乐入门精要笔记</a><time datetime="2024-05-18T16:45:45.000Z" title="发表于 2024-05-19 00:45:45">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/21879.html" title="Unity Primer"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190029709.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity Primer"/></a><div class="content"><a class="title" href="/post/21879.html" title="Unity Primer">Unity Primer</a><time datetime="2024-05-18T16:36:03.000Z" title="发表于 2024-05-19 00:36:03">2024-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/64623.html" title="Unity GUI"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202405190021833.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity GUI"/></a><div class="content"><a class="title" href="/post/64623.html" title="Unity GUI">Unity GUI</a><time datetime="2024-05-18T16:32:22.000Z" title="发表于 2024-05-19 00:32:22">2024-05-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>
