@@ -1,0 +1,728 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>UE AI系统 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="架构Enemy 告诉 AI Controller 使用行为树组件的哪个行为树，然后行为树组件启动并运行（AI Controller 上调用）该行为树 行为树执行逻辑时，行为树会使用一种名为 黑板 的独立资源来存储它需要知道的信息（名为 黑板键），从而做出有根据的决策。常见工作流程是创建一块黑板，添加一些黑板键，然后创建一个使用黑板资源的行为树。 运行前提：  Pawn 关联 AIControlle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UE AI系统">
+<meta property="og:url" content="http://liuke101.github.io/post/46644.html">
+<meta property="og:site_name" content="游戏江湖">
+<meta property="og:description" content="架构Enemy 告诉 AI Controller 使用行为树组件的哪个行为树，然后行为树组件启动并运行（AI Controller 上调用）该行为树 行为树执行逻辑时，行为树会使用一种名为 黑板 的独立资源来存储它需要知道的信息（名为 黑板键），从而做出有根据的决策。常见工作流程是创建一块黑板，添加一些黑板键，然后创建一个使用黑板资源的行为树。 运行前提：  Pawn 关联 AIControlle">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png">
+<meta property="article:published_time" content="2023-10-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-08-06T16:15:48.993Z">
+<meta property="article:author" content="灵玉">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232138939.png"><link rel="canonical" href="http://liuke101.github.io/post/46644.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="6wt4eQbcmYIioyaSsUswEjImObRq1GoUZP_ZRoEoOXc"/><meta name="msvalidate.01" content="9315C074B7CC1C8996DDD5A9533EF368"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d08ce745bb272195666f030857b5f8b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"QTHLKKVLAS","apiKey":"7f01e97a350ca196bda1df9cd9168b30","indexName":"hexo","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 灵玉","link":"链接: ","source":"来源: 游戏江湖","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#804bfb","bgDark":"#804bfb","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'UE AI系统',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-07 00:15:48'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">UE AI系统</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-15T16:00:00.000Z" title="发表于 2023-10-16 00:00:00">2023-10-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-06T16:15:48.993Z" title="更新于 2024-08-07 00:15:48">2024-08-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%99%9A%E5%B9%BB%E5%BC%95%E6%93%8E/">虚幻引擎</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>23分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="UE AI系统"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/46644.html#post-comment"><span class="waline-comment-count" data-path="/post/46644.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><p>Enemy 告诉 AI Controller 使用行为树组件的哪个行为树，然后行为树组件启动并运行（AI Controller 上调用）该行为树<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012766.png" alt="Pasted image 20231027213215"></p>
+<h1 id="行为树"><a href="#行为树" class="headerlink" title="行为树"></a>行为树</h1><p>执行逻辑时，行为树会使用一种名为 <strong>黑板</strong> 的独立资源来存储它需要知道的信息（名为 <strong>黑板键</strong>），从而做出有根据的决策。常见工作流程是创建一块黑板，添加一些黑板键，然后创建一个使用黑板资源的行为树。</p>
+<p><strong>运行前提：</strong></p>
+<ol>
+<li>Pawn 关联 AIController<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012767.jpg" alt="Pasted image 20230911231500"></li>
+<li>AIController 中， 当该控制器”Possess”此Pawn时，运行一个行为树：<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012768.jpg" alt="Pasted image 20230911231525"></li>
+<li>关卡中寻路需要添加 NavMesh</li>
+</ol>
+<p><strong>执行顺序</strong>：从左到右，从上到下（中左右）<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012769.jpg" alt="Pasted image 20230911230545"></p>
+<blockquote>
+<p>节点右上角的数字，表示操作的顺序<br>蓝色节点被称为<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/unreal-engine-behavior-tree-node-reference-decorators">装饰器</a>节点（在其他行为树系统中被称为 条件语句_）。它连接到一个<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/unreal-engine-behavior-tree-node-reference-composites">合成</a>节点，用于验证该黑板键是否为 true。这决定了该分支的其余部分是否能够执行。<br>紫色节点是<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/unreal-engine-behavior-tree-node-reference-tasks">任务（Task）</a>节点，是AI可以完成的动作。</p>
+</blockquote>
+<p><strong>特点：（与传统行为树的比较）</strong></p>
+<ol>
+<li>行为树由事件驱动，被动地监听可用于触发树中变化的”事件”，避免每帧进行不必要的共工作。</li>
+<li>条件语句并非叶节点，而是装饰器（Decorator）节点。所有叶节点都是操作任务节点。条件语句装饰器的另一个优点是可以轻松将装饰器设为树中关键节点上的观察者（等待事件）。要充分利用树事件驱动的特点，此特性十分关键。</li>
+<li>使用<strong>简单平行</strong>节点（<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/unreal-engine-behavior-tree-node-reference-services">服务</a>节点），以及<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/unreal-engine-behavior-tree-node-reference-decorators">装饰器</a>节点的 <strong>观察者中止（Observer Aborts）</strong> 属性来处理并发行为。</li>
+</ol>
+<h2 id="合成节点-Composite"><a href="#合成节点-Composite" class="headerlink" title="合成节点 Composite"></a>合成节点 Composite</h2><blockquote>
+<p>[!NOTE] 合成节点<br><strong>主要作用：流程控制</strong><br>是流控制的一种形式，决定了与其相连的子分支的执行方式。<br>只有 <strong>合成</strong> 节点可以连接至 <strong>行为树</strong> 的 <strong>Root</strong> 节点。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>合成节点</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>选择器（<code>Selector</code>）</strong></td>
+<td><strong>从左到右顺序执行其子节点</strong>。当其中一个子节点执行成功时，选择器节点将停止执行。<div>如果选择器的一个子节点成功运行，则选择器运行成功。如果选择器的所有子节点运行失败，则选择器运行失败。</div></td>
+</tr>
+<tr>
+<td><strong>序列（<code>Sequence</code>）</strong></td>
+<td><strong>从左到右的顺序执行其子节点</strong>。当其中一个子节点失败时，序列节点也将停止执行。<div>如果有子节点失败，那么序列就会失败。如果该序列的所有子节点运行都成功执行，则序列节点成功。</div></td>
+</tr>
+<tr>
+<td><strong>简单平行（<code>Simple Parallel</code>）</strong></td>
+<td>简单平行节点有两个”连接”。<div>第一个是<strong>主任务</strong>，它只能分配一个任务节点（意味着没有合成节点）。</div><div>第二个连接是<strong>后台分支</strong>：是主任务仍在运行时应该执行的活动。</div><div>简单平行节点可能会在主任务完成后立即结束，或者等待后台分支的结束，具体依属性而定。</div></td>
+</tr>
+</tbody></table>
+<p>可以将简单平行节点理解为”执行 A 的同时，也在执行 B”。例如”攻击敌人，同时也朝敌人移动。”从基本上而言，A 是主任务，B 是后台分支。</p>
+<h2 id="装饰器节点-Decorator"><a href="#装饰器节点-Decorator" class="headerlink" title="装饰器节点 Decorator"></a>装饰器节点 Decorator</h2><blockquote>
+<p>[!NOTE]<br><strong>主要作用：对子树的返回结果进行处理</strong></p>
+</blockquote>
+<p>条件语句，连接到<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/unreal-engine-behavior-tree-node-reference-composites">合成（Composite）</a>或<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/unreal-engine-behavior-tree-node-reference-tasks">任务（Task）</a>节点，并定义树中的分支，甚至单个节点是否可以执行。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012770.png" alt="Pasted image 20230911235256"></p>
+<ul>
+<li><strong>Composite</strong>：合成，自定义逻辑。以这种方式使用合成装饰器将影响内存和性能。也可以在C++中创建一个装饰器来执行同样的自定义行为，但效率更高。</li>
+<li><strong>Blackboard</strong>：检查给定的 <strong>黑板键（Blackboard Key）</strong> 上是否设置了值。</li>
+<li><strong>Check Gameplay Tags on Actor</strong>：检查 Gameplay Tag</li>
+<li><strong>Compare BBEntries</strong>：比较两个 <strong>黑板键</strong> 的值，并根据结果（等于或不等）阻止或允许节点的执行。</li>
+<li><strong>Conditional Loop</strong>：条件语句循环，只要满足了 <strong>键查询（Key Query）</strong> 条件，该装饰器将使它所连接节点进行循环。</li>
+<li><strong>Cone Check</strong>：椎体检查装饰器，采用了三个矢量键：第一个确定椎体的起始位置，第二个用于定义锥体朝向的方向，第三个用于检查该位置是否在锥体内部。您可以使用 <strong>锥体半角（Cone Half Angle）</strong> 属性来定义锥体的角度。</li>
+<li><strong>Cooldown</strong>：冷却装饰器， 将锁定节点或分支的执行，直到冷却时间结束。</li>
+<li><strong>Does Path Exist</strong>：路径是否存在，会检查是否可以在以下两个矢量之间创建路径：黑板键A和黑板键B</li>
+<li><strong>Force Success</strong>：强制成功装饰器，会将节点结果更改为成功。</li>
+<li><strong>Is at Location</strong>：在位置处装饰器，节点将检查 AI 控制的 Pawn 是否位于给定位置。</li>
+<li><strong>ls BBEntry Of Class</strong>：用于确定所指定的黑板键是否属于指定的类。</li>
+<li><strong>Keep in Cone</strong>：保持在椎体内装饰器，节点会根据所观察到的位置是否仍位于锥体内部来确定其条件。当节点首次拥有相关性时，将计算锥体的方向。</li>
+<li><strong>Loop</strong>：对节点或分支进行多次循环或无限次循环。</li>
+<li><strong>Set Tag Cooldown</strong>：设置 GameplayTag 的冷却时长。</li>
+<li><strong>Tag Cooldown</strong>：基于 GameplayTag 的冷却计时器是否过期。</li>
+<li><strong>Time Limit</strong>：时间限制装饰器，会为一个分支或节点设置在终止其运行并失败前，完成运行所需的一段时间。每当该节点被聚焦时，计时器都会重置。</li>
+</ul>
+<h2 id="服务节点-Service"><a href="#服务节点-Service" class="headerlink" title="服务节点 Service"></a>服务节点 Service</h2><p><strong>服务节点</strong>：<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/unreal-engine-behavior-tree-node-reference-services">服务</a>节点是与任意合成节点（选择器节点、序列节点或简单平行节点）相关联的一种特殊节点。<strong>只要在合成节点的分支被执行，它们就会以定义的频率执行。常用于检查和更新黑板</strong>。</p>
+<p>它<strong>能够针对指定秒数的每个回调进行注册，并能对多种需要周期性出现的类型进行更新。</strong><br>举例而言，当 AI Pawn 面对当前敌人、继续在其行为树中正常行动时，可以使用服务节点为该 Pawn 确定最适合追逐的敌人。</p>
+<ol>
+<li><strong>默认聚焦(Default Focus）</strong> 通过设置控制器的聚焦来创建访问 <strong>蓝图</strong> 和代码中 Actor 的快捷方式。<strong>将 AIController 的聚焦设置到 Actor 上后，你便能直接从 AI 控制器对其进行访问，而不需要访问黑板键。</strong></li>
+<li><strong>运行 EQS（Run EQS）</strong> 服务节点可用于<strong>以指定的时间间隔定期执行场景查询系统（EQS）模板，并可对指定的黑板键进行更新。</strong></li>
+</ol>
+<h2 id="任务节点-Tasks"><a href="#任务节点-Tasks" class="headerlink" title="任务节点 Tasks"></a>任务节点 Tasks</h2><p><strong>任务节点的功能是实现操作，例如移动 AI 或调整黑板值</strong>。它们可以连接至装饰器节点或服务节点。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012771.png" alt="Pasted image 20230912112520"></p>
+<ul>
+<li><font color="#ff0000">Finish with Result</font>：<strong>以结果完成</strong> 任务节点可用于在完成时即时输出一个给定结果。该节点会基于所定义的结果强制分支结束或继续。</li>
+<li><font color="#ff0000">Make Noise</font>：如果受控Pawn拥有 <strong>PawnNoiseEmitter</strong> 组件，<strong>发出噪音（Make Noise）</strong> 任务将使Pawn”产生噪声”（发送消息），使其它拥有 <strong>PawnSensing</strong> 组件的Pawn听到（接收消息）。</li>
+<li><font color="#ff0000">Move Directly Toward</font>：<strong>直接移动至</strong>任务节点会将 AI Pawn 沿直线移向指定的 Actor 或位置（矢量）黑板条目，而不参考任何导航系统。如果需要 AI 按导航移动，请改用 <strong>移动至（Move To）</strong> 任务节点。</li>
+<li><font color="#ff0000">Move To</font>：<strong>移动至</strong>任务将使拥有角色移动组件的Pawn使用<strong>NavMesh</strong>移动至矢量黑板键。</li>
+<li><font color="#ff0000">Play Animation</font>：用于播放指定的动画资源。</li>
+<li><font color="#ff0000">Play Sound</font>：播放指定的音效。</li>
+<li><font color="#ff0000"><font color="#ff0000">Push Pawn Action</font></font>：<strong>推送 Pawn 动作</strong>节点使您能够将指定的动作推送至 Pawn 的控制器。</li>
+<li><font color="#ff0000">Rotate to Face BBEntry</font>：<strong>旋转至面向黑板条目</strong>任务节点会使关连 Pawn 向指定的黑板键旋转。( Pawn 必须启用 Use Controller Rotation Yaw )</li>
+<li><font color="#ff0000">Run Behavior</font>：<strong>运行行为</strong>任务节点将分支树推送到执行堆栈上，从而运行另一个行为树。（给子树的根等级装饰器节点提供支持。在运行时不能改变该子树资源，在运行时不能修改运行树的结构。如果您需要在运行时能修改的子树，使用 Run Behavior Dynamic）</li>
+<li><font color="#ff0000">Run Behavior Dynamic</font>：<strong>运行动态行为</strong>任务节点能够在执行堆栈上推送子树。使用 <strong>行为树组件</strong> 上的 <strong>SetDynamicSubtree</strong> 函数即可以在运行时分配子树资源。（本函数不会为子树的根等级装饰器节点提供支持。）</li>
+<li><font color="#ff0000">Run EQSQuery</font>：将运行指定的场景查询系统（EQS）资源。</li>
+<li><font color="#ff0000">Set Tag Cooldown</font>：设置 <strong>冷却标签（Cooldown Tag）</strong> 数值，并与 <strong>冷却标签装饰器（Cooldown Tag Decorators）</strong> 一起使用，从而防止行为树的执行。</li>
+<li><font color="#ff0000">Wait</font>：使树在此节点上等待，直至指定的 <strong>等待时间（Wait Time）</strong> 结束。</li>
+<li><font color="#ff0000">Wait Blackboard Time</font>：与 <strong>等待（Wait）</strong> 任务节点的原理类似，由黑板键盘指定时间</li>
+</ul>
+<h2 id="观察者中止-Observer-Aborts"><a href="#观察者中止-Observer-Aborts" class="headerlink" title="观察者中止 Observer Aborts"></a>观察者中止 Observer Aborts</h2><p>传统行为树的标准平行节点的一个常见用处是不断检查条件。一旦任务所需的条件变成 false，该任务就可以中止。</p>
+<p>举例而言，有一只猫在执行序列节点（例如”发出嘶声”和”扑击”）。如果老鼠逃入洞里，则需要猫立即放弃。如果使用平行节点，你要设置一个子项检查是否可以扑击老鼠，然后设置另一个子项检查序列要执行的动作。</p>
+<hr>
+<p>因为虚幻引擎行为树由事件驱动，所以我们要解决此问题。<strong>可以通过条件装饰器观察其数值，并且在必要时中止</strong>。在本例中，可以在序列上设置”是否可以扑击老鼠？（Mouse Can Be Pounced On?）”装饰器节点，把”观察者中止（Observer Aborts）”设置为”自身（Self）”。</p>
+<p>在行为树中，观察者中止（ObserverAborts）是我们控制任务节点执行的最重要的设置之一，其能<strong>在满足装饰器节点临界条件后有条件地中止被观察者中止标记为中止范围的所有节点的执行。</strong></p>
+<p>观察者中止有两个重要的参数，Notify Observer与Observer Aborts</p>
+<p><strong>Notify Observer (通知观察者)：</strong><br>控制BT如何通知观察者中止，鉴于观察者中止的控制是bool类型，一般使用On Result Change即可。</p>
+<ul>
+<li><strong>On Result Change</strong>：对应装饰器节点的 Bool 结果发生变化时通知中止。<ul>
+<li>这里的”结果”指的是行为树节点的执行结果。行为树节点的执行结果通常是一个布尔值，表示节点的执行状态。例如装饰器节点：<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012772.png" alt="Pasted image 20231028150237"> 当 Key 没有 Set 时，<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012773.png" alt="Pasted image 20231028150305"> 就会失败返回 false。</li>
+</ul>
+</li>
+<li><strong>On Value Change</strong>：对应装饰器节点的值（一般是行为树对应的黑板中装饰器节点使用的黑板键的值）变化时通知中止。</li>
+</ul>
+<p><strong>Observer Aborts（观察者中止）：</strong><br><strong>主要控制观察者中止对中止范围的标识</strong>。即，在通知中止后，中止中止范围内的执行中节点，并转而执行观察者中止标识的行为树节点或子树。</p>
+<ul>
+<li><strong>None</strong> 不中止执行。</li>
+<li><strong>Self</strong> 中止此节点自身和在其下运行的所有子树。</li>
+<li><strong>Lower Priority</strong> 中止此节点右侧的所有节点（低优先级，即序号更高的）。</li>
+<li><strong>Both</strong> ：中止 Self+Lower Priority</li>
+</ul>
+<blockquote>
+<p>[!NOTE]</p>
+<ul>
+<li><p>执行中节点不在中止范围时观察者中止无效。</p>
+</li>
+<li><p>观察者中止的中止将会按照行为树的最短距离进行中止转换控制。即，行为树将从执行中节点向上回溯到该执行中节点与观察者中止标识节点或子树的最深共同父级，再从此父级向下顺序执行，并仍然判断 BTD 的可执行性。也即，观察者中止并不会从 Root 开始重新执行整个行为树，其行为逻辑接近节点跳转。</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="行为树节点实例化规则"><a href="#行为树节点实例化规则" class="headerlink" title="行为树节点实例化规则"></a>行为树节点实例化规则</h2><p>行为树节点作为共享对象存在，这意味着使用同一行为树的所有代理将共享一组节点实例。这样不仅可以在降低内存使用率的同时提升 CPU 性能，还可以防止节点保存代理特定的数据。<br>不过，对于代理需要存储和更新节点相关信息的情况，虚幻引擎提供了以下三种解决方案：</p>
+<h3 id="实例化节点"><a href="#实例化节点" class="headerlink" title="实例化节点"></a>实例化节点</h3><p>将节点的 <code>bCreateNodeInstance</code> 变量设为 <code>true</code> 后，将使每个使用行为树的代理成为特殊的节点实例，以牺牲一定性能和内存使用率为代价来确保安全存储代理专属的数据。<br>包括 <code>UBTTask_BlueprintBase</code>、<code>UBTTask_PlayAnimation</code>、<code>UBTTask_RunBehaviorDynamic</code> 在内的部分虚幻引擎节点类均使用此功能。</p>
+<h3 id="存储在黑板上"><a href="#存储在黑板上" class="headerlink" title="存储在黑板上"></a>存储在黑板上</h3><p>常见的解决方案是将变量存储在黑板上。执行此操作的方法是从节点公开变量命名，然后在节点初始化过程中使用该命名获取和存储黑板键。然后便可以使用黑板键在代理的黑板实例上获取并设置该变量的值。此方法支持 <code>bool</code>、<code>float</code>、<code>FVector</code>、<code>int32</code>、<code>enum</code>（存储为 <code>uint8</code>）、<code>UObject*</code> 类型的变量。</p>
+<h3 id="存储在行为树节点上"><a href="#存储在行为树节点上" class="headerlink" title="存储在行为树节点上"></a>存储在行为树节点上</h3><p>可以创建自定义结构体或类，将变量存储在节点的内存中。例如，<code>UBTTask_MoteTo</code> 类利用 <code>FBTMoveToTaskMemory</code>。</p>
+<p>您可以在 <code>BTTask_MoteTo.h</code> 中找到以下代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">FBTMoveToTaskMemory</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/** Move request ID */</span></span><br><span class="line">    FAIRequestID MoveRequestID;</span><br><span class="line"></span><br><span class="line">    FDelegateHandle BBObserverDelegateHandle;</span><br><span class="line">    FVector PreviousGoalLocation;</span><br><span class="line"></span><br><span class="line">    TWeakObjectPtr&lt;UAITask_MoveTo&gt; Task;</span><br><span class="line"></span><br><span class="line">    uint8 bWaitingForPath : <span class="number">1</span>;</span><br><span class="line">    uint8 bObserverCanFinishTask : <span class="number">1</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>UBTNode</code> 中的许多虚函数都将 <code>uint8*</code> 参数带到节点的内存中。此参数指示为代理分配的内存块，内存块大小将由 <code>GetInstanceMemorySize</code> 的覆盖版本返回。节点将为各个代理分配此大小的内存，并将此内存存储到单一连续块中，以优化性能。<strong>但此内存不属于 UObject 生态系统，也不属于虚幻引擎的反射系统，且无法通过垃圾回收查看。因此，<code>UPROPERTY</code> 支持将不可用，建议使用 <code>TWeakObjectPtr</code> 来存储可能需要的 <code>UObject</code> 指针。</strong></p>
+<h1 id="AI-感知系统"><a href="#AI-感知系统" class="headerlink" title="AI 感知系统"></a>AI 感知系统</h1><p>除可用于决定所执行逻辑的<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/behavior-trees-in-unreal-engine">行为树</a>，以及用于获取环境信息的<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/environment-query-system-in-unreal-engine">场景查询系统（EQS）</a>之外，AI 框架中可用于为 AI 提供感官数据的另一个工具是 <strong>AI 感知系统（AI Perception System）</strong> 。通过 AI 感知组件实现。</p>
+<h2 id="AIPerception-感知组件"><a href="#AIPerception-感知组件" class="headerlink" title="AIPerception 感知组件"></a>AIPerception 感知组件</h2><p>AI 组件允许 Pawn 感知周围环境中的数据，例如噪声来源位置、或 Pawn 能够看到某个对象。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012774.png" alt="Pasted image 20230912133213"></p>
+<ul>
+<li><strong><code>AIPerception</code></strong> 组件相当于刺激源的监听器，用于收集已注册的刺激信号。</li>
+<li><strong><code>AI Perception Stimuli Source</code></strong> 组件自动将 Actor 注册成为感知系统中指定感官的一个刺激源。 </li>
+<li>刺激源被注册后将调用 AIPerception 组件的 <strong><code>On Perception Updated</code></strong> （或用于目标选择的 <strong><code>On Target Perception Updated</code></strong> ）事件</li>
+</ul>
+<h3 id="感知配置"><a href="#感知配置" class="headerlink" title="感知配置"></a>感知配置</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012775.png" alt="Pasted image 20230912132010"></p>
+<blockquote>
+<p>可以配置多个感官，并且指定一个<strong>主导感官（Dominant Sense）</strong>，该感官应优先于其他感官。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012776.png" alt="Pasted image 20230912132405"></p>
+<ul>
+<li><p><font color="#ff0000">Al Damage sense config 伤害</font>：对伤害事件（如 <strong>Event Any Damage</strong> 、 <strong>Event Point Damage</strong> 或 <strong>Event Radial Damage</strong> ）作出反应。</p>
+</li>
+<li><p><font color="#ff0000">Al Hearing config 听觉</font>：检测由 <strong>报告噪点事件（Report Noise Event）</strong> 产生的声音，例如发射物击中某物发出的声音</p>
+</li>
+<li><p><font color="#ff0000">Al Prediction sense config 感知</font> ：这要求感知系统（Perception System）在 PredictionTime 秒内向请求者提供 PredictedActor 的预计位置。</p>
+</li>
+<li><p><font color="#ff0000">Al Sight config 视觉</font>：决定着 AI 角色在关卡中所能”看见”的事物。当一个 Actor 进入 <strong>视觉半径</strong> 后，AI 感知系统将发出更新信号，并穿过被看到的 Actor（举例而言，一个玩家进入该半径，并被具备视觉感知的 AI 所察觉）。</p>
+</li>
+<li><p><font color="#ff0000">Al Team sense config 团队</font>：通知感知组件的拥有者同团队中有人处在附近（发送该事件的游戏代码也会发送半径距离）。</p>
+</li>
+<li><p><font color="#ff0000">Al Touch config 触觉</font>：检测到 AI 与物体发生主动碰撞，或是与物体发生被动碰撞。举例而言，在潜入类型的游戏中，你可能希望玩家在不接触敌方 AI 的情况下偷偷绕过他们。使用此感官可以确定玩家与 AI 发生接触，并能用不同逻辑做出响应。</p>
+</li>
+<li><p><font color="#ff0000">Detection by Affiliation</font> 从属检测：默认情况下 <strong>Actor</strong> 不会被指定归属，会被视为中立（neutrals）。</p>
+</li>
+</ul>
+<blockquote>
+<p>[!NOTE]<br>目前，你还不能通过蓝图分配归属，因此为了检测玩家，我们要启用 <strong>检测中立（Detect Neutral）</strong> 标签。另外一种方法是使用 <strong>Actor 标签（Actor Tagging）</strong> 来确定哪个角色是玩家，并强制 AI 角色只追逐被标记为玩家的 Actor。</p>
+</blockquote>
+<h3 id="感知函数调用"><a href="#感知函数调用" class="headerlink" title="感知函数调用"></a>感知函数调用</h3><p>以下函数可以通过蓝图调用，进而从感知系统获取信息，或对感知系统产生影响。</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Get Actors Perception</strong></td>
+<td>获取针对给定Actor的感知，并返回被感知Actor的数据结构。</td>
+</tr>
+<tr>
+<td><strong>Get Currently Perceived Actors</strong></td>
+<td>返回基于给定感官被感知的全部Actor。如果未指定感官，则返回当前以任意方式感知到的所有Actor。</td>
+</tr>
+<tr>
+<td><strong>Get Known Perceived Actors</strong></td>
+<td>返回基于给定感官被感知的（且尚未被遗忘）的所有Actor。如果未指定感官，则被感知到的所有Actor均将被返回。</td>
+</tr>
+<tr>
+<td><strong>Get Perceived Hostile Actors</strong></td>
+<td>返回敌方Actor列表（发出的刺激已被感知且未失效或已成功感知的所有敌方Actor)。本方法可以在蓝图中重写，返回用户所需的任意Actor列表。</td>
+</tr>
+<tr>
+<td><strong>Request Stimuli Listener Update</strong></td>
+<td>手动强制AI感知系统更新指定目标的刺激监听器的属性。</td>
+</tr>
+<tr>
+<td><strong>Set Sense Enabled</strong></td>
+<td>启用或禁用指定的 <strong>感官类</strong> 。<br><br>只有在针对目标组件实体配置给定感官后，该设置才有效。</td>
+</tr>
+</tbody></table>
+<h3 id="刺激源配置"><a href="#刺激源配置" class="headerlink" title="刺激源配置"></a>刺激源配置</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012777.png" alt="Pasted image 20230912133432"></p>
+<p>还可以指定基于 <strong>AISense</strong> 类的所有自定义感官。</p>
+<h3 id="刺激函数调用"><a href="#刺激函数调用" class="headerlink" title="刺激函数调用"></a>刺激函数调用</h3><p>以下函数可以通过 <strong>AI 感知刺激源</strong> 组件的蓝图调用：</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>注册为感官（Register for Sense）</strong></td>
+<td>将拥有Actor注册为指定感官类的刺激源。</td>
+</tr>
+<tr>
+<td><strong>注册到感知系统（Register with Perception System）</strong></td>
+<td>将拥有Actor注册为 <strong>注册为感官源（Register as Source for Senses）</strong> 属性中所指定感官的刺激源，并通过 <strong>Register for Sense</strong> 函数调用。<br><br>如果启用了自动注册为源（Auto Register as Source）属性，则不需要调用此函数。</td>
+</tr>
+<tr>
+<td><strong>从感知系统中注销（Unregister from Perception System）</strong></td>
+<td>取消将拥有Actor注册为感知刺激源。</td>
+</tr>
+<tr>
+<td><strong>从感知中注销（Unregister from Sense）</strong></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="PawnNoiseEmitter-噪声发射器组件"><a href="#PawnNoiseEmitter-噪声发射器组件" class="headerlink" title="PawnNoiseEmitter 噪声发射器组件"></a>PawnNoiseEmitter 噪声发射器组件</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012778.png" alt="Pasted image 20230912134050"><br><strong><code>PawnNoiseEmitterComponent</code></strong> 追踪 <strong><code>PawnSensingComponents</code></strong> 使用的噪声事件数据来监听 Pawn。该组件主要存在于 Pawn 或其控制器上。它在网络客户端上不进行任何操作。</p>
+<h2 id="PawnSensing-感应组件"><a href="#PawnSensing-感应组件" class="headerlink" title="PawnSensing 感应组件"></a>PawnSensing 感应组件</h2><p>Pawn 的感应组件（<code>Sensing Component</code>）用于封装 Actor 的感知（例如视觉和听觉）设置及功能，以便 Actor 在游戏世界中观察&#x2F;监听 Pawn。其在网络客户端上不进行任何操作。<br>在蓝图中可视化设置感官的范围：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012779.png" alt="Pasted image 20230912231118|500"></p>
+<p>注意视锥体的调整有两项：半径和角度<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012780.png" alt="Pasted image 20230912231236|500"></p>
+<h1 id="寻路系统"><a href="#寻路系统" class="headerlink" title="寻路系统"></a>寻路系统</h1><p><strong>虚幻引擎寻路系统</strong> 用于为人工智能代理（AI Agent）提供寻路功能。</p>
+<p>为了帮助AI确定起点和终点之间的路径，引擎会根据场景中的碰撞体生成寻路网格体。这种简化的多边形网格体代表了关卡中的可寻路空间。默认情况下，寻路网格体会细分为多个区块，允许你重新构建寻路网格体的局部区域。</p>
+<p>生成的网格体由多个多边形组成，每个多边形都有一个”成本”值。搜索路径时，寻路算法会尝试找到总成本最低的路径。</p>
+<hr>
+<p>寻路系统包含各种组件以及可修改寻路网格体生成方式的设置，例如指定给多边形的成本。这进而影响代理在你的关卡中寻路的方式。你还可以将寻路网格体中不连续的区域连接起来，如平台和桥梁。</p>
+<p>寻路系统包含三种 <strong>生成模式（Generation Modes）</strong>：<strong>静态（Static）</strong>、<strong>动态（Dynamic）</strong> 和 <strong>仅限动态修改器（Dynamic Modifiers Only）</strong>。这些模式控制了项目中生成寻路网格体的方式，并提供了各种选项来满足你的需要。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012781.png" alt="Pasted image 20230912142325"></p>
+<blockquote>
+<p>项目设置—引擎网格体—运行时</p>
+</blockquote>
+<p>该系统还为代理提供了两种规避方法：<strong>相对速度障碍物(RVO)（Reciprocal Velocity Obstacles (RVO)）</strong> 和 <strong>大规模人群绕行避让管理器（Detour Crowd Manager）</strong>。这些方法允许代理在游戏过程中绕行，避让动态障碍物和其他代理。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012782.png" alt="Pasted image 20230912114543"><br>注意寻路网格体在楼梯上无法正确绘制，可以调整绘制偏移让覆盖面更广。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012783.png" alt="Pasted image 20230912114535"></p>
+<p>重要节点（由事件驱动）：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012784.png" alt="Pasted image 20230912121741"></p>
+<h2 id="修改寻路系统"><a href="#修改寻路系统" class="headerlink" title="修改寻路系统"></a>修改寻路系统</h2><ul>
+<li>寻路修饰体积 <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012785.png" alt="Pasted image 20230912121943|246"> ：使用区域类（Area class）来确定体积内寻路的 <strong>默认成本（Default Cost）</strong> 乘数。从而改变特定区域中的 Nav Mesh 成本，让指定区域可达或不可达。</li>
+</ul>
+<blockquote>
+<p>[!NOTE] 区域类<br> <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012786.png" alt="Pasted image 20230912125311"></p>
+<ul>
+<li>区域类还定义了 <strong>固定区域进入成本（Fixed Area Entering Cost）</strong>，这是代理进入该区域时采用的初始成本。你可以根据需要创建任意数量的区域类来影响代理如何寻路关卡。</li>
+<li>可以创建 Area Class 蓝图自定义区域类<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012787.png" alt="Pasted image 20230912125453|350"></li>
+</ul>
+</blockquote>
+<ul>
+<li>寻路查询筛选器（Navigation Query Filters）： 包含有关一个或多个区域类的信息，如有需要，可以重载成本值。你可以根据需要创建任意数量的查询筛选器来进一步自定义代理如何寻路关卡。<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/overview-of-custom-navigation-areas-and-query-filters-in-unreal-engine/">自定义寻路区域和查询筛选器</a></li>
+<li>寻路链接代理 <img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012788.png" alt="Pasted image 20230912121957|196"> ：能将寻路网格体中没有直接寻路路径的两个区域连接起来。在搜索路径的同时，寻路链接代理会用作额外连接，供代理用于到达目的地。<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012789.png" alt="Pasted image 20230912122840"></li>
+<li>自定义蓝图，使用<strong>智能链接代理</strong>以允许代理在平台之间朝着目标跳跃或执行其他动作<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/overview-of-how-to-modify-the-navigation-mesh-in-unreal-engine/">教程链接</a></li>
+<li>自定义蓝图，在运行时<strong>动态生成 Nav Mesh</strong><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/overview-of-how-to-modify-the-navigation-mesh-in-unreal-engine/">教程链接</a></li>
+</ul>
+<h2 id="避障机制"><a href="#避障机制" class="headerlink" title="避障机制"></a>避障机制</h2><p><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/using-avoidance-with-the-navigation-system-in-unreal-engine/">在虚幻引擎寻路系统中使用避障机制 | 虚幻引擎5.2文档 (unrealengine.com)</a></p>
+<p>寻路机制可以在静态对象周围生成路径，而避障算法主要用于<strong>处理移动障碍物</strong>。<br>AI 代理有两种方法来绕开移动障碍物，或在彼此间避障，分别是 <strong>相对速度障碍物算法（Reciprocal Velocity Obstacles，即 RVO）</strong> 和 <strong>群组绕行管理器（Detour Crowd Manager）</strong>。</p>
+<ol>
+<li><p><strong>相对速度障碍物算法</strong> 系统会计算每个代理的速度向量，避免和附近的其他代理碰撞。该系统会查看附近的代理，并假定它们在计算的每一步内都以恒速移动。根据代理向目标移动的速度，会选择最佳的速度向量进行匹配。</p>
+<ul>
+<li>RVO 不使用寻路网格体进行避障，因此它无需寻路系统即可用于代理。该系统包含在角色类的 <strong>角色移动（Character Movement）</strong> 组件中。<img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012790.png" alt="Pasted image 20230912130029"></li>
+</ul>
+</li>
+<li><p><strong>群组绕行管理器（Detour Crowd Manager）</strong> 系统<strong>通过自适应 RVO 采样计算来解决代理之间的规避问题</strong>。它会计算一个粗略的速度采样，并且着重在代理的移动方向，相较于传统的 RVO 规避方式，<strong>显著提升规避性能</strong>。该系统还使用可见度和拓扑路径优化项，进一步提升碰撞规避。</p>
+<ul>
+<li>群组绕行管理器系统可以高度配置特定示例模式选项、最大代理数和代理半径。该系统包括在 <strong>群组绕行 AI 控制器（DetourCrowd AI Controller）</strong> 类中，可以和任意 Pawn 类一起使用。</li>
+</ul>
+</li>
+</ol>
+<p><strong>两种系统各自独立工作，在你的项目中只能使用其中一种。</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+<th>局限性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>相对速度障碍物算法</td>
+<td>- 代理使用特定半径内的速度向量规避障碍物。<br>    <br>- 包含在角色类的角色移动（Character Movement）组件中。</td>
+<td>- 相较于群组绕行管理器更难配置。<br>    <br>- 仅限于角色类中。<br>    <br>- 不使用寻路网格体进行规避，因此代理可能会任性地”出走”。</td>
+</tr>
+<tr>
+<td>群组绕行管理器</td>
+<td>- 代理通过路径优化和特定半径内的速度向量规避障碍物。<br>    <br>- 包含在群组绕行AI控制器（DetourCrowd AI Controller）类中。| 在项目设置中定义了固定的最大代理数量。</td>
+<td>- 在项目设置中定义了固定的最大代理数量。</td>
+</tr>
+</tbody></table>
+<h2 id="寻路调用程序"><a href="#寻路调用程序" class="headerlink" title="寻路调用程序"></a>寻路调用程序</h2><p><strong>寻路调用程序（Navigation Invokers）</strong> 是在运行时在代理周围生成寻路网格体的蓝图 Actor 组件。<strong>使用寻路调用程序，就无需在编辑器中构建寻路网格体，并且还可以限制在运行时生成的图块数。</strong><br>寻路调用程序非常适合大型关卡，因为在编辑器中构建寻路网格体不切实际。<br><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/using-navigation-invokers-in-unreal-engine/">使用虚幻引擎中的寻路调用程序 | 虚幻引擎5.2文档 (unrealengine.com)</a></p>
+<h2 id="优化-NavMesh-生成速度"><a href="#优化-NavMesh-生成速度" class="headerlink" title="优化 NavMesh 生成速度"></a>优化 NavMesh 生成速度</h2><p><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/optimizing-navigation-mesh-generation-speed-in-unreal-engine/">优化虚幻引擎寻路网格体的生成速度 | 虚幻引擎5.2文档 (unrealengine.com)</a></p>
+<h2 id="世界分区静态导航网格"><a href="#世界分区静态导航网格" class="headerlink" title="世界分区静态导航网格"></a>世界分区静态导航网格</h2><p><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/world-partitioned-navigation-mesh/">世界分区导航网格 | 虚幻引擎5.2文档 (unrealengine.com)</a></p>
+<h1 id="MassEntity（鸽）"><a href="#MassEntity（鸽）" class="headerlink" title="MassEntity（鸽）"></a>MassEntity（鸽）</h1><p>MassEntity 是一个重点围绕游戏逻辑打造的框架，用于面向数据的计算。<strong>基于 ECS</strong><br><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/mass-entity-in-unreal-engine/">虚幻引擎MassEntity | 虚幻引擎5.2文档 (unrealengine.com)</a></p>
+<h1 id="智能对象（鸽）"><a href="#智能对象（鸽）" class="headerlink" title="智能对象（鸽）"></a>智能对象（鸽）</h1><p><strong>智能对象（Smart Object）</strong> 是可以放置在关卡中与AI代理和玩家交互的对象。这些对象包含交互所需的所有信息。<br><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/smart-objects-in-unreal-engine---overview/">虚幻引擎智能对象概述 | 虚幻引擎5.2文档 (unrealengine.com)</a></p>
+<h1 id="StateTree（鸽）"><a href="#StateTree（鸽）" class="headerlink" title="StateTree（鸽）"></a>StateTree（鸽）</h1><p><strong>StateTree</strong> 是一种通用分层状态机，组合了行为树中的 <strong>选择器（Selectors）</strong> 与状态机中的 <strong>状态（States）</strong> 和 <strong>过渡（Transitions）</strong> 。使用 StateTree，你可以创建非常高效、保持灵活且井然有序的逻辑。</p>
+<p><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/state-tree-in-unreal-engine/">虚幻引擎中的StateTree | 虚幻引擎5.2文档 (unrealengine.com)</a></p>
+<h1 id="环境查询系统-EQS"><a href="#环境查询系统-EQS" class="headerlink" title="环境查询系统 EQS"></a>环境查询系统 EQS</h1><p><strong>场景查询系统（EQS）用于从环境中收集数据，获取环境信息</strong>。在 EQS 中，可以通过不同种类的测试向收集的数据提问，这些测试会根据提出问题的类型来生成最适合的项目。 </p>
+<ul>
+<li><strong>场景查询系统（EQS）</strong> 可在行为树中用于通过各种轮询测试场景，然后根据这些测试的结果做出如何继续的决定。EQS 的一些样板用例包括：让 AI 角色找到避开玩家视线的掩护位置，或者找到关卡中最近的体力回复剂或弹药。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012791.png" alt="Pasted image 20231028210156"></p>
+<blockquote>
+<p>生成器生成位置（黄色圆圈 ），然后使用 Trace 和 Distance 测试，就能知道能看到 Player 且最近的位置。这样 Enemy 就能移动到该位置并发现Player</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">节点类型</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Generator <br> <a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.3/zh-CN/eqs-node-reference-generators-in-unreal-engine/">生成器</a></td>
+<td align="left">生成位置或Actor，称为 项目（Item），将被测试和加权。</td>
+</tr>
+<tr>
+<td align="left">Context <br> <a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.3/zh-CN/eqs-node-reference-contexts-in-unreal-engine/">上下文</a></td>
+<td align="left">这是各种测试和生成器的参考框架 <br>上下文可以是简单的 Querier查询器（其执行测试），也可以是比较复杂的Item，例如 某种类型的所有Actor</td>
+</tr>
+<tr>
+<td align="left">Test <br> <a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.3/zh-CN/eqs-node-reference-tests-in-unreal-engine/">测试</a></td>
+<td align="left">这是场景查询系统确定来自生成器的项目（Item）是否为”最佳”选项的方式。 <br> 以对一个生成器添加多个测试，这是缩小结果范围的有效方法，可以提供尽可能好的选择。</td>
+</tr>
+</tbody></table>
+<p>从行为树调用场景查询（任务节点），然后实际的场景查询将使用其 <a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/eqs-node-reference-generators-in-unreal-engine">Generator</a>，引用其 <a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/eqs-node-reference-contexts-in-unreal-engine">Context</a>，并使用其 <code>Test</code> 对生成的数据提问，返回符合所提问题类型的最佳 Item（作为黑板键返回，是权重最高的结果）</p>
+<blockquote>
+<p>[!NOTE] 节点注意事项</p>
+<ol>
+<li>虽然可以将多个生成器连接到 Root，但查询中只会使用最左侧的生成器。</li>
+<li>对生成器添加 Test 的顺序并不重要。Test 会自动排序，将过滤 Test 排在前面（从而使后续测试所处理的项目（Item）集合尽可能小），还会按开销过滤（从而使距离过滤器在视线过滤器之前执行）。</li>
+</ol>
+</blockquote>
+<h1 id="调式工具"><a href="#调式工具" class="headerlink" title="调式工具"></a>调式工具</h1><p><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.3/zh-CN/ai-debugging-in-unreal-engine">AI调试工具</a>查看任何活动的 EQS 查询（除了行为树或感知信息之外）。要在运行时激活 AI 调试，请按 **’**（撇号）键，然后选择1（进行一般 AI 调试）、2（用于行为树）、3（用于 EQS）或4（用于 AI 感知）。下面我们激活 AI 调试并调出 EQS 调试工具。</p>
+<p>除了使用 EQS 调试工具外，还有一种特殊类型的 Pawn，叫做 <strong>EQS 测试 Pawn</strong>，可用于在编辑器中调试 EQS 查询。你可以通过创建新蓝图类 <strong>EQS Testing Pawn</strong> 类来创建此 Pawn。</p>
+<p>我们的当前设置使用玩家角色作为情境，用于在我们的 EQS 测试中求值。要在游戏未运行时测试，我们需要对 <strong>EQS_PlayerContext</strong> 蓝图稍加修改，覆盖 <strong>Provide Actors Set</strong> 函数。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012792.jpg" alt="Pasted image 20231028202816"><br>我们可以使用 <strong>获取所有（Get All Actors of Class）</strong>，将其设为 <strong>ThirdPersonCharacter</strong>，这会提供 <strong>结果 Actor 集（Resulting Actors Set）</strong>：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012793.jpg" alt="Pasted image 20231028202829"><br>将EQS测试Pawn添加到关卡时，在 <strong>细节（Details）</strong> 面板中可以指定 <strong>查询模板（Query Template）</strong>（我们已将它设为我们的 <strong>EQS_FindPlayer</strong> 查询）。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012794.jpg" alt="Pasted image 20231028202833"></p>
+<p>这样当你在编辑器中时，就可以看到测试的结果，如下图所示：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070012795.png" alt="Pasted image 20231028202857"><br>系统还会通过VisLog记录EQS数据供你参考。请参见 <strong>Visual Logger</strong> 了解更多信息。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/46644.html">http://liuke101.github.io/post/46644.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/AI/">AI</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/40918.html" title="UEC++基础API"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070001649.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">UEC++基础API</div></div></a></div><div class="next-post pull-right"><a href="/post/62010.html" title="Sugar:用于高效 3D Mesh 重建和高质量 Mesh 渲染的曲面对齐的高斯泼贱"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Sugar:用于高效 3D Mesh 重建和高质量 Mesh 渲染的曲面对齐的高斯泼贱</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">1. 文章主要迁移自个人的obsidian笔记，存在部分md语法冲突，导致显示异常，暂未修复。 2. 文章部分内容参考/引用网络资源，用于个人学习，如有侵权，请联系我删除。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-text">架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A1%8C%E4%B8%BA%E6%A0%91"><span class="toc-text">行为树</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%88%E6%88%90%E8%8A%82%E7%82%B9-Composite"><span class="toc-text">合成节点 Composite</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E8%8A%82%E7%82%B9-Decorator"><span class="toc-text">装饰器节点 Decorator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E8%8A%82%E7%82%B9-Service"><span class="toc-text">服务节点 Service</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E8%8A%82%E7%82%B9-Tasks"><span class="toc-text">任务节点 Tasks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E8%80%85%E4%B8%AD%E6%AD%A2-Observer-Aborts"><span class="toc-text">观察者中止 Observer Aborts</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%8C%E4%B8%BA%E6%A0%91%E8%8A%82%E7%82%B9%E5%AE%9E%E4%BE%8B%E5%8C%96%E8%A7%84%E5%88%99"><span class="toc-text">行为树节点实例化规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%8C%96%E8%8A%82%E7%82%B9"><span class="toc-text">实例化节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%9C%A8%E9%BB%91%E6%9D%BF%E4%B8%8A"><span class="toc-text">存储在黑板上</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%9C%A8%E8%A1%8C%E4%B8%BA%E6%A0%91%E8%8A%82%E7%82%B9%E4%B8%8A"><span class="toc-text">存储在行为树节点上</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AI-%E6%84%9F%E7%9F%A5%E7%B3%BB%E7%BB%9F"><span class="toc-text">AI 感知系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#AIPerception-%E6%84%9F%E7%9F%A5%E7%BB%84%E4%BB%B6"><span class="toc-text">AIPerception 感知组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%84%9F%E7%9F%A5%E9%85%8D%E7%BD%AE"><span class="toc-text">感知配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%84%9F%E7%9F%A5%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8"><span class="toc-text">感知函数调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%BA%E6%BF%80%E6%BA%90%E9%85%8D%E7%BD%AE"><span class="toc-text">刺激源配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%BA%E6%BF%80%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8"><span class="toc-text">刺激函数调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PawnNoiseEmitter-%E5%99%AA%E5%A3%B0%E5%8F%91%E5%B0%84%E5%99%A8%E7%BB%84%E4%BB%B6"><span class="toc-text">PawnNoiseEmitter 噪声发射器组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PawnSensing-%E6%84%9F%E5%BA%94%E7%BB%84%E4%BB%B6"><span class="toc-text">PawnSensing 感应组件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9F"><span class="toc-text">寻路系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9F"><span class="toc-text">修改寻路系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%81%BF%E9%9A%9C%E6%9C%BA%E5%88%B6"><span class="toc-text">避障机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BB%E8%B7%AF%E8%B0%83%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="toc-text">寻路调用程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96-NavMesh-%E7%94%9F%E6%88%90%E9%80%9F%E5%BA%A6"><span class="toc-text">优化 NavMesh 生成速度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%96%E7%95%8C%E5%88%86%E5%8C%BA%E9%9D%99%E6%80%81%E5%AF%BC%E8%88%AA%E7%BD%91%E6%A0%BC"><span class="toc-text">世界分区静态导航网格</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MassEntity%EF%BC%88%E9%B8%BD%EF%BC%89"><span class="toc-text">MassEntity（鸽）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E5%AF%B9%E8%B1%A1%EF%BC%88%E9%B8%BD%EF%BC%89"><span class="toc-text">智能对象（鸽）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#StateTree%EF%BC%88%E9%B8%BD%EF%BC%89"><span class="toc-text">StateTree（鸽）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F-EQS"><span class="toc-text">环境查询系统 EQS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B0%83%E5%BC%8F%E5%B7%A5%E5%85%B7"><span class="toc-text">调式工具</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/17862.html" title="3DGS总结">3DGS总结</a><time datetime="2024-05-04T16:00:00.000Z" title="发表于 2024-05-05 00:00:00">2024-05-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/46692.html" title="2DGS">2DGS</a><time datetime="2024-04-11T16:00:00.000Z" title="发表于 2024-04-12 00:00:00">2024-04-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/8166.html" title="GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成">GaussianDreamer:通过桥接 2D 和 3D  Diffusion Model，实现从 Text 到 3D 高斯的快速生成</a><time datetime="2024-04-09T16:00:00.000Z" title="发表于 2024-04-10 00:00:00">2024-04-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/46693.html" title="DreamGaussian:用于高效3D内容创建的生成式高斯泼溅">DreamGaussian:用于高效3D内容创建的生成式高斯泼溅</a><time datetime="2024-04-08T16:00:00.000Z" title="发表于 2024-04-09 00:00:00">2024-04-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/42610.html" title="GaussianEditor:使用高斯泼溅进行快速可控的 3D 编辑">GaussianEditor:使用高斯泼溅进行快速可控的 3D 编辑</a><time datetime="2024-04-08T16:00:00.000Z" title="发表于 2024-04-09 00:00:00">2024-04-09</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-server-indol.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.css')
+      const { init } = await import('https://cdn.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.min.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Waline' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline-server-indol.vercel.app/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="9896988395" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js?v=4.13.0"></script></div></div></body></html>
