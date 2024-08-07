@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>UE网络精粹 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="游戏开发">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>UE网络精粹 | 游戏江湖</title><meta name="author" content="灵玉"><meta name="copyright" content="灵玉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="1 虚幻中的网络虚幻引擎使用标准的客户端 - 服务器 （Client-Server）架构。 服务器是权威（Authoritative） 的。所有数据必须首先从客户端发送到服务器。之后，服务器验证数据并根据您的代码做出反应。  服务器是权威的，意味着服务器运行的游戏版本被认为是正确的版本  运行单人游戏时，UE 仍然使用 CS 架构，只不过客户端和服务器是同一台机器。  1.1 一个小例子​当您作为">
 <meta property="og:type" content="article">
 <meta property="og:title" content="UE网络精粹">
 <meta property="og:url" content="http://liuke101.github.io/post/62793.html">
 <meta property="og:site_name" content="游戏江湖">
-<meta property="og:description" content="游戏开发">
+<meta property="og:description" content="1 虚幻中的网络虚幻引擎使用标准的客户端 - 服务器 （Client-Server）架构。 服务器是权威（Authoritative） 的。所有数据必须首先从客户端发送到服务器。之后，服务器验证数据并根据您的代码做出反应。  服务器是权威的，意味着服务器运行的游戏版本被认为是正确的版本  运行单人游戏时，UE 仍然使用 CS 架构，只不过客户端和服务器是同一台机器。  1.1 一个小例子​当您作为">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png">
 <meta property="article:published_time" content="2023-10-06T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-08-06T16:34:32.949Z">
+<meta property="article:modified_time" content="2024-08-07T16:30:37.705Z">
 <meta property="article:author" content="灵玉">
 <meta property="article:tag" content="网络同步">
 <meta name="twitter:card" content="summary">
@@ -62,8 +62,8 @@
   isPost: true,
   isHome: false,
   isHighlightShrink: false,
-  isToc: false,
-  postUpdate: '2024-08-07 00:34:32'
+  isToc: true,
+  postUpdate: '2024-08-08 00:30:37'
 }</script><script>(win=>{
       win.saveToLocal = {
         set: (key, value, ttl) => {
@@ -160,7 +160,1158 @@
         }
       }
       detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">UE网络精粹</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-06T16:00:00.000Z" title="发表于 2023-10-07 00:00:00">2023-10-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-06T16:34:32.949Z" title="更新于 2024-08-07 00:34:32">2024-08-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%99%9A%E5%B9%BB%E5%BC%95%E6%93%8E/">虚幻引擎</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">0</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="UE网络精粹"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/62793.html#post-comment"><span class="waline-comment-count" data-path="/post/62793.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/62793.html">http://liuke101.github.io/post/62793.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E5%90%8C%E6%AD%A5/">网络同步</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/41022.html" title="UML类图"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">UML类图</div></div></a></div><div class="next-post pull-right"><a href="/post/3180.html" title="UEC++指针"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">UEC++指针</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">1. 文章主要迁移自个人的obsidian笔记，存在部分md语法冲突，导致显示异常，暂未修复。 2. 文章部分内容参考/引用网络资源，用于个人学习，如有侵权，请联系我删除。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/46644.html" title="UE AI系统">UE AI系统</a><time datetime="2023-10-15T16:00:00.000Z" title="发表于 2023-10-16 00:00:00">2023-10-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/8996.html" title="UEC++定时器">UEC++定时器</a><time datetime="2023-10-15T16:00:00.000Z" title="发表于 2023-10-16 00:00:00">2023-10-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/40918.html" title="UEC++基础API">UEC++基础API</a><time datetime="2023-10-15T16:00:00.000Z" title="发表于 2023-10-16 00:00:00">2023-10-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/24808.html" title="蓝图精粹"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408070002240.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="蓝图精粹"/></a><div class="content"><a class="title" href="/post/24808.html" title="蓝图精粹">蓝图精粹</a><time datetime="2023-10-15T16:00:00.000Z" title="发表于 2023-10-16 00:00:00">2023-10-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/46645.html" title="UE AI系统">UE AI系统</a><time datetime="2023-10-15T16:00:00.000Z" title="发表于 2023-10-16 00:00:00">2023-10-16</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><nav id="nav"><span id="blog-info"><a href="/" title="游戏江湖"><span class="site-name">游戏江湖</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">UE网络精粹</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-06T16:00:00.000Z" title="发表于 2023-10-07 00:00:00">2023-10-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-07T16:30:37.705Z" title="更新于 2024-08-08 00:30:37">2024-08-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%99%9A%E5%B9%BB%E5%BC%95%E6%93%8E/">虚幻引擎</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">25.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>86分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="UE网络精粹"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/62793.html#post-comment"><span class="waline-comment-count" data-path="/post/62793.html"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="1-虚幻中的网络"><a href="#1-虚幻中的网络" class="headerlink" title="1 虚幻中的网络"></a>1 虚幻中的网络</h1><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026256.png" alt="Pasted image 20231003202346"><br>虚幻引擎使用标准的<strong>客户端 - 服务器 （Client-Server）架构</strong>。</p>
+<p>服务器是<strong>权威（Authoritative）</strong> 的。所有数据必须首先从客户端发送到服务器。之后，服务器验证数据并根据您的代码做出反应。</p>
+<blockquote>
+<p>服务器是权威的，意味着服务器运行的游戏版本被认为是正确的版本</p>
+</blockquote>
+<p>运行单人游戏时，UE 仍然使用 CS 架构，只不过客户端和服务器是同一台机器。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026257.png" alt="Pasted image 20231006211813"></p>
+<h2 id="1-1-一个小例子​"><a href="#1-1-一个小例子​" class="headerlink" title="1.1 一个小例子​"></a>1.1 一个小例子​</h2><p>当您作为客户端在多人游戏中移动角色时，您不会自己移动角色，而是告诉服务器您想要移动它。然后，服务器会为其他人（包括您）更新角色的变换。</p>
+<blockquote>
+<p>[!info] </p>
+<p>此外，为了防止本地客户端有 “滞后” 的感觉，程序员通常还让本地客户端直接控制他们的角色——尽管当客户端开始作弊时，服务器仍然可能覆盖角色的位置！这意味着客户端（几乎）永远不会直接与其他客户端“交谈”。</p>
+</blockquote>
+<h2 id="1-2-另一个例子​"><a href="#1-2-另一个例子​" class="headerlink" title="1.2 另一个例子​"></a>1.2 另一个例子​</h2><p>当向另一个客户端（个人、公会、队伍等）发送聊天消息时，您首先将其发送到服务器，然后服务器将其传递给您想要联系的客户端。</p>
+<blockquote>
+<p>[!danger]<br>永远不要相信客户端！信任客户端意味着您在执行客户端的操作之前不会测试它们。<br>这会允许他们作弊！<br>一个简单的例子是发射武器：确保在服务器上测试客户端是否拥有所需数量的弹药，之后再允许射击而不是直接处理射击！</p>
+</blockquote>
+<h1 id="2-GamePlay-架构-网络"><a href="#2-GamePlay-架构-网络" class="headerlink" title="2 GamePlay 架构 + 网络"></a>2 GamePlay 架构 + 网络</h1><h2 id="2-1-架构总结"><a href="#2-1-架构总结" class="headerlink" title="2.1 架构总结"></a>2.1 架构总结</h2><p>根据前面关于虚幻引擎的 CS 架构和常用类的信息，我们可以将虚幻类分为四类： </p>
+<ul>
+<li><strong>Server Only</strong> -  仅服务器 - 这些对象只存在于服务器上</li>
+<li><strong>Server &amp; Clients</strong> - 服务器和所有客户端 - 这些对象存在于服务器和所有客户端中</li>
+<li><strong>Server &amp; Owning Client</strong> - 服务器和拥有客户端（即本地客户端） - 这些对象只存在于服务器和拥有客户端上</li>
+<li><strong>Owning Client Only</strong> - 仅拥有客户端，这些对象只存在于拥有客户端上</li>
+</ul>
+<blockquote>
+<p><strong>拥有客户端（Owning Client）</strong> 是指拥有相关 Actor 的 player&#x2F;client。就像你拥有自己的电脑一样。所有权（Ownership）对于后面章节中的 “RPC “非常重要。</p>
+</blockquote>
+<p><strong>下面两幅图向您展示了一些常见的类别，以及它们属于哪些类别。</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026258.svg" alt="8a1f656c0ccacdb389055b2e883b707f_MD5|&quot;Common Classes layed out in the four sections mentioned above.&quot;"></p>
+<blockquote>
+<p>记忆方法，只记单个的AGameMode、PlayerController、UI </p>
+</blockquote>
+<p>第二幅图展示了一个有两个连接客户端的专用服务器（dedicated server）的示例。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026259.svg" alt="27b08f9e7b9ed6bc9c57882c9cbe197a_MD5|&quot;Venn Diagram of the Classes in a Dedicated Server with two connected Clients example.&quot;"></p>
+<h2 id="2-2-GameMode（仅服务器）"><a href="#2-2-GameMode（仅服务器）" class="headerlink" title="2.2 GameMode（仅服务器）"></a>2.2 GameMode（仅服务器）</h2><blockquote>
+<p>[!NOTE]<br>在 4.14 中，AGameMode 类分为 AGameModeBase 和 AGameMode。 AGameMode 在 AGameModeBase 基础上拓展了对网络的支持。</p>
+</blockquote>
+<p>AGameMode 类用于定义游戏规则。这包括要生成的其他游戏框架类，例如 APawn、APlayerController、APlayerState 等。</p>
+<p><strong>它仅在服务器上可用。客户端没有 AGameMode 类的实例，并且在尝试检索它时只会得到 nullptr。</strong></p>
+<h3 id="2-2-1-示例和用法​"><a href="#2-2-1-示例和用法​" class="headerlink" title="2.2.1 示例和用法​"></a>2.2.1 示例和用法​</h3><p>游戏模式的一些用例可能来自较早的第一人称射击游戏，例如《虚幻竞技场》：</p>
+<p><strong>Deathmatch</strong>, <strong>Team Deathmatch</strong> or <strong>Capture the Flag</strong>.<br>死亡竞赛、团队死亡竞赛或夺旗。</p>
+<p>这意味着 GameMode 可以定义如下内容：</p>
+<ul>
+<li>团队赛还是个人赛？</li>
+</ul>
+<ul>
+<li>获胜条件是什么？<ul>
+<li>杀敌数到达多少胜利？</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>积分是如何获得的？<ul>
+<li>杀人？</li>
+<li>夺旗？</li>
+</ul>
+</li>
+<li>将使用什么角色？</li>
+<li>允许携带哪些武器？</li>
+</ul>
+<pre><code>* 只有手枪吗？
+* 只有刀？
+</code></pre>
+<p>对于多人游戏场景，GameMode 还具有一些有趣的功能，可以帮助我们管理玩家和比赛的总体流程。</p>
+<h4 id="2-2-1-1-函数"><a href="#2-2-1-1-函数" class="headerlink" title="2.2.1.1 函数"></a>2.2.1.1 函数</h4><p>GameMode蓝图的 Override 函数部分：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026260.png" alt="cbde69313852572dab83dc34073ca75f_MD5"></p>
+<p>您可以实现这些函数的逻辑，以适应您的游戏的特定规则。 这包括更改 GameMode 生成 DefaultPawn 的方式或您想要如何决定游戏是否已准备好开始。</p>
+<p><strong>一个例子可能是检查所有玩家是否已加入服务器并准备好：</strong></p>
+<ul>
+<li><p>@ 蓝图：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026261.png" alt="Pasted image 20231001162035"></p>
+<blockquote>
+<p>玩家数到达最大玩家数时返回 true</p>
+</blockquote>
+</li>
+<li><p>@ C++：<br>由于 <code>ReadyToStartMatch</code> 是 <code>BlueprintNativeEvent</code>，因此该函数的实际 C++ 实现称为 <code>ReadyToStartMatch_Implementation</code>。这是我们想要覆盖的：</p>
+</li>
+</ul>
+<figure class="highlight c++"><figcaption><span>title:MyGameMode.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 本场比赛所需/允许的最大Player人数</span></span><br><span class="line">int32 MaxNumPlayers;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">ReadyToStartMatch_Implementation</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><figcaption><span>title:MyGameMode.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ATestGameMode::ReadyToStartMatch_Implementation</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">ReadyToStartMatch</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> MaxNumPlayers == NumPlayers;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><strong>但也有一些事件可以用来对整个比赛中发生的某些事情做出反应。</strong><br>我经常使用的一个很好的例子是事件 <code>OnPostLogin</code>。每次新玩家加入游戏时都会调用此方法。该事件会向您传递一个有效的 PlayerController 引用，该 Controller 由连接玩家的 UConnection 拥有 （详情 [[#Actors 和他们的拥有关系]]）。</p>
+<ul>
+<li><p>@ 蓝图<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026262.png" alt="Pasted image 20231001160607|300"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026263.png" alt="Pasted image 20231001162106"></p>
+</li>
+<li><p>@ C ++<br><code>OnPostLogin</code> 函数是虚函数，在 C++ 中简称为 <code>PostLogin</code></p>
+<figure class="highlight c++"><figcaption><span>title:MyGameMode.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// List of PlayerControllers</span></span><br><span class="line"><span class="built_in">UPROPERTY</span>()</span><br><span class="line">TArray&lt;APlayerController*&gt; PlayerControllerList;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Overriding the PostLogin function</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">PostLogin</span><span class="params">(APlayerController* NewPlayer)</span> <span class="keyword">override</span></span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight c++"><figcaption><span>title:MyGameMode.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestGameMode::PostLogin</span><span class="params">(APlayerController* NewPlayer)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">PostLogin</span>(NewPlayer);</span><br><span class="line"></span><br><span class="line">    PlayerControllerList.<span class="built_in">Add</span>(NewPlayer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这可以用于与该玩家进行交互，例如，为他们生成一个新的 Pawn，或者只是将其 PlayerController 保存在数组中以供以后使用。</p>
+<p>正如已经提到的，您可以使用 GameMode 来管理游戏的一般比赛流程。为此，您可以找到一些功能，其中一些功能是可覆盖的，例如<code>Ready To Start Match</code>。</p>
+<p>这些函数和事件可用于控制当前的 <code>MatchState（匹配状态）</code>。当“<code>Ready To Start Match</code>”函数返回 <strong>TRUE</strong> 时，它们中的大多数将被自动调用，但您也可以手动使用它们。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026264.png" alt="Pasted image 20231001162147"></p>
+<blockquote>
+<p>“<code>New State</code>”是一个简单的“FName”类型。您现在可能会问，“为什么这不在 AGameState 类中处理？”嗯，确实如此。这些 GameMode 函数与 GameState 协同工作。<br><strong>这只是为了给您一个点来管理任何客户端都无法访问的 <code>MatchState</code>，因为 GameMode 只存在于服务器上！</strong></p>
+</blockquote>
+<h4 id="2-2-1-2-变量​"><a href="#2-2-1-2-变量​" class="headerlink" title="2.2.1.2 变量​"></a>2.2.1.2 变量​</h4><p>这是已经继承的变量的列表。其中一些可以通过 GameMode 蓝图的 ClassDefaults 进行设置：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026265.png" alt="80d227b1ee73d70c373d2144046809bd_MD5"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026266.png" alt="ac948e6651eb07cead5c485776186c8c_MD5"></p>
+<p>其中大多数命名都很直白，例如<code>Default Player Name</code>，它使您能够为每个连接的玩家提供一个可以通过 <code>APlayerState</code> 类访问的默认玩家名称。<br>还有 <code>bDelayedStart</code>，这将使游戏无法开始，即使 <code>Ready To Start Match</code> 的默认实现满足所有其他条件。 </p>
+<p><strong>更重要的变量之一是 <code>Options String</code>。这些是选项，用“<code>?</code>”分隔，您可以通过<code>OpenLevel</code>函数或当您将<code>ServerTravel</code>作为控制台命令调用时传递这些选项。</strong> </p>
+<p>您可以使用 <code>Parse Option</code> 来提取传递的选项，例如<code>MaxNumPlayers</code>：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026267.png" alt="Pasted image 20231001163900|400"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026268.png" alt="Pasted image 20231001164757"></p>
+<h2 id="2-3-GameState（服务器-所有客户端）"><a href="#2-3-GameState（服务器-所有客户端）" class="headerlink" title="2.3 GameState（服务器+所有客户端）"></a>2.3 GameState（服务器+所有客户端）</h2><p>服务端：ROLE_Authority<br>客户端：ROLE_SiimulatedProxy</p>
+<p><strong>在 GameState 上不能执行 Client RPC</strong> ，因为 GameState 同步时无法确认所属玩家。PlayerState 则可以。我们可以在 PlayerState 上执行 Client RPC，在其中调用 GameState 中的函数，以实现 GameState 上的 Client RPC 功能。</p>
+<blockquote>
+<p>[!info]<br>在 4.14 中，GameState 类被分为 AGameStateBase 和 AGameState。 GameStateBase 的功能较少，因为某些游戏可能不需要旧 GameState 类的完整功能列表。</p>
+</blockquote>
+<p>AGameState 类可能是服务器和客户端之间共享信息的最重要的类。<br>GameState 用于跟踪游戏 &#x2F; 比赛的当前状态。对于多人游戏来说，这<strong>包括已连接玩家的列表 (<code>APlayerState</code>)。</strong></p>
+<p><strong>此外，它会复制给所有客户端，因此每个人都可以访问它</strong>。这使得 GameState 成为多人游戏中信息方面最为核心的类之一。 </p>
+<p>虽然 GameMode 会告诉您需要多少杀敌数才能获胜，但 GameState 将跟踪每个玩家和 &#x2F; 或团队当前的杀敌数！</p>
+<p>您在这里存储什么信息完全取决于您。它可以是得分数组或自定义结构数组</p>
+<h3 id="2-3-1-示例和用法​"><a href="#2-3-1-示例和用法​" class="headerlink" title="2.3.1 示例和用法​"></a>2.3.1 示例和用法​</h3><p>在多人游戏中，AGameState 类用于跟踪游戏的当前状态，其中还包括<strong>玩家及其 PlayerState</strong>。</p>
+<p>GameMode 确保调用 GameState 的 <code>MatchState</code> 函数，并且 <strong>GameState 本身也允许您在客户端上使用它们</strong>。</p>
+<p>与 GameMode 相比，GameState 并没有给我们太多的帮助，但这仍然允许我们创建我们的逻辑，<strong>该逻辑主要应该尝试将信息传播给客户端。</strong></p>
+<h4 id="2-3-1-1-变量​"><a href="#2-3-1-1-变量​" class="headerlink" title="2.3.1.1 变量​"></a>2.3.1.1 变量​</h4><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026269.png" alt="460a118ae262e844e17ac30050cdac94_MD5"></p>
+<p>我们从 AGameState 基类中获取一些可以利用的变量。 PlayerArray、MatchState 和 ElapsedTime 都会被复制，因此客户端也可以访问它们。</p>
+<blockquote>
+<p><code>AuthorityGameMode</code> 除外。只有服务器可以访问它，因为 GameMode 仅存在于服务器上。</p>
+</blockquote>
+<p><strong>PlayerArray 不会直接复制，但是，每个 PlayerState 都会被复制，并且它们会在构造时将自己添加到 PlayerArray 中</strong>。此外，它们由 GameState 收集，只是为了确保竞争条件不会导致问题。</p>
+<p>以下是 C++代码示例，展示了将 PlayerState 收集到 PlayerArray 中的快速插入方法：<br>PlayerState 类本身的内部</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">APlayerState::PostInitializeComponents</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// […]</span></span><br><span class="line"></span><br><span class="line">    UWorld* World = <span class="built_in">GetWorld</span>();</span><br><span class="line">    <span class="comment">// Register this PlayerState with the Game&#x27;s ReplicationInfo</span></span><br><span class="line">    <span class="keyword">if</span> (World-&gt;GameState != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        World-&gt;GameState-&gt;<span class="built_in">AddPlayerState</span>(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// […]</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>并且在 GameState 中</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">AGameState::PostInitializeComponents</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// […]</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (TActorIterator&lt;APlayerState&gt; <span class="built_in">It</span>(World); It; ++It)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">AddPlayerState</span>(*It);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AGameState::AddPlayerState</span><span class="params">(APlayerState* PlayerState)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!PlayerState-&gt;bIsInactive)</span><br><span class="line">    &#123;</span><br><span class="line">        PlayerArray.<span class="built_in">AddUnique</span>(PlayerState);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>所有这一切都发生在服务器以及 Player 和 GameState 的客户端实例上！</p>
+<h4 id="2-3-1-2-示例"><a href="#2-3-1-2-示例" class="headerlink" title="2.3.1.2 示例"></a>2.3.1.2 示例</h4><p>我可以为您提供的一个小的函数示例是<strong>跟踪 “A” 和“B”两支球队的得分。</strong> 假设我们有一个 <code>CustomEvent</code>，当球队得分时会调用该事件。</p>
+<p>它传递一个布尔值，这样我们就知道哪支球队得分了。我们还可以传递 PlayerState、Team 或任何您用来识别得分者的信息。</p>
+<p>稍后在 “Replication 复制” 章节中，您将了解<strong>只有服务器可以（并且应该）复制变量的规则</strong>，因此我们确保只有服务器可以调用此事件。</p>
+<p>该事件是从另一个类调用的（例如杀死某人的武器），并且这应该发生在服务器上（总是！），因此我们在这里不需要 RPC。</p>
+<ul>
+<li><p>@ 蓝图<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026270.png" alt="Pasted image 20231001173813"><br>由于这些变量和 GameState 是复制的，因此您可以使用这两个变量并将它们放入您需要的任何其他类中。例如，将它们显示在记分板 widget 中。 </p>
+</li>
+<li><p>@ C++</p>
+</li>
+</ul>
+<p>为了重新创建这个例子，我们需要更多的代码，但是除了函数本身之外，设置复制所需的代码只需要每个类一次。</p>
+<figure class="highlight c++"><figcaption><span>title:MyGameState.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// You need this included to get the replication working.</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> “UnrealNetwork.h”</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Replicated specifier used to mark this variable to replicate</span></span><br><span class="line"><span class="built_in">UPROPERTY</span>(Replicated)</span><br><span class="line">int32 TeamAScore;</span><br><span class="line"></span><br><span class="line"><span class="built_in">UPROPERTY</span>(Replicated)</span><br><span class="line">int32 TeamBScore;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Function to increase the score of a team</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AddScore</span><span class="params">(<span class="type">bool</span> bTeamAScored)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><figcaption><span>title:MyGameState.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestGameState::AddScore</span><span class="params">(<span class="type">bool</span> bTeamAScored)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (bTeamAScored)</span><br><span class="line">    &#123;</span><br><span class="line">        TeamAScore++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        TeamBScore++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-4-PlayerState-（服务器-所有客户端）"><a href="#2-4-PlayerState-（服务器-所有客户端）" class="headerlink" title="2.4 PlayerState （服务器+所有客户端）"></a>2.4 PlayerState （服务器+所有客户端）</h2><p>服务端：ROLE_Authority<br>客户端：ROLE_SimulatedProxy</p>
+<p><code>APlayerState</code> 类是<strong>共享特定玩家信息的最重要的类</strong>。它旨在保存有关玩家的当前信息。<strong>每个玩家都有自己的 PlayerState</strong>。</p>
+<p><strong>PlayerState 也会复制给每个人，并可用于在其他客户端上检索和显示数据。<br>访问所有 PlayerState 的一个简单方法是 AGameState 类中的 <code>PlayerArray</code>。</strong></p>
+<p>您可能想要存储在 PlayerState 中的示例信息：</p>
+<ul>
+<li>PlayerName - 玩家的当前名称</li>
+<li>Score - 玩家当前的分数</li>
+<li>Ping - 玩家当前的 ping</li>
+<li>TeamID - 玩家所在团队的 ID</li>
+<li>或其他玩家可能需要了解的其他复制信息</li>
+</ul>
+<h3 id="2-4-1-示例和用法​"><a href="#2-4-1-示例和用法​" class="headerlink" title="2.4.1 示例和用法​"></a>2.4.1 示例和用法​</h3><p>我能提供的大多数例子都非常具体。因此，我们将看看一些已经可用的属性，以及一些更有趣的函数。</p>
+<h4 id="2-4-1-1-蓝图示例​"><a href="#2-4-1-1-蓝图示例​" class="headerlink" title="2.4.1.1 蓝图示例​"></a>2.4.1.1 蓝图示例​</h4><p>蓝图暴露了一些变量，它们或多或少有用。遗憾的是，其中一些并未公开其所有函数，因此最好用您自己的函数替换它们。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026271.png" alt="104ed35e4fa0a9d27583ee86b3d4d64f_MD5"></p>
+<blockquote>
+<p><strong>这些变量都会被复制，因此它们在所有客户端上保持同步。</strong></p>
+</blockquote>
+<p>遗憾的是，它们在蓝图中不容易设置，但没有什么可以阻止您创建它们的版本。</p>
+<p>设置 PlayerName 变量的一个示例是通过调用 GameMode 函数<code>ChangeName</code>，并将其传递给玩家的 PlayerController。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026272.png" alt="Pasted image 20231001174629"></p>
+<p>PlayerState 还用于<strong>确保数据在无缝关卡更改或意外连接问题期间保持持久性。</strong></p>
+<p>PlayerState 有两个专门用于处理重新连接玩家和与服务器无缝切换到新地图的玩家的功能。<strong>PlayerState 负责将其已保存的信息复制到新的 PlayerState 中</strong>。这要么是通过关卡更新创建的，要么是因为玩家重新连接而创建的。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026273.png" alt="Pasted image 20231001175334"></p>
+<ul>
+<li>@ c++实现<br>让我们看一下 C++ 中的相同函数。<figure class="highlight c++"><figcaption><span>title:TestPlayerState.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Used to copy properties from the current PlayerState to the passed one</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">CopyProperties</span><span class="params">(<span class="keyword">class</span> APlayerState* PlayerState)</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Used to override the current PlayerState with the properties of the passed one</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">OverrideWith</span><span class="params">(<span class="keyword">class</span> APlayerState* PlayerState)</span> <span class="keyword">override</span></span>;</span><br></pre></td></tr></table></figure>
+这些函数可以在您自己的 C++ PlayerState 子类中实现，以管理您添加到自定义 PlayerState 的数据。确保在末尾添加“override”说明符，并调用“Super::”，以便原始实现保持活动状态。</li>
+</ul>
+<p>您的实现可能与此类似：</p>
+<figure class="highlight c++"><figcaption><span>title:TestPlayerState.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestPlayerState::CopyProperties</span><span class="params">(<span class="keyword">class</span> APlayerState* PlayerState)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">CopyProperties</span>(PlayerState);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">IsValid</span>(PlayerState))</span><br><span class="line">    &#123;</span><br><span class="line">        ATestPlayerState* TestPlayerState = <span class="built_in">Cast</span>&lt;ATestPlayerState&gt;(PlayerState);</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">IsValid</span>(TestPlayerState))</span><br><span class="line">        &#123;</span><br><span class="line">            TestPlayerState-&gt;SomeVariable = SomeVariable;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestPlayerState::OverrideWith</span><span class="params">(<span class="keyword">class</span> APlayerState* PlayerState)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">OverrideWith</span>(PlayerState);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">IsValid</span>(PlayerState))</span><br><span class="line">    &#123;</span><br><span class="line">        ATestPlayerState* TestPlayerState = <span class="built_in">Cast</span>&lt;ATestPlayerState&gt;(PlayerState);</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">IsValid</span>(TestPlayerState))</span><br><span class="line">        &#123;</span><br><span class="line">            SomeVariable = TestPlayerState-&gt;SomeVariable;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-5-Pawn-Character（服务器-所有客户端）"><a href="#2-5-Pawn-Character（服务器-所有客户端）" class="headerlink" title="2.5 Pawn &#x2F; Character（服务器+所有客户端）"></a>2.5 Pawn &#x2F; Character（服务器+所有客户端）</h2><p>PlayerController 一次只能拥有一个 Pawn，但可以通过-possess  和 unpossess 来轻松切换 Pawn。</p>
+<p><strong>Pawn 大部分被复制到所有客户端。</strong></p>
+<p>Pawn 的子类 ACharacter 经常被使用，因为它带有一个已经<strong>联网</strong>的 MovementComponent，用于处理复制玩家角色的位置、旋转等。</p>
+<h3 id="2-5-1-示例和用法​"><a href="#2-5-1-示例和用法​" class="headerlink" title="2.5.1 示例和用法​"></a>2.5.1 示例和用法​</h3><p>在多人游戏中，我们主要使用 Pawn 的 <code>Replication</code> 部分来显示角色并与其他人共享一些信息。一个简单的例子是角色的“Health”。  </p>
+<p>我们不仅仅复制“Health”以使其对其他玩家可见，我们还复制它以使服务器对其具有权限，以防止客户端作弊。</p>
+<h4 id="2-5-1-1-蓝图​"><a href="#2-5-1-1-蓝图​" class="headerlink" title="2.5.1.1 蓝图​"></a>2.5.1.1 蓝图​</h4><p>尽管有标准的可重载函数，Pawn 也有两个事件可以让您对它被 PlayerController 或 AIController 拥有时做出反应。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026274.png" alt="Pasted image 20231001180252|300"></p>
+<blockquote>
+<p>[!NOTE] </p>
+<ul>
+<li>由于 possess 逻辑发生在服务器上，这些事件仅在 Pawn&#x2F;Character 的服务器版本上调用。</li>
+<li><code>ReceiveControllerChanged</code> 事件：在 Controller 变更时后调用，在客户端和服务端都能调用。</li>
+</ul>
+</blockquote>
+<p>下图将展示如何使用 <code>EventAnyDamage</code> 函数和复制的 <code>Health</code> 变量来降低玩家的生命值。</p>
+<blockquote>
+<p>这发生在服务器上而不是客户端上！</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026275.png" alt="Pasted image 20231001181826"></p>
+<p>由于 Pawn 应该被复制，只要服务器调用 DestroyActor 节点，它也会销毁 Pawn 的客户端版本。  </p>
+<p>在客户端站点上，我们可以将复制的“<code>Health</code>”变量用于 HUD 或每个人头顶上的健康栏。您可以通过创建带有 ProgressBar 和对 Pawn 的引用的 UserWidget 来轻松完成此操作。</p>
+<p>假设我们的“BP_Character”类上有一个“Health”和“MaxHealth”变量，全部设置为<strong>复制</strong>（如果 MaxHealth 永远不会运行时改变，您可以不设置复制）。</p>
+<p>现在，在 UserWidget 和 ProgressBar 内部创建“BP_Character”引用变量后，我们可以将该条的百分比绑定到以下函数：</p>
+<p><img src="https://cedric-neukirchen.net/assets/images/health_bar_settings-00ef62de597e323724e84acad719a3a1.png" alt="Health Bar Settings" title="Health Bar Settings"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026276.png" alt="Pasted image 20231001182325"></p>
+<p>此外，在设置 WidgetComponent 后，我​​们可以将“Widget Class To Use”设置为您的 HealthBar UserWidget，并在 BeginPlay 上执行以下操作：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026277.png" alt="Pasted image 20231001182420"></p>
+<p>**“BeginPlay”在 Pawn 的所有实例上（服务器和所有客户端上）调用</p>
+<p>所以现在每个实例都将自己设置为它所拥有的 UserWidget 的 Pawn 引用。</p>
+<p>由于 Pawn 和生命值变量被复制，我们在每个 Pawn 的头部上方都有正确的百分比。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026278.jpg" alt="Pasted image 20231001182430"></p>
+<h4 id="2-5-1-2-C"><a href="#2-5-1-2-C" class="headerlink" title="2.5.1.2 C++"></a>2.5.1.2 C++</h4><p>对于 C++ 示例，我不会重新创建 UserWidget 示例。要让 UserWidgets 在 C++ 中工作需要做太多的模板式的东西，我不想在这里讨论这个。</p>
+<p>所以我们将重点关注占有和伤害事件。在 C++中，两个 Possess 事件被称为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">PossessedBy</span><span class="params">(AController* NewController)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">UnPossessed</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意，<code>UnPossessed</code> 事件不会传递旧的 PlayerController。</p>
+</blockquote>
+<p>And we also want to recreate the Health example in C++. As always, if you don’t understand the steps of replication at this moment, don’t worry, the upcoming chapters will explain it to you.<br>我们还想用 C++ 重新创建 Health 示例。如果您现在不明白复制的步骤，请不要担心，接下来的章节将为您解释。</p>
+<blockquote>
+<p>如果示例在复制方面看起来太复杂，请暂时跳过这些示例。</p>
+</blockquote>
+<p>“<code>TakeDamage</code>”函数相当于“<code>EventAnyDamage</code>”节点。为了造成伤害，您通常会对要对其造成伤害的 Actor 调用“TakeDamage”，如果该 Actor 实现了该函数，它将对此做出反应，类似于本示例的做法。</p>
+<figure class="highlight c++"><figcaption><span>title:TestPawn.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Replicated Health variable</span></span><br><span class="line"><span class="built_in">UPROPERTY</span>(Replicated)</span><br><span class="line">int32 Health;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Overriding the TakeDamage event</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">float</span> <span class="title">TakeDamage</span><span class="params">(<span class="type">float</span> Damage, <span class="keyword">struct</span> FDamageEvent <span class="type">const</span>&amp; DamageEvent, AController* EventInstigator, AActor* DamageCauser)</span> <span class="keyword">override</span></span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><figcaption><span>title:TestPawn.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 该函数是必需的，UPROPERTY 宏中的Replicated指示符会为我们声明该函数。我们只需实现它</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestPawn::GetLifetimeReplicatedProps</span><span class="params">(TArray&lt;FLifetimeProperty&gt;&amp; OutLifetimeProps)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">GetLifetimeReplicatedProps</span>(OutLifetimeProps);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 告诉 UE 我们要复制这个变量</span></span><br><span class="line">    <span class="built_in">DOREPLIFETIME</span>(ATestPawn, Health);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">float</span> <span class="title">ATestPawn::TakeDamage</span><span class="params">(<span class="type">float</span> Damage, <span class="keyword">struct</span> FDamageEvent <span class="type">const</span>&amp; DamageEvent, AController* EventInstigator, AActor* DamageCauser)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">float</span> ActualDamage = Super::<span class="built_in">TakeDamage</span>(Damage, DamageEvent, EventInstigator, DamageCauser);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Lower the Health of the Player</span></span><br><span class="line">    Health -= ActualDamage;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// And destroy it if the Health is less or equal 0</span></span><br><span class="line">    <span class="keyword">if</span> (Health &lt;= <span class="number">0.f</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">Destroy</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ActualDamage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-6-PlayerController-（服务器-拥有客户端）"><a href="#2-6-PlayerController-（服务器-拥有客户端）" class="headerlink" title="2.6 PlayerController （服务器+拥有客户端）"></a>2.6 PlayerController （服务器+拥有客户端）</h2><p>APlayerController 类可能是我们遇到的最有趣、最复杂的类。它也是大量客户端逻辑的中心，因为<strong>这是客户端真正 “拥有 (owns) “的第一个类</strong>。</p>
+<p>PlayerController 可以看作是玩家的 “<code>Input</code>“。它是玩家与服务器的链接。这进一步意味着<strong>每个客户端都有一个 PlayerController</strong>。  </p>
+<p><strong>客户端的 PlayerController 只存在于本客户端和服务器</strong>：</p>
+<ul>
+<li>每个客户端<strong>只知道</strong>自己的 PlayerController，<strong>无法访问其他客户端的 PlayerController。</strong></li>
+<li>服务器拥有<strong>所有</strong>客户端 PlayerControllers 的引用！</li>
+</ul>
+<p>“Input”一词并不直接意味着所有实际输入（按键、鼠标移动、控制器轴等）都需要放在 PlayerController 中。一个好的做法是：</p>
+<ul>
+<li>将 Pawn&#x2F;Character <strong>特定</strong>的输入（汽车的工作方式与人类不同）放入 APawn&#x2F;ACharacter 类中</li>
+<li>将适用于<strong>所有</strong> Character 或甚至当 Character 对象无效时的输入，放入 PlayerController 中。</li>
+</ul>
+<blockquote>
+<p>[!question]<br>如何获取正确的 PlayerController？</p>
+</blockquote>
+<p>节点 <code>GetPlayerController(0)</code> 或代码行 <code>UGameplayStatics::GetPlayerController(GetWorld(), 0);</code> 在服务器和客户端上的工作方式不同：</p>
+<ul>
+<li>在监听服务器（Listen-Server）上调用它将返回<strong>监听服务器</strong>的 PlayerController</li>
+<li>在客户端上调用它将返回<strong>客户端</strong>的 PlayerController</li>
+<li>在专用服务器（Dedicated Server）上调用它将返回<strong>第一个客户端</strong>的 PlayerController</li>
+</ul>
+<blockquote>
+<p>除 “0 “以外的其他数字将不会返回某个客户端的其他客户端 PlayerControllers。该索引用于本地玩家（分屏），我们在此不做介绍。</p>
+</blockquote>
+<h3 id="2-6-1-示例和用法"><a href="#2-6-1-示例和用法" class="headerlink" title="2.6.1 示例和用法"></a>2.6.1 示例和用法</h3><p>尽管 APlayerController 是网络中最重要的类之一，但默认情况下它的功能并不多。</p>
+<p>因此，我们将创建一个小示例来说明为什么需要它。在 “所有权 (ownership) “一章中，你会了解到<strong>为什么 PlayerController 对于 RPC 非常重要。</strong></p>
+<p>下面的示例将向您展示如何利用 PlayerController，通过按下 UserWidget 按钮来递增 GameState 中的一个复制变量。</p>
+<blockquote>
+<p>[!question] 为什么需要使用 PlayerController？<br>UserWidgets 只存在于本地播放器（客户端或 ListenServer）上，即使它们被客户端拥有，ServerRPC 也无法在服务器上运行它们的实例。它根本无法复制！</p>
+</blockquote>
+<p>这意味着我们需要一种方法，将 button Press 发送到服务器，这样服务器就可以递增变量。</p>
+<blockquote>
+<p>RPC 和所有权章节会有详细介绍！</p>
+</blockquote>
+<blockquote>
+<p>[!question] 为什么不直接调用 GameState 上的 RPC？<br>因为它归服务器所有。ServerRPC 需要客户端作为所有者！</p>
+</blockquote>
+<h4 id="2-6-1-1-蓝图"><a href="#2-6-1-1-蓝图" class="headerlink" title="2.6.1.1 蓝图"></a>2.6.1.1 蓝图</h4><p>因此，首先，我们需要一个简单的 UserWidget，上面有一个可以按下的按钮。</p>
+<p>我将以相反的顺序张贴图片，这样你就能看到图片的结尾，以及哪些事件呼应了前面图片中的事件。</p>
+<p>因此，从我们的目标 GameState 开始。它会收到一个普通事件，该事件会递增一个复制的整数变量：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026279.png" alt="Pasted image 20231001200904"></p>
+<p>该事件将在服务器端调用，就在我们的 PlayerController 中的 ServerRPC 内部：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026280.png" alt="Pasted image 20231001200911"></p>
+<p>最后，我们的按钮被按下并调用 ServerRPC：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026281.png" alt="Pasted image 20231001200919"></p>
+<p>因此，当我们点击按钮（客户端）时，我们<strong>使用 PlayerController 中的 ServerRPC 来进入服务器端</strong>（这是可能的，因为 PlayerController 是客户端所有的！），然后调用 GameState 的 “IncreaseVariable “事件来递增复制的整数变量。</p>
+<p>由于这个整数变量是由服务器复制和设置的，因此现在会在 GameState 的所有实例上更新，这样客户端也能看到更新！</p>
+<h5 id="2-6-1-1-1-C"><a href="#2-6-1-1-1-C" class="headerlink" title="2.6.1.1.1 C++"></a>2.6.1.1.1 C++</h5><figure class="highlight c++"><figcaption><span>title:TestGameState.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Replicated integer variable</span></span><br><span class="line"><span class="built_in">UPROPERTY</span>(Replicated)</span><br><span class="line">int32 OurVariable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="comment">// Function to increment the variable</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">IncreaseVariable</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><figcaption><span>title:file:TestGameState.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//此函数是必需的，并且UPROPERTY宏中复制的说明符会为我们声明它。我们只需要实现它</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestGameState::GetLifetimeReplicatedProps</span><span class="params">(TArray&lt;FLifetimeProperty&gt;&amp; OutLifetimeProps)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">GetLifetimeReplicatedProps</span>(OutLifetimeProps);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// This tells UE that we want to replicate this variable</span></span><br><span class="line">    <span class="built_in">DOREPLIFETIME</span>(ATestGameState, OurVariable);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestGameState::IncreaseVariable</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    OurVariable++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在本例的 C++ 版本中，我将用 PlayerController 的 BeginPlay 代替 UserWidget。不过，用 C++ 实现 UserWidget 需要更多代码，我不想在此赘述。</p>
+<figure class="highlight c++"><figcaption><span>title:TestPlayerController.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Server RPC. You will read more about this in the RPC chapter  </span></span><br><span class="line"><span class="built_in">UFUNCTION</span>(Server, unreliable, WithValidation)  </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Server_IncreaseVariable</span><span class="params">()</span></span>;  </span><br><span class="line">  </span><br><span class="line"><span class="comment">// Also overriding the BeginPlay function for this example  </span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">BeginPlay</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><figcaption><span>title:TestPlayerController.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Otherwise we can&#x27;t access the GameState functions</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> “TestGameState.h”</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// You will read later about RPCs and why &#x27;_Validate&#x27; is a thing</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ATestPlayerController::Server_IncreaseVariable_Validate</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// You will read later about RPCs and why &#x27;_Implementation&#x27; is a thing</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestPlayerController::Server_IncreaseVariable_Implementation</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ATestGameState* GameState = <span class="built_in">Cast</span>&lt;ATestGameState&gt;(UGameplayStatics::<span class="built_in">GetGameState</span>(<span class="built_in">GetWorld</span>()));</span><br><span class="line">    GameState-&gt;<span class="built_in">IncreaseVariable</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestPlayerController::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//BeginPlay在Actor的每个实例上都被调用，在该PlayerController的服务器版本上也是如此。</span></span><br><span class="line">    <span class="comment">//我们希望确保，只有本地player调用此RPC。同样，这个例子不一定有多大意义</span></span><br><span class="line">    <span class="comment">//因为我们可以翻转条件，根本不需要RPC，但是C++Widget，你知道。。。</span></span><br><span class="line">    <span class="comment">//我们也可以在这里使用“IsLocalPlayerController（）”</span></span><br><span class="line">    <span class="keyword">if</span> (Role &lt; ROLE_Authority)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">Server_IncreaseVariable</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是相当多的代码。如果你还不理解其中一些函数的用法和命名，不用担心。接下来的章节将帮助你理解为什么要这样做。</p>
+<h2 id="2-7-AIController（仅服务器）"><a href="#2-7-AIController（仅服务器）" class="headerlink" title="2.7 AIController（仅服务器）"></a>2.7 AIController（仅服务器）</h2><h2 id="2-8-AHUD（仅拥有客户端）"><a href="#2-8-AHUD（仅拥有客户端）" class="headerlink" title="2.8 AHUD（仅拥有客户端）"></a>2.8 AHUD（仅拥有客户端）</h2><p><strong>AHUD 类仅在每个客户端上可用，可通过 PlayerController 访问。它将由 PlayerController 自动生成。</strong></p>
+<p>在 UMG（虚幻动态图形）发布之前，AHUD 类一直用于在客户端的视口中绘制文本、纹理等。</p>
+<p><strong>现在，UserWidgets 在 99% 的情况下都取代了 HUD 类。</strong></p>
+<p>您仍然可以使用 AHUD 类进行调试，或者使用一个独立区域来管理 UserWidget 的创建、显示、隐藏和销毁。</p>
+<blockquote>
+<p>由于 HUD 与多人游戏没有直接联系，因此示例只能显示单人游戏的逻辑，所以本课将跳过这些示例。</p>
+</blockquote>
+<h2 id="2-9-UUserWidget-（仅拥有客户端）"><a href="#2-9-UUserWidget-（仅拥有客户端）" class="headerlink" title="2.9 UUserWidget （仅拥有客户端）"></a>2.9 UUserWidget （仅拥有客户端）</h2><p>UUserWidgets 用于 Epic Games 的用户界面系统，该系统被称为<strong>虚幻动态图形（UMG，Unreal Motion Graphics）</strong>。</p>
+<p>它们<strong>继承自 Slate</strong>，Slate 是一种用于在 C++ 中创建用户界面的语言，同时也用于虚幻引擎编辑器本身。</p>
+<p>Widgets are only available locally. They don’t replicate and should not contain and replication code. Preferably they wouldn’t contain any gameplay code either, but some games might require it.<br>Widgets<strong>只能在本地使用</strong>。它们<strong>不会复制，也不应包含复制代码</strong>。<strong>它们最好也不包含任何游戏代码</strong>，但有些游戏可能需要。</p>
+<p>要了解有关 UMG 和小工具的更多信息，请使用上面提供的 API 链接。</p>
+<p>在 APawn 示例中，我们已经有一个使用 Widgets 的小例子。因此，我将在此略过。</p>
+<h2 id="2-10-相关函数"><a href="#2-10-相关函数" class="headerlink" title="2.10 相关函数"></a>2.10 相关函数</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026282.png" alt="Pasted image 20231117203904"></p>
+<h1 id="3-NetMode-网络模式"><a href="#3-NetMode-网络模式" class="headerlink" title="3 NetMode 网络模式"></a>3 NetMode 网络模式</h1><p>NetMode 是 World 的属性 ：<code>ENetMode UWorld::GetNetMode()</code></p>
+<p>可能是以下四个值：<code>NM_Standalone</code>, <code>NM_DedicatedServer,</code> <code>NM_ClientSever</code>, <code>NM_Client</code>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026283.png" alt="Pasted image 20231117133442"><br><strong>区分网络模式的依据：</strong></p>
+<ol>
+<li>游戏可以玩吗？即我们的 GameInstance 是否有 LocalPlayer，是否可以处理 Player 的输入并将 World 渲染到 Viewport。</li>
+<li>是服务器吗？换句话说，我们的 GameInstance 是否有用权威的世界副本（其中包含 GameMode Actor）</li>
+<li>如果是服务器。是否开放远程连接？其他 Player 可以作为客户端加入游戏。</li>
+</ol>
+<p>前面的视频 <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=IaU2Hue-ApI">The Unreal Engine Game Framework: From int main() to BeginPlay - YouTube</a> （还没看，有空补一下）提到，当启动游戏时，会获得一个与进程生命周期相关的 GameInstance 对象，然后游戏引擎能够浏览 URL，这个 URL 可以是一个客户端的服务器地址，也可以是一个本地地图的地址。这会导致游戏加载 Map ，从而赋予他一个 World。<br>World 的网络模式将根据 GameInstance 的启动方式而有所不同：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026284.png" alt="Pasted image 20231117134600"></p>
+<ul>
+<li>如果 GameInstance 已经连接了一个远程服务器，World 就是 <code>NM_Client</code> 网络模式。所以你的 world 只能按照服务器的 world 来更新。</li>
+<li>如果 GameInstance 已经在本地加载 Map，你的 world 就是 <code>NM_Standalone</code> 网络模式。因此你的 GameInstance 既是服务器也是客户端。它在单人配置中运行，不开放客户端连接。</li>
+<li>如果 GameInstance 在本地加载 Map，但是有监听选项，那么你的 world 就是 <code>NM_ListenSever</code> 网络模式。基本上与 <code>NM_Standalone</code> 相同，但是游戏的其他实例依然能作为客户端访问。</li>
+<li>如果 GameInstance 是 <code>NM_DedicateServer</code> 网络模式，这个游戏实例既没有 localplayer，也没有 viewport。这只是一个服务器端控制台应用程序，玩家可以作为服务端连接。</li>
+</ul>
+<h2 id="3-1-专用服务器与监听服务器"><a href="#3-1-专用服务器与监听服务器" class="headerlink" title="3.1 专用服务器与监听服务器"></a>3.1 专用服务器与监听服务器</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026285.png" alt="Pasted image 20231003203817"></p>
+<ul>
+<li>Playe Standalone：独立的客户端，无服务器</li>
+<li>Play As Listen Server：本机作为监听服务器，小窗口为客户端</li>
+<li>Play As Client：全部为客户端，服务器为专用服务器</li>
+</ul>
+<h3 id="3-1-1-Dedicated-Server-专用服务器"><a href="#3-1-1-Dedicated-Server-专用服务器" class="headerlink" title="3.1.1 Dedicated Server 专用服务器"></a>3.1.1 Dedicated Server 专用服务器</h3><p>专用服务器是<strong>不需要玩家托管的独立服务器。</strong></p>
+<p>它与游戏客户端分离运行，主要用于运行一个服务器，玩家可以随时加入&#x2F;离开，而服务器不会随之关闭。</p>
+<p>专用服务器可在 Windows 和 Linux 下编译，也可在云服务器上运行，玩家可通过固定 IP 地址连接到云服务器。</p>
+<p><strong>专用服务器没有视觉（visual）部分，因此不需要 UI，也没有 PlayerController 。它们在游戏中也没有 Character 或类似的代表。</strong>  </p>
+<h3 id="3-1-2-Listen-Server-监听服务器"><a href="#3-1-2-Listen-Server-监听服务器" class="headerlink" title="3.1.2 Listen Server 监听服务器"></a>3.1.2 Listen Server 监听服务器</h3><p>监听服务器是指同时也是客户端的服务器。（用自己的电脑开服务器，还能同时玩游戏~）。</p>
+<p>主机自身是没有延迟的</p>
+<p>由于同时也是客户端，Listen-Server 需要 UI，并有一个代表客户端部分的 PlayerController。<strong>在监听服务器上获取 <code>PlayerController(0)</code>将返回该客户端的  PlayerController 。</strong></p>
+<p><strong>由于监听服务器在客户端上运行，其他人需要连接的 IP 就是客户端的 IP。与专用服务器相比，这往往会带来玩家没有静态 IP 的问题。</strong></p>
+<p>不过，使用 OnlineSubsystem（详情[[4 会话管理#2 在线子系统概述]]）可以解决更改 IP 的问题。</p>
+<h1 id="4-Replication-复制-（同步）"><a href="#4-Replication-复制-（同步）" class="headerlink" title="4 Replication 复制 （同步）"></a>4 Replication 复制 （同步）</h1><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026286.png" alt="Pasted image 20240521132554"></p>
+<h2 id="4-1-简介"><a href="#4-1-简介" class="headerlink" title="4.1 简介"></a>4.1 简介</h2><p>Replication 是<strong>服务器将信息 &#x2F; 数据传递给客户端</strong>的行为。</p>
+<blockquote>
+<p>[!bug] 注意方向，不能反过来！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;flowchart LR</span><br><span class="line">&gt;服务器--Replication--&gt;客户端;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>每个 <strong>Actor</strong> 都维护一个包含全部属性的列表，其中包含 <code>Replicated</code> 说明符。每当复制的属性值发生变化时，服务器会向所有客户端发送更新。客户端会将其应用到 Actor 的本地版本上。<strong>这些更新只会来自服务器，客户端永远不会向服务器或其他客户端发送属性更新。</strong></p>
+<blockquote>
+<p>[!warning]<br>我们不推荐在客户端上更改复制的变量值。该值将始终与服务器端的值不一致，直到服务器下一次侦测到变更并发送更新为止。如果服务器版本的属性不是经常更新，那客户端就需要等待很长时间才能被纠正。</p>
+</blockquote>
+<p><strong>Actor 属性复制是可靠的</strong>。这意味着，Actor 的客户端版本的属性最终将反映服务器上的值，但客户端不必接受服务器上某个属性的每一个单独变更。例如，如果一个整数属性的值快速从100变成200，然后又变成了300，客户端将最终接受一个值为300的变更，但客户端不一定会知道这个值曾经变成过200。<br>属性同步的产生是为了维持对象的状态，是一个从概念上非常贴近“同步”二字的功能，一旦服务器上的同步属性发生了变化，就一定会发送给客户端（<strong>注意：属性同步只是服务器向客户端的同步，不存在客户端向服务器流通</strong>），也许中间会丢包会延迟（actor 首次同步时是 reliable 的），但是其内置的机制会保证属性的值最终送达到客户端。借用一句经典的话来说就是，<strong>同步数据也许会迟到，但是永远不会缺席</strong>。</p>
+<hr>
+<p><strong>第一个可以复制属性的类是 AActor 类</strong>。虽然您也可以复制 UObject，但它们是通过 AActor 复制的，因此仍然需要某种 AActor 来处理复制。<a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/replicated-subobjects-in-unreal-engine/">虚幻引擎中的复制子对象 | 虚幻引擎5.2文档 (unrealengine.com)</a><br>UActorComponent 就是一个很好的例子，它支持通过 AActor 复制 UObjects，而不需要我们做太多额外的工作。</p>
+<p><strong>前面提到的所有类都在某种程度上继承自 AActor，从而使它们能够在需要时复制属性。不过，并非所有类的复制方式都相同。</strong><br>例如，<strong>AGameMode 不会复制</strong>，因为只存在于服务器上。<strong>而 AHUD、UUserWidget 只存在于客户端，也不会复制。</strong></p>
+<h2 id="4-2-复制原理"><a href="#4-2-复制原理" class="headerlink" title="4.2 复制原理"></a>4.2 复制原理</h2><h3 id="4-2-1-复制流程"><a href="#4-2-1-复制流程" class="headerlink" title="4.2.1 复制流程"></a>4.2.1 复制流程</h3><p>UE 复制系统依赖于三个重要的类：<code>UNetDriver</code>，<code>UNetConnection</code>，<code>UChannel</code>。<br>下面以 Dedicated Server 网络模式举例，我们有一个专用服务器和两个客户端。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026287.png" alt="Pasted image 20231117140830"><br>无论客户端进程（这里理解成一个.exe 就是一个进程）还是服务器进程都有 <code>UGameEngine* Engine</code> 对象，而每个 Engine 都有自己的  <code>UNetDriver* GameNetDriver</code> 对象。</p>
+<ul>
+<li>当 Server 启动时，Engine 创建 GameNetDriver，GameNetDriver 开始监听远程进程的连接请求。</li>
+<li>当客户端启动时，Engine 创建 GameNetDriver，GameNetDriver 开始向服务器发送连接请求。</li>
+<li>一旦连接建立，Server 就会建立一个 UNetConnection 数组 <code>ClientConnections</code> 来维护所有客户端连接。<ul>
+<li>Server 会为每个连接的客户端单独建立一个 UNetConnection。</li>
+<li>但是客户端只有一个 <code>UNetConnection* ServerConnection</code>，代表自己与服务器的连接。</li>
+</ul>
+</li>
+<li>每个 <code>UNetConnection</code> 内有都有许多不同的的 Channel，通常一个连接将具有一个 <code>UControlChanel</code>, 一个 <code>UVoiceChannel</code>，多个 <code>UActorChannel</code>（每个 ActorChannel 对应一个通过该连接复制的 Actor）。</li>
+</ul>
+<h3 id="4-2-2-Actor-复制"><a href="#4-2-2-Actor-复制" class="headerlink" title="4.2.2 Actor 复制"></a>4.2.2 Actor 复制</h3><p>由上节可知，复制发生在 Actor 层级，如果需要 Actor 通过网络同步，就要设置 <code>bReplicates=true</code> 。服务器用 <code>IsNotRelevantFor()</code> 来检测这个 Actor 属于哪个 Player，然后在该 Player 的 <code>UNetConnection</code> 中打开 <code>UActorChannel</code> ，服务器和客户端将使用该通道来交换该 Actor 的信息。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026288.png" alt="Pasted image 20231117142017"></p>
+<p>如果 Actor 被复制到客户端，主要关注三件重要的事情：</p>
+<ol>
+<li><strong>生命周期：Actor 的生命周期在服务器和客户端之间保持同步。</strong> 服务器生成一个 <code>bReplicates=true</code> 的 Actor，客户端将收到通知，在本地复制该 Actor。如果这个 Actor 在服务器上被销毁，客户端复制的 Actor 同样也会被销毁。<ul>
+<li><strong>如果一个 Actor 的 <code>bReplicates</code> 设置为 <code>true</code>，那么该 Actor 将被生成并复制到所有客户端（如果该角色是由服务器生成的）。而且只有在服务器生成时才会复制。</strong></li>
+<li><strong>如果客户端生成了这个 Actor，该 Actor 将只存在于这个客户端上。</strong></li>
+</ul>
+</li>
+<li><strong>属性复制（Property Replication）</strong>：如果 Actor 有一个标记为 Replicated 的属性，那么如果服务器上的 Property 改变，客户端的 Property 也会随之改变。</li>
+<li><strong>RPC</strong></li>
+</ol>
+<h2 id="4-3-如何使用-Replication"><a href="#4-3-如何使用-Replication" class="headerlink" title="4.3 如何使用 Replication"></a>4.3 如何使用 Replication</h2><ol>
+<li><p>蓝图：类默认设置<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026289.png" alt="Pasted image 20231001225526|450"></p>
+</li>
+<li><p>C++：复制可以在 AActor 子类的构造函数中激活：<br>Character构造函数示例</p>
+</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ATestCharacter::<span class="built_in">ATestCharacter</span>(<span class="type">const</span> FObjectInitializer&amp; ObjectInitializer)</span><br><span class="line">    : <span class="built_in">Super</span>(ObjectInitializer)</span><br><span class="line">&#123;</span><br><span class="line">    bReplicates = <span class="literal">true</span>;</span><br><span class="line">    bReplicateMovement = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>可以在运行时打开或关闭复制：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026290.png" alt="Pasted image 20231117150733|500"></li>
+</ol>
+<h2 id="4-4-属性复制（属性同步）"><a href="#4-4-属性复制（属性同步）" class="headerlink" title="4.4 属性复制（属性同步）"></a>4.4 属性复制（属性同步）</h2><h3 id="4-4-1-Replicated"><a href="#4-4-1-Replicated" class="headerlink" title="4.4.1 Replicated"></a>4.4.1 Replicated</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026291.png" alt="Pasted image 20231001225820|500"></p>
+<p>启用复制后，我们可以在 Actor 内部复制变量。有多种方法可以做到这一点。我们将从最基本的方法开始：</p>
+<p><strong>将 “复制” 下拉菜单设置为 “<code>Replicated</code>“，将确保此变量被复制到此 Actor 的所有复制实例中。</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026292.png" alt="Pasted image 20231001230029|298"></p>
+<blockquote>
+<p>Replicated 变量用两个白圈标出。</p>
+</blockquote>
+<ul>
+<li>@ 在 C++ 中复制变量所需的工作稍多一些：<figure class="highlight c++"><figcaption><span>title:TestPlayerCharacter.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Create replicated health variable</span></span><br><span class="line"><span class="built_in">UPROPERTY</span>(Replicated)</span><br><span class="line"><span class="type">float</span> Health;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>.cpp 文件需要实现 <strong><code>GetLifetimeReplicatedProps</code> 函数</strong>。在将变量标记为 <code>Replicated</code> 时，UE 已经为我们创建了该函数的头声明。<br><strong>在此函数中，您可以定义复制变量的规则。</strong></p>
+<figure class="highlight c++"><figcaption><span>title:TestPlayerCharacter.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestPlayerCharacter::GetLifetimeReplicatedProps</span><span class="params">(TArray&lt;FLifetimeProperty&gt;&amp; OutLifetimeProps)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">GetLifetimeReplicatedProps</span>(OutLifetimeProps);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里列出我们想要复制的变量</span></span><br><span class="line">    <span class="built_in">DOREPLIFETIME</span>(ATestPlayerCharacter, Health);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-4-2-RepNotify—ReplicatedUsing"><a href="#4-4-2-RepNotify—ReplicatedUsing" class="headerlink" title="4.4.2 RepNotify—ReplicatedUsing"></a>4.4.2 RepNotify—ReplicatedUsing</h3><p>如果需要在复制时运行某些代码，可以使用复制变量的另一种方法，是将变量标记为 <code>ReplicatedUsing</code>（C++）。</p>
+<p>在蓝图中，这被称为 <code>RepNotify</code>（代表通知）。<strong>它允许指定一个函数，当变量的新值被复制到客户端时，该函数将被调用。</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026294.png" alt="Pasted image 20231001233317"></p>
+<blockquote>
+<p>Set 变为“使用通知设置”</p>
+</blockquote>
+<p>在蓝图中，一旦在 “复制” 下拉菜单中选择 “<code>RepNotify</code>“，该功能就会自动创建：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026295.png" alt="Pasted image 20231001233531|373"></p>
+<p>C++ 版本需要的更多，但工作原理相同：</p>
+<figure class="highlight c++"><figcaption><span>title:ATestCharacter.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建 RepNotify Health 变量</span></span><br><span class="line"><span class="built_in">UPROPERTY</span>(ReplicatedUsing = OnRep_Health)</span><br><span class="line"><span class="type">float</span> Health;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建 OnRep 函数 | UFUNCTION() 宏很重要！</span></span><br><span class="line"><span class="built_in">UFUNCTION</span>()</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">OnRep_Health</span><span class="params">(<span class="type">const</span> <span class="type">float</span>&amp; Health)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><figcaption><span>title:ATestCharacter.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestCharacter::OnRep_Health</span><span class="params">(<span class="type">const</span> <span class="type">float</span>&amp; Health)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (Health &lt;= <span class="number">0.f</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">PlayDeathAnimation</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>通过 <code>ReplicatedUsing=函数名</code>，我们指定了变量复制成功后应调用的函数。该函数必须包含 “<code>UNFUNCTION ()</code>“ 宏，即使该宏为空！</strong></p>
+<p><strong>RepNotify 也要实现 <code>GetLifetimeReplicatedProps</code> 函数！</strong></p>
+<blockquote>
+<p>[!NOTE] RepNotify 蓝图和 C++之间的区别<br>值得注意的是，C++ 和蓝图 对 RepNotify 的处理方式略有不同。</p>
+<ul>
+<li><p><strong>在 C++ 中，OnRep 函数只调用客户端。</strong></p>
+<ul>
+<li>当服务器更改值并要求同时调用 OnRep 函数时，您<strong>需要在调整变量后手动调用该函数</strong>。这是因为 <strong>OnRep 函数的作用是在变量复制到客户端时进行回调。</strong></li>
+</ul>
+</li>
+<li><p><strong>在蓝图中，OnRep 函数将调用客户端和服务器</strong>。</p>
+<ul>
+<li>这是因为 BP 版本的 OnRep 是 <strong>“属性已更改（Property Changed）” 回调</strong>。这意味着该函数不仅会调用服务器，而且如果客户端在本地更改了变量，也会调用客户端。</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h3 id="4-4-3-条件属性复制"><a href="#4-4-3-条件属性复制" class="headerlink" title="4.4.3 条件属性复制"></a>4.4.3 条件属性复制</h3><p><strong>默认情况下，每个复制属性都有一个内置条件：如果不发生变化就不会进行复制。</strong></p>
+<p>为了加强对属性复制的控制，UE 提供了宏来添加附加条件：</p>
+<ul>
+<li><p>@ Replicated 使用 <code>DOREPLIFETIME_CONDITION</code> 宏。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestPlayerCharacter::GetLifetimeReplicatedProps</span><span class="params">(TArray&lt;FLifetimeProperty&gt;&amp; OutLifetimeProps)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">GetLifetimeReplicatedProps</span>(OutLifetimeProps);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 仅向该Object/Class的所有者复制变量 </span></span><br><span class="line">    <span class="built_in">DOREPLIFETIME_CONDITION</span>(ATestPlayerCharacter, Health, COND_OwnerOnly);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>@ 对于 <code>RepNotify</code>，使用 <code>DOREPLIFETIME_CONDITION_NOTIFY</code> 宏</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestPlayerCharacter::GetLifetimeReplicatedProps</span><span class="params">(TArray&lt;FLifetimeProperty&gt;&amp; OutLifetimeProps)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">GetLifetimeReplicatedProps</span>(OutLifetimeProps);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//COND_None：此属性没有条件，并将在其发生变化时随时发送（服务器）</span></span><br><span class="line">    <span class="comment">//REPNOTIFY_Always：属性复制时，客户端总是调用该属性的 RepNotify 函数（客户端）</span></span><br><span class="line">    <span class="built_in">DOREPLIFETIME_CONDITION_NOTIFY</span> (ATestPlayerCharacter, Health, COND_None, REPNOTIFY_Always);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Condition 条件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>COND_InitialOnly</td>
+<td>该属性仅在初始数据组尝试发送</td>
+</tr>
+<tr>
+<td>COND_OwnerOnly</td>
+<td>该属性只会发送给Actor的所有者（owner）</td>
+</tr>
+<tr>
+<td>COND_SkipOwner</td>
+<td>此属性会发送至除 Owner 之外的所有连接</td>
+</tr>
+<tr>
+<td>COND_SimulatedOnly</td>
+<td>此属性只会发送到模拟Actor（Simulated Actor）</td>
+</tr>
+<tr>
+<td>COND_AutonomousOnly</td>
+<td>该属性只会发送给自治Actor(autonomous Actor)</td>
+</tr>
+<tr>
+<td>COND_SimulatedOrPhysics</td>
+<td>该属性将发送到simulated 或 bRepPhysics Actor。</td>
+</tr>
+<tr>
+<td>COND_InitialOrOwner</td>
+<td>该属性将发送初始数据组，或发送给 Actor 的所有者</td>
+</tr>
+<tr>
+<td>COND_Custom</td>
+<td>该属性没有特定条件，但需要通过 SetCustomIsActiveOverride</td>
+</tr>
+</tbody></table>
+<p>优点：</p>
+<ol>
+<li>节省带宽</li>
+<li>对于不接收该属性的客户端而言，服务器无需干涉这个客户端的本地副本。</li>
+</ol>
+<hr>
+<p><strong>如果这样的控制力还不够，那该怎么办？</strong> 关于这个话题，还有一件事需要讨论。有一个名叫 <code>DOREPLIFETIME_ACTIVE_OVERRIDE</code> 的宏可以让您进行全面控制，利用您想要的任何定制条件来决定何时复制&#x2F;不复制某个属性。<strong>需要注意的是，这种控制需针对每个 actor（而不是每条连接）逐一进行</strong>。换句话说，如果在定制条件中使用一个可根据连接而发生变化的状态，会存在一定的安全风险。具体示例如下。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">AActor::PreReplication</span><span class="params">( IRepChangedPropertyTracker &amp; ChangedPropertyTracker )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">DOREPLIFETIME_ACTIVE_OVERRIDE</span>( AActor, ReplicatedMovement, bReplicateMovement );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在 ReplicatedMovement 属性只会在 bReplicateMovement 为 true 时复制。</p>
+<p>为何不一直使用这个宏？主要有两个原因：</p>
+<ul>
+<li>如果定制条件的值变化太大，这种做法会降低执行速度。</li>
+<li>您不能使用根据连接而变化的条件（此时不检查 RemoteRole）。</li>
+</ul>
+<h3 id="4-4-4-复制对象引用"><a href="#4-4-4-复制对象引用" class="headerlink" title="4.4.4 复制对象引用"></a>4.4.4 复制对象引用</h3><p>一般而言，对象引用会在 <strong>虚幻引擎（UE）</strong> 多人游戏架构中自动处理。这就是说，如果您有一个已经复制的 <code>UObject</code> 属性，则对该对象的引用将作为服务器分配的专门 ID 通过网络进行发送。这个专门 id 是一个 <code>FNetworkGUID</code>。服务器将负责分配此 id，然后向所有已连接的客户端告知这一分配。</p>
+<p>要复制对象引用，您只需将一个 UObject 属性标记为已复制，就像下面这样：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ENGINE_API</span> AActor : <span class="keyword">public</span> UObject</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UPROPERTY</span>(Replicated)</span><br><span class="line">    AActor* Owner;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这时，”Owner” 属性将作为其引用的 actor 的一个复制引用。</p>
+<p>对于通过网络合法引用的对象，必须对其提供支持以保证网络连接。要进行检查，您可以调用 <code>UObject::IsSupportedForNetworking()</code>。这通常被认为是一个底层函数，所以<strong>一般不需要在游戏代码中对其进行检查</strong>。</p>
+<p>您通常可以按照以下原则来确定是否可以通过网络引用一个对象：</p>
+<ul>
+<li>任何复制的 actor 都可以复制为一个引用</li>
+<li>任何未复制的 actor 都必须有可靠命名（直接从数据包加载）</li>
+<li>任何复制的组件都可以复制为一个引用</li>
+<li>任何未复制的组件都必须有可靠命名。</li>
+<li>其他所有 UObject（非 actor 或组件）必须由加载的数据包直接提供</li>
+</ul>
+<h4 id="4-4-4-1-拥有可靠命名的对象"><a href="#4-4-4-1-拥有可靠命名的对象" class="headerlink" title="4.4.4.1 拥有可靠命名的对象"></a>4.4.4.1 拥有可靠命名的对象</h4><p><strong>拥有可靠命名的对象指的是存在于服务器和客户端上的同名对象。</strong></p>
+<p>如果 Actor 是从数据包直接加载（并非在游戏期间生成），它们就被认为是拥有可靠命名。</p>
+<p>满足以下条件的组件即拥有可靠命名：</p>
+<ul>
+<li>从数据包直接加载</li>
+<li>通过简单构建脚本添加</li>
+<li>采用手动标记（通过 <code>UActorComponent::SetNetAddressable</code> 进行）<ul>
+<li>只有当您知道要手动命名组件以便其在服务器和客户端上具有相同名称时，才应当使用这种方法（最好的例子就是 <code>AActor</code> C++ 构造函数中添加的组件）</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-4-5-Replicated-和-ReplicatedUsing-的区别"><a href="#4-4-5-Replicated-和-ReplicatedUsing-的区别" class="headerlink" title="4.4.5 Replicated 和 ReplicatedUsing 的区别"></a>4.4.5 Replicated 和 ReplicatedUsing 的区别</h3><blockquote>
+<p>ChatGPT 生成</p>
+</blockquote>
+<p>在虚幻引擎中，将变量标记为”Replicated”和”ReplicatedUsing”都是用于实现变量在网络中的同步。它们的区别在于同步的方式和实现的灵活性。</p>
+<ol>
+<li>“<code>Replicated</code>“:<ul>
+<li>当将变量标记为”Replicated”时，引擎会自动处理变量的同步。它会在服务器和客户端之间自动复制变量的值，并确保它们保持同步。</li>
+<li>这种方式适用于简单的同步需求，例如玩家的位置、血量等信息。<strong>引擎会自动处理同步细节，无需额外的代码。</strong></li>
+</ul>
+</li>
+<li>“<code>ReplicatedUsing=FunctionName</code>“:<ul>
+<li>当将变量标记为”ReplicatedUsing”时，<strong>需要为该变量编写自定义的同步函数。这个函数将负责处理变量的同步逻辑。</strong></li>
+<li>这种方式适用于需要更复杂的同步需求，例如需要在同步时执行特定的逻辑或转换。通过自定义同步函数，可以更灵活地控制变量的同步过程。</li>
+<li>自定义同步函数需要在服务器和客户端上都实现，并使用相同的函数签名。</li>
+</ul>
+</li>
+</ol>
+<p>总结起来，”Replicated”是一种简单的同步方式，由引擎自动处理同步细节；而”ReplicatedUsing”是一种更灵活的同步方式，需要编写自定义的同步函数来控制同步逻辑。选择哪种方式取决于同步需求的复杂性和灵活性。</p>
+<h3 id="4-4-6-Actor-以及-Component-的同步顺序"><a href="#4-4-6-Actor-以及-Component-的同步顺序" class="headerlink" title="4.4.6 Actor 以及 Component 的同步顺序"></a>4.4.6 Actor 以及 Component 的同步顺序</h3><p>一个对象的同步首先要给客户端上的对象与服务器上的对象建立关联，这样服务器的A变化了才会告诉客户端上的A也去变化。但是A是一个对象，对象也是需要同步的，一个场景里面有那么多的对象，同步肯定是按顺序的来的。这样就会经常出现A的对象里面有很多指向B对象的同步指针属性，但是A对象出现的时候B还没同步过来，所以在A的Beginplay里面访问B是不行的。<br>那么如何解决这个问题？答案是用属性回调，一旦执行了属性回调，就可以确保A的B指针是存在的。不过，属性回调并不能解决所有问题。假如B对象还有C对象的指针，回调的时候C还没同步过来，你想用B去访问C发现又是空指针。这问题目前在现在的虚幻引擎里面还没有完美的解决方案，所以我们要尽可能的避免这种情况。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026296.png" alt="Pasted image 20240714212608"></p>
+<h3 id="4-4-7-属性同步和-RPC-比较"><a href="#4-4-7-属性同步和-RPC-比较" class="headerlink" title="4.4.7 属性同步和 RPC 比较"></a>4.4.7 属性同步和 RPC 比较</h3><p>RPC 只适合临时的事件，如果要发送持久化状态，还是要使用 Replicated Properties。所有客户端最终都会与服务器同步。<br>Replicated Properties 同样和网络相关。尽管 Replicated Properties 可能发生延时，比如服务器上的 Actor 距离客户端操控的 Pawn 太远导致暂时没有相关性时，Actor 在服务器的更改客户端看不到，但是只要距离接近恢复相关性，会立刻把更新的 property 复制给你的 pawn。<br>属性赋值遵循更新频率和带宽限制</p>
+<h5 id="如何选择？"><a href="#如何选择？" class="headerlink" title="如何选择？"></a>如何选择？</h5><p>摘自： <a target="_blank" rel="noopener" href="https://forums.unrealengine.com/t/replicated-properties-vs-rpcs/264973">Replicated Properties vs RPCs - Programming &amp; Scripting &#x2F; Multiplayer &amp; Networking - Epic Developer Community Forums (unrealengine.com)</a></p>
+<p>本文旨在深入探讨复制属性与 RPC 的使用方法，并探讨何时以及如何使用复制属性最合适。</p>
+<p>一般来说，性能问题不是在 RPC 和属性复制之间做出选择的充分理由。为了更好地确定使用哪种方法，你应该问自己几个问题：</p>
+<ul>
+<li>我是否真的需要在这些值每次变化时都发生响应事件，还是只关心其最新值？</li>
+<li>我是否需要在某个 Actor 成为相关 Actor、某个 Player 加入游戏过程或重放录制 &#x2F; 刷新时恢复这些数据，还是说我可以接受这些数据 “永远消失”？</li>
+<li>这些值取决于 Actor 的其他属性的状态，还是它们本身就修改</li>
+</ul>
+<p><strong>一般来说，属性复制最适合需要最新数据，但不一定关心中间步骤的情况。</strong><br>因为属性只有在实际发生变化时才会被发送，而且我们可能不会在每一帧都将每个 Actor 复制到每个连接，所以你可以省去一些工作，并确信你会得到正确的值。<br><strong>此外，虽然属性数据的传输是 “不可靠的”，但我们会向客户发送多余的属性更改，直到收到确认为止。而不可靠的 RPC 则没有这种保证。</strong></p>
+<p>您可以通过可靠的 RPC 来确保接收事件，但这些 RPC 需要更多的开销，而且应该很少使用。此外，属性复制只适用于相关性、进行中的连接和重放擦除（replay scrubbing ）情况。  </p>
+<p>无论何时，只要 Actor 第一次被复制到给定的连接，就能保证与该连接相关的属性会被复制到该连接。同样，RPC 并不提供这样的保证。 </p>
+<p>摘自 RPC 文档：”这些功能的主要用例是用于处理瞬时性或外观性 (transient or cosmetic) 的不可靠游戏事件”。这意味着 RPC 没有最终的一致性 (eventual consistency)。<br>如果数据包丢失，或者 RPC 没有发送到特定客户端，它就永远不会到达该客户端。在连接进行中、相关性和重放擦除等情况下，你将无法保证 Actor 状态的一致性。<br>不过，这也意味着，如果你真的只想立即发送信息，而不在乎它是否能到达客户端，那么你就不会浪费资源来比较每一帧的属性或冗余地传输数据。<br><strong>同样重要的是，RPC 是客户端向服务器发送数据的唯一方式。</strong></p>
+<p>不过，使用不可靠的 RPC 是否会比使用复制属性更快，或者反之亦然，这一点可能并不清楚。同样，这也很难量化，取决于系统其他部分的设置情况。<br>RPC 最终需要通过 Actor（具体来说，就是由 <code>UNetConnection</code> 所拥有的 Actor）进行路由，而所有 Actor 都有一套基本的复制属性。这两种情况都会通过线路传输数据，而且格式大致相同。   </p>
+<p><strong>然而，数据的路由和应用方式却有些不同。</strong><br>首先，需要注意的是序列化几乎是相同的。例如，RPC 和属性复制都依赖于复制布局（参见 Engine\Source\Runtime\Engine\Public\Net\RepLayout. h ）。<br>每个类将生成一个 RepLayout，每个 RPC 将生成一个 RepLayout，因此，<strong>添加一个新属性的内存开销将比添加一个新 RPC 的内存开销略少</strong>。当然，这可以很容易地被类的实例数量所抵消。<br>如果有很多实例，那么最终每个实例上的属性所占用的内存将超过创建 &#x2F; 跟踪 RepLayout 函数的内存。</p>
+<p>就性能而言，RPC 最终调用的虚拟函数调用和查找次数要比属性复制多得多，而且每次调用 RPC 时都需要进行这些操作。<br>此外，这些调用将在调用 RPC 的帧中发生，而不是在帧的末尾分批进行（如属性复制），因此<strong>单次 RPC 更有可能出现缓存缺失</strong>。</p>
+<p>RPC 的流程如下：</p>
+<ul>
+<li>你调用 RPC 函数。</li>
+<li>参数会被复制到一个参数结构体（由虚幻头文件工具 UHT 生成）中。</li>
+<li>Next, we search for the UFunction object that represents the RPC (by name through a map lookup), and pass that and the params to UObject:: ProcessEvent (virtual call).<br>接下来，我们搜索代表 RPC 的 UFunction 对象（通过映射查找名称），并将其和参数传递给 UObject::ProcessEvent（虚拟调用）。</li>
+<li>In ProcessEvent, we need to figure out the callspace of the function (virtual call to determine if it’s Local, Remote, Both, or Suppressed).<br>在 ProcessEvent 中，我们需要找出函数的调用空间（虚拟调用，以确定是本地、远程、两者或抑制）。</li>
+<li>If it is remote we’ll call UObject:: CallRemoteFunction (again, another virtual).<br>如果它是远程的，我们将调用 UObject::CallRemoteFunction（同样是另一个虚拟函数）。</li>
+<li>Then we need to iterate over every available NetDriver associated with the world (usually there’s only 1 anyway) and call ProcessRemoteFunction (another virtual).<br>然后，我们需要遍历与世界相关的每个可用 NetDriver（通常只有一个），并调用 ProcessRemoteFunction（另一个虚拟函数）。</li>
+<li>There’s then a ton of lookups to resolve: the actor’s connection, the actor’s channel (and may result in actor channel creation if one doesn’t exist), the actual function being called, and the RepLayout for the function (again, creation may occur if one doesn’t exist).<br>然后需要解决大量的查找问题：Actor 的连接、Actor 的通道（如果不存在，可能会创建 Actor 通道）、实际调用的函数以及函数的 RepLayout（同样，如果不存在，可能会创建 RepLayout）。</li>
+<li>Next, we’ll serialize the properties.<br>接下来，我们将对属性进行序列化。</li>
+<li>At this point, if you’re using an unreliable multicast RPC or if we’re forcing the RPC to be queued, that data will be cached off and then sent with replicated property data later anyway. If we’re not queueing, we’ll go ahead and try to send it immediately.<br>此时，如果你使用的是不可靠的多播 RPC，或者我们强制 RPC 必须排队，那么这些数据就会被缓存起来，随后再与复制的属性数据一起发送。如果没有排队，我们就会立即发送。</li>
+</ul>
+<p>The flow of Property Data looks like this (note that this is for standard Net Driver replication, not using RepGraph):<br>属性数据的流程如下（注意，这是标准 Net 驱动程序复制，而不是使用 RepGraph）：</p>
+<p>At the end of the frame, the server will figure out all actors that may need to replicate.<br>在帧结束时，服务器会找出所有可能需要复制的角色。<br>The server will then prioritize those actors.<br>然后，服务器将优先处理这些行为者。<br>Each connection will then process the prioritized actors, replicating what they need to.<br>然后，每个连接都将处理优先级 Actor，复制它们需要的内容。<br>The first time in a frame an actor is replicated (or if we are forcing net comparisons), we will iterate over all replicated properties to generate a changelist (literally, a list of handles of properties that changed), unless push model is enabled, in which case only properties marked as dirty will be checked.<br>除非启用了推送模型，否则在这种情况下，只有标记为脏的属性才会被检查。<br>Then, the server will send just the changed properties.<br>然后，服务器将只发送已更改的属性。</p>
+<p>Again, it’s important to note that the steps for RPCs happen every time an RPC is invoked, but the steps for Property Replication will happen every frame regardless.<br>同样，需要注意的是，RPC 的步骤在每次调用 RPC 时都会发生，但属性复制的步骤无论如何都会在每一帧发生。<br>So, if there’s a single new property that you want to add, that property isn’t immensely expensive to compare, and the actor&#x2F;object is already replicating other properties, then there will be significantly less overhead to just adding a new property.<br>因此，如果你只想添加一个新属性，而该属性的比较成本并不高，并且 Actor &#x2F; 对象已经在复制其他属性，那么只添加一个新属性的开销就会大大减少。<br>However, if the properties are extremely expensive to compare or you know you only need them to be updated rarely, using RPCs might be faster, and again, RPCs are the only way to get data back to the server from the client.<br>不过，如果属性的比较成本极高，或者你知道只需要很少更新这些属性，那么使用 RPC 可能会更快，同样，RPC 也是将数据从客户端传回服务器的唯一方法。</p>
+<p>回到 RPC 文档中的那一部分：” 这些功能的主要用例是用于处理瞬时性或外观性的不可靠游戏事件。这些事件可能包括播放声音、产生粒子或其他对 Actor 运行并不重要的临时效果。以前，这些类型的事件通常会通过 Actor 属性进行复制 “。<br>同样，这里描述的情况不是出于性能原因，而是出于游戏原因。让我们来看看播放声音的例子。<br>如果您有一些因属性而触发的声音，而某个 Actor 又变得相关了（或有人加入了进程等），那么您可能会遇到这些声音被重新触发的情况。</p>
+<p><strong>所以一般来说，RPC 应该用于特效提示和类似的非关键网络信息传递，而属性则用于其他一切。</strong> 无论如何，属性复制都会在角色上发生，如果属性复制成为瓶颈，你可以开始使用大量的优化措施。如果你确实只需要触发一个一次性事件，而且你不在乎该事件是否会被丢弃，或者你需要从客户端向服务器发送数据，那么你当然可以使用 RPC。</p>
+<h2 id="4-5-例子"><a href="#4-5-例子" class="headerlink" title="4.5 例子"></a>4.5 例子</h2><p>在你自定义的 actor 比如 weapon 设置 bReplicates &#x3D; true，这个 bReplicates &#x3D; true，就意味着<strong>如果服务器创建了这个 weapon，那么这个 actor 就会把这个 weapon 副本给客户端。</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AWeapon::<span class="built_in">AWeapon</span>()</span><br><span class="line">&#123;</span><br><span class="line">    bReplicates = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在使用这个 weapon 的 Character 类里，设置 UPROPERTY (ReplicatedUsing&#x3D;OnRepXXX)。并重写 GetLifetimeReplicatedProps。被标注的 OverlappingWeapon 在服务器如果发生改变，服务器就会传给客户端。但是 on_RepXXX 这里只会在客户端执行。On_RepXXX 实际上是一个接收到服务器 replicate 后需要执行的函数，replicate 过程是单向的，所以 On_RepXXX 只能再客户端执行。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BLASTER_API</span> ABlasterCharacter : <span class="keyword">public</span> ACharacter</span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">UPROPERTY</span>(ReplicatedUsing = OnRep_OverlappingWeapon)</span><br><span class="line">	<span class="keyword">class</span> <span class="title class_">AWeapon</span>* OverlappingWeapon;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">UFUNCTION</span>()</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">OnRep_OverlappingWeapon</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">GetLifetimeReplicatedProps</span><span class="params">(TArray&lt;FLifetimeProperty&gt;&amp; OutLifetimeProps)</span> <span class="type">const</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>实现 GetLifetimeReplicatedProps，这里也是设置 replicate 条件的地方。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ABlasterCharacter::GetLifetimeReplicatedProps</span><span class="params">(TArray&lt;FLifetimeProperty&gt;&amp; OutLifetimeProps)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Super::<span class="built_in">GetLifetimeReplicatedProps</span>(OutLifetimeProps);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">DOREPLIFETIME</span>(ABlasterCharacter, OverlappingWeapon);</span><br><span class="line">    <span class="built_in">DOREPLIFETIME_CONDITION</span>(ABlasterCharacter, OverlappingWeapon, COND_OwnerOnly);<span class="comment">//只对拥有者replicate</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的 OverlappingWeapon 是一个指针，当它从 null 变为不是 null 的时候，就会触发客户端执行 OnRep_OverlappingWeapon 这个函数。UMG 永远不会同步，<a target="_blank" rel="noopener" href="https://forums.unrealengine.com/t/do-you-also-play-as-a-client-when-using-listen-server/242131">Do you also play as a client when using listen server? - Programming &amp; Scripting &#x2F; Blueprint - Epic Developer Community Forums (unrealengine.com)</a>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026297.jpg" alt="d74a31f12be38036dc974072fea588e5_MD5"></p>
+<h2 id="4-6-踩坑"><a href="#4-6-踩坑" class="headerlink" title="4.6  踩坑"></a>4.6  踩坑</h2><ul>
+<li><p>1.Client的RPC并不能保证一定在客户端执行。在服务器上，如果有一个没有connection信息的actor（比如不是同步的，完全由AI控制的。或者说他的remote role等于none），那么他的clientRPC只会在自己的客户端上面执行。最后可能造成的后果就是函数调用栈的无限循环进而崩溃。</p>
+</li>
+<li><p>2.beginplay在客户端服务器都会执行，如果在beginplay执行另外一个actor的生成。可能会触发客户端和服务器都生成一遍自己的actor，结果客户端存在了两个Actor（一个自己生成的，一个服务器生产的）。之后在调用RPC的时候很可能会出现RPC执行失败，因为本地生成的Actor没有任何connection信息。  </p>
+</li>
+<li><p>3.客户端上对象的Beginplay是可能执行多次。在unreal中，如果一个actor是服务器创建并同步给客户端，那么服务器可以随时关闭这个对象的同步。一旦这个对象距离玩家角色非常远或者服务器主动关闭同步，客户端上的对象就会被删除掉。后期如果玩家又靠近了这个对象，那么就会重新同步到客户端，再执行一次Beginplay。这样某些数据进行两次初始化，可能不是我们想要的。</p>
+</li>
+<li><p>4.我们经常会遇到“游戏状态恢复”的场景，比如网络游戏中的断线重连。然后你就可能会遇到一些对象在重连后状态不对，因为很多对象的变化是通过RPC去做的，RPC是一次性的。当你重连后，RPC不会再执行一次，所以客户端重连的状态与服务器其实是不同的。这时候需要使用属性同步来解决问题，但是属性回调在断线重连的时候你也并不一定想执行，所以要重新审视一下回调函数里面的内容。</p>
+</li>
+<li><p>5.不要把随时可能被destroyed的对象传进RPC的参数里面，RPC参数里面没有判断对象是否是合法的。如果传递的过程中对象被destroy掉，后续可能触发序列化找不到NETGUID的相关崩溃。</p>
+</li>
+<li><p>6.一般情况下，同步顺序在一个character内是严格按照属性的声明顺序的，不同actor无法保证</p>
+</li>
+<li><p>7.一般回调会调到的函数，要注意里面有没有判空return的情况，这个时候其他actor的指针是有可能为空的。</p>
+</li>
+<li><p>8.一个UObject指针类型的数组属性，可能会触发多次回调，最后一次可以确保所有指针都有值。</p>
+</li>
+<li><p>9.属性回调执行的前提是客户端与服务器的值不同，如果你本地先修改一个值，然后服务器修改的与客户端相同，那么是不会触发回调的</p>
+</li>
+<li><p>10.一般来说当Actor与PC解绑后，Actor就无法保证RPC的执行了。这种情况往往发生在角色死亡后执行unpossess时，所以在这时应该注意RPC的执行情况。</p>
+</li>
+<li><p>11.如果属性没有同步到客户端或者不执行回调，注意一下是否使用了自定义的条件属性</p>
+</li>
+<li><p>12.所有设置定时器来判断同步属性是否收到的逻辑都是不规范的，一旦服务器或者客户端变卡（一开始没有表现，但是随着游戏内容的增加可能出现各种诡异的bug）就可能导致信息丢失</p>
+</li>
+</ul>
+<h1 id="5-RPC-远程过程调用"><a href="#5-RPC-远程过程调用" class="headerlink" title="5 RPC 远程过程调用"></a>5 RPC 远程过程调用</h1><p>在计算机网络的概念里面，RPC叫做“远程过程调用（Remote Procedure Calls）”，本质上就是一种传递数据的手段，而其实现方式既可以是应用层的Http，也可以是传输层的TCP&#x2F;UDP。在虚幻里面，由于很多游戏的同步（比如FPS）对网络延迟要求比较苛刻，所以放弃了需要三次握手的TCP而改用UDP（更不可能考虑HTTP了）</p>
+<p>RPC 是在本地调用但在其他机器（不同于执行调用的机器）上远程执行的<strong>函数</strong>。</p>
+<blockquote>
+<p>类似电视遥控器对电视机的控制。</p>
+</blockquote>
+<p>RPC 函数非常有用，可允许客户端或服务器通过网络连接<strong>相互</strong>发送消息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">	客户端--&gt;服务器</span><br><span class="line">	服务器--&gt;客户端</span><br></pre></td></tr></table></figure>
+
+<p><strong>RPC 主要作用是执行那些不可靠的暂时性&#x2F;修饰性游戏事件（不要用多播 RPC 来发送持久性状态! 而应该选择使用 [[#复制属性 Replicated Properties]]）。</strong> 这其中包括播放声音、生成粒子或产生其他<strong>临时效果</strong>之类的事件，它们<strong>对于 Actor 的正常运作并不重要</strong>。</p>
+<blockquote>
+<p>在此之前，这些类型的事件往往要通过 Actor 属性进行复制。现在推荐直接使用 RPC 调用一个函数来播放粒子等效果。</p>
+</blockquote>
+<p>在使用 RPC 时，还必须要了解 [[#6 Ownership 连接所有权]]，因为它决定了大多数 RPC 将在哪里运行。<br>![[1 UE网络精粹#^uh7l5h]]</p>
+<blockquote>
+<p>[!warning]<br> RPC <strong>不能有返回值</strong>！要返回一些信息，您需要在另一个方向上使用第二个 RPC。</p>
+</blockquote>
+<h2 id="5-1-使用-RPC"><a href="#5-1-使用-RPC" class="headerlink" title="5.1 使用 RPC"></a>5.1 使用 RPC</h2><h3 id="5-1-1-蓝图"><a href="#5-1-1-蓝图" class="headerlink" title="5.1.1 蓝图"></a>5.1.1 蓝图</h3><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026298.png" alt="9237d6adf6779d0342e27319939ac35b_MD5|450"></p>
+<p>如果被标记为 RPC 的函数是从蓝图中调用，它们也会被复制。这时，它们将遵循相同的规则，就像是从 C++ 调用一样。在此情况下，您无法将函数动态标记为蓝图的 RPC。</p>
+<p>然而，<strong>自定义事件却可以从蓝图编辑器内部被标记为复制</strong>。</p>
+<p>蓝图中的 RPC 是通过创建 <code>CustomEvent</code> 并将设置 <code>Replicates</code> 来创建的。<strong>RPC 不能有返回值，因此不能使用函数来创建 RPC。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026299.png" alt="d900cca98dc7a2a1829d62f9d4fcec4c_MD5"></p>
+<h3 id="5-1-2-C-（三种-RPC-函数）"><a href="#5-1-2-C-（三种-RPC-函数）" class="headerlink" title="5.1.2 C++ （三种 RPC 函数）"></a>5.1.2 C++ （三种 RPC 函数）</h3><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/245358090">[UE4 Network] RPC 之哪里调用和哪里执行 - 知乎 (zhihu.com)</a><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026300.png" alt="Pasted image 20240714211828"></p>
+<h4 id="5-1-2-1-相关概念的简介"><a href="#5-1-2-1-相关概念的简介" class="headerlink" title="5.1.2.1 相关概念的简介"></a>5.1.2.1 相关概念的简介</h4><ol>
+<li>由 <code>AActor-&gt;LocalRole == ROLE_Authority</code> 检测是否为本地权威角色</li>
+<li>由 <code>AActor::GetNetConnection() != NULL</code> 检测 AActor 是否有所属链接</li>
+<li>由 <code>AActor-&gt;RemoteRole != ROLE_None</code> 检测 AActor 是否为参与属性同步</li>
+</ol>
+<blockquote>
+<p>[!tip] 区分调用和执行<br>假设我们声明了一个名为 <code>FunctionName()</code> 的 RPC 函数，用户并不需要实现这个函数，而是要额外的实现一个名为 <code>FunctionName_Implementation()</code> 函数处理真正要执行逻辑。而这个 <code>FunctionName()</code> 函数会由 UHT 来为我们实现来处理 RPC 调用的逻辑。</p>
+<p>我们将用户调用 <code>FunctionName()</code> 函数行为称为用户发起了这个 RPC 函数的<strong>调用</strong>。<br>而将真正执行到 <code>FunctionName_Implementation()</code> 函数时称为这个 RPC 函数被<strong>执行</strong>。</p>
+</blockquote>
+<p>要将一个函数声明为 RPC，您只需将 <code>Server</code>、<code>Client</code> 或 <code>NetMulticast</code> 关键字添加到 <code>UFUNCTION()</code> 声明。</p>
+<h4 id="5-1-2-2-UFUNCTION-Server"><a href="#5-1-2-2-UFUNCTION-Server" class="headerlink" title="5.1.2.2 UFUNCTION(Server)"></a>5.1.2.2 <code>UFUNCTION(Server)</code></h4><p>用于声明<strong>由客户端发起调用，在服务器执行</strong>的 RPC 函数。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026301.png" alt="Pasted image 20231117154247"></p>
+<p><strong>执行空间：</strong></p>
+<ol>
+<li>在服务器调用时仅本地执行</li>
+<li>在客户端调用时，对于本地权威角色的 AActor ，若其参与属性同步且有所属链接则远程执行，否则仅本地执行</li>
+<li>在客户端调用时，对于非本地权威角色的 AActor ，若其参与属性同步且有所属链接则远程执行，否则终止执行</li>
+</ol>
+<p><strong>通过代码理解 Server RPC：</strong><br>客户端（Player） 控制 Pawn 在服务器上的地图捡到一把武器（Weapon），写一个 Server RPC 函数（功能是，捡起这个武器，并 Attach 到客户端的 Pawn），这个函数需要在服务器上执行。<br>在捡到武器的时候，客户端向服务器发送一个 RPC 请求，让服务器执行这个函数。在上面那个 Actor 同步例子中，<strong>我们把 Weapon 的 bReplicate 设置为了 true，说明了这个 Weapon 只能由服务器创建，然后 Replicate 给客户端</strong>，所以当我们捡到这个武器时，事实上是在服务器上执行了将这个武器的 owner 设置为客户端Player，并 replicate 其他客户端。注意这个函数实现的命名形式，加了一个 Implementation。 </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UFUNCTION</span>(Server, Reliable)</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ServerEquip</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ABlasterCharacter::ServerEquip_Implementation</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//捡起武器，并 Attach 到客户端的 Pawn</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-1-2-3-UFUNCTION-Client"><a href="#5-1-2-3-UFUNCTION-Client" class="headerlink" title="5.1.2.3 UFUNCTION(Client)"></a>5.1.2.3 <code>UFUNCTION(Client)</code></h4><p>用于声明<strong>由服务器发起调用，在客户端执行</strong>的 RPC 函数。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026302.png" alt="Pasted image 20231117154226"></p>
+<p><strong>执行空间：</strong></p>
+<ol>
+<li>在客户端调用时则仅本地执行</li>
+<li>在服务器调用时，对于本地权威角色的 AActor ，若其参与属性同步且有所属链接则远程执行，否则仅本地执行</li>
+<li>在服务器调用时，对于非本地权威角色的 AActor ，若其参与属性同步且有所属链接则远程执行，否则终止执行</li>
+</ol>
+<h4 id="5-1-2-4-UFUNCTION-NetMulticast"><a href="#5-1-2-4-UFUNCTION-NetMulticast" class="headerlink" title="5.1.2.4 UFUNCTION(NetMulticast)"></a>5.1.2.4 <code>UFUNCTION(NetMulticast)</code></h4><p>用于声明<strong>由服务器发起调用，并广播到所有端执行（服务器+客户端）</strong> 的 RPC 函数。  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026303.png" alt="Pasted image 20231117154309"></p>
+<p><strong>考虑相关性：</strong><br>与 Server RPC 和 Client RPC 不同，相关性是多播 RPC 要考虑的因素。因为不拥有该 Actor 的客户端可能没有给该 Actor 开放 Channel，这种情况下客户端不会接收 RPC。<strong>这意味着不应该使用多播 RPC 来将持久状态的更改复制到客户端。</strong><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026304.png" alt="Pasted image 20231117154649"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026305.png" alt="Pasted image 20231117154735"></p>
+<p><strong>执行空间：</strong></p>
+<ol>
+<li>在客户端调用时仅本地执行（如果想要客户端广播到其他客户端，只能通过 Server RPC 间接调用 NetMulticast RPC，例如玩家死亡&#x2F;位置更新要通知其他玩家）</li>
+<li>在服务器调用时，对于参与同步的 AActor 即会本地执行也会远程执行，对于不参与同步的 AActor 仅本地执行</li>
+</ol>
+<h4 id="5-1-2-5-例子"><a href="#5-1-2-5-例子" class="headerlink" title="5.1.2.5 例子"></a>5.1.2.5 例子</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这是一个 ServerRPC，被标记为unreliable，并且 WithValidation（需要！）。</span></span><br><span class="line"><span class="built_in">UFUNCTION</span>(Server, unreliable, WithValidation)</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Server_Interact</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>CPP 文件将实现一个不同的函数。该文件需要以 “<code>_Implementation</code>“ 作为后缀。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这是实际的实现，而不是 Server_Interact（由 UHT 自动实现）。</span></span><br><span class="line"><span class="comment">// 但在调用时，我们使用 Server_Interact。</span></span><br><span class="line"><span class="comment">// 调用Server_Interact后，会执行该函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ATestPlayerCharacter::Server_Interact_Implementation</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Interact with a door or so!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>CPP 文件还需要一个以 <code>_Validate</code> 为后缀的版本，用于 [[#Validation 验证 (C++)]]。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ATestPlayerCharacter::Server_Interact_Validate</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其他两类 RPC 也是这样创建的：都需要标记为 <code>reliable</code> 或 <code>unreliable</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//ClientRPC</span></span><br><span class="line"><span class="built_in">UFUNCTION</span>(Client, reliable)</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ClientRPCFunction</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//MulticastRPC</span></span><br><span class="line"><span class="built_in">UFUNCTION</span>(NetMulticast, unreliable)</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MulticastRPCFunction</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-2-要求和注意事项"><a href="#5-2-要求和注意事项" class="headerlink" title="5.2 要求和注意事项"></a>5.2 要求和注意事项</h2><p><strong>要使 RPC 完全发挥作用，需要满足一些要求：</strong></p>
+<ol>
+<li>它们必须在 Actor 或复制的子对象 SubObject（如 Component）上调用  </li>
+<li>Actor（和 Component）必须被复制</li>
+<li>如果 <strong>RPC 由服务器调用并在客户端执行（<code>UFUNCTION (Client)</code>）</strong>，则只有<strong>拥有该 Actor</strong> 的客户端才会执行该函数</li>
+<li>如果 <strong>RPC 由客户端调用并在服务器上执行（<code>UFUNCTION (Server)</code>）</strong>，则客户端必须拥有 RPC 调用的 Actor</li>
+<li><strong>多播 RPC （<code>UFUNCTION (NetMulticast</code>）是个例外</strong>：<ul>
+<li>如果它们被服务器调用，服务器将在本地执行它们，并在当前连接的所有客户端上执行它们，这些客户端都有一个相关的 Actor 实例</li>
+<li>如果从客户端调用，多播只能在本地执行，而不会在服务器或其他客户端上执行</li>
+<li>目前，我们有一个针对多播事件的简单<strong>节流机制</strong>（throttling mechanism）：<ul>
+<li>在特定的 Actor 的网络更新周期内，多播函数的复制次数不会超过两次。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="5-3-从服务器调用的-RPC"><a href="#5-3-从服务器调用的-RPC" class="headerlink" title="5.3 从服务器调用的 RPC"></a>5.3 从服务器调用的 RPC</h2><p>下面的表格<strong>根据执行调用的 actor 的所有权，总结了特定类型的 RPC 将在哪里执行。</strong></p>
+<table>
+<thead>
+<tr>
+<th>Actor Ownership <br> 所有权</th>
+<th>未复制</th>
+<th><code>NetMulticast</code></th>
+<th><code>Server</code></th>
+<th><code>Client</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>被客户端拥有</td>
+<td>服务器上运行</td>
+<td>服务器+所有客户端</td>
+<td>服务器</td>
+<td>在 actor 的所属客户端上运行</td>
+</tr>
+<tr>
+<td>被服务器拥有</td>
+<td>服务器</td>
+<td>服务器+所有客户端</td>
+<td>服务器</td>
+<td>服务器</td>
+</tr>
+<tr>
+<td>未被拥有</td>
+<td>服务器</td>
+<td>服务器+所有客户端</td>
+<td>服务器</td>
+<td>服务器</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>未标记 Replicated 则都在服务器上运行</p>
+</blockquote>
+<h2 id="5-4-从客户端调用的-RPC"><a href="#5-4-从客户端调用的-RPC" class="headerlink" title="5.4 从客户端调用的 RPC"></a>5.4 从客户端调用的 RPC</h2><table>
+<thead>
+<tr>
+<th>Actor Ownership <br> 所有权</th>
+<th>未复制</th>
+<th><code>NetMulticast</code></th>
+<th><code>Server</code></th>
+<th><code>Client</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>被执行调用的客户端拥有</td>
+<td>在执行调用的客户端上运行</td>
+<td>执行调用的客户端</td>
+<td>服务器上</td>
+<td>执行调用的客户端</td>
+</tr>
+<tr>
+<td>被不同客户拥有</td>
+<td>执行调用的客户端</td>
+<td>执行调用的客户端</td>
+<td>丢弃</td>
+<td>执行调用的客户端</td>
+</tr>
+<tr>
+<td>被服务器拥有</td>
+<td>执行调用的客户端</td>
+<td>执行调用的客户端</td>
+<td>丢弃</td>
+<td>执行调用的客户端</td>
+</tr>
+<tr>
+<td>未被拥有</td>
+<td>执行调用的客户端</td>
+<td>执行调用的客户端</td>
+<td>丢弃</td>
+<td>执行调用的客户端</td>
+</tr>
+</tbody></table>
+<h2 id="5-5-可靠性-Reliable"><a href="#5-5-可靠性-Reliable" class="headerlink" title="5.5 可靠性 Reliable"></a>5.5 可靠性 Reliable</h2><ul>
+<li>默认情况下，RPC 不可靠（UDP），通过指定  <code>Reliable</code> 标记为可靠 (TCP)</li>
+<li>不要将每个 RPC 都标记为 <code>Reliable</code>！您<strong>只应在偶尔调用一次且需要它们到达目的地的 RPC 上这样做。</strong> 过渡使用可靠 RPC 会导致带宽饱和，并且在丢包时可能会导致瓶颈。</li>
+<li>在 Tick 上调用 <code>reliable</code> RPC 可能会产生副作用，如填满可靠缓冲区，从而导致其他属性和 RPC 不再被处理。</li>
+</ul>
+<blockquote>
+<p>[!NOTE] 网络通信的可靠性与不可靠性<br>在网络通信中，可靠和不可靠是指数据传输的特性。</p>
+</blockquote>
+<p>可靠传输意味着数据在传输过程中能够保证完整性和顺序性。这意味着发送的数据将按照发送的顺序到达接收端，并且不会丢失或损坏。如果发生数据丢失或损坏，可靠传输机制会自动进行重传，以确保数据的完整性和正确性。</p>
+<blockquote>
+</blockquote>
+<p>不可靠传输则不提供数据的完整性和顺序性保证。在不可靠传输中，数据可能会丢失、损坏或乱序到达接收端，而且没有自动重传机制。</p>
+<blockquote>
+</blockquote>
+<p>在网络通信中，可靠传输通常用于需要确保数据完整性和顺序性的场景，例如文件传输、实时视频流等。而不可靠传输通常用于对实时性要求较高，但对数据完整性和顺序性要求较低的场景，例如实时游戏中的网络同步。</p>
+<h2 id="5-6-Server-Validation-验证"><a href="#5-6-Server-Validation-验证" class="headerlink" title="5.6 Server Validation 验证"></a>5.6 Server Validation 验证</h2><p>检测错误数据&#x2F;输入的一个手段。这是<strong>一种作弊检测方法，适用于以影从客户端发送异常数据到服务器的情况</strong>，如果 ServerRPC 验证失败，发送该 RPC 的客户端将被踢出游戏。</p>
+<p><strong>验证的原理</strong>：如果 RPC 的验证函数检测到任何参数有问题，就会通知系统<strong>断开</strong>发起 RPC 调用的客户端 &#x2F; 服务器。</p>
+<p>现在，<strong>每个 ServerRPC 都需要验证</strong>。<code>UFUNCTION</code> 宏中的 <code>WithValidation</code> 关键字就是用于此目的。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UFUNCTION</span>(Server, unreliable, WithValidation)</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">SomeRPCFunction</span><span class="params">(int32 AddHealth)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>下面举例说明如何使用 <code>_Validate</code> 函数： </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ATestPlayerCharacter::SomeRPCFunction_Validate</span><span class="params">(int32 AddHealth)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (AddHealth &gt; MAX_ADD_HEALTH)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// 这将断开调用</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// 允许调用 RPC！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>[!info]<br>Server RPC 要求使用 <code>_Validate</code> 函数，以确保服务器 RPC 功能的安全性，并尽可能方便用户添加代码，根据所有已知的输入约束条件检查每个参数是否有效。</p>
+</blockquote>
+<h1 id="6-Ownership-连接所有权"><a href="#6-Ownership-连接所有权" class="headerlink" title="6 Ownership 连接所有权"></a>6 Ownership 连接所有权</h1><p>所有权是非常重要的一点。你已经看到了一个包含 “Client-owned Actor “等条目的表格 [[#5.3 从服务器调用的 RPC]]。</p>
+<p><strong>服务器或客户端可以 own（拥有） 一个Actor。</strong></p>
+<p>例如，本地 player（客户端或监听服务器）拥有 PlayerController。<br>另一个例子是场景中生成&#x2F;放置的门。这主要由服务器所有。</p>
+<p><strong>但为什么会出现这样的问题呢？</strong><br>如果你再查看一下前面的表格，就会发现，例如，如果客户端在不属于自己的 Actor 上调用 Server RPC，该 RPC 就会被丢弃。因此，客户端无法在服务器拥有的 Actor上调用 “<code>Server_Interact</code>“。但我们该如何解决这个问题呢？</p>
+<p>我们使用客户端拥有的 Class&#x2F;Actor，这就是 PlayerController 开始大显身手的地方。在讨论 PlayerController 类时，我们已经举过一个类似的例子，即根据 UserWidget 按钮的按压情况发送 RPC 以递增数值。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026306.png" alt="Pasted image 20231002095346"></p>
+<p>因此，与其在 Actor 上启用输入并在那里调用 ServerRPC，不如<strong>在 PlayerController 中创建 ServerRPC，让服务器调用 Actor 上的接口函数（例如 “Interact”）。</strong>  </p>
+<h2 id="6-1-Actors-和他们的拥有连接"><a href="#6-1-Actors-和他们的拥有连接" class="headerlink" title="6.1 Actors 和他们的拥有连接"></a>6.1 Actors 和他们的拥有连接</h2><p>Owning Connections（拥有连接）</p>
+<h3 id="6-1-1-设置-Owner"><a href="#6-1-1-设置-Owner" class="headerlink" title="6.1.1 设置 Owner"></a>6.1.1 设置 Owner</h3><p><strong>每个 Acctor 都可以指定另一个 Actor 作为其 Owner（拥有者）。</strong></p>
+<ul>
+<li>通常可以在 Spawn 时设置 Owner<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026307.png" alt="Pasted image 20231117144636|500"></li>
+<li>也可以在运行时通过 SetOwner 设置<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026308.png" alt="Pasted image 20231117144705|450"></li>
+</ul>
+<h3 id="6-1-2-PlayerController-的所有权"><a href="#6-1-2-PlayerController-的所有权" class="headerlink" title="6.1.2 PlayerController 的所有权"></a>6.1.2 PlayerController 的所有权</h3><p>Gameplay 架构+网络 章节中提到，PlayerController 是客户端真正 “拥有 (own) “的第一个类。这意味着什么呢？</p>
+<p>每个 <code>UNetConnection</code> 都连接着一个 Player，一旦玩家登录到游戏，就会有一个与之关联的 <code>PlayerController</code> （注意，PlayerController 也是 Actor）。<strong>从服务器的角度来看，这个 <code>PlayerController</code> 被该链接拥有（own），并且该连接拥有 PlayerController 拥有的所有 Actor</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">	Actor--&gt;PlayerController--&gt;Connection</span><br><span class="line">	Actor--&gt;Connection</span><br></pre></td></tr></table></figure>
+
+<p>因此，当我们想确定某个 Actor 是否被某个人拥有时，我们会向上查询（递归），直到查询到最外层的所有者，如果是一个 PlayerController，那么拥有该 PlayerController 的 Connection 也拥有该 Actor。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026309.png" alt="Pasted image 20231117145651"></p>
+<blockquote>
+<p>举例：如果你 (Player) 控制游戏中的人物（APawn）拿了一把枪 (AWeapon)，服务器可以追踪到这把枪是 Pawn 的，并复制给其他所有的玩家客户端，这样其他玩家都可以看到你操控的人物拿了一把枪。<br>甚至服务器可以递归查询 Weapon 被你拥有</p>
+</blockquote>
+<p>Pawn&#x2F;Character。它们被 PlayerController possess，在此期间，PlayerController 是 possessed Pawn 的所有者。<strong>这意味着拥有该 PlayerController 的 Connection 也拥有该 Pawn。</strong> 这只是在玩家控制器 possess Pawn 时的情况。<strong>un-possess 将导致客户端不再拥有该 Pawn。</strong></p>
+<p>在确定关联连接方面，Component 有一些特殊之处。这时，我们要首先确定 Component 的所有者，方法是遍历组件的”外链”，直到找出所属的 actor，然后确定这个 actor 的关联连接，像上面那样继续下去。</p>
+<blockquote>
+<p>[!question]  所有权是以下情形中的重要因素：</p>
+<ul>
+<li>RPC 需要确定哪个客户端将执行 Run-On-Client RPC（运行于客户端的 RPC）</li>
+<li>Actor 复制（replication）和 Connection 相关性（relevancy）</li>
+<li>涉及所有者时的 Actor 属性复制条件</li>
+</ul>
+</blockquote>
+<p>连接所有权对于 RPC 这样的机制至关重要，因为当您在 actor 上调用 RPC 函数时，<strong>除非 RPC 被标记为多播，否则就需要知道要在哪个客户端上执行该 RPC。它可以查找关联连接来确定将 RPC 发送到哪条连接。</strong> ^uh7l5h</p>
+<p>连接所有权会在 actor 复制期间使用，用于确定各个 actor 上有哪些连接获得了更新。对于那些将 <code>bOnlyRelevantToOwner</code> 设置为 <code>true</code> 的 actor，只有拥有此 actor 的连接才会接收这个 actor 的属性更新。<strong>默认情况下，所有 PlayerController 都设置了此标志，正因如此，客户端才只会收到它们拥有的 PlayerController 的更新</strong>。这样做是出于多种原因，其中最主要的是防止玩家作弊和提高效率。</p>
+<p>对于那些要用到所有者的 <a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.2/zh-CN/conditional-property-replication-in-unreal-engine">需要复制属性的情形</a>来说，连接所有权具有重要意义。例如，当使用 <code>COND_OnlyOwner</code> 时，只有此 actor 的所有者才会收到这些属性更新。</p>
+<p>最后，关联连接对那些作为自治代理的 actor（Role 为 <code>ROLE_AutonomousProxy</code>）来说也很重要。这些 actor 的 Role 会降级为 <code>ROLE_SimulatedProxy</code>，其属性则被复制到不拥有这些 actor 的连接中。 </p>
+<h3 id="6-1-3-PlayerControler-与-RPC-的关系"><a href="#6-1-3-PlayerControler-与-RPC-的关系" class="headerlink" title="6.1.3 PlayerControler 与 RPC 的关系"></a>6.1.3 PlayerControler 与 RPC 的关系</h3><p>由于我们在发送同步数据的时候需要知道这个数据应该发向哪个客户端，而客户端与服务器的链接信息（IP等）又在Playercontroller里面，所以同步的逻辑与playercontroller密切相关。很多刚接触unreal的朋友经常会遇到RPC数据发不出去或者收不到的问题，就是没有认识到playercontroller其实是包含客户端与服务器的连接信息的。<br>最典型的，假如你有服务器上连着10个玩家客户端，服务器上有一辆车，让他执行Client RPC，他怎么知道发给哪个客户端？当然是通过这个车找到控制他的playercontroller，然后找到对应客户端的IP，如果这个车不被任何客户端控制，那他就不知道要发给谁。</p>
+<h1 id="7-Actor-的相关性和优先级"><a href="#7-Actor-的相关性和优先级" class="headerlink" title="7 Actor 的相关性和优先级"></a>7 Actor 的相关性和优先级</h1><h2 id="7-1-Relevancy-相关性"><a href="#7-1-Relevancy-相关性" class="headerlink" title="7.1 Relevancy 相关性"></a>7.1 Relevancy 相关性</h2><blockquote>
+<p>[!question]<br>什么是相关性，为什么我们需要它？</p>
+</blockquote>
+<p>想象一下，游戏中的 Levels&#x2F;Maps 大到足以让玩家认为其他玩家 “UnImportant”。如果玩家 “A “和玩家 “B “相隔万里，为什么还需要从玩家 “B “那里获取网络更新？</p>
+<p>为了提高带宽，虚幻引擎的网络代码<strong>允许服务器只告诉客户端在其相关集合中的角色。</strong></p>
+<blockquote>
+<p>[!quote] 带宽<br>在计算机网络中，带宽是指在单位时间内传输数据的能力或速率。它通常以每秒传输的比特数（bps）或字节（Bps）来衡量。带宽决定了网络连接的数据传输速度，即能够在特定时间内传输多少数据量。</p>
+</blockquote>
+<p>虚幻应用以下规则（<strong>按顺序</strong>）来**确定与玩家相关的 Actors 集合。这些测试在虚函数 <code>AActor::IsNetRelevantFor()</code> 中实现（以下规则可以通过重载该函数修改）。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026310.png" alt="Pasted image 20231002112835|350"></p>
+<ol>
+<li>如果 Actor 被标记为 “<code>bAlwaysRelevant</code>“（始终相关）、被 Pawn 或 PlayerController 所拥有、本身为 Pawn，或者 Pawn 是某些行为（如 noise 或 damage）的 Instigator，则其具有相关性。<ul>
+<li>如果 Actor 被标记为 “<code>bAlwaysRelevant</code>“意味着只要他们有资格进行复制，服务器就会随时将它们复制到所有客户端<ul>
+<li>有的 Actor 就是对于所有的客户端都复制，例如 GameState, PlayerState 默认始终相关。</li>
+<li>但是有些 Actor 只对于一个客户端有相关性，所以这个 Actor 只会复制给这个客户端。比如 PlayerController 这个 Actor 只对自己的客户端有相关性，也只会复制给自己的客户端。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果 Actor 被标记为 “<code>bNetUserOwnerRelevancy(使用所有者相关性)</code> “且有一个所有者，则使用<strong>所有者</strong>的相关性。</li>
+<li>如果 Actor 被标记为 “<code>bOnlyRelevantToOwner</code>“，并且没有通过第一轮检查，则不具有相关性。</li>
+<li>如果该 Actor Attach 到另一个 Actor 的骨骼上，则其相关性由另一个 Actor 的相关性决定。</li>
+<li>如果 Actor 是隐藏的（<code>bHidden == true</code>），并且根组件没有发生碰撞，那么不具有相关性。<ul>
+<li>如果没有根组件，”<code>AActor::IsNetRelevantFor()</code> “将记录警告并询问是否应将 Actor 设置为 “<code>bAlwaysRelevant = true</code>“</li>
+</ul>
+</li>
+<li>如果 “<code>AGameNetworkManager</code> “设置为使用基于距离的相关性，则如果某个 Actor 和 Pawnd 的距离小于  net cull distance  ，则被视为具有相关性。</li>
+</ol>
+<blockquote>
+<p>[!info]<br>Pawn 和 PlayerController 重载了 <code>AActor::IsNetRelevantFor()</code>，因此具有不同的相关性条件。</p>
+</blockquote>
+<p>请注意，<code>bStatic Actor</code>（保留在客户端上）也是可以复制的。</p>
+<h2 id="7-2-Prioritization-优先级"><a href="#7-2-Prioritization-优先级" class="headerlink" title="7.2 Prioritization 优先级"></a>7.2 Prioritization 优先级</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026311.png" alt="Pasted image 20231002113159|400"></p>
+<blockquote>
+<p>优先级更高则意味着其复制的可能性更高</p>
+</blockquote>
+<p>服务器的 <code>UNetDriver</code> 采用了负载平衡（load-balancing）技术，网络带宽是有限的，该技术会优先处理所有 Actors，并根据每个 Actors 对游戏的重要性为其提供合理的带宽份额。</p>
+<p>默认距离玩家较近的 Actor 具有较高的优先级，而一段时间没有更新的 Actor 也具有较高的优先级。</p>
+<ul>
+<li>Actor 的当前优先级通过虚函数 <code>AActor::GetNetPriority()</code> 计算。   </li>
+<li>为避免饥饿（starvation），<code>AActor::GetNetPriority()</code> 使用 Actor 上次复制后经过的时间去乘以 <code>NetPriority</code></li>
+<li><code>GetNetPriority</code> 函数还考虑了 “Actor “与 “观察者 “之间的相对位置和距离。</li>
+</ul>
+<p>Actor 有一个名为 <code>NetPriority</code>（网络优先级）的浮点变量。这个数字越大，该 Actor 相对于其他 Actor 获得的带宽就越多。<br>NetPriority 为 2.0 的 Actor 的更新频率是 NetPriority 为 1.0 的 Actor 的两倍。</p>
+<blockquote>
+<p>优先级只决定分配带宽的比例，显然无法通过提高所有优先级来提高虚幻的网络性能。</p>
+</blockquote>
+<p>这些设置大多可以在蓝图的 “类默认值 “中找到，也可以在每个角色子代的 C++ 类中设置。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">bOnlyRelevantToOwner = <span class="literal">false</span>;</span><br><span class="line">bAlwaysRelevant = <span class="literal">false</span>;</span><br><span class="line">bReplicateMovement = <span class="literal">true</span>;</span><br><span class="line">bNetLoadOnClient = <span class="literal">true</span>;</span><br><span class="line">bNetUseOwnerRelevancy = <span class="literal">false</span>;</span><br><span class="line">bReplicates = <span class="literal">true</span>;</span><br><span class="line">NetUpdateFrequency = <span class="number">100.f</span>;</span><br><span class="line">NetCullDistanceSquared = <span class="number">225000000.f</span>;</span><br><span class="line">NetPriority = <span class="number">1.f</span>;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="8-网络对象判断"><a href="#8-网络对象判断" class="headerlink" title="8 网络对象判断"></a>8 网络对象判断</h1><p>UE 网络对象判断有三种方法（建议使用<strong>网络角色&#x2F;对象身份</strong>方法）<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026312.png" alt="Pasted image 20240517232534"></p>
+<h2 id="8-1-服务器判断"><a href="#8-1-服务器判断" class="headerlink" title="8.1 服务器判断"></a>8.1 服务器判断</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GetWorld-&gt;<span class="built_in">IsServer</span>()</span><br></pre></td></tr></table></figure>
+<h2 id="8-2-NetRole-网络角色"><a href="#8-2-NetRole-网络角色" class="headerlink" title="8.2 NetRole 网络角色"></a>8.2 NetRole 网络角色</h2><p>在网络同步中，始终存在三种形式的角色，分别是本地玩家控制的、服务器控制的以及其他玩家控制的，在unreal中分别对应着Autonomous、Authority与Simulate。这三种类型的存在本质上代表着角色的控制者是谁（哪个端可以直接通过命令操作他）。<br>从另一个角度讲这种分类其实是代表着玩家的操作是否有网络延迟以及延迟的大小。对于本地控制的Autonomous角色，他可以在本地直接响应你的操作，如果想把操作发给服务器，则需要经历一个client——server的延迟，而服务器想把这个操作同步给其他客户端又需要一个server——client的延迟。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Actor在local/remote网络上下文中的网络角色 */</span></span><br><span class="line"><span class="built_in">UENUM</span>()</span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">ENetRole</span> : <span class="type">int</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">/** No role at all. */</span></span><br><span class="line">	ROLE_None,</span><br><span class="line">	<span class="comment">//此Actor的本地模拟代理</span></span><br><span class="line">	ROLE_SimulatedProxy, </span><br><span class="line">	<span class="comment">//此Actor的本地自洽代理</span></span><br><span class="line">	ROLE_AutonomousProxy, </span><br><span class="line">	<span class="comment">/** 对此Actor权威控制 */</span></span><br><span class="line">	ROLE_Authority,</span><br><span class="line">	ROLE_MAX,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>服务器不会在每次更新时都复制 Actor。这会消耗太多的带宽和 CPU 资源。实际上，服务器将按照 <code>AActor:: NetUpdateFrequency（网络更新频率）</code> 属性指定的频率复制 Actor。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026313.png" alt="Pasted image 20231006204332"></p>
+<p>因此在 Actor 更新的间歇，会有一些时间数据被传递到客户端。这可能会导致 Actor 的动作看起来不连贯。<strong>为了弥补这一点，客户端将在更新的间歇模拟，目前共有两种类型的模拟 ROLE_SimulatedProxy 和 ROLE_AutonomousProxy 。</strong></p>
+<h3 id="8-2-1-ROLE-SimulatedProxy-模拟代理"><a href="#8-2-1-ROLE-SimulatedProxy-模拟代理" class="headerlink" title="8.2.1  ROLE_SimulatedProxy 模拟代理"></a>8.2.1  ROLE_SimulatedProxy 模拟代理</h3><p>**Simulated proxy 意味着该 Actor 被其他客户端所控制。而不是本客户端。 ** </p>
+<p><strong>这是标准的模拟路径，通常是根据上次获得的速率对移动进行推算。</strong></p>
+<p>当服务器为特定 Actor 发送更新时，客户端将向着新的方位调整其位置，然后利用更新的间歇，根据由服务器发送的最近的速率值来继续移动 actor。</p>
+<p>使用上次获得的速率值进行模拟，只是普通模拟方式中的一种。您完全可以编写自己的自定义代码，在服务器更新的间隔使用其他的一些信息来进行推算。</p>
+<h3 id="8-2-2-ROLE-AutonomousProxy-自治代理"><a href="#8-2-2-ROLE-AutonomousProxy-自治代理" class="headerlink" title="8.2.2  ROLE_AutonomousProxy 自治代理"></a>8.2.2  ROLE_AutonomousProxy 自治代理</h3><p><strong>Autonomous（自治） 是指本客户端直接控制 Actor 的行为，尽管不是权威的。</strong></p>
+<p><strong>一般只用于被 PlayerController possess 的 Actor。</strong></p>
+<p>这只是意味着这个 Actor 正在接收来自<strong>外部（玩家）的输入</strong>，因此当我们进行推算时，我们可以获得更多的信息，并使用实际的外部输入来填补缺失的信息（而不是根据上次获得的速率来进行推算）。</p>
+<h3 id="8-2-3-ROLE-Authority"><a href="#8-2-3-ROLE-Authority" class="headerlink" title="8.2.3 ROLE_Authority"></a>8.2.3 ROLE_Authority</h3><p>注意在服务器和客户端上都可能表现为权威，一般只有确定是服务器时才使用 <code>HasAuthority</code> 来判断</p>
+<h4 id="8-2-3-1-HasAuthority"><a href="#8-2-3-1-HasAuthority" class="headerlink" title="8.2.3.1 HasAuthority()"></a>8.2.3.1 <code>HasAuthority()</code></h4><p><strong>对于普通的 Actor</strong> 我们只需要关心：这个 Actor 的 Role 是否为 <code>ROLE_Authority</code>（通常在 C++中调用 <code> HasAuthority()</code> 来判断，即本地机器是否有权管理该 Actor（<strong>决定其是否被复制</strong>）。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">FORCEINLINE_DEBUGGABLE <span class="type">bool</span> <span class="title">AActor::HasAuthority</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> (<span class="built_in">GetLocalRole</span>() == ROLE_Authority);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026314.png" alt="Pasted image 20231117165650"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> ASomeActor : :<span class="built_in">BeginPlay</span>()</span><br><span class="line">&#123;</span><br><span class="line">    super::<span class="built_in">BeginPlay</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//如果有权管理</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">HasAuthority</span>()) <span class="comment">//即 if(GetLocalRole() == ROLE_Authority)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 执行时机：</span></span><br><span class="line">        <span class="comment">// 网络模式为 NM_Standalone</span></span><br><span class="line">        <span class="comment">// 或网络模式为 NM_DedicatedServer/NM_ListenServer</span></span><br><span class="line">        <span class="comment">// 或网络模式为 NM_Client，但是该Actor在客户端生成（Spawn）</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 网络模式为 NM_Client，但是该Actor在服务器生成（Spawn）</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="8-3-LocalRole-RemoteRole"><a href="#8-3-LocalRole-RemoteRole" class="headerlink" title="8.3 LocalRole &#x2F; RemoteRole"></a>8.3 LocalRole &#x2F; RemoteRole</h2><p><strong>每个 Actor 都有两个 <code>ENetRole</code> 枚举类型的属性： <code>Role</code> 和 <code>RemoteRole</code></strong></p>
+<ul>
+<li><code>Role</code> （即LocalRole）表示了本地机器对该 Actor 的控制程度，由 <code>GetLocalRole()</code> 获取。</li>
+<li><code>RemoteRole</code> 表示了远程机器对该 Actor 的控制程度，由 <code>GetRemoteRoleRole()</code> 获取。</li>
+</ul>
+<p>通过这两个属性，您可以知道：</p>
+<ul>
+<li>谁有权管理 Actor</li>
+<li>Actor 是否被复制 </li>
+<li>模拟模式</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UFUNCTION</span>(BlueprintCallable, Category=Networking)</span><br><span class="line"><span class="function">ENetRole <span class="title">GetLocalRole</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> Role; &#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">UFUNCTION</span>(BlueprintCallable, Category=Networking)</span><br><span class="line"><span class="function">ENetRole <span class="title">GetRemoteRole</span><span class="params">()</span> <span class="type">const</span></span>; &#123;<span class="keyword">return</span> RemoteRole;&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="8-4-IsLocallyControlled"><a href="#8-4-IsLocallyControlled" class="headerlink" title="8.4 IsLocallyControlled()"></a>8.4 <code>IsLocallyControlled()</code></h2><p><strong>对于 PlayerController 控制的 Pawn</strong>, 另一个重要问题是：是否是本地控制 <code>IsLocallyControlled()</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">APawn::IsLocallyControlled</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> ( Controller &amp;&amp; Controller-&gt;<span class="built_in">IsLocalController</span>() );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 是否是本地控制器</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">AController::IsLocalController</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//获取网络模式</span></span><br><span class="line">	<span class="type">const</span> ENetMode NetMode = <span class="built_in">GetNetMode</span>();</span><br><span class="line">    <span class="comment">//1. 网络模式为NM_Standalone</span></span><br><span class="line">	<span class="keyword">if</span> (NetMode == NM_Standalone)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// Not networked.</span></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//2. 网络模式为NM_Client且LocalRole为ROLE_AutonomousProxy</span></span><br><span class="line">	<span class="keyword">if</span> (NetMode == NM_Client &amp;&amp; <span class="built_in">GetLocalRole</span>() == ROLE_AutonomousProxy)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// Networked client in control.</span></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="comment">//3. RemoteRole 不是 ROLE_AutonomousProxy且 LocalRole为ROLE_Authority</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">GetRemoteRole</span>() != ROLE_AutonomousProxy &amp;&amp; <span class="built_in">GetLocalRole</span>() == ROLE_Authority)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// Local authority in control.</span></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026315.png" alt="Pasted image 20231117173631"><br>比如使用专有服务器的网游中自己操控的角色就是本地控制，<code>IsLocallyControlled()==true</code>，其他玩家的角色就是远程控制 <code>IsLocallyControlled()==false</code></p>
+<blockquote>
+<p>[!info] 这与所有权（Ownership）不同！</p>
+</blockquote>
+<blockquote>
+<p>[!NOTE]<br>就目前而言，<strong>只有服务器能够向已连接的客户端同步 Actor （客户端永远都不能向服务器同步）</strong>。始终记住这一点， <strong>只有服务器才能看到</strong> <code>Role == ROLE_Authority</code> 和 <code>RemoteRole == ROLE_SimulatedProxy</code> 或者 <code>ROLE_AutonomousProxy</code>。</p>
+</blockquote>
+<h2 id="8-5-不同网络模式下的-Role"><a href="#8-5-不同网络模式下的-Role" class="headerlink" title="8.5 不同网络模式下的 Role"></a>8.5 不同网络模式下的 Role</h2><h3 id="8-5-1-NM-Standalone"><a href="#8-5-1-NM-Standalone" class="headerlink" title="8.5.1 NM_Standalone"></a>8.5.1 NM_Standalone</h3><p>设置网络模式为 Play standalone</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026316.png" alt="Pasted image 20231117213610|500"></p>
+<ul>
+<li>本地机器即是客户端也是服务器，是权威的</li>
+<li>远程忽略，因为该模式只有本地。</li>
+</ul>
+<h3 id="8-5-2-NM-ListenServer"><a href="#8-5-2-NM-ListenServer" class="headerlink" title="8.5.2 NM_ListenServer"></a>8.5.2 NM_ListenServer</h3><p>设置网络模式为 Play As Listen Server：</p>
+<p><strong>ListenServer 端：</strong></p>
+<ul>
+<li>本地机器为服务器，都是权威的</li>
+<li>远程机器是客户端，都是模拟代理<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026317.png" alt="Pasted image 20231117213846"></li>
+</ul>
+<p><strong>Client 端：</strong></p>
+<ul>
+<li>本地机器都为客户端，<strong>拥有客户端的 LocalRole 为自洽代理，其他客户端的 LocalRole 为模拟代理。</strong></li>
+<li>远程机器都为服务器，可以看到远程机器对客户端上的 Pawn 是权威的。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026318.png" alt="Pasted image 20231117213942"></li>
+</ul>
+<h3 id="8-5-3-NM-DedicatedServer"><a href="#8-5-3-NM-DedicatedServer" class="headerlink" title="8.5.3 NM_DedicatedServer"></a>8.5.3 NM_DedicatedServer</h3><p>设置网络模式为：Play As Client:<br>Client1：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026319.png" alt="Pasted image 20231117214209"><br>Client2：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026320.png" alt="Pasted image 20231117214245"></p>
+<p>Server:<br>无渲染场景，角色和 ListenServer 模式下 Server 表现相同<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026317.png" alt="Pasted image 20231117213846"></p>
+<p>该模式下：</p>
+<ul>
+<li>本地机器都为客户端，拥有客户端的 LocalRole 为自洽代理，其他客户端的 LocalRole 为模拟代理。</li>
+<li>远程机器都为服务器，可以看到远程机器对客户端上的 Pawn 是权威的。</li>
+</ul>
+<p>该模式下的 Role 关系：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026322.png" alt="Pasted image 20231117172834"><br>PlayerController 被复制到 owning client 是 AutonomousProxy，并且关联的 Pawn 也是 AutonomousProxy，其他 Actor 是 SimulatedProxy。</p>
+<h3 id="8-5-4-选择"><a href="#8-5-4-选择" class="headerlink" title="8.5.4 选择"></a>8.5.4 选择</h3><p>各种情况对应的可实现功能：<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026323.png" alt="Pasted image 20231117205306"></p>
+<ul>
+<li>权威&#x2F;服务器：如果某些事情只需要在多人游戏或单人游戏的服务器上发生，记得判读 <code>if(HasAuthority()) &#123;...&#125;</code><ul>
+<li>生成复制的 actor、更新复制的属性、验证或修改 GameMode、对 Actor 造成伤害</li>
+</ul>
+</li>
+<li>非权威&#x2F;客户端：如果某些事情只需要在远程客户端运行时发生，记得判断 &#96;if(!HasAuthority()) {…}<ul>
+<li>插值复制的属性、延迟初始化知道复制的值初始化</li>
+</ul>
+</li>
+<li>美化效果、仅视口显式：某些情况下，你希望专门排除 DedicatedServer,，记得判断 <code>if(!IsRunningDedicatedServer()) &#123;...&#125;</code><ul>
+<li>spawn粒子效果、播放 audio、Spawning 非复制的演员纯粹是装饰</li>
+</ul>
+</li>
+<li>本地&#x2F;仅 Player：如果有纯粹的客户端功能，它通常与 Pawn 或 Controller 绑定，记得判断是否是本地控制：<code>if(Pawn-&gt;IsLocally ())</code> 或 <code>if(Controller-&gt;IsLocally ())</code> <ul>
+<li>配置输入、创建或更新 UI、在 PlayerController 中Spawn 仅在客户端显式的辅助对象</li>
+</ul>
+</li>
+</ul>
+<h3 id="8-5-5-LocalRole-RemoteRole-Reversal-对调"><a href="#8-5-5-LocalRole-RemoteRole-Reversal-对调" class="headerlink" title="8.5.5 LocalRole&#x2F;RemoteRole Reversal 对调"></a>8.5.5 LocalRole&#x2F;RemoteRole Reversal 对调</h3><p>通过上面的示例，可以发现对于不同的数值观察者，它们的 Role 和 RemoteRole 值可能发生对调。</p>
+<p>例如，在服务器上有这样的配置：</p>
+<ul>
+<li><code>Role == Role_Authority</code></li>
+<li><code>RemoteRole == ROLE_SimulatedProxy  </code></li>
+</ul>
+<p>客户端会将其识别为以下形式：</p>
+<ul>
+<li><code>Role == ROLE_SimulatedProxy</code></li>
+<li><code>RemoteRole == ROLE_Authority</code></li>
+</ul>
+<p><strong>这种情况是正常的，因为<mark style="background: #FF5582A6;">服务器</mark>要负责掌管 actor 并将其复制到客户端。而<mark style="background: #FF5582A6;">客户端</mark>只是接收更新，并在更新的间歇模拟 actor。</strong></p>
+<h1 id="9-Travel-关卡切换"><a href="#9-Travel-关卡切换" class="headerlink" title="9 Travel 关卡切换"></a>9 Travel 关卡切换</h1><p><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/5.3/zh-CN/travelling-in-multiplayer-in-unreal-engine/">虚幻引擎中的关卡切换 | 虚幻引擎5.3文档 (unrealengine.com)</a></p>
+<h2 id="9-1-无缝与非无缝切换"><a href="#9-1-无缝与非无缝切换" class="headerlink" title="9.1 无缝与非无缝切换"></a>9.1 无缝与非无缝切换</h2><p><strong>Seamless</strong> and <strong>Non-seamless Travel</strong></p>
+<p>UE 中主要有两种关卡切换方式：<strong>无缝</strong> 和 <strong>非无缝方式</strong></p>
+<p>无缝切换和非无缝切换之间的区别：</p>
+<ul>
+<li><strong>无缝切换</strong>是一种非阻塞（non-blocking）操作，而<strong>非无缝切换</strong>则将是阻塞（blocking）调用。</li>
+<li>客户端执行<strong>非无缝切换</strong>意时，他们<strong>与服务器断开连接，然后重新连接到同一服务器</strong>，而服务器将准备新的 Map 以供加载。</li>
+</ul>
+<p>**Epic 建议虚幻引擎多人模式游戏尽量采用<mark style="background: #FF5582A6;">无缝切换</mark>**，因为这将带来更流畅的体验，并避免重新连接过程中可能出现的任何问题。</p>
+<p><strong>有三种情况必然发生<mark style="background: #FF5582A6;">非无缝切换</mark>：</strong></p>
+<ul>
+<li>第一次加载地图时</li>
+<li>初次作为客户端连接到服务器时</li>
+<li>想要终止一个多人模式游戏并启动新游戏时</li>
+</ul>
+<h2 id="9-2-主要切换函数"><a href="#9-2-主要切换函数" class="headerlink" title="9.2 主要切换函数"></a>9.2 主要切换函数</h2><p>驱动切换的三大主要函数：</p>
+<h3 id="9-2-1-UEngine-Browser"><a href="#9-2-1-UEngine-Browser" class="headerlink" title="9.2.1 UEngine::Browser"></a>9.2.1 UEngine::Browser</h3><ul>
+<li>就像是加载新地图时**硬重置（hard reset）</li>
+<li>始终导致<mark style="background: #FF5582A6;">非无缝</mark>切换</li>
+<li>将导致服务器在切换到目的 Map 之前与当前客户端断开连接</li>
+<li>客户端将与当前服务器断开连接。</li>
+<li>专用服务器（Dedicated Serve）无法访问其他服务器，因此 Map 必须存储再本地的（不能是 URL）</li>
+</ul>
+<h3 id="9-2-2-UWorld-ServerTravel"><a href="#9-2-2-UWorld-ServerTravel" class="headerlink" title="9.2.2 UWorld::ServerTravel"></a>9.2.2 UWorld::ServerTravel</h3><ul>
+<li> <strong>仅适用于服务器</strong></li>
+<li>会将服务器跳转到新的 World&#x2F;Level </li>
+<li>所有连接的客户端都会跟随</li>
+<li>这就是多人游戏从一个 Map 切换到另一个 Map 的方式，服务器负责调用此函数</li>
+<li>服务器将为所有连接的客户端玩家调用 <code>APlayerController::ClientTravel</code><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">UWorld* World = <span class="built_in">GetWorld</span>();</span><br><span class="line"><span class="keyword">if</span>(World)</span><br><span class="line">&#123;</span><br><span class="line">    World-&gt;<span class="built_in">ServerTravel</span>(<span class="string">&quot;/Game/Maps/TestLevel ? listen&quot;</span>) <span class="comment">//? listen可选，会将服务器设为监听服务器</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="9-2-3-APlayerController-ClientTravel"><a href="#9-2-3-APlayerController-ClientTravel" class="headerlink" title="9.2.3 APlayerController::ClientTravel"></a>9.2.3 APlayerController::ClientTravel</h3><ul>
+<li>如果由客户端调用，将切换到新服务器</li>
+<li>如果由服务器调用，将指示特定客户端切换到新 Map（但保持与当前服务器的连接）<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">APlayerController* PlayerController = <span class="built_in">GetGameInstance</span>()-&gt;<span class="built_in">GetFirstLocalPlayerController</span>();</span><br><span class="line"><span class="keyword">if</span>(PlayerController)</span><br><span class="line">&#123;</span><br><span class="line">    PlayerController-&gt;<span class="built_in">ClientTravel</span>(FString&amp; Address, ETravelType::TRACEL_Absolute);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="9-3-启用无缝切换​"><a href="#9-3-启用无缝切换​" class="headerlink" title="9.3 启用无缝切换​"></a>9.3 启用无缝切换​</h2><p>无缝切换需要设置一个<strong>过渡 Map（Transition Map）</strong>。这是通过 <code>UGameMapsSettings:: TransitionMap</code> 属性进行配置的。<br>该属性默认为空，如果您的游戏保持默认状态，则会为过度地图创建一个空地图。</p>
+<blockquote>
+<p>[!NOTE] </p>
+<ul>
+<li>过渡 Map 存在的原因是必须始终加载一个 World（用于存放 Map），因此我们无法在加载新 Map 之前释放旧 Map。 </li>
+<li>由于 Map 可能非常大，因此将旧 Map 和新 Map 同时存储在内存中是个坏主意，因此这就是 Transition Map 的用武之地。过渡地图非常小，不会造成太大的资源消耗</li>
+</ul>
+</blockquote>
+<p>设置好过渡地图后，将 <code>AGameMode::bUseSeamlessTravel</code> 设置为 true，这样就可以实现无缝切换了。</p>
+<h2 id="9-4-无缝切换流程"><a href="#9-4-无缝切换流程" class="headerlink" title="9.4 无缝切换流程"></a>9.4 无缝切换流程</h2><p>下面是执行无缝切换时的一般流程：</p>
+<ol>
+<li>标记出要在过渡 Level 中的持久化actor（Persisting Actors）（更多信息请见下面）</li>
+<li>转移到过渡 Level </li>
+<li>标记出要在最终 Level 中持久化actor（更多信息请见下面）</li>
+<li>转移到最终 Level</li>
+</ol>
+<h2 id="9-5-无缝切换中的持久化Actor"><a href="#9-5-无缝切换中的持久化Actor" class="headerlink" title="9.5 无缝切换中的持久化Actor"></a>9.5 无缝切换中的持久化Actor</h2><p>在使用无缝切换时，可以将（持久化）actor 从当前关卡带到新的关卡。这适用于一些特定的 actor，如道具栏物品和玩家等。</p>
+<p><strong>默认情况下，这些 actor 将自动存留：</strong></p>
+<ul>
+<li><code>GameMode</code> actor（仅限服务器）<ul>
+<li>通过 <code>AGameModeBase::GetSeamlessTravelActorList</code> 额外添加的任何 actor</li>
+</ul>
+</li>
+<li>拥有一个有效的 <code>PlayerState</code> （仅限服务器）的所有<code>Controller</code></li>
+<li>所有 <code>PlayerController</code> （仅限服务器）</li>
+<li>所有本地 <code>PlayerController</code> （服务器和客户端）<ul>
+<li>通过 <code>APlayerController::GetSeamlessTravelActorList</code> （在本地<code>PlayerControllers</code>上调用）额外添加的任何 actor</li>
+</ul>
+</li>
+</ul>
+<h1 id="10-如何开始多人游戏"><a href="#10-如何开始多人游戏" class="headerlink" title="10 如何开始多人游戏"></a>10 如何开始多人游戏</h1><p>开始多人游戏的最简单方法是在 “Play “下拉菜单中将”玩家数量”设置为大于 1 的数值。<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026324.png" alt="Pasted image 20231002203934"></p>
+<p>这将自动在服务器和客户端之间建立网络连接。因此，即使您在主菜单层级中启动游戏，并将 “玩家人数 “设置为 2+ ，游戏也会连接起来！</p>
+<p>这始终是一种网络连接。这不是本地多人游戏连接。这需要以不同的方式处理，目前不会涉及。</p>
+<h2 id="10-1-高级设置"><a href="#10-1-高级设置" class="headerlink" title="10.1  高级设置"></a>10.1  高级设置</h2><p><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026325.png" alt="9a85779ca82237f7738f54dcd6f05f1e_MD5|&quot;Advanced Settings&quot;"><br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026326.png" alt="Pasted image 20231002204121"></p>
+<h3 id="10-1-1-单进程下运行"><a href="#10-1-1-单进程下运行" class="headerlink" title="10.1.1 单进程下运行"></a>10.1.1 单进程下运行</h3><ul>
+<li>选中时，将在 UE 的单个实例中生成多个玩家窗口。</li>
+<li>不选中时，将为每个分配的 player 启动多个 UE 实例。</li>
+</ul>
+<p>如果不选中 “<code>Run Dedicated Server</code> 运行专用服务器”，第一个 player 将是一个监听服务器 ListenServer。</p>
+<p>另一方面，当标记为 “<code>TRUE</code> “时，所有 Player 都将成为客户端。</p>
+<h2 id="10-2-启动并连接服务器"><a href="#10-2-启动并连接服务器" class="headerlink" title="10.2 启动并连接服务器"></a>10.2 启动并连接服务器</h2><p>查看 “会话管理（Session Management） “选项卡，了解如何通过会话系统设置会话&#x2F;服务器。</p>
+<p>让我们看看如何在没有会话的情况下启动和加入服务器。</p>
+<h3 id="10-2-1-启动（监听）服务器"><a href="#10-2-1-启动（监听）服务器" class="headerlink" title="10.2.1 启动（监听）服务器"></a>10.2.1 启动（监听）服务器</h3><ul>
+<li>@ 蓝图<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026327.png" alt="dbe15fd24cd12eb791c2da618741e0a5_MD5|&quot;Listen Server&quot;"></li>
+</ul>
+<p>要<strong>在不使用会话系统的情况下启动服务器</strong>，只需使用 <code>OpenLevel</code> 节点，并将 “Level Name “和 “listen “选项传给它即可。<br>您还可以传入更多选项，以”<code>?</code> “分隔，这些选项可以在 AGameMode 类中检索到。</p>
+<p><strong>没有会话系统的专用服务器</strong>已经在正确的 Map 上启动，您可以在项目设置的 “地图和模式 “部分指定正确的地图。</p>
+<ul>
+<li>@ C++<br>与蓝图类似，您也可以使用这两个函数，其结果与蓝图节点相同。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//启动（监听）服务器</span></span><br><span class="line">UGameplayStatics::<span class="built_in">OpenLevel</span>(<span class="built_in">GetWorld</span>(), “LevelName”, <span class="literal">true</span>, “listen”);</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-2-2-连接到服务器"><a href="#10-2-2-连接到服务器" class="headerlink" title="10.2.2 连接到服务器"></a>10.2.2 连接到服务器</h3><ul>
+<li>@ 蓝图<br><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202408080026328.png" alt="6e1d9a284e660e8e1a742103f4a3b4de_MD5|&quot;Connect Via IP&quot;"></li>
+</ul>
+<p>要连接服务器，只需在 “<code>Execute Console Command</code> (执行控制台命令) “节点上使用 “<code>open IPADDRESS</code> “命令，其中 “<code>IPADDRESS</code> “由服务器的<strong>实际 IP 地址</strong>代替。</p>
+<ul>
+<li>@ C++<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//连接到服务器</span></span><br><span class="line">APlayerController* PlayerController = UGameplayStatics::<span class="built_in">GetPlayerController</span>(<span class="built_in">GetWorld</span>(), <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">PlayerController-&gt;<span class="built_in">ClientTravel</span>(“IPADDRESS”, ETravelType::TRAVEL_Absolute);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="10-2-3-通过命令行启动"><a href="#10-2-3-通过命令行启动" class="headerlink" title="10.2.3 通过命令行启动"></a>10.2.3 通过命令行启动</h3><p>基本命令行（这些命令使用编辑器，因此不需要熟数据（cooked data）：</p>
+<table>
+<thead>
+<tr>
+<th>Type 类型</th>
+<th>Command 指挥</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Listen Server</td>
+<td>UE4Editor.exe ProjectName MapName?Listen -game</td>
+</tr>
+<tr>
+<td>Dedicated Server</td>
+<td>UE4Editor.exe ProjectName MapName -server -game -log</td>
+</tr>
+<tr>
+<td>Client</td>
+<td>UE4Editor.exe ProjectName ServerIP -game</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>[!info]<br>专用服务器默认情况下是无头的（headless）。如果不使用”-log”，就看不到任何显示专用服务器的窗口！</p>
+</blockquote>
+<h2 id="10-3-连接过程"><a href="#10-3-连接过程" class="headerlink" title="10.3  连接过程"></a>10.3  连接过程</h2><p>如果一个服务器需要从网络连接的角度实现某种目的，它就必须要有客户端连接！</p>
+<p>当新的客户端<strong>初次连接</strong>时，客户端要向服务器发送一个请求。服务器将处理这条请求。</p>
+<p><strong>主要步骤如下：</strong></p>
+<ol>
+<li>客户端发送连接请求。</li>
+<li>如果服务器接受连接，则发送当前地图。</li>
+<li>服务器等待客户端加载此地图。</li>
+<li>加载之后，服务器将在本地调用 <code>AGameModeBase::PreLogin</code>。<ul>
+<li>这样可以使 <code>GameMode</code> 有机会拒绝连接</li>
+</ul>
+</li>
+<li>如果接受连接，服务器将调用 <code>AGameModeBase::Login</code><ul>
+<li><strong>该函数的作用是创建一个 <code>PlayerController</code>，可用于在今后复制到新连接的客户端</strong>。成功接收后，这个 PlayerController 将替代客户端的临时 PlayerController （之前被用作连接过程中的占位符）。</li>
+<li>此时将调用 <code>APlayerController::BeginPlay</code>。应当注意的是，在此 actor 上调用 RPC 函数尚存在安全风险。您应当等待 <code>AGameModeBase::PostLogin</code> 被调用完成。</li>
+</ul>
+</li>
+<li>如果一切顺利，<code>AGameModeBase::PostLogin</code> 将被调用。<ul>
+<li>这时，可以放心的让服务器在此 PlayerController 上开始调用 RPC 函数。</li>
+</ul>
+</li>
+</ol>
+<p>那么这里面第 5 点需要重点强调一下。我们知道所谓连接，不过就是客户端连接到一个服务器，在维持着这个连接的条件下，我们才能真正的玩 “网络游戏”。通常，如果我们想让服务器把某些特定的信息发送给特定的客户端，我们就需要找到服务器与客户端之间的这个连接。<strong>这个链接的信息就存储在 PlayerController 的里面</strong>，而这个 PlayerController 不能是随随便便创建的 PlayerController，一定是客户端第一次链接到服务器，服务器同步过来的这个 PlayerController（也就是上面的第五点，后面称其为<strong>拥有连接的 PlayerController</strong>）。进一步来说，这个 Controller 里面包含着相关的 NetDriver，Connection 以及 Session 信息。</p>
+<p>对于任何一个 Actor（客户端上），他可以有连接，也可以无连接。一旦 Actor 有连接，他的 Role（控制权限）就是 ROLE_AutonomousProxy，如果没有连接，他的 Role（控制权限）就是 ROLE_SimulatedProxy 。</p>
+<p>那么对于一个 Actor，他有三种方法来得到这个连接（或者说让自己属于这个连接）。</p>
+<ol>
+<li><strong>设置自己的 owner 为拥有连接的 PlayerController，或者自己 owner 的 owner 为拥有连接的 PlayerController。</strong> 也就说官方文档说的查找他最外层的 owner 是否是 PlayerController 而且这个 PlayerController 拥有连接。</li>
+<li><strong>这个 Actor 必须是 Pawn 并且 Possess 了拥有连接的 PlayerController。</strong> 这个例子就是我们打开例子程序时，开始控制一个角色的情况。我们控制的这个角色就拥有这个连接。</li>
+<li><strong>这个 Actor 设置自己的 owner 为拥有连接的 Pawn。</strong> 这个区别于第一点的就是，Pawn 与 Controller 的绑定方式不是通过 Owner 这个属性。而是 Pawn 本身就拥有 Controller 这个属性。所以 Pawn 的 Owner 可能为空。（Owner 这个属性在 Actor 里面，蓝图也可以通过 GetOwner 来获取）</li>
+</ol>
+<p>对于组件来说，那就是先获取到他所归属的那个 Actor，然后再通过上面的条件来判断。</p>
+<p>我这里举几个例子，玩家 PlayerState 的 owner 就是拥有连接的 PlayerController，Hud 的 owner 是拥有连接的 PlayerController，CameraActor 的 owner 也是拥有连接的 PlayerController。<br>而客户端上的其他 NPC（一定是在服务器创建的）是都没有 owner 的 Actor，所以这些 NPC 都是没有连接的，他们的 Role 就为 ROLE_SimulatedProxy。</p>
+<h1 id="11-Prediction-预测"><a href="#11-Prediction-预测" class="headerlink" title="11 Prediction 预测"></a>11 Prediction 预测</h1><p>在虚幻引擎中，Prediction（预测）是一种网络同步技术，用于在客户端和服务器之间实现平滑的游戏对象移动。它通过在客户端上进行预测性移动来减少网络延迟的影响，从而提供更流畅的游戏体验。</p>
+<p><strong>当玩家在客户端上执行操作时</strong>，例如移动角色，<strong>客户端会立即更新角色的位置和状态，而不必等待服务器的响应</strong>。同时，客户端会根据当前的输入和游戏规则进行预测性移动，以保持游戏的连贯性。这样，<strong>玩家在客户端上的操作会立即反馈给他们，而不会受到网络延迟的影响。</strong></p>
+<p><strong>然后，客户端将这些操作发送给服务器进行验证。服务器会检查客户端的操作是否合法，并校正任何不一致的移动。服务器的校正会发送给客户端，以确保所有玩家在游戏中的位置和状态保持同步。</strong></p>
+<p>总结：</p>
+<ol>
+<li>没有预测技术：客户端请求服务器改变值，服务器允许后才能更改（本地有延迟）</li>
+<li>有预测技术：客户端先自己改了，再让服务器检查更改是否有效，如果有效就修改服务器端数据并广播到其他客户端，如果无效就修正。（本地没有延迟）</li>
+</ol>
+<p><code>PredictionKey</code> 是虚幻引擎中用于网络同步和预测的重要概念之一。它是一个标识符，用于跟踪网络上的状态变化和预测。在多人游戏中，每个客户端都会根据自己的输入进行操作，并将操作结果发送给服务器和其他客户端。服务器会根据接收到的操作结果进行模拟，并将模拟结果广播给其他客户端。</p>
+<p>PredictionKey用于确保模拟结果在所有客户端上的一致性。当服务器接收到客户端的操作结果时，会为每个操作结果生成一个PredictionKey，并将其与操作结果一起发送给其他客户端。其他客户端根据PredictionKey来判断是否需要接受该操作结果，并将其应用到本地模拟中。</p>
+<p>通过使用PredictionKey，虚幻引擎可以在网络延迟和不稳定性的情况下，实现客户端之间的状态同步和预测。它是实现多人游戏中流畅体验的重要机制之一。</p>
+<h1 id="12-其他博客文章和网站"><a href="#12-其他博客文章和网站" class="headerlink" title="12 其他博客文章和网站"></a>12 其他博客文章和网站</h1><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/532800522">UE4网络同步-基础流程 - 知乎 (zhihu.com)</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34721113">《Exploring in UE4》关于网络同步的理解与思考[概念理解] - 知乎 (zhihu. com)</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzkzNTIxMjMyNg==&mid=2247491564&idx=1&sn=cc823e3c096e74f22e8f0e8137794e13&chksm=c2b03ba5f5c7b2b33c8c902ba7c297062bdaf56c5719e82d06b6adbe7fb9260c6283efd241b5&token=1087467425&lang=zh_CN#rd">使用虚幻引擎4年，我想再谈谈他的网络架构 (qq.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/343847343">【UE4网络】网游开发中的RPC和OnRep（一） - 知乎 (zhihu.com)</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/245358090">[UE4 Network] RPC 之哪里调用和哪里执行 - 知乎 (zhihu. com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/130702310">细谈网络同步在游戏历史中的发展变化（上） - 知乎 (zhihu.com)</a></p>
+<h3 id="12-1-1-Wizardcell-发表的帖子"><a href="#12-1-1-Wizardcell-发表的帖子" class="headerlink" title="12.1.1 Wizardcell 发表的帖子"></a>12.1.1 Wizardcell 发表的帖子</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://wizardcell.com/unreal/multiplayer-tips-and-tricks/">Unreal Engine Multiplayer Tips and Tricks<br>  虚幻引擎多人游戏技巧和窍门</a></li>
+<li><a target="_blank" rel="noopener" href="https://wizardcell.com/unreal/persistent-data/">Persistent Data Compendium<br>  持久性数据简编</a></li>
+</ul>
+<h3 id="12-1-2-Vori-Vorixo-发表的帖子"><a href="#12-1-2-Vori-Vorixo-发表的帖子" class="headerlink" title="12.1.2 Vori (Vorixo) 发表的帖子"></a>12.1.2 Vori (Vorixo) 发表的帖子</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://vorixo.github.io/devtricks/stateful-events-multiplayer/">Multicast&#x2F;Client RPCs vs OnReps (towards stateful replication)<br>  组播&#x2F;客户端 RPC 与 OnReps（面向有状态复制）</a></li>
+<li><a target="_blank" rel="noopener" href="https://vorixo.github.io/devtricks/network-managers/">How to replicate thousands of Actors efficiently (network managers)<br>  如何高效复制数千个代理（网络管理员）</a></li>
+<li><a target="_blank" rel="noopener" href="https://vorixo.github.io/devtricks/non-destructive-synced-net-clock/">A better and non-destructive synced network clock<br>  更好的无损同步网络时钟</a></li>
+<li><a target="_blank" rel="noopener" href="https://vorixo.github.io/devtricks/atomicity/">Understanding replication atomicity (why you need NetSerialize on some critical structs)<br>  了解复制原子性（为什么需要在某些关键结构上使用 NetSerialize）</a></li>
+<li><a target="_blank" rel="noopener" href="https://vorixo.github.io/devtricks/simple-rewinding/">Rewinding in Multiplayer<br>  多人游戏中的倒带</a></li>
+</ul>
+<h3 id="12-1-3-KaosSpectrum-发表的帖子"><a href="#12-1-3-KaosSpectrum-发表的帖子" class="headerlink" title="12.1.3  KaosSpectrum 发表的帖子"></a>12.1.3  KaosSpectrum 发表的帖子</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.thegames.dev/?p=45">How to call RPCs inside UObjects<br>  如何在 UObject 内部调用 RPC</a></li>
+</ul>
+<h3 id="12-1-4-各种"><a href="#12-1-4-各种" class="headerlink" title="12.1.4  各种"></a>12.1.4  各种</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://forums.unrealengine.com/t/experimental-sample-code-for-implementing-instant-replays/264946">Experimental: Sample Code for implementing Instance Replays<br>  实验：实施实例重播的示例代码</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/staticJPL/UE4SequenceCharacterMovement/blob/master/UE4MovementNetCodeSequence.pdf">Sequence Diagram of the Character Movement Component<br>  角色运动组件序列图</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.aclockworkberry.com/custom-struct-serialization-for-networking-in-unreal-engine/#NetDeltaSerialize_and_Fast_TArray_Replication">Custom Struct Serialization for Networking in Unreal Engine<br>  虚幻引擎中用于联网的自定义结构序列化</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.unrealengine.com/en-US/blog/unreal-engine-improvements-for-fortnite-battle-royale">Unreal Engine Improvements for Fortnite: Battle Royal<br>  虚幻引擎对《堡垒之夜：皇室战争》的改进</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.unrealengine.com/en-US/blog/finding-network-based-exploits">Finding Network Exploits<br>  查找网络漏洞</a></li>
+<li><a target="_blank" rel="noopener" href="https://twitter.com/joatski/status/1257751888658915328">Twitter Post by Michael Noland (@joatski) - Check if Server or Client caused a Breakpoint in C++<br>  Michael Noland (@joatski) 在 Twitter 上发布的帖子 - 在 C++ 中检查是服务器还是客户端引起了断点</a></li>
+</ul>
+<h3 id="12-1-5-Online-Beacons-在线信标"><a href="#12-1-5-Online-Beacons-在线信标" class="headerlink" title="12.1.5 Online Beacons 在线信标"></a>12.1.5 Online Beacons 在线信标</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/en-us/Gameplay/Networking/OnlineBeacons">Online Beacons UE Docs<br>  在线信标 UE 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://forums.unrealengine.com/community/community-content-tools-and-tutorials/1355434-onlinebeacons-tutorial-with-blueprint-access">Online Beacons Tutorial with Blueprint Access<br>  附带蓝图访问权限的在线信标教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://answers.unrealengine.com/questions/467973/what-are-online-beacons-and-how-do-they-work.html">What are Online Beacons and how do they work?<br>  什么是在线信标？</a></li>
+<li><a target="_blank" rel="noopener" href="https://forums.unrealengine.com/development-discussion/c-gameplay-programming/85348-party-beacon-how-does-it-work-o-o">Party Beacon - How does it work?<br>  党员灯塔 - 它是如何工作的？</a></li>
+</ul>
+<h3 id="12-1-6-资料库"><a href="#12-1-6-资料库" class="headerlink" title="12.1.6 资料库"></a>12.1.6 资料库</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Vaei/PredictedMovement/">Predicted Movement: CMC extended for predicted abilities<br>  预测移动：预测能力的 CMC 扩展</a></li>
+</ul>
+<h3 id="12-1-7-视频和频道"><a href="#12-1-7-视频和频道" class="headerlink" title="12.1.7 视频和频道"></a>12.1.7 视频和频道</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=JOJP0CvpB8w">Multiplayer in Unreal Engine: How to understand Network Replication<br>  虚幻引擎中的多人游戏：如何理解网络复制</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=RtQRMcupJs0&ab_channel=ReidsChannel">UE4 - Advanced Networked Movement Tutorial (Sprinting &amp; Wall Running)<br>  UE4 - 高级联网运动教程（冲刺和跑墙）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=09yWANtKmC8">Network Multiplayer Fundamentals | Live from HQ | Inside Unreal<br>  网络多人游戏基础 | 来自总部的现场直播 | 虚幻内部</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=VusAHXoHF3Y">Replication Graph for Optimizing Real-Time Strategy Games | Unreal Fest Europe 2019 | Unreal Engine<br>  用于优化实时战略游戏的复制图 | Unreal Fest Europe 2019 | 虚幻引擎</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=_8A2gzRrWLk">Replicating Chaos: Vehicle Replication in Watch Dogs 2<br>  复制混乱看门狗 2》中的车辆复制</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.gdcvault.com/play/1024035/Deterministic-vs-Replicated-AI-Building">Deterministic vs Replicated AI: Building the Battlefield of “For Honor”<br>  确定型人工智能与复制型人工智能：构建 “荣誉 “战场</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.gdcvault.com/play/1024041/Networking-Scripted-Weapons-and-Abilities">Network Scripted Weapons and Abilities in “Overwatch”<br>  守望先锋》中的网络脚本武器和能力</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=W3aieHjyNvw">Overwatch Gameplay Architecture and Netcode<br>  守望先锋》游戏架构和网络代码</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=h47zZrqjgLc">I Shot You First: Networking the Gameplay of Halo: Reach<br>  我先开枪的：光环：到达》游戏联网</a></li>
+<li><a target="_blank" rel="noopener" href="https://youtu.be/ueEmiDM94IE?t=1413">It IS Rocket Science! The Physics of Rocket League Detailed<br>  这就是火箭科学！火箭联盟的物理原理详解</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://liuke101.github.io">灵玉</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://liuke101.github.io/post/62793.html">http://liuke101.github.io/post/62793.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://liuke101.github.io" target="_blank">游戏江湖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E5%90%8C%E6%AD%A5/">网络同步</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赏碎银二两</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232247905.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232251074.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/18785.html" title="【图形系统02】光栅化"><img class="cover" src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404292307530.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【图形系统02】光栅化</div></div></a></div><div class="next-post pull-right"><a href="/post/41022.html" title="UML类图"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">UML类图</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Waline</span><span id="switch-btn"></span><span class="second-comment">Livere</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTc3Ny8zNjIzOQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/I168.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">灵玉</div><div class="author-info__description">游戏开发</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liuke101"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/liuke101" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/gamerlk@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">1. 文章主要迁移自个人的obsidian笔记，存在部分md语法冲突，导致显示异常，暂未完全修复。 2. 文章部分内容参考/引用网络资源，用于个人学习，如有侵权，请联系我删除。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E8%99%9A%E5%B9%BB%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C"><span class="toc-text">1 虚幻中的网络</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BE%8B%E5%AD%90%E2%80%8B"><span class="toc-text">1.1 一个小例子​</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E2%80%8B"><span class="toc-text">1.2 另一个例子​</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-GamePlay-%E6%9E%B6%E6%9E%84-%E7%BD%91%E7%BB%9C"><span class="toc-text">2 GamePlay 架构 + 网络</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E6%9E%B6%E6%9E%84%E6%80%BB%E7%BB%93"><span class="toc-text">2.1 架构总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-GameMode%EF%BC%88%E4%BB%85%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%89"><span class="toc-text">2.2 GameMode（仅服务器）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1-%E7%A4%BA%E4%BE%8B%E5%92%8C%E7%94%A8%E6%B3%95%E2%80%8B"><span class="toc-text">2.2.1 示例和用法​</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-1-1-%E5%87%BD%E6%95%B0"><span class="toc-text">2.2.1.1 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-1-2-%E5%8F%98%E9%87%8F%E2%80%8B"><span class="toc-text">2.2.1.2 变量​</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-GameState%EF%BC%88%E6%9C%8D%E5%8A%A1%E5%99%A8-%E6%89%80%E6%9C%89%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%89"><span class="toc-text">2.3 GameState（服务器+所有客户端）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1-%E7%A4%BA%E4%BE%8B%E5%92%8C%E7%94%A8%E6%B3%95%E2%80%8B"><span class="toc-text">2.3.1 示例和用法​</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-1-1-%E5%8F%98%E9%87%8F%E2%80%8B"><span class="toc-text">2.3.1.1 变量​</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-1-2-%E7%A4%BA%E4%BE%8B"><span class="toc-text">2.3.1.2 示例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-PlayerState-%EF%BC%88%E6%9C%8D%E5%8A%A1%E5%99%A8-%E6%89%80%E6%9C%89%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%89"><span class="toc-text">2.4 PlayerState （服务器+所有客户端）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-1-%E7%A4%BA%E4%BE%8B%E5%92%8C%E7%94%A8%E6%B3%95%E2%80%8B"><span class="toc-text">2.4.1 示例和用法​</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-1-1-%E8%93%9D%E5%9B%BE%E7%A4%BA%E4%BE%8B%E2%80%8B"><span class="toc-text">2.4.1.1 蓝图示例​</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-Pawn-Character%EF%BC%88%E6%9C%8D%E5%8A%A1%E5%99%A8-%E6%89%80%E6%9C%89%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%89"><span class="toc-text">2.5 Pawn &#x2F; Character（服务器+所有客户端）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-1-%E7%A4%BA%E4%BE%8B%E5%92%8C%E7%94%A8%E6%B3%95%E2%80%8B"><span class="toc-text">2.5.1 示例和用法​</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-1-1-%E8%93%9D%E5%9B%BE%E2%80%8B"><span class="toc-text">2.5.1.1 蓝图​</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-1-2-C"><span class="toc-text">2.5.1.2 C++</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-PlayerController-%EF%BC%88%E6%9C%8D%E5%8A%A1%E5%99%A8-%E6%8B%A5%E6%9C%89%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%89"><span class="toc-text">2.6 PlayerController （服务器+拥有客户端）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-1-%E7%A4%BA%E4%BE%8B%E5%92%8C%E7%94%A8%E6%B3%95"><span class="toc-text">2.6.1 示例和用法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-1-1-%E8%93%9D%E5%9B%BE"><span class="toc-text">2.6.1.1 蓝图</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-6-1-1-1-C"><span class="toc-text">2.6.1.1.1 C++</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-AIController%EF%BC%88%E4%BB%85%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%89"><span class="toc-text">2.7 AIController（仅服务器）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-AHUD%EF%BC%88%E4%BB%85%E6%8B%A5%E6%9C%89%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%89"><span class="toc-text">2.8 AHUD（仅拥有客户端）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-9-UUserWidget-%EF%BC%88%E4%BB%85%E6%8B%A5%E6%9C%89%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%89"><span class="toc-text">2.9 UUserWidget （仅拥有客户端）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-10-%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-text">2.10 相关函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-NetMode-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F"><span class="toc-text">3 NetMode 网络模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E4%B8%93%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8E%E7%9B%91%E5%90%AC%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">3.1 专用服务器与监听服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-1-Dedicated-Server-%E4%B8%93%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">3.1.1 Dedicated Server 专用服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-2-Listen-Server-%E7%9B%91%E5%90%AC%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">3.1.2 Listen Server 监听服务器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Replication-%E5%A4%8D%E5%88%B6-%EF%BC%88%E5%90%8C%E6%AD%A5%EF%BC%89"><span class="toc-text">4 Replication 复制 （同步）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E7%AE%80%E4%BB%8B"><span class="toc-text">4.1 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86"><span class="toc-text">4.2 复制原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-1-%E5%A4%8D%E5%88%B6%E6%B5%81%E7%A8%8B"><span class="toc-text">4.2.1 复制流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-2-Actor-%E5%A4%8D%E5%88%B6"><span class="toc-text">4.2.2 Actor 复制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Replication"><span class="toc-text">4.3 如何使用 Replication</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-%E5%B1%9E%E6%80%A7%E5%A4%8D%E5%88%B6%EF%BC%88%E5%B1%9E%E6%80%A7%E5%90%8C%E6%AD%A5%EF%BC%89"><span class="toc-text">4.4 属性复制（属性同步）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-1-Replicated"><span class="toc-text">4.4.1 Replicated</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-2-RepNotify%E2%80%94ReplicatedUsing"><span class="toc-text">4.4.2 RepNotify—ReplicatedUsing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-3-%E6%9D%A1%E4%BB%B6%E5%B1%9E%E6%80%A7%E5%A4%8D%E5%88%B6"><span class="toc-text">4.4.3 条件属性复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-4-%E5%A4%8D%E5%88%B6%E5%AF%B9%E8%B1%A1%E5%BC%95%E7%94%A8"><span class="toc-text">4.4.4 复制对象引用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4-4-1-%E6%8B%A5%E6%9C%89%E5%8F%AF%E9%9D%A0%E5%91%BD%E5%90%8D%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="toc-text">4.4.4.1 拥有可靠命名的对象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-5-Replicated-%E5%92%8C-ReplicatedUsing-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">4.4.5 Replicated 和 ReplicatedUsing 的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-6-Actor-%E4%BB%A5%E5%8F%8A-Component-%E7%9A%84%E5%90%8C%E6%AD%A5%E9%A1%BA%E5%BA%8F"><span class="toc-text">4.4.6 Actor 以及 Component 的同步顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-7-%E5%B1%9E%E6%80%A7%E5%90%8C%E6%AD%A5%E5%92%8C-RPC-%E6%AF%94%E8%BE%83"><span class="toc-text">4.4.7 属性同步和 RPC 比较</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%EF%BC%9F"><span class="toc-text">如何选择？</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-%E4%BE%8B%E5%AD%90"><span class="toc-text">4.5 例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-6-%E8%B8%A9%E5%9D%91"><span class="toc-text">4.6  踩坑</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-RPC-%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8"><span class="toc-text">5 RPC 远程过程调用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-%E4%BD%BF%E7%94%A8-RPC"><span class="toc-text">5.1 使用 RPC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-1-%E8%93%9D%E5%9B%BE"><span class="toc-text">5.1.1 蓝图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-2-C-%EF%BC%88%E4%B8%89%E7%A7%8D-RPC-%E5%87%BD%E6%95%B0%EF%BC%89"><span class="toc-text">5.1.2 C++ （三种 RPC 函数）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-2-1-%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E7%9A%84%E7%AE%80%E4%BB%8B"><span class="toc-text">5.1.2.1 相关概念的简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-2-2-UFUNCTION-Server"><span class="toc-text">5.1.2.2 UFUNCTION(Server)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-2-3-UFUNCTION-Client"><span class="toc-text">5.1.2.3 UFUNCTION(Client)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-2-4-UFUNCTION-NetMulticast"><span class="toc-text">5.1.2.4 UFUNCTION(NetMulticast)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-2-5-%E4%BE%8B%E5%AD%90"><span class="toc-text">5.1.2.5 例子</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-%E8%A6%81%E6%B1%82%E5%92%8C%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">5.2 要求和注意事项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-%E4%BB%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%B0%83%E7%94%A8%E7%9A%84-RPC"><span class="toc-text">5.3 从服务器调用的 RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-%E4%BB%8E%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B0%83%E7%94%A8%E7%9A%84-RPC"><span class="toc-text">5.4 从客户端调用的 RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-5-%E5%8F%AF%E9%9D%A0%E6%80%A7-Reliable"><span class="toc-text">5.5 可靠性 Reliable</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-6-Server-Validation-%E9%AA%8C%E8%AF%81"><span class="toc-text">5.6 Server Validation 验证</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Ownership-%E8%BF%9E%E6%8E%A5%E6%89%80%E6%9C%89%E6%9D%83"><span class="toc-text">6 Ownership 连接所有权</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-Actors-%E5%92%8C%E4%BB%96%E4%BB%AC%E7%9A%84%E6%8B%A5%E6%9C%89%E8%BF%9E%E6%8E%A5"><span class="toc-text">6.1 Actors 和他们的拥有连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-1-%E8%AE%BE%E7%BD%AE-Owner"><span class="toc-text">6.1.1 设置 Owner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-2-PlayerController-%E7%9A%84%E6%89%80%E6%9C%89%E6%9D%83"><span class="toc-text">6.1.2 PlayerController 的所有权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-3-PlayerControler-%E4%B8%8E-RPC-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text">6.1.3 PlayerControler 与 RPC 的关系</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-Actor-%E7%9A%84%E7%9B%B8%E5%85%B3%E6%80%A7%E5%92%8C%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-text">7 Actor 的相关性和优先级</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#7-1-Relevancy-%E7%9B%B8%E5%85%B3%E6%80%A7"><span class="toc-text">7.1 Relevancy 相关性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-2-Prioritization-%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-text">7.2 Prioritization 优先级</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-%E7%BD%91%E7%BB%9C%E5%AF%B9%E8%B1%A1%E5%88%A4%E6%96%AD"><span class="toc-text">8 网络对象判断</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#8-1-%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%88%A4%E6%96%AD"><span class="toc-text">8.1 服务器判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-2-NetRole-%E7%BD%91%E7%BB%9C%E8%A7%92%E8%89%B2"><span class="toc-text">8.2 NetRole 网络角色</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-1-ROLE-SimulatedProxy-%E6%A8%A1%E6%8B%9F%E4%BB%A3%E7%90%86"><span class="toc-text">8.2.1  ROLE_SimulatedProxy 模拟代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-2-ROLE-AutonomousProxy-%E8%87%AA%E6%B2%BB%E4%BB%A3%E7%90%86"><span class="toc-text">8.2.2  ROLE_AutonomousProxy 自治代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-3-ROLE-Authority"><span class="toc-text">8.2.3 ROLE_Authority</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-2-3-1-HasAuthority"><span class="toc-text">8.2.3.1 HasAuthority()</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-3-LocalRole-RemoteRole"><span class="toc-text">8.3 LocalRole &#x2F; RemoteRole</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-4-IsLocallyControlled"><span class="toc-text">8.4 IsLocallyControlled()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-5-%E4%B8%8D%E5%90%8C%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-Role"><span class="toc-text">8.5 不同网络模式下的 Role</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-5-1-NM-Standalone"><span class="toc-text">8.5.1 NM_Standalone</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-5-2-NM-ListenServer"><span class="toc-text">8.5.2 NM_ListenServer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-5-3-NM-DedicatedServer"><span class="toc-text">8.5.3 NM_DedicatedServer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-5-4-%E9%80%89%E6%8B%A9"><span class="toc-text">8.5.4 选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-5-5-LocalRole-RemoteRole-Reversal-%E5%AF%B9%E8%B0%83"><span class="toc-text">8.5.5 LocalRole&#x2F;RemoteRole Reversal 对调</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9-Travel-%E5%85%B3%E5%8D%A1%E5%88%87%E6%8D%A2"><span class="toc-text">9 Travel 关卡切换</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-%E6%97%A0%E7%BC%9D%E4%B8%8E%E9%9D%9E%E6%97%A0%E7%BC%9D%E5%88%87%E6%8D%A2"><span class="toc-text">9.1 无缝与非无缝切换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-2-%E4%B8%BB%E8%A6%81%E5%88%87%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="toc-text">9.2 主要切换函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-1-UEngine-Browser"><span class="toc-text">9.2.1 UEngine::Browser</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-2-UWorld-ServerTravel"><span class="toc-text">9.2.2 UWorld::ServerTravel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-3-APlayerController-ClientTravel"><span class="toc-text">9.2.3 APlayerController::ClientTravel</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-3-%E5%90%AF%E7%94%A8%E6%97%A0%E7%BC%9D%E5%88%87%E6%8D%A2%E2%80%8B"><span class="toc-text">9.3 启用无缝切换​</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-4-%E6%97%A0%E7%BC%9D%E5%88%87%E6%8D%A2%E6%B5%81%E7%A8%8B"><span class="toc-text">9.4 无缝切换流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-5-%E6%97%A0%E7%BC%9D%E5%88%87%E6%8D%A2%E4%B8%AD%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96Actor"><span class="toc-text">9.5 无缝切换中的持久化Actor</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#10-%E5%A6%82%E4%BD%95%E5%BC%80%E5%A7%8B%E5%A4%9A%E4%BA%BA%E6%B8%B8%E6%88%8F"><span class="toc-text">10 如何开始多人游戏</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#10-1-%E9%AB%98%E7%BA%A7%E8%AE%BE%E7%BD%AE"><span class="toc-text">10.1  高级设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#10-1-1-%E5%8D%95%E8%BF%9B%E7%A8%8B%E4%B8%8B%E8%BF%90%E8%A1%8C"><span class="toc-text">10.1.1 单进程下运行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-2-%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">10.2 启动并连接服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#10-2-1-%E5%90%AF%E5%8A%A8%EF%BC%88%E7%9B%91%E5%90%AC%EF%BC%89%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">10.2.1 启动（监听）服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-2-2-%E8%BF%9E%E6%8E%A5%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">10.2.2 连接到服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-2-3-%E9%80%9A%E8%BF%87%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%90%AF%E5%8A%A8"><span class="toc-text">10.2.3 通过命令行启动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-3-%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%A8%8B"><span class="toc-text">10.3  连接过程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#11-Prediction-%E9%A2%84%E6%B5%8B"><span class="toc-text">11 Prediction 预测</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#12-%E5%85%B6%E4%BB%96%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E5%92%8C%E7%BD%91%E7%AB%99"><span class="toc-text">12 其他博客文章和网站</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-1-1-Wizardcell-%E5%8F%91%E8%A1%A8%E7%9A%84%E5%B8%96%E5%AD%90"><span class="toc-text">12.1.1 Wizardcell 发表的帖子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-1-2-Vori-Vorixo-%E5%8F%91%E8%A1%A8%E7%9A%84%E5%B8%96%E5%AD%90"><span class="toc-text">12.1.2 Vori (Vorixo) 发表的帖子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-1-3-KaosSpectrum-%E5%8F%91%E8%A1%A8%E7%9A%84%E5%B8%96%E5%AD%90"><span class="toc-text">12.1.3  KaosSpectrum 发表的帖子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-1-4-%E5%90%84%E7%A7%8D"><span class="toc-text">12.1.4  各种</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-1-5-Online-Beacons-%E5%9C%A8%E7%BA%BF%E4%BF%A1%E6%A0%87"><span class="toc-text">12.1.5 Online Beacons 在线信标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-1-6-%E8%B5%84%E6%96%99%E5%BA%93"><span class="toc-text">12.1.6 资料库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-1-7-%E8%A7%86%E9%A2%91%E5%92%8C%E9%A2%91%E9%81%93"><span class="toc-text">12.1.7 视频和频道</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/57053.html" title="Lua精粹">Lua精粹</a><time datetime="2024-08-07T17:01:13.127Z" title="发表于 2024-08-08 01:01:13">2024-08-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/46644.html" title="UE AI系统">UE AI系统</a><time datetime="2023-10-15T16:00:00.000Z" title="发表于 2023-10-16 00:00:00">2023-10-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/28208.html" title="UE伤害系统">UE伤害系统</a><time datetime="2023-10-15T16:00:00.000Z" title="发表于 2023-10-16 00:00:00">2023-10-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/46645.html" title="GAS精粹">GAS精粹</a><time datetime="2023-10-15T16:00:00.000Z" title="发表于 2023-10-16 00:00:00">2023-10-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/28207.html" title="UE输入系统">UE输入系统</a><time datetime="2023-10-15T16:00:00.000Z" title="发表于 2023-10-16 00:00:00">2023-10-16</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/liuke101/PicGo-For-Hexo/image/202404232157234.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By 灵玉</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
   window.MathJax = {
     tex: {
       inlineMath: [['$', '$'], ['\\(', '\\)']],
